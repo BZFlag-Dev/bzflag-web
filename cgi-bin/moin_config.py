@@ -50,6 +50,7 @@ title1 = """<div align="center">
       <table border="0" cellpadding="2"><tr><td>
 <a href="/" class="navbar">home</a><br>
 <a href="/download/" class="navbar">download</a><br>
+<a href="/wiki/BetaImages" class="navbar">beta&nbsp;images</a><br>
 <a href="/help/" class="navbar">help</a><br>
 <a href="/developers/" class="navbar">developers</a><br>
 <a href="/screenshots/" class="navbar">screenshots</a><br>
@@ -57,6 +58,7 @@ title1 = """<div align="center">
 <a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
 <a href="/wiki/OtherLinks" class="navbar">links</a><br>
 <a href="/league/" class="navbar">CTF&nbsp;league</a><br>
+<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/TODO?rev=HEAD" class="navbar">TODO</a><br>
 <br>
 <a href="/wiki/FrontPage" class="navbar">wiki</a><br>
 &nbsp;<a href="/wiki/FindPage" class="navbar">FindPage</a><br>
