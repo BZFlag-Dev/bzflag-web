@@ -351,17 +351,17 @@ if ($action == "LIST" ) {
   $row = mysql_fetch_row($result);
   $randtext = $row[0];
   if ( $randtext == NULL ) {
-    print("You have already confirmed your account registration<br>\n");
+    print("The account $email has already been confirmed.<br>\n");
   } else {
     if ( $password != $randtext ) {
-      print("Failed to confirm registration since generated key did not match<br>\n");
+      print("Failed to confirm registration for $email since generated key did not match<br>\n");
     } else {
       $result = mysql_query("UPDATE players SET "
 	  . "randtext = NULL, "
 	  . "lastmod = '" . time() . "' "
 	  . "WHERE email='$email'", $link)
 	or die ("Invalid query: " . mysql_error());
-      print("Your account has been successfully activated.<br>\n");
+      print("The account for $email has been successfully activated.<br>\n");
     }
   }
   print('See <a href="http://BZFlag.org">http://BZFlag.org</a></body></html>');
