@@ -160,7 +160,7 @@ function action_list () {
     $row = mysql_fetch_row($result);
     $playerid = $row[0];
     if (!$playerid) {
-      print("NOTOK invalid callsign or password ($callsign:$password)\n");
+      print("NOTOK: invalid callsign or password ($callsign:$password)\n");
     } else {
       srand(microtime() * 100000000);
       $token = rand(0,2147483647);
@@ -169,7 +169,7 @@ function action_list () {
 	  . "tokendate = '" . time() . "'"
 	  . "WHERE playerid = '$playerid'", $link)
 	or die ("Invalid query: ". mysql_error());
-      print("TOKEN:$token\n");
+      print("TOKEN: $token\n");
     }
   }
 
@@ -203,7 +203,7 @@ function checktoken ($callsign, $token, $garray) {
   # validate player token for connecting player on a game server
   global $link;
   # TODO add grouplist support
-  print("MSG checktoken callsign=$callsign, token=$token ");
+  print("MSG: checktoken callsign=$callsign, token=$token ");
   foreach($garray as $group) {
     print(" group=$group");
   }
@@ -252,7 +252,7 @@ function action_add () {
   debug("Attempting to ADD $nameport $version $gameinfo $title");
 
   # Filter out badly formatted or buggy versions
-  print "MSG ADD $nameport $version $gameinfo $title\n";
+  print "MSG: ADD $nameport $version $gameinfo $title\n";
   $pos = strpos($version, "BZFS");
   if ($pos === false || $pos > 0)
     return;
@@ -273,7 +273,7 @@ function action_add () {
   }elseif ($_SERVER['REMOTE_ADDR'] != $servip) {
     debug("Requesting address is " . $_SERVER['REMOTE_ADDR']
 	. " while server is at " . $servip );
-    print("Requesting address is " . $_SERVER['REMOTE_ADDR']
+    print("ERROR: Requesting address is " . $_SERVER['REMOTE_ADDR']
 	. " while server is at " . $servip );
     die();
   }
@@ -296,7 +296,7 @@ function action_add () {
   $count = mysql_num_rows($result);
   if (!$count) {
     debug("Server does not already exist in database -- adding");
-    print("MSG adding $nameport\n");
+    print("MSG: adding $nameport\n");
 
     # Server does not already exist in DB so insert into DB
     $result = mysql_query("INSERT INTO servers "
@@ -308,7 +308,7 @@ function action_add () {
   } else {
 
     debug("Server already exists in database -- updating");
-    print("MSG updating $nameport\n");
+    print("MSG: updating $nameport\n");
 
     # Server exists already, so update the table entry
     # ASSUMPTION: only the 'lastmod' column of table needs updating since all
@@ -335,7 +335,7 @@ function action_remove () {
   # Server requests to be removed from the DB.
   global $link, $nameport;
   header("Content-type: text/plain");
-  print("MSG REMOVE request from $nameport\n");
+  print("MSG: REMOVE request from $nameport\n");
   debug("REMOVE request from $nameport");
 
   $split = explode(":", $nameport);
@@ -354,14 +354,14 @@ function action_remove () {
   } elseif ($_SERVER['REMOTE_ADDR'] != $servip) {
     debug("Requesting address is " . $_SERVER['REMOTE_ADDR']
 	. " while server is at " . $servip );
-    print("Requesting address is " . $_SERVER['REMOTE_ADDR']
+    print("ERROR: Requesting address is " . $_SERVER['REMOTE_ADDR']
 	. " while server is at " . $servip );
     die();
   }
 
   $result = mysql_query("DELETE FROM servers WHERE nameport = '$nameport'", $link)
     or die ("Invalid query: ". mysql_error());
-  print("REMOVE $nameport\n");
+  print("REMOVE: $nameport\n");
 }
 
 function action_register () {
