@@ -149,7 +149,7 @@ if (isset($_SERVER['SCRIPT_FILENAME'])) {
 
 
 $link = mysql_pconnect($dbhost, $dbuname, $dbpass) or die("Could not connect");
-mysql_select_db("bzflag", $link) or die("Could not select database");
+mysql_select_db($dbname, $link) or die("Could not select database");
 
 $separator = '<div class="center">&middot; &middot; &middot; &middot; &middot; &middot; &middot;</div>';
 
