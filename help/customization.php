@@ -58,6 +58,7 @@ character and includes all characters to the end of the line.<br><br>
 <b>Server Options</b><br><br>
 <table border="0" width="100%">
 <tr><td>callsign</td><td>Last callsign (see -callsign).</td></tr>
+<tr><td>email</td><td>Last email (see -email).</td></tr>
 <tr><td>list</td><td>Set the server list server url (see -list).</td></tr>
 <tr><td>port</td><td>Last server port number (see -port).</td></tr>
 <tr><td>server</td><td>Last server.</td></tr>
@@ -93,6 +94,7 @@ character and includes all characters to the end of the line.<br><br>
 <tr><td>greenradar</td><td>Like redradar but for green team tanks.</td></tr>
 <tr><td>blueradar</td><td>Like redradar but for blue team tanks.</td></tr>
 <tr><td>purpleradar</td><td>Like redradar but for purple team tanks.</td></tr>
+<tr><td>enhancedradar</td><td>Enables blending of buildings on radar based on height.</td></tr>
 </table><br>
 
 <b>Key Options</b><br><br>
@@ -121,9 +123,25 @@ are masked if a customizable key uses that key.<br><br>
 <tr><td>longRangeKey</td><td>Sets the radar to long range.</td></tr>
 <tr><td>sendAllKey</td><td>Sends a message to everybody</td></tr>
 <tr><td>sendTeamKey</td><td>Sends a message to teammates.</td></tr>
+<tr><td>sendNemesisKey</td><td>Sends a private message to last victim or killer.</td></tr>
+<tr><td>sendRecipientKey</td><td>Sends a private message to a player.</td></tr>
 <tr><td>timeBackwardKey</td><td>Changes the time of day backward.</td></tr>
 <tr><td>timeForwardKey</td><td>Changes the time of day forward.</td></tr>
 </table><br>
+
+ALT-F1 to ALT-F10 and CTRL-F1 to CTRL-F10 lets you send predefined
+messages to all players resp. to your team. You can define these
+messages in your config file:
+
+<table border="0" width="100%">
+<tr><td>quickMessage1</td><td>arbitrary text -- define quick message for ALT-F1</td></tr>
+<tr><td>quickMessage2</td><td>arbitrary text -- define quick message for ALT-F2</td></tr>
+<tr><td>...</td><td>...</td></tr>
+<tr><td>quickTeamMessage1</td><td>arbitrary text -- define quick team message for CTRL-F1</td></tr>
+<tr><td>quickTeamMessage2</td><td>arbitrary text -- define quick team message for CTRL-F2</td></tr>
+<tr><td>...</td><td>...</td></tr>
+</table><br>
+
 <b>Other Options</b><br><br>
 <table border="0" width="100%">
 <tr><td>directory</td><td>The directory where the data files are.</td></tr>
