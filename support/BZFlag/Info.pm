@@ -30,7 +30,7 @@ sub serverlist(%) {
 
     $ua->timeout(10);
 
-    my $req = HTTP::Request->new('GET', ($options{Server} ? $options{Server} : $self->listserver));
+    my $req = HTTP::Request->new('GET', ($options{Server} ? $options{Server} : $self->listserver) . '?action=LIST');
     my $res = $ua->request($req);
     my $totalServers = 0;
     my $totalPlayers = 0;
