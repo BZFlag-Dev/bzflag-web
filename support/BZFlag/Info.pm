@@ -159,121 +159,236 @@ sub queryserver(%) {
 	return undef;
     }
 
-    # try incompatible for 1.7, etc.
-    if ($version != '1910') {
+    if ($version == '0026') {
+	# 2.0.x
+	# send game request
+	print S pack("n2", 0, 0x7167);
+
+	# get reply
+	unless (read(S, $buffer, 46) == 46) {
+	    $self->{error} = 'errServerReadError';
+	    return undef;
+	}
+
+	my ($infolen,$infocode,$style,$maxPlayers,$maxShots,
+	    $rogueSize,$redSize,$greenSize,$blueSize,$purpleSize,$observerSize,
+	    $rogueMax,$redMax,$greenMax,$blueMax,$purpleMax,$observerMax,
+	    $shakeWins,$shakeTimeout,
+	    $maxPlayerScore,$maxTeamScore,$maxTime,$timeElapsed) = unpack("n23", $buffer);
+
+	unless ($infocode == 0x7167) {
+	    $self->{error} = 'errBadServerData';
+	    return undef;
+	}
+
+	$response->{serverconfig}->{style} = $self->parsestyle($style);
+
+	$response->{serverconfig}->{maxplayers} = $maxPlayers;
+	$response->{serverconfig}->{maxshots} = $maxShots;
+	$response->{serverconfig}->{roguemax} = $rogueMax;
+	$response->{serverconfig}->{redmax} = $redMax;
+	$response->{serverconfig}->{greenmax} = $greenMax;
+	$response->{serverconfig}->{bluemax} = $blueMax;
+	$response->{serverconfig}->{purplemax} = $purpleMax;
+	$response->{serverconfig}->{observermax} = $observerMax;
+	$response->{serverconfig}->{shakewins} = $shakeWins;
+	$response->{serverconfig}->{shaketimeout} = $shakeTimeout;
+	$response->{serverconfig}->{maxplayerscore} = $maxPlayerScore;
+	$response->{serverconfig}->{maxteamscore} = $maxTeamScore;
+	$response->{serverconfig}->{maxtime} = $maxTime;
+	$response->{serverconfig}->{timeelapsed} = $timeElapsed;
+
+	# send players request
+	print S pack("n2", 0, 0x7170);
+
+	# get number of teams and players we'll be receiving
+	unless (read(S, $buffer, 8) == 8) {
+	    $self->{error} = 'errCountReadError';
+	    return undef;
+	}
+
+	my ($countlen,$countcode,$numTeams,$numPlayers) = unpack("n4", $buffer);
+	unless ($countcode == 0x7170) {
+	    $self->{error} = 'errBadCountData';
+	    return undef;
+	}
+
+	$response->{numplayers} = $numPlayers;
+
+	unless (read(S, $buffer, 5) == 5) {
+	    $self->{error} = 'errCountReadError';
+	    return undef;
+	}
+
+	my ($countlen2, $countcode2, $numTeams2) = unpack("n2 C", $buffer);
+	unless ($countcode2 == 0x7475) {
+	    $self->{error} = 'errBadCountData';
+	    return undef;
+	}
+
+	$response->{numteams} = $numTeams2;
+
+	# get the teams
+	for (1..$numTeams2) {
+	    unless (read(S, $buffer, 8) == 8) {
+		$self->{error} = 'errTeamReadError';
+		return undef;
+	    }
+
+	    my ($team, $size, $wins, $losses) = unpack("n4", $buffer);
+
+	    my $score = $wins - $losses;
+
+	    $response->{teams}->{$teamName[$team]}->{size}   = $size;
+	    $response->{teams}->{$teamName[$team]}->{score}  = $score;
+	    $response->{teams}->{$teamName[$team]}->{wins}   = $wins;
+	    $response->{teams}->{$teamName[$team]}->{losses} = $losses;
+
+	}
+
+	# get the players
+	for (1..$numPlayers) {
+	    next unless (read(S, $buffer, 175) == 175);
+	    my ($len, $code, $pID, $type, $team, $wins, $losses, $tks, $callsign, $email) =
+		unpack("n2 C n5 A32 A128", $buffer);
+
+	    unless ($code == 0x6170) {
+		$self->{error} = 'errBadPlayerData';
+		return undef;
+	    }
+
+	    my $score = $wins - $losses;
+
+	    $response->{players}->{$callsign}->{team}   = $teamName[$team];
+	    $response->{players}->{$callsign}->{email}  = $email;
+	    $response->{players}->{$callsign}->{score}  = $score;
+	    $response->{players}->{$callsign}->{wins}   = $wins;
+	    $response->{players}->{$callsign}->{losses} = $losses;
+	    $response->{players}->{$callsign}->{tks}    = $tks;
+	    $response->{players}->{$callsign}->{pID}    = $pID;
+
+	}
+	if ($numPlayers <= 1) {
+	    $self->{error} = 'errNoPlayers';
+	    return undef;
+	}
+    } elsif ($version == '1910') {
+	# 1.10.x
+	# send game request
+	print S pack("n2", 0, 0x7167);
+
+	# get reply
+	unless (read(S, $buffer, 40) == 40) {
+	    $self->{error} = 'errServerReadError';
+	    return undef;
+	}
+
+	my ($infolen,$infocode,$style,$maxPlayers,$maxShots,
+	    $rogueSize,$redSize,$greenSize,$blueSize,$purpleSize,
+	    $rogueMax,$redMax,$greenMax,$blueMax,$purpleMax,
+	    $shakeWins,$shakeTimeout,
+	    $maxPlayerScore,$maxTeamScore,$maxTime) = unpack("n20", $buffer);
+
+	unless ($infocode == 0x7167) {
+	    $self->{error} = 'errBadServerData';
+	    return undef;
+	}
+
+	$response->{serverconfig}->{style} = $self->parsestyle($style);
+
+	$response->{serverconfig}->{maxplayers} = $maxPlayers;
+	$response->{serverconfig}->{maxshots} = $maxShots;
+	$response->{serverconfig}->{roguemax} = $rogueMax;
+	$response->{serverconfig}->{redmax} = $redMax;
+	$response->{serverconfig}->{greenmax} = $greenMax;
+	$response->{serverconfig}->{bluemax} = $blueMax;
+	$response->{serverconfig}->{purplemax} = $purpleMax;
+	$response->{serverconfig}->{shakewins} = $shakeWins;
+	$response->{serverconfig}->{shaketimeout} = $shakeTimeout;
+	$response->{serverconfig}->{maxplayerscore} = $maxPlayerScore;
+	$response->{serverconfig}->{maxteamscore} = $maxTeamScore;
+	$response->{serverconfig}->{maxtime} = $maxTime;
+
+	# send players request
+	print S pack("n2", 0, 0x7170);
+
+	# get number of teams and players we'll be receiving
+	unless (read(S, $buffer, 8) == 8) {
+	    $self->{error} = 'errCountReadError';
+	    return undef;
+	}
+
+	my ($countlen,$countcode,$numTeams,$numPlayers) = unpack("n4", $buffer);
+	unless ($countcode == 0x7170) {
+	    $self->{error} = 'errBadCountData';
+	    return undef;
+	}
+
+	$response->{numplayers} = $numPlayers;
+
+	unless (read(S, $buffer, 5) == 5) {
+	    $self->{error} = 'errCountReadError';
+	    return undef;
+	}
+
+	my ($countlen2, $countcode2, $numTeams2) = unpack("n2 C", $buffer);
+	unless ($countcode2 == 0x7475) {
+	    $self->{error} = 'errBadCountData';
+	    return undef;
+	}
+
+	$response->{numteams} = $numTeams2;
+
+	# get the teams
+	for (1..$numTeams2) {
+	    unless (read(S, $buffer, 8) == 8) {
+		$self->{error} = 'errTeamReadError';
+		return undef;
+	    }
+
+	    my ($team, $size, $wins, $losses) = unpack("n4", $buffer);
+
+	    my $score = $wins - $losses;
+
+	    $response->{teams}->{$teamName[$team]}->{size}   = $size;
+	    $response->{teams}->{$teamName[$team]}->{score}  = $score;
+	    $response->{teams}->{$teamName[$team]}->{wins}   = $wins;
+	    $response->{teams}->{$teamName[$team]}->{losses} = $losses;
+
+	}
+
+	# get the players
+	for (1..$numPlayers) {
+	    next unless (read(S, $buffer, 175) == 175);
+	    my ($len, $code, $pID, $type, $team, $wins, $losses, $tks, $callsign, $email) =
+		unpack("n2 C n5 A32 A128", $buffer);
+
+	    unless ($code == 0x6170) {
+		$self->{error} = 'errBadPlayerData';
+		return undef;
+	    }
+
+	    my $score = $wins - $losses;
+
+	    $response->{players}->{$callsign}->{team}   = $teamName[$team];
+	    $response->{players}->{$callsign}->{email}  = $email;
+	    $response->{players}->{$callsign}->{score}  = $score;
+	    $response->{players}->{$callsign}->{wins}   = $wins;
+	    $response->{players}->{$callsign}->{losses} = $losses;
+	    $response->{players}->{$callsign}->{tks}    = $tks;
+	    $response->{players}->{$callsign}->{pID}    = $pID;
+
+	}
+	if ($numPlayers <= 1) {
+	    $self->{error} = 'errNoPlayers';
+	    return undef;
+	}
+    } else {
+	# probably a development version
 	$self->{error} = 'errIncompatibleVersion';
 	return undef;
     }
 
-    # send game request
-    print S pack("n2", 0, 0x7167);
-
-    # get reply
-    unless (read(S, $buffer, 40) == 40) {
-	$self->{error} = 'errServerReadError';
-	return undef;
-    }
-
-    my ($infolen,$infocode,$style,$maxPlayers,$maxShots,
-	$rogueSize,$redSize,$greenSize,$blueSize,$purpleSize,
-	$rogueMax,$redMax,$greenMax,$blueMax,$purpleMax,
-	$shakeWins,$shakeTimeout,
-	$maxPlayerScore,$maxTeamScore,$maxTime) = unpack("n20", $buffer);
-
-    unless ($infocode == 0x7167) {
-	$self->{error} = 'errBadServerData';
-	return undef;
-    }
-
-    $response->{serverconfig}->{style} = $self->parsestyle($style);
-
-    $response->{serverconfig}->{maxplayers} = $maxPlayers;
-    $response->{serverconfig}->{maxshots} = $maxShots;
-    $response->{serverconfig}->{roguemax} = $rogueMax;
-    $response->{serverconfig}->{redmax} = $redMax;
-    $response->{serverconfig}->{greenmax} = $greenMax;
-    $response->{serverconfig}->{bluemax} = $blueMax;
-    $response->{serverconfig}->{purplemax} = $purpleMax;
-    $response->{serverconfig}->{shakewins} = $shakeWins;
-    $response->{serverconfig}->{shaketimeout} = $shakeTimeout;
-    $response->{serverconfig}->{maxplayerscore} = $maxPlayerScore;
-    $response->{serverconfig}->{maxteamscore} = $maxTeamScore;
-    $response->{serverconfig}->{maxtime} = $maxTime;
-
-    # send players request
-    print S pack("n2", 0, 0x7170);
-
-    # get number of teams and players we'll be receiving
-    unless (read(S, $buffer, 8) == 8) {
-	$self->{error} = 'errCountReadError';
-	return undef;
-    }
-
-    my ($countlen,$countcode,$numTeams,$numPlayers) = unpack("n4", $buffer);
-    unless ($countcode == 0x7170) {
-	$self->{error} = 'errBadCountData';
-	return undef;
-    }
-
-    $response->{numplayers} = $numPlayers;
-
-    unless (read(S, $buffer, 5) == 5) {
-	$self->{error} = 'errCountReadError';
-	return undef;
-    }
-
-    my ($countlen2, $countcode2, $numTeams2) = unpack("n2 C", $buffer);
-    unless ($countcode2 == 0x7475) {
-	$self->{error} = 'errBadCountData';
-	return undef;
-    }
-
-    $response->{numteams} = $numTeams2;
-
-    # get the teams
-    for (1..$numTeams2) {
-	unless (read(S, $buffer, 8) == 8) {
-	    $self->{error} = 'errTeamReadError';
-	    return undef;
-	}
-
-	my ($team, $size, $wins, $losses) = unpack("n4", $buffer);
-
-	my $score = $wins - $losses;
-
-	$response->{teams}->{$teamName[$team]}->{size}   = $size;
-	$response->{teams}->{$teamName[$team]}->{score}  = $score;
-	$response->{teams}->{$teamName[$team]}->{wins}   = $wins;
-	$response->{teams}->{$teamName[$team]}->{losses} = $losses;
-
-    }
-
-    # get the players
-    for (1..$numPlayers) {
-	next unless (read(S, $buffer, 175) == 175);
-	my ($len, $code, $pID, $type, $team, $wins, $losses, $tks, $callsign, $email) =
-	    unpack("n2 C n5 A32 A128", $buffer);
-
-	unless ($code == 0x6170) {
-	    $self->{error} = 'errBadPlayerData';
-	    return undef;
-	}
-
-	my $score = $wins - $losses;
-
-	$response->{players}->{$callsign}->{team}   = $teamName[$team];
-	$response->{players}->{$callsign}->{email}  = $email;
-	$response->{players}->{$callsign}->{score}  = $score;
-	$response->{players}->{$callsign}->{wins}   = $wins;
-	$response->{players}->{$callsign}->{losses} = $losses;
-	$response->{players}->{$callsign}->{tks}    = $tks;
-	$response->{players}->{$callsign}->{pID}    = $pID;
-
-    }
-    if ($numPlayers <= 1) {
-	$self->{error} = 'errNoPlayers';
-	return undef;
-    }
 
     # close socket
     close(S);
