@@ -65,7 +65,6 @@ CREATE TABLE players (
   email varchar(64) NOT NULL default '',
   callsign varchar(32) NOT NULL default '',
   password varchar(16) NOT NULL default '',
-  assignments text,
   playtime int(10) unsigned NOT NULL default '0',
   lastmod int(10) unsigned NOT NULL default '0',
   randtext varchar(8) default NULL,
