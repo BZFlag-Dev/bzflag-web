@@ -5,7 +5,7 @@ $doc = new Document;
 $doc->begin("protocol");
 print <<< end
 <p><i>This document is somewhat out of date. The source code is always the best
-reference to determine the protocol.</i></i>
+reference to determine the protocol.</i>
 <p>
 <u>BZFlag network protocol</u><br>
 [ This is a work in progress.  It is mostly done but still incomplete. ]<br><br>
@@ -1241,7 +1241,6 @@ Appendix C:  Dead Reckoning<br>
 <pre>
 [to do]
 </pre>
-</p>
 end;
 $doc->end();
 
