@@ -307,7 +307,7 @@ function checktoken ($callsign, $token, $garray) {
       $result = mysql_query("$query")
 	or die ("Invalid query: " . mysql_error());
       while ($row = mysql_fetch_row($result)) {
-	print(" " . $row[0]);
+	print(":" . $row[0]);
       }
     }
     print ("\n");
