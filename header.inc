@@ -102,6 +102,7 @@ Servers
 Other Links
 <ul>
 <li><a href="/irc/irc.cgi">IRC Chat</a></li>
+<li><a href="http://www.bzflag.org/cvs/">Nightly Snapshots</a></li>
 <li><a href="http://files.noodleroni.com/pub/bzflag/nightlies/">Nightly RPMs</a></li>
 <li><a href="http://bzbb.bzflag.org/">BZBB</a></li>
 <li><a href="http://www.bzflag.org/league/">CTF League</a></li>
