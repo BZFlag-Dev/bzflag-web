@@ -79,6 +79,7 @@ if ($enableDebug) {
 # ignore banned servers outright
 if ($banlist[$_SERVER['REMOTE_ADDR']] != "") {
   # reject the connection attempt
+  header("Content-type: text/plain");
   $remote_addr = $_SERVER['REMOTE_ADDR'];
   debug($debugFile, "Connection rejected from $remote_addr");
   die("Connection attempt rejected.  See #bzflag on irc.freenode.net");
@@ -92,7 +93,7 @@ if (!array_key_exists("action", $_GET)) {
 </head>
 <body>
   <h1>BZFlag db server</h1>
-  <p>This is the development interface to the BZFlag list server.</p>
+  <p>This is the development interface to the <a href="http://BZFlag.org/">BZFlag</a> list server.</p>
   <form action="" method="get">
     action:<select name="action">
 	<option value="LIST" selected>LIST - list servers</option>
