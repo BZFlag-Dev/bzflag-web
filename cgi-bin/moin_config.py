@@ -146,7 +146,7 @@ logo_string = sitename
 css_url = url_prefix + '/css/moinmoin.css' # stylesheet link, or ''
 html_head = """
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html;charset=%s">
-<link rel="/favicon.ico" rel="shortcut icon">
+<link href="/favicon.ico" rel="shortcut icon">
 """ % (charset,)
 
 # security (deactivated by default)
