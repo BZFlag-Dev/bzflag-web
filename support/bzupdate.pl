@@ -31,11 +31,10 @@ for (;;) {
     my $serverlist = $bzinfo->serverlist;
     my $refreshquery = "WHERE ";
 
-    foreach(keys(%{ $serverlist->{servers} })) {
-	print "$$: $_ ".$serverlist->{servers}->{$_}->{numplayers}."\n" if $debug;
-
+    foreach(sort keys(%{ $serverlist->{servers} })) {
 	my $server = $_;
 	my $numplayers = $serverlist->{servers}->{$_}->{numplayers};
+	print "$$: $server $numplayers\n" if $debug;
 
 	$dbh->do("DELETE FROM `currentplayers` WHERE server = '$server'");
 	$dbh->do("DELETE FROM `teaminfo` WHERE server = '$server'");
