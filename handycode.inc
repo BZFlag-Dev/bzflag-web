@@ -89,7 +89,7 @@ if (isset($_COOKIE['language'])) {
 /** set the title depending on how the url was called
  */
 if (isset($_SERVER['SCRIPT_FILENAME'])) {
-	switch ($SCRIPT_FILENAME) {
+	switch ($_SERVER['SCRIPT_FILENAME']) {
 	case "$dbroot/stats.php":
 		$title = "Welcome!";
 		break;

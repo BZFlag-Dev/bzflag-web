@@ -1,6 +1,6 @@
 <? include('header.inc'); ?>
 
-<form method="get" action="<?=$PHP_SELF?>">
+<form method="get" action="<?=$_SERVER['PHP_SELF']?>">
 <p>Callsign</p>
 <p><input type="text" name="callsign" <?=((isset($callsign)) ? "value=\"$callsign\" " : '')?>/><input type="submit" /></p>
 </form>
