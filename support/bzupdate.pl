@@ -196,6 +196,10 @@ for (;;) {
 
     }
 
+    my $endtime = gettimeofday();
+    my $delta = gettimeofday() - $starttime;
+    print "$delta seconds to scan servers\n" if $debug;
+
     print "$refreshquery\n" if $debug;
 
     $dbh->do("DELETE FROM `currentplayers` $refreshquery 1");
@@ -204,10 +208,9 @@ for (;;) {
     $dbh->do("DELETE FROM `miscinfo`");
     $dbh->do("INSERT INTO `miscinfo` VALUES (".time.")");
 
-    my $endtime = gettimeofday;
-
-    my $delta = $endtime - $starttime;
-    print "$delta seconds to update\n" if $debug;
+    $endtime = gettimeofday();
+    $delta = $endtime - $starttime;
+    print "$delta seconds to scan and delete old records\n" if $debug;
 
     if ($delta < 300) {
 	my $sleeptime = 300 - $delta;
