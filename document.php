@@ -15,7 +15,7 @@ print <<< end
 <link rel="stylesheet" type="text/css" href="/general.css">
 <body>
 <div align="center">
-<table width="80%" border="0" cellpadding="0" cellspacing="0" bgcolor="#000000"><tr><td>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#000000"><tr><td>
   <table border="0" cellpadding="0" cellspacing="1" width="100%">
     <tr>
       <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -32,7 +32,7 @@ print <<< end
 <a href="/developers/" class="navbar">developers</a><br>
 <a href="/screenshots/" class="navbar">screenshots</a><br>
 <a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
-<a href="/links/" class="navbar">links</a><br>
+<a href="/cgi-bin/moin.cgi/OtherLinks" class="navbar">links</a><br>
 <a href="/cgi-bin/moin.cgi/" class="navbar">wiki</a><br>
 <a href="/league/" class="navbar">CTF&nbsp;league</a><br>
 end;
