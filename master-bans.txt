@@ -1,7 +1,7 @@
 65.125.185.2
 end: 0
 banner: JeffM2501
-reason:spaming and racist remarks (  white aryan resistance)
+reason: spaming and racist remarks (  white aryan resistance)
 66.218.54.83
 end: 0
 banner: JeffM2501
