@@ -109,6 +109,7 @@ Other Links
 <li><a href="http://www.noodleroni.com/">Noodleroni.com</a></li>
 <li><a href="http://www.tuckermclean.com/">TuckerMcLean.com</a></li>
 <li><em><a href="link.php">Link to us!</a></em></li>
+<li><a href="bzfls.php">list server script</a></li>
 </ul>
 </div>
 
