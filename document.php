@@ -33,7 +33,7 @@ print <<< end
 <a href="/wiki/GettingHelp" class="navbar">getting&nbsp;help</a><br>
 <a href="/wiki/Download" class="navbar">download</a><br>
 <a href="/help/" class="navbar">help</a><br>
-<a href="/developers/" class="navbar">developers</a><br>
+<a href="/wiki/Developers" class="navbar">developers</a><br>
 <a href="/screenshots/" class="navbar">screenshots</a><br>
 <a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/COPYING?rev=HEAD&amp;content-type=text/vnd.viewcvs-markup" class="navbar">license</a><br>
 <a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
