@@ -1,7 +1,15 @@
 #!/bin/sh
 case "$QUERY_STRING" in
- bzadmin|bzflag|bzfs)
-  wget -O - http://cvs.sourceforge.net/viewcvs.py/*checkout\*/bzflag/bzflag/man/$QUERY_STRING.6s?rev=HEAD \
+ bzadmin|bzflag|bzfs|bzw)
+  case "$QUERY_STRING" in
+    bzw)
+      MAN_EXTENSION=5s
+      ;;
+    *)
+      MAN_EXTENSION=6s
+      ;;
+  esac
+  wget -O - http://cvs.sourceforge.net/viewcvs.py/*checkout\*/bzflag/bzflag/man/$QUERY_STRING.$MAN_EXTENSION?rev=HEAD \
   | man2html \
   | sed -e "s~^using the manual pages.<BR>$~using the manual pages from http://cvs.sourceforge.net/viewcvs.py/*checkout\*/bzflag/bzflag/man/$QUERY_STRING.6s<BR>~" \
   | sed -e "s~<A HREF=\"/cgi-bin/man/man2html\">Return to Main Contents</A><HR>~<a href=\"$SCRIPT_NAME\">Top</a><HR>~"
