@@ -1,6 +1,6 @@
 <?php
 
-// bzflsMy.php
+// bzfls.php
 //
 // Copyright (c) 1993 - 2004 Tim Riker
 //
