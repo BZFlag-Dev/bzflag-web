@@ -44,7 +44,7 @@ if ($enableDebug) {
     $fp = fopen($debugFile, 'a');
     if ($fp) {
       # output the message with a BSD-style timestamp
-      fwrite($fp, date('D M j G:i:s T Y') . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . $message . '\n');
+      fwrite($fp, date('D M j G:i:s T Y') . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . $message . "\n");
       fclose($fp);
     } else {
       print('Unable to write to to log file [$filename]');
@@ -216,9 +216,9 @@ Group1</textarea>
   </form>
 </body>');
   if ($action == 'DEBUG') {
-    print('<PRE>\n');
+    print("<PRE>\n");
     var_dump($GLOBALS);
-    print('</PRE>\n');
+    print("</PRE>\n");
     phpinfo();
   }
   print('</body>
@@ -304,7 +304,7 @@ function checktoken ($callsign, $token, $garray) {
   foreach($garray as $group) {
     print(" group=$group");
   }
-  print('\n');
+  print("\n");
   $timeout = 3600; # 60 minutes while testing
   $staletime = time() - $timeout;
   if (!mysql_select_db($bbdbname)) {
@@ -337,7 +337,7 @@ function checktoken ($callsign, $token, $garray) {
 	print(':' . $row[0]);
       }
     }
-    print ('\n');
+    print ("\n");
   } else
     print ("TOKBAD: $callsign\n");
 }
@@ -348,8 +348,8 @@ function action_checktokens () {
   global $link, $checktokens, $groups;
   if ($checktokens != '') {
     function remove_empty ($value) { return empty($value) ? false : true; }
-    $garray = array_filter(explode('\r\n', $groups), 'remove_empty');
-    foreach(array_filter(explode('\r\n', $checktokens), 'remove_empty') as $checktoken) {
+    $garray = array_filter(explode("\r\n", $groups), 'remove_empty');
+    foreach(array_filter(explode("\r\n", $checktokens), 'remove_empty') as $checktoken) {
       list($callsign, $token) = explode("=", $checktoken);
       if ($token) checktoken($callsign, $token, $garray);
     }
@@ -395,7 +395,7 @@ function action_add () {
   # connection to it
   $fp = fsockopen ($servname, $servport, $errno, $errstring, 30);
   if (!$fp) {
-    print 'failed to connect\n';
+    print("failed to connect\n");
     return;
   }
   # FIXME - should callback and update all stats instead of bzupdate.pl
