@@ -62,6 +62,7 @@ title1 = """<div align="center">
 <a href="http://sourceforge.net/tracker/?atid=353248&group_id=3248&func=browse" class="navbar">&nbsp;feature&nbsp;requests</a><br>
 <a href="http://sourceforge.net/forum/?group_id=3248" class="navbar">&nbsp;forums</a><br>
 <a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">&nbsp;mailing&nbsp;lists</a><br>
+<a href="http://sourceforge.net/tracker/?atid=423059&group_id=3248&func=browse" class="navbar">&nbsp;maps</a><br>
 <a href="http://sourceforge.net/tracker/?group_id=3248&atid=203248" class="navbar">&nbsp;support</a><br>
       </td></tr></table>
     </td>
@@ -72,7 +73,18 @@ title1 = """<div align="center">
 page_footer2 = """        </div>
       </td></tr></table>
     </td></tr>
-    <tr><td bgcolor="#ffffff" colspan="2" align="right">
+  </table>
+  <table border="0" cellpadding="0" cellspacing="1" width="100%">
+    <tr><td width="50" bgcolor="#ffffff" align="left">
+<!-- Search Google -->
+<FORM method=GET action=http://www.google.com/custom>
+<INPUT type=hidden name=cof VALUE="AH:center;S:http://BZFlag.org/;AWFID:3e0e6d8d8d5bbf7d;">
+<input type=hidden name=domains value="BZFlag.org">
+<input type=hidden name=sitesearch value="BZFlag.org">
+<IMG SRC="http://www.google.com/logos/Logo_25wht.gif" border=0 ALT=Google align=middle height=32 width=75></A>&nbsp;<INPUT TYPE=text name=q size=31 maxlength=255 value="">&nbsp;<INPUT type=submit name=sa VALUE="Search">
+</FORM>
+<!-- Search Google -->
+    </td><td bgcolor="#ffffff" align="right">
       <span class="copyright">copyright &copy; 1993-2002&nbsp;</span>
     </td></tr>
   </table>
