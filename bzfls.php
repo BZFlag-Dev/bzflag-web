@@ -60,7 +60,8 @@ $banlist = array(
   "255.255.255.255" => "globalbroadcast"
 );
 
-$alternateServers = array("http://db.bzflag.org/db/","");
+// $alternateServers = array("http://db.bzflag.org/db/","");
+$alternateServers = array("");
 
 # log function
 if ($enableDebug) {
@@ -74,7 +75,7 @@ if ($enableDebug) {
       print("Unable to write to to log file [$filename]");
     }
   }
-  
+
 } else {
   function debug ($filename, $message) {
   }
@@ -135,7 +136,7 @@ if (!array_key_exists("action", $_GET)) {
     <input type="reset" value="Clear form">
   </form>
 </body>
-</html>'); 
+</html>');
 	}
 }
 
@@ -146,7 +147,7 @@ debug($debugFile, "Connecting to the database");
 $link = mysql_pconnect($dbhost, $dbuname, $dbpass)
      or die("Could not connect: " . mysql_error());
 if (!mysql_select_db($dbname)) {
-  debug($debugFile, "Database did not exist, creating a new one");
+  debug($debugFile, "Database did not exist");
 
   die("Could not open db: " . mysql_error());
 }
@@ -218,9 +219,9 @@ if ($action == "LIST" ) {
     $line = implode(" ", $row);
     print "$line\n";
   }
-  
+
   if ($local != 1){
-  	foreach($alternateServers as $thisSever ){
+	foreach($alternateServers as $thisSever ){
 		if ($thisSever != "")
 			readfile($thisSever.'?action=LIST&local=1');
 	}
@@ -228,14 +229,14 @@ if ($action == "LIST" ) {
   // check the old list server and append
  // readfile($oldListServer);
 	if($_GET['style'] == "rss"){
-	
-/* The-ERM, THIS IS WHERE I GOT STARTED...... THIS SHOULD CHECK TO SEE IF IT IS ?action=list&style=rss   
-	PLEASE FIX... I WOULD REALLY APPRECIATE IT.... - Amathis 
-	
-	*/	
-	
-	}	
-  
+
+/* The-ERM, THIS IS WHERE I GOT STARTED...... THIS SHOULD CHECK TO SEE IF IT IS ?action=list&style=rss
+	PLEASE FIX... I WOULD REALLY APPRECIATE IT.... - Amathis
+
+	*/
+
+	}
+
 } elseif ($action == "ADD") {
   #  -- ADD --
   # Server either requests to be added to DB, or to issue a keep-alive so that it

@@ -17,26 +17,26 @@ sub new {
 
 sub serverlist(%) {
     my $self = shift;
-    
+
     my %options;
     while (my @option = splice(@_, 0, 2)) {
 	$options{$option[0]} = $option[1];
     }
-    
+
     my $proxy = $options{Proxy};
     my $response;
     my $ua = new LWP::UserAgent;
     $ua->proxy('http', $proxy) if defined($proxy);
-    
+
     $ua->timeout(10);
-    
+
     my $req = HTTP::Request->new('GET', ($options{Server} ? $options{Server} : $self->listserver));
     my $res = $ua->request($req);
     my $totalServers = 0;
     my $totalPlayers = 0;
     for my $line (split("\n",$res->content)) {
 	my ($serverport, $version, $flags, $ip, $description) = split(" ",$line,5);
-	
+
 	my @fields = ('style','maxShots','shakeWins','shakeTimeout','maxPlayerScore',
 	    'maxTeamScore','maxTime','maxPlayers','rogueSize','rogueMax','redSize',
 	    'redMax','greenSize','greenMax','blueSize','blueMax','purpleSize',
@@ -53,18 +53,18 @@ sub serverlist(%) {
 	    $info{$_} = oct('0x'.$info[$counter]);
 	    $counter++;
 	}
-	
+
 	my $playerSize = $info{rogueSize} + $info{redSize} + $info{greenSize}
 	    + $info{blueSize} + $info{purpleSize} + $info{observerSize};
-	
+
 	unless ($serverport =~ m/.*:\d+/) {
 	    $serverport = "$serverport:5154";
 	}
-	
+
 	$response->{servers}->{$serverport}->{version}     = $version;
 	$response->{servers}->{$serverport}->{ip}          = $ip;
 	$response->{servers}->{$serverport}->{description} = $description;
-	
+
 	$response->{servers}->{$serverport}->{numplayers}   = $playerSize;
 	$response->{servers}->{$serverport}->{roguesize}    = $info{rogueSize};
 	$response->{servers}->{$serverport}->{redsize}      = $info{redSize};
@@ -96,7 +96,7 @@ sub serverlist(%) {
 
     return ($response);
 
-}    
+}
 
 sub queryserver(%) {
     my $self = shift;
@@ -115,19 +115,19 @@ sub queryserver(%) {
     my $response;
     my ($servername, $port) = split(/:/, $hostandport);
     $port = 5154 unless $port;
-    
+
     # socket define
     my $sockaddr = 'S n a4 x8';
-    
+
     # port to port number
     my ($name,$aliases,$proto) = getprotobyname('tcp');
     ($name,$aliases,$port)  = getservbyname($port,'tcp') unless $port =~ /^\d+$/;
-    
+
     # get server address
     my ($type,$len,$serveraddr);
     ($name,$aliases,$type,$len,$serveraddr) = gethostbyname($servername);
     $server = pack($sockaddr, AF_INET, $port, $serveraddr);
-    
+
     # connect
     unless (socket(S, AF_INET, SOCK_STREAM, $proto)) {
 	$self->{error} = 'errSocketError';
@@ -138,10 +138,10 @@ sub queryserver(%) {
 	$self->{error} = "errCouldNotConnect: $servername:$port";
 	return undef;
     }
-    
+
     # don't buffer
     select(S); $| = 1; select(STDOUT);
-    
+
     # get hello
     my $buffer;
     unless (read(S, $buffer, 9) == 9) {
@@ -151,7 +151,7 @@ sub queryserver(%) {
 
     # parse reply
     my ($magic, $version, $id) = unpack("a4 a4 C1", $buffer);
-    
+
     # quit if version isn't valid
     if ($magic ne "BZFS") {
 	$self->{error} = 'errNotABzflagServer';
@@ -163,10 +163,10 @@ sub queryserver(%) {
 	$self->{error} = 'errIncompatibleVersion';
 	return undef;
     }
-    
+
     # send game request
     print S pack("n2", 0, 0x7167);
-    
+
     # get reply
     unless (read(S, $buffer, 40) == 40) {
 	$self->{error} = 'errServerReadError';
@@ -201,7 +201,7 @@ sub queryserver(%) {
 
     # send players request
     print S pack("n2", 0, 0x7170);
-    
+
     # get number of teams and players we'll be receiving
     unless (read(S, $buffer, 8) == 8) {
 	$self->{error} = 'errCountReadError';
@@ -244,13 +244,13 @@ sub queryserver(%) {
 	$response->{teams}->{$teamName[$team]}->{score}  = $score;
 	$response->{teams}->{$teamName[$team]}->{wins}   = $wins;
 	$response->{teams}->{$teamName[$team]}->{losses} = $losses;
-	
+
     }
-    
+
     # get the players
     for (1..$numPlayers) {
 	next unless (read(S, $buffer, 175) == 175);
-	my ($len, $code, $pID, $type, $team, $wins, $losses, $tks, $callsign, $email) = 
+	my ($len, $code, $pID, $type, $team, $wins, $losses, $tks, $callsign, $email) =
 	    unpack("n2 C n5 A32 A128", $buffer);
 
 	unless ($code == 0x6170) {
@@ -273,10 +273,10 @@ sub queryserver(%) {
 	$self->{error} = 'errNoPlayers';
 	return undef;
     }
-    
+
     # close socket
     close(S);
-    
+
     return $response;
 
 }
@@ -287,61 +287,61 @@ sub parsestyle ($) {
 
     my $response;
 
-    if ($style & 0x0001) { 
+    if ($style & 0x0001) {
 	$response->{ctf} = 1;
     } else {
 	$response->{ctf} = 0;
     }
-    
-    if ($style & 0x0002) { 
+
+    if ($style & 0x0002) {
 	$response->{superflags} = 1;
     } else {
 	$response->{superflags} = 0;
     }
-    
-    if ($style & 0x0004) { 
+
+    if ($style & 0x0004) {
 	$response->{rogues} = 1;
     } else {
 	$response->{rogues} = 0;
     }
-    
-    if ($style & 0x0008) { 
+
+    if ($style & 0x0008) {
 	$response->{jumping} = 1;
     } else {
 	$response->{jumping} = 0;
     }
-    
-    if ($style & 0x0010) { 
+
+    if ($style & 0x0010) {
 	$response->{inertia} = 1;
     } else {
 	$response->{inertia} = 0;
     }
-    
-    if ($style & 0x0020) { 
+
+    if ($style & 0x0020) {
 	$response->{ricochet} = 1;
     } else {
 	$response->{ricochet} = 0;
     }
-    
-    if ($style & 0x0040) { 
+
+    if ($style & 0x0040) {
 	$response->{shakable} = 1;
     } else {
 	$response->{shakable} = 0;
     }
-    
-    if ($style & 0x0080) { 
+
+    if ($style & 0x0080) {
 	$response->{antidoteflags} = 1;
     } else {
 	$response->{antidoteflags} = 0;
     }
-    
-    if ($style & 0x0100) { 
+
+    if ($style & 0x0100) {
 	$response->{timesync} = 1;
     } else {
 	$response->{timesync} = 0;
     }
-    
-    if ($style & 0x0200) { 
+
+    if ($style & 0x0200) {
 	$response->{rabbitchase} = 1;
     } else {
 	$response->{rabbitchase} = 0;
@@ -371,14 +371,14 @@ BZFlag::Info - Extracts infomation about BZFlag servers and players
 =head1 SYNOPSIS
 
     use BZFlag::Info;
-    
+
     my $bzinfo = new BZFlag::Info;
-    
+
     my $serverlist = $bzinfo->serverlist;
     my $serverlist = $bzinfo->serverlist(Proxy => 'host:port', Server => 'http://listserver/');
-    
+
     my $serverinfo = $bzinfo->queryserver(Server => 'host:port');
-    
+
 
 =head1 DESCRIPTION
 
