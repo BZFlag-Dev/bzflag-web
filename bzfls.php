@@ -92,6 +92,7 @@ if (!array_key_exists("action", $_GET)) {
 </head>
 <body>
   <h1>BZFlag db server</h1>
+  <p>This is the development interface to the BZFlag list server.</p>
   <form action="" method="get">
     action:<select name="action">
 	<option value="LIST" selected>LIST - list servers</option>
@@ -173,7 +174,8 @@ if ($action == "LIST" ) {
     # TODO we have user credentials, verify, create a token
     $result = mysql_query("SELECT playerid FROM players "
 	. "WHERE callsign='$callsign' "
-	. "AND password = '$password'", $link)
+	. "AND password = '$password'"
+	. "AND randtext IS NULL", $link)
       or die ("Invalid query: " . mysql_error());
     $row = mysql_fetch_row($result);
     $playerid = $row[0];
@@ -346,15 +348,18 @@ if ($action == "LIST" ) {
        "    callsign: $callsign\n" .
        "    password: $password\n" .
        "To activate this account, please go to the following URL:\n\n" .
-       "http://" . $_SERVER['SERVER_NAME']. "/db/?action=CONFIRM&email=$email&password=$randtext\n")
+       "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'] . "?action=CONFIRM&email=$email&password=$randtext\n")
     or die ("Could not send mail");
+  $curtime = time();
   $result = mysql_query("INSERT INTO players "
-      . "(email, callsign, password, created, randtext) VALUES "
-      . "('$email', '$callsign', '$password', '" . time() . "', "
-      . "'$randtext')", $link)
+      . "(email, callsign, password, created, randtext, lastmod) VALUES "
+      . "('$email', '$callsign', '$password', '$curtime', "
+      . "'$randtext', '$curtime')", $link)
   or die ("Invalid query: ". mysql_error());
   print("Registration SUCCESSFUL: ");
   print("You will receive an email informing you on how to complete your account registration\n");
+  print("While we are debugging, the link is posted here as well.:\n" .
+       "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'] . "?action=CONFIRM&email=$email&password=$randtext\n");
 } elseif ($action == "CONFIRM") {
   #  -- CONFIRM --
   # Confirms a registration
@@ -373,9 +378,9 @@ if ($action == "LIST" ) {
 	  . "lastmod = '" . time() . "' "
 	  . "WHERE email='$email'", $link)
 	or die ("Invalid query: " . mysql_error());
-      print("Your account has been successfully activated.");
-      print("It would be nice to say more here.");
-      print("<a href=\"http://BZFlag.org/\">BZFlag.org</a>");
+      print("Your account has been successfully activated.\n");
+      # TODO It would be nice to say more here
+      print("http://BZFlag.org/");
     }
   }
 } elseif ($action == "CHECKTOKEN") {
