@@ -1,4 +1,4 @@
-127.0.0.1
+208.48.199.220
 end: 0
-banner: localgumpster
-reason: because there's no place like 127.0.0.1, there's no place like ...
+banner: Patlabor221
+reason: JeffM is an evil despot who must be destroyed
