@@ -20,16 +20,16 @@ Why doesn't <? echo $_SERVER['SERVER_NAME']; ?> show someone online that I know 
 <li>The database hasn't been refreshed recently enough.
 
 <ul>
-<li>The database is set to refresh every 2 minutes. We try to keep a
+<li>The database is set to refresh every 5 minutes. We try to keep a
 balance of keeping the database current and not annoying the admins of
-the servers. If you are on for at least 2 minutes, you will be in the
+the servers. If you are on for at least 5 minutes, you will be in the
 database.</li>
 </ul></li>
 
 <li>You might have requested a page right when the database is being refreshed.
 
 <ul>
-<li>Every 2 minutes, the backend scripts go through the public servers
+<li>Every 5 minutes, the backend scripts go through the public servers
 one by one, download the information, clear the old information, and
 finally input the new information. There will be about 2 seconds
 between the time the old info is cleared, and the new info has been

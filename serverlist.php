@@ -1,6 +1,6 @@
 <? include ('header.inc') ?>
 
-<h2>Information sampled every 2 minutes</h2>
+<h2>Information sampled every 5 minutes</h2>
 
 <?
 

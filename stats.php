@@ -60,7 +60,7 @@ line</a>, and give me some feedback.</p>
 
 <?=$separator?>
 
-<h2>Current facts: (sampled every 2 minutes)</h2>
+<h2>Current facts: (sampled every 5 minutes)</h2>
 
 <table>
 <tr class="evenrow"><td>Most popular server</td><td><?
