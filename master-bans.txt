@@ -1,3 +1,7 @@
+24.130.243.205
+end: 0
+banner: brlcad
+reason: Spamming inappropriate messages (USAPATRIOT)
 67.163.160.42
 end: 0
 banner: JeffM2501
