@@ -408,8 +408,8 @@ function action_register () {
   or die ("Invalid query: ". mysql_error());
   print("Registration SUCCESSFUL: ");
   print("You will receive an email informing you on how to complete your account registration\n");
-  print("While we are debugging, the link is posted here as well.:\n" .
-       "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'] . "?action=CONFIRM&email=$email&password=$randtext\n");
+  #print("While we are debugging, the link is posted here as well.:\n" .
+  #     "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'] . "?action=CONFIRM&email=$email&password=$randtext\n");
 }
 
 function action_confirm () {
