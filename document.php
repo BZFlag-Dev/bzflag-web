@@ -71,7 +71,7 @@ print <<< end
   </table>
   <table border="0" cellpadding="0" cellspacing="1" width="100%">
     <tr><td width="50" bgcolor="#ffffff" align="left">
-<!-- Search Google -->
+<!-- Search Google Tim@BZFlag.org -->
 <FORM method=GET action=http://www.google.com/custom>
 <INPUT type=hidden name=cof VALUE="AH:center;S:http://BZFlag.org/;AWFID:3e0e6d8d8d5bbf7d;">
 <input type=hidden name=domains value="BZFlag.org">
