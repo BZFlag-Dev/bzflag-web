@@ -34,7 +34,7 @@ $banlist = array(
   '255.255.255.255' => 'globalbroadcast'
 );
 
-// $alternateServers = array('http://db.bzflag.org/db/','');
+// $alternateServers = array('http://my.BZFlag.org/db/','');
 $alternateServers = array('');
 
 # log function

@@ -352,7 +352,7 @@ sub geterror {
 
 sub listserver {
     my $self = shift;
-    return "http://db.bzflag.org/db/";
+    return "http://my.BZFlag.org/db/";
 }
 
 1;
