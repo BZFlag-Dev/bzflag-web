@@ -15,7 +15,7 @@ case "$QUERY_STRING" in
   echo '<title>BZFlag man pages from CVS</title>'
   echo '</head>'
   echo '<body>'
-  echo '<h1>Display BZFlag man pages from CVS.</h1>'
+  echo '<h1>Display <a href="http://BZFlag.org/">BZFlag</a> man pages from CVS.</h1>'
   echo '<ul>'
   echo '<li><a href="?bzadmin">bzadmin</a></li>'
   echo '<li><a href="?bzflag">bzflag</a></li>'
