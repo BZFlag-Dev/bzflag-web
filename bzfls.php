@@ -24,32 +24,6 @@ include('serversettings.php');
 // $dbuname = "bzflag";
 // $dbpass  = "bzflag";
 
-# Common to all
-$action   = $_REQUEST['action'];
-if (!array_key_exists("action", $_REQUEST)) {
-  $action = "";
-}
-
-# For ADD REMOVE
-$nameport = $_REQUEST['nameport'];
-
-# For ADD
-$build    = $_REQUEST['build'];
-$version  = $_REQUEST['version']; # also on LIST
-$gameinfo = $_REQUEST['gameinfo'];
-$title    = $_REQUEST['title'];
-# for ADD CHECKTOKENS
-$checktokens = $_REQUEST['checktokens']; # callsign0=token\ncallsign1=token\n...
-$groups   = $_REQUEST['groups']; # groups server is interested in
-
-# For players
-$callsign = $_REQUEST['callsign'];  # urlencoded
-$email    = $_REQUEST['email'];     # urlencoded
-$password = $_REQUEST['password'];  # urlencoded
-
-# for LIST
-$local    = $_REQUEST['local'];
-
 # for banning.  provide key => value pairs where the key is an
 # ip address. value is not used at present.
 # FIXME this should be in an sql table with a remote admin interface
@@ -79,6 +53,102 @@ if ($enableDebug) {
   function debug ($message) {
   }
 }
+
+function validate_string($string, $valid_chars, $return_invalid_chars) {
+  # thanx http://scripts.franciscocharrua.com/validate-string.php =)
+  $invalid_chars = "";
+
+  if ($string == null || $string == "")
+    return(true);
+
+  # for every char
+  for ($index = 0; $index < strlen($string); $index++) {
+    $char = substr($string, $index, 1);
+    # valid char?
+    if (strpos($valid_chars, $char) === false) {
+      # if not, is it on the list of invalid characters?
+      if (strpos($invalid_chars, $char) === false) {
+        # if not, add it.
+        $invalid_chars .= $char;
+      }
+    }
+  }
+
+  # if the string does not contain invalid characters, the function will return true.
+  # if it does, it will either return false or a list of the invalid characters used
+  # in the string, depending on the value of the second parameter.
+  if($return_invalid_chars == true && $invalid_chars != "")
+    return($invalid_chars);
+  else
+    return($invalid_chars == "");
+}
+
+# validate string or die
+function validate_string_or_die($string, $valid_chars, $return_invalid_chars) {
+  $invalid_chars = validate_string($string, $valid_chars, true);
+  if ($invalid_chars === true) {
+    return($string);
+  }
+  header("Content-type: text/html");
+  die("Invalid chars in \"$string\": \"$invalid_chars\"");
+}
+
+# validate callsign or die (restrictive, used for more than callsign)
+function vcsod($string) {
+  $valid_chars = "-_.1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  return(validate_string_or_die($string, $valid_chars, true));
+}
+
+# validate hex or die
+function vhod($string) {
+  $valid_chars = "1234567890abcdef";
+  return(validate_string_or_die($string, $valid_chars, true));
+}
+
+# validate nameport or die
+function vnpod($string) {
+  $valid_chars = "-.:1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  return(validate_string_or_die($string, $valid_chars, true));
+}
+
+# validate checktoken or die
+function vctod($string) {
+  $valid_chars = "\r\n=-_.1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  return(validate_string_or_die($string, $valid_chars, true));
+}
+
+# validate email or die
+function veod($string) {
+  $valid_chars = "-.@1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  return(validate_string_or_die($string, $valid_chars, true));
+}
+
+# Common to all
+if (array_key_exists("action", $_REQUEST)) {
+  $action = vcsod($_REQUEST['action']);
+} else {
+  $action = "";
+}
+
+# For ADD REMOVE
+$nameport = vnpod($_REQUEST['nameport']);
+
+# For ADD
+$build    = vcsod($_REQUEST['build']);
+$version  = vcsod($_REQUEST['version']); # also on LIST
+$gameinfo = vhod($_REQUEST['gameinfo']);
+$unsafetitle    = $_REQUEST['title']; # escape for ALL SQL calls!
+# for ADD CHECKTOKENS
+$checktokens = vctod($_REQUEST['checktokens']); # callsign0=token\ncallsign1=token\n...
+$groups   = vctod($_REQUEST['groups']); # groups server is interested in
+
+# For players
+$callsign = vcsod($_REQUEST['callsign']);  # urlencoded
+$email    = veod($_REQUEST['email']);     # urlencoded
+$password = vcsod($_REQUEST['password']);  # urlencoded
+
+# for LIST
+$local    = vcsod($_REQUEST['local']);
 
 function testform ($message) {
   global $action;
@@ -258,12 +328,12 @@ function action_add () {
   #  -- ADD --
   # Server either requests to be added to DB, or to issue a keep-alive so that it
   # does not get dropped due to a timeout...
-  global $link, $nameport, $version, $build, $gameinfo, $title, $checktokens, $groups;
+  global $link, $nameport, $version, $build, $gameinfo, $unsafetitle, $checktokens, $groups;
   header("Content-type: text/plain");
-  debug("Attempting to ADD $nameport $version $gameinfo $title");
+  debug("Attempting to ADD $nameport $version $gameinfo $unsafetitle");
 
   # Filter out badly formatted or buggy versions
-  print "MSG: ADD $nameport $version $gameinfo $title\n";
+  print "MSG: ADD $nameport $version $gameinfo $unsafetitle\n";
   $pos = strpos($version, "BZFS");
   if ($pos === false || $pos > 0)
     return;
@@ -310,11 +380,12 @@ function action_add () {
     print("MSG: adding $nameport\n");
 
     # Server does not already exist in DB so insert into DB
+    # FIXME escape title!
     $result = mysql_query("INSERT INTO servers "
 	. "(nameport, build, version, gameinfo, ipaddr,"
 	. " title, lastmod) VALUES "
 	. "('$nameport', '$build', '$version',"
-	. " '$gameinfo', '$servip', '$title', $curtime)", $link)
+	. " '$gameinfo', '$servip', '$unsafetitle', $curtime)", $link)
       or die ("Invalid query: ". mysql_error());
   } else {
 
@@ -324,11 +395,12 @@ function action_add () {
     # Server exists already, so update the table entry
     # ASSUMPTION: only the 'lastmod' column of table needs updating since all
     # else should remain the same as before
+    # FIXME escape title!
     $result = mysql_query("UPDATE servers SET "
 	. "build = '$build', "
 	. "version = '$version', "
 	. "gameinfo = '$gameinfo', "
-	. "title = '$title', "
+	. "title = '$unsafetitle', "
 	. "lastmod = $curtime "
 	. "WHERE nameport = '$nameport'", $link)
       or die ("Invalid query: ". mysql_error());
