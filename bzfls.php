@@ -388,7 +388,7 @@ if ($action == "LIST" ) {
 } else {
   header("Content-type: text/html");
   # TODO dump the default form here but still close the database connection
-  die('<html>
+  print('<html>
 <head>
 <title>BZFlag db server</title>
 </head>
@@ -425,7 +425,10 @@ if ($action == "LIST" ) {
     <input type="submit" value="Post entry">
     <input type="reset" value="Clear form">
   </form>
-</body>
+</body>');
+  //var_dump($buffer);
+  //phpinfo();
+  die('</body>
 </html>');
 }
 
