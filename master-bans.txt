@@ -1,7 +1,23 @@
-1.0.0.0
+209.216.156.3
 end: 0
-banner: Patlabor221
-reason: sample ban
+banner: bzflag developers
+reason: Wikipedia abuse (dirtytroll/dj28)
+140.247.60.133
+end: 0
+banner: bzflag developers
+reason: Wikipedia abuse (dirtytroll/dj28)
+212.184.72.34
+end: 0
+banner: bzflag developers
+reason: Wikipedia abuse (dirtytroll/dj28)
+207.36.86.132
+end: 0
+banner: bzflag developers
+reason: Wikipedia abuse (dirtytroll/dj28)
+194.70.3.60
+end: 0
+banner: bzflag developers
+reason: Wikipedia abuse (dirtytroll/dj28)
 68.109.43.46
 end: 0
 banner: bzflag developers
@@ -10,3 +26,7 @@ reason: gross abuse and cheating (knightmare).
 end: 0
 banner: bzflag developers
 reason: gross abuse and cheating (knightmare).
+1.0.0.0
+end: 0
+banner: Patlabor221
+reason: sample ban
