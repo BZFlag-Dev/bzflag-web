@@ -40,16 +40,16 @@ print <<< end
 <a href="/league/" class="navbar">CTF&nbsp;league</a><br>
 <br>
 <a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
-<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag" class="navbar">&nbsp;browse&nbsp;CVS</a><br>
-<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=103248" class="navbar">&nbsp;bug&nbsp;reports</a><br>
-<a href="http://sourceforge.net/cvs/?group_id=3248" class="navbar">&nbsp;CVS&nbsp;access</a><br>
-<a href="http://sourceforge.net/project/showfiles.php?group_id=3248" class="navbar">&nbsp;downloads</a><br>
-<a href="http://download.sourceforge.net/bzflag/" class="navbar">&nbsp;download&nbsp;dir</a><br>
-<a href="http://sourceforge.net/tracker/?atid=353248&amp;group_id=3248&amp;func=browse" class="navbar">&nbsp;feature&nbsp;requests</a><br>
-<a href="http://sourceforge.net/forum/?group_id=3248" class="navbar">&nbsp;forums</a><br>
-<a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">&nbsp;mailing&nbsp;lists</a><br>
-<a href="http://sourceforge.net/tracker/?atid=423059&amp;group_id=3248&amp;func=browse" class="navbar">&nbsp;maps</a><br>
-<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=203248" class="navbar">&nbsp;support</a><br>
+&nbsp;<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag" class="navbar">browse&nbsp;CVS</a><br>
+&nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=103248" class="navbar">bug&nbsp;reports</a><br>
+&nbsp;<a href="http://sourceforge.net/cvs/?group_id=3248" class="navbar">CVS&nbsp;access</a><br>
+&nbsp;<a href="http://sourceforge.net/project/showfiles.php?group_id=3248" class="navbar">downloads</a><br>
+&nbsp;<a href="http://download.sourceforge.net/bzflag/" class="navbar">download&nbsp;dir</a><br>
+&nbsp;<a href="http://sourceforge.net/tracker/?atid=353248&amp;group_id=3248&amp;func=browse" class="navbar">feature&nbsp;requests</a><br>
+&nbsp;<a href="http://sourceforge.net/forum/?group_id=3248" class="navbar">forums</a><br>
+&nbsp;<a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">mailing&nbsp;lists</a><br>
+&nbsp;<a href="http://sourceforge.net/tracker/?atid=423059&amp;group_id=3248&amp;func=browse" class="navbar">maps</a><br>
+&nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=203248" class="navbar">support</a><br>
 end;
     if($session == 1) {
 print <<< end
