@@ -31,7 +31,7 @@ url_prefix = '/wiki'
 css_url = '/general.css'
 logo_url = url_prefix + '/img/moinmoin.gif'
 title1 = """<div align="center">
-<table width="80%" border="0" cellpadding="0" cellspacing="0" bgcolor="#000000"><tr><td>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#000000"><tr><td>
   <table border="0" cellpadding="0" cellspacing="1" width="100%">
     <tr>
       <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%">
