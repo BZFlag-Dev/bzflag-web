@@ -27,10 +27,10 @@ CREATE TABLE currentplayers (
 --
 
 CREATE TABLE karma (
-  from int(11) NOT NULL default '0',
-  to int(11) NOT NULL default '0',
+  _from int(11) NOT NULL default '0',
+  _to int(11) NOT NULL default '0',
   karma int(11) NOT NULL default '0',
-  PRIMARY KEY  (from,to)
+  PRIMARY KEY  (_from,_to)
 ) TYPE=MyISAM;
 
 --
