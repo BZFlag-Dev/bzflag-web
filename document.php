@@ -30,6 +30,7 @@ print <<< end
       <table border="0" cellpadding="2"><tr><td>
 <a href="/" class="navbar">home</a><br>
 <a href="/download/" class="navbar">download</a><br>
+<a href="/wiki/BetaImages" class="navbar">beta&nbsp;images</a><br>
 <a href="/help/" class="navbar">help</a><br>
 <a href="/developers/" class="navbar">developers</a><br>
 <a href="/screenshots/" class="navbar">screenshots</a><br>
