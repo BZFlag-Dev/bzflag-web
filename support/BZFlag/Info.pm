@@ -27,6 +27,7 @@ sub serverlist(%) {
     my $response;
     my $ua = new LWP::UserAgent;
     $ua->proxy('http', $proxy) if defined($proxy);
+    $ua->agent("BZFlag::Info v$VERSION - " . $ua->agent);
 
     $ua->timeout(10);
 
