@@ -30,7 +30,7 @@ if (!array_key_exists("action", $_REQUEST)) {
   $action = "";
 }
 
-# For bzfs
+# For ADD REMOVE
 $nameport = $_REQUEST['nameport'];
 
 # For ADD
@@ -38,16 +38,17 @@ $build    = $_REQUEST['build'];
 $version  = $_REQUEST['version']; # also on LIST
 $gameinfo = $_REQUEST['gameinfo'];
 $title    = $_REQUEST['title'];
-$local    = $_REQUEST['local'];
+# for ADD CHECKTOKENS
+$checktokens = $_REQUEST['checktokens']; # callsign0=token\ncallsign1=token\n...
+$groups   = $_REQUEST['groups']; # groups server is interested in
 
 # For players
 $callsign = $_REQUEST['callsign'];  # urlencoded
 $email    = $_REQUEST['email'];     # urlencoded
 $password = $_REQUEST['password'];  # urlencoded
 
-# for CHECKTOKEN
-$playerid = $_REQUEST['playerid'];
-$token = $_REQUEST['token'];
+# for LIST
+$local    = $_REQUEST['local'];
 
 # for banning.  provide key => value pairs where the key is an
 # ip address. value is not used at present.
@@ -98,7 +99,7 @@ function testform ($message) {
 	<option value="REMOVE">REMOVE - remove a server</option>
 	<option value="REGISTER">REGISTER - new player</option>
 	<option value="CONFIRM">CONFIRM - confirm registration</option>
-	<option value="CHECKTOKEN">CHECKTOKEN - verify player token from game server</option>
+	<option value="CHECKTOKENS">CHECKTOKENS - verify player token from game server</option>
 	<option value="UNKNOWN">UNKNOWN - test invalid request</option>
     </select><br>
     actions: LIST<br>
@@ -106,20 +107,21 @@ function testform ($message) {
     local:<input type="text" name="local" size="5" value="1"><br>
     callsign:<input type="text" name="callsign" size="80"><br>
     password:<input type="text" name="password" size="80"><br>
-    actions: ADD REMOVE<br>
+    actions: REMOVE<br>
     nameport:<input type="text" name="nameport" size="80"><br>
+    actions: ADD REMOVE<br>
     build:<input type="text" name="build" size="80"><br>
     gameinfo:<input type="text" name="gameinfo" size="80"><br>
     title:<input type="text" name="title" size="80"><br>
+    actions: ADD CHECKTOKENS<br>
+    checktokens:<textarea name="checktokens" rows="3" style="width:100%">
+CallSign0=7654321089abcdef
+CallSign1=1234567812345678</textarea>
+    groups:<textarea name="groups" rows="3" style="width:100%">
+Group0
+Group1</textarea>
     actions: REGISTER CONFIRM<br>
     email:<input type="text" name="email" size="80"><br>
-    actions: CHECKTOKEN<br>
-    playerid:<input type="text" name="playerid" size="80"><br>
-    token:<input type="text" name="token" size="80"><br>
-    savetext:<textarea name="savetext" rows="5" style="width:100%">
-multiple
-lines
-    </textarea
     <input type="submit" value="Post entry">
     <input type="reset" value="Clear form">
   </form>
@@ -167,7 +169,7 @@ function action_list () {
 	  . "tokendate = '" . time() . "'"
 	  . "WHERE playerid = '$playerid'", $link)
 	or die ("Invalid query: ". mysql_error());
-      print("TOKEN:$playerid:$token\n");
+      print("TOKEN:$token\n");
     }
   }
 
@@ -197,16 +199,60 @@ function action_list () {
   }
 }
 
+function checktoken ($callsign, $token, $garray) {
+  # validate player token for connecting player on a game server
+  global $link;
+  # TODO add grouplist support
+  print("MSG checktoken callsign=$callsign, token=$token ");
+  foreach($garray as $group) {
+    print(" group=$group");
+  }
+  print("\n");
+  $timeout = 600; # 10 minutes while testing
+  $staletime = time() - $timeout;
+  $result = mysql_query("SELECT playerid FROM players "
+      . "WHERE callsign = '$callsign' "
+      . "AND token = '$token' "
+      . "AND tokendate > $staletime", $link)
+    or die ("Invalid query: " . mysql_error());
+  $row = mysql_fetch_row($result);
+  $playerid = $row[0];
+  if ($playerid) {
+    # clear tokendate so nasty game server admins can't login someplace else
+    $result = mysql_query("UPDATE players SET "
+	. "lastmod = '" . time() . "', "
+	. "tokendate = '0' "
+	. "WHERE playerid='$playerid'", $link)
+      or die ("Invalid query: " . mysql_error());
+    print ("TOKGOOD: $callsign\n");
+  } else
+    print ("TOKBAD: $callsign\n");
+}
+
+function action_checktokens () {
+  #  -- CHECKTOKENS --
+  # validate callsigns and tokens (clears tokens)
+  global $link, $checktokens, $groups;
+  if ($checktokens != "") {
+    # TODO discard empty garray entries
+    $garray = explode("\r\n", $groups);
+    foreach(explode("\r\n", $checktokens) as $checktoken) {
+      $split = explode("=", $checktoken);
+      if ($split[1]) checktoken($split[0], $split[1], $garray);
+    }
+  }
+}
+
 function action_add () {
   #  -- ADD --
   # Server either requests to be added to DB, or to issue a keep-alive so that it
   # does not get dropped due to a timeout...
-  global $link, $nameport, $version, $gameinfo, $title;
+  global $link, $nameport, $version, $gameinfo, $title, $checktokens, $groups;
   header("Content-type: text/plain");
   debug("Attempting to ADD $nameport $version $gameinfo $title");
 
   # Filter out badly formatted or buggy versions
-  print "trying ADD $nameport $version $gameinfo $title\n";
+  print "MSG ADD $nameport $version $gameinfo $title\n";
   $pos = strpos($version, "BZFS");
   if ($pos === false || $pos > 0)
     return;
@@ -219,7 +265,7 @@ function action_add () {
   $servip = gethostbyname($servname);
 
   if ($servip == "0.0.0.0") {
-    debug("Changed " . $servip . " to requesting address: "
+    debug("Changed " . $servname . " to requesting address: "
 	. $_SERVER['REMOTE_ADDR'] );
     $servip =  $_SERVER['REMOTE_ADDR'];
     $servname = $servip;
@@ -234,14 +280,12 @@ function action_add () {
 
   # Test to see whether nameport is valid by attempting to establish a
   # connection to it
-  # FIXME - should callback and update all stats instead of bzupdate.pl
-
   $fp = fsockopen ($servname, $servport, $errno, $errstring, 30);
   if (!$fp) {
     print "failed to connect\n";
     return;
   }
-  # TODO should check additional info for stats here.
+  # FIXME - should callback and update all stats instead of bzupdate.pl
   fclose ($fp);
 
   $curtime = time();
@@ -252,6 +296,7 @@ function action_add () {
   $count = mysql_num_rows($result);
   if (!$count) {
     debug("Server does not already exist in database -- adding");
+    print("MSG adding $nameport\n");
 
     # Server does not already exist in DB so insert into DB
     $result = mysql_query("INSERT INTO servers "
@@ -263,6 +308,7 @@ function action_add () {
   } else {
 
     debug("Server already exists in database -- updating");
+    print("MSG updating $nameport\n");
 
     # Server exists already, so update the table entry
     # ASSUMPTION: only the 'lastmod' column of table needs updating since all
@@ -277,9 +323,11 @@ function action_add () {
       or die ("Invalid query: ". mysql_error());
   }
 
-  debug("ADD complete");
+  action_checktokens();
 
-  print "ADD complete\n";
+  debug("ADD $nameport");
+
+  print "ADD $nameport\n";
 }
 
 function action_remove () {
@@ -287,6 +335,7 @@ function action_remove () {
   # Server requests to be removed from the DB.
   global $link, $nameport;
   header("Content-type: text/plain");
+  print("MSG REMOVE request from $nameport\n");
   debug("REMOVE request from $nameport");
 
   $split = explode(":", $nameport);
@@ -312,6 +361,7 @@ function action_remove () {
 
   $result = mysql_query("DELETE FROM servers WHERE nameport = '$nameport'", $link)
     or die ("Invalid query: ". mysql_error());
+  print("REMOVE $nameport\n");
 }
 
 function action_register () {
@@ -364,7 +414,7 @@ function action_register () {
 
 function action_confirm () {
   #  -- CONFIRM --
-  # Confirms a registration
+  # Confirm a registration
   global $link, $email, $password;
   header("Content-type: text/html");
   print("<html><head><title>Confirm registration</title></head><body>\n");
@@ -387,36 +437,6 @@ function action_confirm () {
     }
   }
   print('See <a href="http://BZFlag.org">http://BZFlag.org</a></body></html>');
-}
-
-# TODO combine with ADD and accept multiple callsigns/tokens at one time
-# TODO accept list of groups and return membership info
-# TODO convert to callsign instead of playerid cause we need to check that too
-function action_checktoken () {
-  #  -- CHECKTOKEN --
-  # validate player token for connecting player on a game server
-  global $link, $playerid, $token;
-  # TODO add grouplist support
-  header("Content-type: text/plain");
-  $timeout = 600; # 10 minutes while testing
-  $staletime = time() - $timeout;
-  $result = mysql_query("SELECT callsign FROM players "
-      . "WHERE playerid = '$playerid' "
-      . "AND token = '$token' "
-      . "AND tokendate > $staletime", $link)
-    or die ("Invalid query: " . mysql_error());
-  $row = mysql_fetch_row($result);
-  $callsign = $row[0];
-  if ($callsign) {
-    # clear tokendate so nasty game server admins can't login someplace else
-    $result = mysql_query("UPDATE players SET "
-	. "lastmod = '" . time() . "', "
-	. "tokendate = '0' "
-	. "WHERE playerid='$playerid'", $link)
-      or die ("Invalid query: " . mysql_error());
-    print ("$callsign:\n");
-  } else
-    print ("FAIL");
 }
 
 # ignore banned servers outright
@@ -470,8 +490,9 @@ case "REGISTER":
 case "CONFIRM";
   action_confirm();
   break;
-case "CHECKTOKEN":
-  action_checktoken();
+case "CHECKTOKENS":
+  header("Content-type: text/plain");
+  action_checktokens();
   break;
 case "DEBUG":
   testform('');
