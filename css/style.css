@@ -11,7 +11,7 @@ body, table {
 }
 
 #banner {
-	background: #336699 url(sbo_banner_bluetangerine.jpg) top left no-repeat;
+	background: #336699 url(../images/banner_bluetangerine.jpg) top left no-repeat;
 	height: 11em;
 }
 

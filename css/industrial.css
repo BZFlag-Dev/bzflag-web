@@ -11,7 +11,7 @@ body, table {
 }
 
 #banner {
-	background: #999999 url(sbo_banner_industrial.jpg) top left no-repeat;
+	background: #999999 url(../images/banner_industrial.jpg) top left no-repeat;
 	height: 11em;
 }
 

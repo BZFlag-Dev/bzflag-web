@@ -138,7 +138,7 @@ Auto refresh?</p>
 
 <div class="center">
 <p><a href="rssgenerator.php"><img src="xml.gif" alt="RSS Feed" /></a></p>
-<p><a href="link.php"><img src="images/sbo_link_<?=($theme == 'bluetangerine')?'bronze':(($theme == 'industrial')?'silver':'blue')?>.png" alt="got stats?" /></a></p>
+<p><a href="link.php"><img src="images/link_<?=($theme == 'bluetangerine')?'bronze':(($theme == 'industrial')?'silver':'blue')?>.png" alt="got stats?" /></a></p>
 <p><a href="http://validator.w3.org/check/referer"><img src="images/valid-xhtml10.png" alt="Valid XHTML 1.0!" /></a></p>
 </div>
 </div>
@@ -180,7 +180,7 @@ if ($viewsource == 'footer') {
 
 if ($viewsource == 'rss') {
 	echo $ossmessage;
-	highlight_file("./sbo_rss.php");
+	highlight_file("./rss.php");
 	include ('footer.inc');
 	exit;
 }

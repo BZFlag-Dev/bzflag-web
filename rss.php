@@ -48,7 +48,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 		<sy:updateFrequency>30</sy:updateFrequency>
 		<sy:updateBase>2003-09-01T12:00+00:00</sy:updateBase>
 		<image>
-			<url>http://stats.bzflag.org/images/sbo_link_blue.png</url>
+			<url>http://stats.bzflag.org/images/link_blue.png</url>
 			<link>http://stats.bzflag.org/</link>
 			<title>Stats.BZFlag.org</title>
 			<height>31</height>
