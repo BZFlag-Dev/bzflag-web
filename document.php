@@ -39,6 +39,8 @@ print <<< end
 <a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
 <a href="/wiki/OtherLinks" class="navbar">links</a><br>
 <a href="/wiki/" class="navbar">wiki</a><br>
+<a href="http://my.BZFlag.org/" class="navbar">stats</a><br>
+<a href="http://my.BZFlag.org/bb/" class="navbar">forums</a><br>
 <a href="/league/" class="navbar">CTF&nbsp;league</a><br>
 <a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/TODO?rev=HEAD" class="navbar">TODO</a><br>
 <br>
@@ -48,7 +50,6 @@ print <<< end
 &nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=103248" class="navbar">bug&nbsp;reports</a><br>
 &nbsp;<a href="http://sourceforge.net/cvs/?group_id=3248" class="navbar">CVS&nbsp;access</a><br>
 &nbsp;<a href="http://sourceforge.net/tracker/?atid=353248&amp;group_id=3248&amp;func=browse" class="navbar">feature&nbsp;requests</a><br>
-&nbsp;<a href="http://sourceforge.net/forum/?group_id=3248" class="navbar">forums</a><br>
 &nbsp;<a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">mailing&nbsp;lists</a><br>
 &nbsp;<a href="http://sourceforge.net/tracker/?atid=423059&amp;group_id=3248&amp;func=browse" class="navbar">maps</a><br>
 &nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=203248" class="navbar">support</a><br>
