@@ -14,7 +14,7 @@
 
 # where to send debug printing (might override below)
 $enableDebug	= 0;
-$debugFile 	= "bzfls.log";
+$debugFile	= "bzfls.log";
 
 // define dbhost/dbuname/dbpass/dbname here
 // NOTE it's .php so folks can't read the source
@@ -181,7 +181,7 @@ if ($action == "LIST" ) {
     $row = mysql_fetch_row($result);
     $playerid = $row[0];
     if (!$playerid) {
-      print("ERROR: invalid callsign or password ($callsign:$password)\n");
+      print("TOKEN:ERROR: invalid callsign or password ($callsign:$password)\n");
     } else {
       srand(microtime() * 100000000);
       $token = rand(0,2147483647);
@@ -190,7 +190,7 @@ if ($action == "LIST" ) {
 	  . "tokendate = '" . time() . "'"
 	  . "WHERE playerid = '$playerid'", $link)
 	or die ("Invalid query: ". mysql_error());
-      print("$playerid:$token\n");
+      print("TOKEN:$playerid:$token\n");
     }
   }
 
