@@ -1,4 +1,0 @@
-127.0.0.1
-end: 0
-banner: locals_unwanted
-reason: because there's no place like 127.0.0.1
