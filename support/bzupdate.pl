@@ -46,7 +46,7 @@ for (;;) {
 
 	my $query = "INSERT INTO `serverinfo` (`server` , `players` ,
 	`ctf` , `superflags` , `rogues` , `jumping` , `inertia` ,
-	`ricochet` , `shakable` , `antidoteflags` , `timesync` ,
+	`ricochet` , `shakable` , `antidoteflags` , `handicap` ,
 	`rabbitchase` , `maxshots` , `shakewins` , `shaketimeout` ,
 	`maxplayerscore` , `maxteamscore` , `maxtime` , `maxplayers` ,
 	`roguesize` , `roguemax` , `redsize` , `redmax` , `greensize` ,
@@ -68,7 +68,7 @@ for (;;) {
 		      &tf_yn($serverlist->{servers}->{$_}->{serverconfig}->{style}->{ricochet})      ,
 		      &tf_yn($serverlist->{servers}->{$_}->{serverconfig}->{style}->{shakable})      ,
 		      &tf_yn($serverlist->{servers}->{$_}->{serverconfig}->{style}->{antidoteflags}) ,
-		      &tf_yn($serverlist->{servers}->{$_}->{serverconfig}->{style}->{timesync})      ,
+		      &tf_yn($serverlist->{servers}->{$_}->{serverconfig}->{style}->{handicap})      ,
 		      &tf_yn($serverlist->{servers}->{$_}->{serverconfig}->{style}->{rabbitchase})   ,
 		      $serverlist->{servers}->{$_}->{serverconfig}->{maxshots}                       ,
 		      $serverlist->{servers}->{$_}->{serverconfig}->{shakewins}                      ,

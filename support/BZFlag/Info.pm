@@ -224,7 +224,7 @@ sub queryserver(%) {
     my ($countlen2, $countcode2, $numTeams2) = unpack("n2 C", $buffer);
     unless ($countcode2 == 0x7475) {
 	$self->{error} = 'errBadCountData';
-        return undef;
+	return undef;
     }
 
     $response->{numteams} = $numTeams2;
@@ -336,9 +336,9 @@ sub parsestyle ($) {
     }
 
     if ($style & 0x0100) {
-	$response->{timesync} = 1;
+	$response->{handicap} = 1;
     } else {
-	$response->{timesync} = 0;
+	$response->{handicap} = 0;
     }
 
     if ($style & 0x0200) {
@@ -400,50 +400,50 @@ C<serverlist> retrieves the current list of public servers. Then
 returns a data structure that would be displayed by C<Data::Dumper>
 like this:
 
-    $VAR1 = {
-          'totalservers' => 1,
-          'totalplayers' => 6
-          'servers' => {
-                         'bzflag.secretplace.us:5255' => {
-                                                           'serverconfig' => {
-                                                                               'purplemax' => 5,
-                                                                               'redmax' => 5,
-                                                                               'bluemax' => 5,
-                                                                               'greenmax' => 5,
-                                                                               'roguemax' => 10,
-                                                                               'shakewins' => 1,
-                                                                               'observermax' => 5,
-                                                                               'style' => {
-                                                                                            'ctf' => 0,
-                                                                                            'jumping' => 1,
-                                                                                            'shakable' => 1,
-                                                                                            'antidoteflags' => 1,
-                                                                                            'inertia' => 0,
-                                                                                            'ricochet' => 1,
-                                                                                            'timesync' => 0,
-                                                                                            'rabbitchase' => 0,
-                                                                                            'superflags' => 1,
-                                                                                            'rogues' => 0
-                                                                                          },
-                                                                               'maxshots' => 10,
-                                                                               'maxteamscore' => 0,
-                                                                               'shaketimeout' => '5',
-                                                                               'maxtime' => 0,
-                                                                               'maxplayerscore' => 0
-                                                                             },
-                                                           'ip' => '69.28.129.162',
-                                                           'version' => 'BZFS1910',
-                                                           'redsize' => 0,
-                                                           'description' => 'Now playing Spirals 3.0 by BZDoug.',
-                                                           'bluesize' => 1,
-                                                           'numplayers' => 6,
-                                                           'roguesize' => 4,
-                                                           'observersize' => 0,
-                                                           'purplesize' => 0,
-                                                           'greensize' => 1
-                                                         },
-	  };
-
+  $VAR1 = {
+    'totalservers' => 1,
+    'totalplayers' => 6
+    'servers' => {
+      'bzflag.secretplace.us:5255' => {
+	'serverconfig' => {
+	  'purplemax' => 5,
+	  'redmax' => 5,
+	  'bluemax' => 5,
+	  'greenmax' => 5,
+	  'roguemax' => 10,
+	  'shakewins' => 1,
+	  'observermax' => 5,
+	  'style' => {
+	    'ctf' => 0,
+	    'jumping' => 1,
+	    'shakable' => 1,
+	    'antidoteflags' => 1,
+	    'inertia' => 0,
+	    'ricochet' => 1,
+	    'handicap' => 0,
+	    'rabbitchase' => 0,
+	    'superflags' => 1,
+	    'rogues' => 0
+	  },
+	  'maxshots' => 10,
+	  'maxteamscore' => 0,
+	  'shaketimeout' => '5',
+	  'maxtime' => 0,
+	  'maxplayerscore' => 0
+	},
+	'ip' => '69.28.129.162',
+	'version' => 'BZFS1910',
+	'redsize' => 0,
+	'description' => 'Now playing Spirals 3.0 by BZDoug.',
+	'bluesize' => 1,
+	'numplayers' => 6,
+	'roguesize' => 4,
+	'observersize' => 0,
+	'purplesize' => 0,
+	'greensize' => 1
+      },
+    },
+  };
 
 It can also take 2 options. The Proxy option specifies a proxy server
 to handle the HTTP request. The Server option specifies an alternate
@@ -455,90 +455,90 @@ C<queryserver> extracts information about players and teams from the
 BZFlag server specified with the Server option. It returns a data
 structure that would be displayed by C<Data::Dumper> like this:
 
-    ## brlcad.org:14244
+  ## brlcad.org:14244
 
-    $VAR1 = {
-          'numplayers' => 2,
-          'serverconfig' => {
-                              'purplemax' => 200,
-                              'redmax' => 200,
-                              'bluemax' => 200,
-                              'shakewins' => 0,
-                              'greenmax' => 200,
-                              'roguemax' => 200,
-                              'style' => {
-                                           'ctf' => 1,
-                                           'jumping' => 1,
-                                           'shakable' => 0,
-                                           'antidoteflags' => 1,
-                                           'inertia' => 0,
-                                           'ricochet' => 1,
-                                           'timesync' => 0,
-                                           'rabbitchase' => 0,
-                                           'superflags' => 1,
-                                           'rogues' => 0
-                                         },
-                              'maxshots' => 2,
-                              'maxteamscore' => 10,
-                              'maxplayers' => 8,
-                              'maxtime' => 0,
-                              'shaketimeout' => 0,
-                              'maxplayerscore' => 100
-                            },
-          'numteams' => 5,
-          'teams' => {
-                       'X' => {
-                                'losses' => 0,
-                                'wins' => 0,
-                                'score' => 0,
-                                'size' => 1
-                              },
-                       'P' => {
-                                'losses' => 0,
-                                'wins' => 0,
-                                'score' => 0,
-                                'size' => 0
-                              },
-                       'R' => {
-                                'losses' => 0,
-                                'wins' => 0,
-                                'score' => 0,
-                                'size' => 0
-                              },
-                       'G' => {
-                                'losses' => 0,
-                                'wins' => 0,
-                                'score' => 0,
-                                'size' => 0
-                              },
-                       'B' => {
-                                'losses' => 0,
-                                'wins' => 0,
-                                'score' => 0,
-                                'size' => 1
-                              }
-                     },
-          'players' => {
-                         'romfis' => {
-                                       'losses' => 34,
-                                       'wins' => 95,
-                                       'email' => 'Roman Fischer@fischer-medion',
-                                       'pID' => 1,
-                                       'score' => 61,
-                                       'team' => 'X',
-                                       'tks' => 0
-                                     },
-                         'slowfox' => {
-                                        'losses' => 80,
-                                        'wins' => 29,
-                                        'email' => 'tester@linux.local',
-                                        'pID' => 0,
-                                        'score' => -51,
-                                        'team' => 'B',
-                                        'tks' => 0
-                                      }
-                       }
-        };
+  $VAR1 = {
+    'serverconfig' => {
+      'purplemax' => 200,
+      'redmax' => 200,
+      'bluemax' => 200,
+      'shakewins' => 0,
+      'greenmax' => 200,
+      'roguemax' => 200,
+      'style' => {
+	'ctf' => 1,
+	'jumping' => 1,
+	'shakable' => 0,
+	'antidoteflags' => 1,
+	'inertia' => 0,
+	'ricochet' => 1,
+	'timesync' => 0,
+	'rabbitchase' => 0,
+	'superflags' => 1,
+	'rogues' => 0
+      },
+      'maxshots' => 2,
+      'maxteamscore' => 10,
+      'maxplayers' => 8,
+      'maxtime' => 0,
+      'shaketimeout' => 0,
+      'maxplayerscore' => 100
+    },
+    'numteams' => 5,
+    'teams' => {
+      'X' => {
+	'losses' => 0,
+	'wins' => 0,
+	'score' => 0,
+	'size' => 1
+      },
+      'P' => {
+	'losses' => 0,
+	'wins' => 0,
+	'score' => 0,
+	'size' => 0
+      },
+      'R' => {
+	'losses' => 0,
+	'wins' => 0,
+	'score' => 0,
+	'size' => 0
+      },
+      'G' => {
+	'losses' => 0,
+	'wins' => 0,
+	'score' => 0,
+	'size' => 0
+      },
+      'B' => {
+	'losses' => 0,
+	'wins' => 0,
+	'score' => 0,
+	'size' => 1
+      }
+    },
+    'numplayers' => 2,
+    'players' => {
+      'romfis' => {
+	'losses' => 34,
+	'wins' => 95,
+	'email' => 'Roman Fischer@fischer-medion',
+	'pID' => 1,
+	'score' => 61,
+	'team' => 'X',
+	'tks' => 0
+      },
+      'slowfox' => {
+	'losses' => 80,
+	'wins' => 29,
+	'email' => 'tester@linux.local',
+	'pID' => 0,
+	'score' => -51,
+	'team' => 'B',
+	'tks' => 0
+      }
+    }
+  };
 
 X, R, G, B, P, O, and H stand for Rogue, Red, Green, Blue, Purple,
 Observer, and Rabbit, respectively.
@@ -553,18 +553,18 @@ style field returned from either the list server or the game server.
 BZFlag server specified with the Server option. It returns a data
 structure that would be displayed by C<Data::Dumper> like this:
 
-    $VAR1 = {
-           'ctf' => 1,
-	   'jumping' => 1,
-	   'shakable' => 0,
-	   'antidoteflags' => 1,
-	   'inertia' => 0,
-	   'ricochet' => 1,
-	   'timesync' => 0,
-	   'rabbitchase' => 0,
-	   'superflags' => 1,
-	   'rogues' => 0
-	 },
+  $VAR1 = {
+    'ctf' => 1,
+    'jumping' => 1,
+    'shakable' => 0,
+    'antidoteflags' => 1,
+    'inertia' => 0,
+    'ricochet' => 1,
+    'handicap' => 0,
+    'rabbitchase' => 0,
+    'superflags' => 1,
+    'rogues' => 0
+  },
 
 =back
 
