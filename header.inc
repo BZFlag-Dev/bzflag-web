@@ -106,11 +106,9 @@ Other Links
 <li><a href="/bb/">Forums</a></li>
 <li><a href="/irc/irc.cgi">IRC Chat</a></li>
 <li><a href="http://bzflag.org/league/">CTF League</a></li>
-<li><a href="http://bzflag.org/cvs/">Nightly Snapshots</a></li>
-<li><a href="http://files.noodleroni.com/pub/bzflag/nightlies/">Nightly RPMs</a></li>
-<li><em><a href="link.php">Link to us!</a></em></li>
-<li><a href="bzfls.php">list server script</a></li>
+<li><a href="http://bzflag.org/wiki/Download">Download</a></li>
 <li><a href="http://bzflag.org/wiki/OtherLinks">OtherLinks</a></li>
+<li><em><a href="link.php">Link to us!</a></em></li>
 </ul>
 </div>
 
