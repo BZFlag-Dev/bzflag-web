@@ -24,35 +24,26 @@ my $dbh = DBI->connect("DBI:mysql:bzflag:localhost",
 my $bzinfo = new BZFlag::Info;
 
 for (;;) {
-    
+
     alarm(300);
-    
+
     my $starttime = gettimeofday;
-    
     my $serverlist = $bzinfo->serverlist;
-    
     my $refreshquery = "WHERE ";
-    
+
     foreach(keys(%{ $serverlist->{servers} })) {
-	
 	print "$$: $_\n" if $debug;
-	
 	print "$$: $_ ".$serverlist->{servers}->{$_}->{numplayers}."\n" if $debug;
-	
+
 	my $server = $_;
 	my $numplayers = $serverlist->{servers}->{$_}->{numplayers};
-	
+
 	$dbh->do("DELETE FROM `currentplayers` WHERE server = '$server'");
 	$dbh->do("DELETE FROM `teaminfo` WHERE server = '$server'");
 	$dbh->do("DELETE FROM `serverinfo` WHERE server = '$server'");
-	
-	
+
 	$refreshquery .= "server != '$server' AND ";
-	
-	
-	
-	
-	
+
 	my $query = "INSERT INTO `serverinfo` (`server` , `players` ,
 	`ctf` , `superflags` , `rogues` , `jumping` , `inertia` ,
 	`ricochet` , `shakable` , `antidoteflags` , `timesync` ,
@@ -64,7 +55,7 @@ for (;;) {
 	`version` , `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,
 	?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
 	?, ?, ?, ?);";
-	
+
 	my $sth = $dbh->prepare($query);
 	$sth->execute(
 		      $server                                                                        ,
@@ -102,15 +93,14 @@ for (;;) {
 		      $serverlist->{servers}->{$_}->{version}                                        ,
 		      $serverlist->{servers}->{$_}->{description}                                    ,
 		      );
-	
-	
+
 	my $serverinfo = $bzinfo->queryserver(Server => $_);
-	
+
 	unless (defined($serverinfo)) {
 	    print $bzinfo->geterror . "\n" if $debug;
 	    next;
 	}
-	
+
 	print Dumper($serverinfo) if $debug;
 	# Insert the team info into the database
 	foreach (keys(%{ $serverinfo->{teams} })) {
@@ -119,17 +109,17 @@ for (;;) {
 	    my $score  = $serverinfo->{teams}->{$_}->{score};
 	    my $wins   = $serverinfo->{teams}->{$_}->{wins};
 	    my $losses = $serverinfo->{teams}->{$_}->{losses};
-	    
+
 	    $dbh->do("INSERT INTO `teaminfo` VALUES ('', '$server', '$team', '$size', '$score', '$wins', '$losses')");
 	    next;
 	}
-	
+
 	# Foreach player on the server
 	foreach (keys(%{ $serverinfo->{players} })) {
-	    
+
 	    # The default is that this player is not found in the database
 	    my $newplayer = 1;
-	    
+
 	    my $callsign = $_;
 	    my $email    = $serverinfo->{players}->{$_}->{email};
 	    my $score    = $serverinfo->{players}->{$_}->{score};
@@ -137,29 +127,28 @@ for (;;) {
 	    my $team     = $serverinfo->{players}->{$_}->{team};
 	    my $wins     = $serverinfo->{players}->{$_}->{wins};
 	    my $losses   = $serverinfo->{players}->{$_}->{losses};
-	    
+
 	    $callsign =~ s/\\/\\\\/g;
 	    $callsign =~ s/'/\\'/g;
 	    $email =~ s/\\/\\\\/g;
 	    $email =~ s/'/\\'/g;
-	    
+
 	    # Compute the raw kill ratio
 	    my $killratio = (($wins != 0)?($score/$wins):(0));
-	    
+
 	    # Compute the "strength index"
 	    my $strengthindex = $killratio * abs($score / 2);
-	    
+
 	    # Actually record the information
 	    $dbh->do("INSERT INTO `currentplayers` (`callsign`, `email`, `server`, `score`, `tks`, `strengthindex`, `killratio`, `team`) VALUES ('$callsign', '$email', '$server', '$score', '$tks', '$strengthindex', '$killratio', '$team')");
-	    
+
 	    # Look to see if they have a profile in the database
 	    my $sth = $dbh->prepare("SELECT * from playerinfo WHERE `callsign` = '$callsign'");
 	    $sth->execute();
 	    while (my $row = $sth->fetchrow_hashref()) {
-		
 		# This player isn't new
 		$newplayer = 0;
-		
+
 		# Update the record with new fresh info
 		my @r = (
 			 $row->{'id'},                # 0
@@ -179,9 +168,8 @@ for (;;) {
 			 $row->{'lastseen'},          # 14
 			 $row->{'lastserver'},        # 15
 			 );
-		
+
 		# Update any info that needs updating about the player
-		
 		my $updatecmd;
 		$updatecmd .= "`email`             = '$email', ";
 		$updatecmd .= "`highscore`         = '$score', "         unless ($r[4]  > $score);
@@ -195,12 +183,11 @@ for (;;) {
 		$updatecmd .= "`mostwins`          = '$wins', "          unless ($r[12]  > $wins);
 		$updatecmd .= "`mostlosses`        = '$losses', "        unless ($r[13]  > $losses);
 		$updatecmd .= "`lastserver`        = '$server', ";
-		
+
 		$dbh->do("UPDATE playerinfo SET $updatecmd `lastseen` = '".time."' WHERE `callsign` = '$callsign'");
-		
+
 	    }
-	    
-	    
+
 	    # If this player's new, let's make a new record for them
 	    if ($newplayer) {
 		$dbh->do("INSERT INTO playerinfo (`callsign`, `email`, `highscore`, `lowscore`, `mosttks`, `leasttks`, `highstrengthindex`, `lowstrengthindex`, `highkillratio`, `lowkillratio`, `mostwins`, `mostlosses`, `lastseen`, `lastserver`) VALUES ('$callsign', '$email', '$score', '$score', '$tks', '$tks', '$strengthindex', '$strengthindex', '$killratio', '$killratio', '$wins', '$losses', '".time."', '$server')");
@@ -208,13 +195,12 @@ for (;;) {
 	}
 
     }
-    
+
     print "$refreshquery\n" if $debug;
-    
+
     $dbh->do("DELETE FROM `currentplayers` $refreshquery 1");
     $dbh->do("DELETE FROM `teaminfo` $refreshquery 1");
     $dbh->do("DELETE FROM `serverinfo` $refreshquery 1");
-    
     $dbh->do("DELETE FROM `miscinfo`");
     $dbh->do("INSERT INTO `miscinfo` VALUES (".time.")");
 
@@ -223,8 +209,8 @@ for (;;) {
     my $delta = $endtime - $starttime;
     print "$delta seconds to update\n" if $debug;
 
-    if ($delta < 120) {
-	my $sleeptime = 120 - $delta;
+    if ($delta < 300) {
+	my $sleeptime = 300 - $delta;
 	print "sleeping for $sleeptime seconds\n" if $debug;
 	sleep($sleeptime)
     }
