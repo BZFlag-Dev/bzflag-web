@@ -1,0 +1,320 @@
+
+body {
+	background: white;
+	margin: 0px;
+}
+
+body, table {
+	font-family: "bitstream vera sans", verdana, arial, sans-serif;
+	font-size: 10px;
+	color: #222222;
+}
+
+#banner {
+	background: #999999 url(sbo_banner_industrial.jpg) top left no-repeat;
+	height: 11em;
+}
+
+/* #banner #bannerimg {
+	background: url(images/gotstats.png) top left no-repeat;
+	height: 110px;
+	width: 213px;
+} */
+
+a  {
+	color: #333333;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+td.score, td.killquotient {
+	text-align: right
+}
+/*
+a:active  {
+            color: #ff3300;
+}
+
+a:visited  {
+             color: #336699;
+}*/
+
+a:hover  {
+	color: #333399;
+	text-decoration: underline;
+}
+
+tr.tableheader {
+	background: #cccccc;
+                 color: black;
+}
+
+tr.tableheader a {
+	color: black;
+/*	text-decoration: underline; */
+}
+
+tr.tableheader a:hover {
+	color: black;
+}
+
+tr.tableheader td {
+	font-weight: bold;
+	text-align: center;
+}
+
+tr.evenrow {
+	background: #cccccc;
+}
+
+tr.oddrow {
+	background: white;
+}
+
+tr.oddrow:hover {
+	background: #ececec;
+}
+
+table {
+	width: 100%;
+	margin: 1em auto;
+        border: 0.1em solid #999999;
+}
+
+table td {
+	padding: 0.4em;
+}
+
+p.pages {
+	text-align: center;
+	font-size: 120%;
+}
+
+.teamred {
+	color: #ff0000;
+	font-weight: bold;
+}
+
+.teamgreen {
+	color: #00bb00;
+	font-weight: bold;
+}
+
+.teamblue {
+	color: #0000ff;
+	font-weight: bold;
+}
+
+.teampurple {
+	color: #ff00ff;
+	font-weight: bold;
+}
+
+.teamrogue {
+/*	color: black; */
+	font-weight: bold;
+}
+
+.teamobserver {
+/*	color: black; */
+	font-weight: bold;
+}
+
+.teamrabbit {
+	color: #994400;
+	font-weight: bold;
+}
+
+#main {
+	background: white;
+	border-top: 0.1em solid black;
+/*	border-bottom: 1px solid #333333; */
+/*	width: 100%; */
+	padding: 1em;
+}
+
+#content { 
+           margin-left: 17em;
+           width: 59em;
+}
+
+#footercontainer { 
+                   text-align: center;
+                   font-size: 90%;             
+                   clear: both;
+                   }
+
+#footercontainer div { 
+                       margin: 1em;
+                       }
+
+h1 {
+	font-size: 200%;
+     font-family: "trebuchet ms", sans-serif;
+     
+}
+
+h2 {
+	font-size: 150%;
+     font-family: "trebuchet ms", sans-serif;
+}
+
+
+h3 {
+	font-size: 120%;
+     font-family: "trebuchet ms", sans-serif;
+}
+
+h4 {
+	font-size: 100%;
+     font-family: "trebuchet ms", sans-serif;
+}
+
+#menu { 
+        float: left;
+        width: 14em;
+        border-right: 0.1em dashed #333333;
+        padding: 1em;
+}
+
+#menubar {
+           position: relative;
+           top: 8.7em;
+           left: 17em;
+           height: 2.4em;
+           line-height: 2.4em;
+           width: 40em;
+           }
+
+#menubar a {
+             font-size: 1.6em;
+             font-weight: normal;
+             color: #333333;
+             background: #cccccc;
+             padding: 0.125em;
+             padding-left: 0.5em;
+             padding-right: 0.5em;
+             border-top: 0.0625em solid #333333;
+             border-right: 0.0625em solid #666666;
+             border-bottom: 0.0625em solid #999999;
+             border-left: 0.0625em solid #333333;
+             margin-right: -0.25em;
+             }
+
+#menubar a:hover {
+                   color: black;
+                   text-decoration: none;
+                   background: #ccccff;
+                   border-right: 0.0625em solid #666666;
+                   border-bottom: 0.0625em solid #999999;
+                   border-left: 0.0625em solid #333333;
+                   }
+
+#menubar a.active {
+                    color: black;
+                    text-decoration: none;
+                    background: white;
+                    border-bottom: 0.0625em solid white;
+                    border-left: 0.0625em solid #333333;
+                    }
+
+#menubar a.active:hover {
+                          color: black;
+                          text-decoration: none;
+                          background: white;
+                          border-bottom: 0.0625em solid white;
+                          border-right: 0.0625em solid #666666;
+                          border-left: 0.0625em solid #333333;
+                          }
+
+
+
+.center {
+	text-align: center;
+}
+
+img {
+	border: 0px;
+	margin: 0px;
+	vertical-align: text-bottom;
+}
+
+p.refreshed {
+/*              float: right; */
+              text-align: right;
+	font-style: italic;
+}
+
+div#languages {
+	position: absolute;
+	top: 130px;
+	right: 5px;
+/*	background: #BDCDE0; */
+	background: #E5E9ED;
+	padding: 3px;
+}
+
+a.help {
+	background: white;
+	padding: 0.1em;
+	padding-left: 0.3em;
+	padding-right: 0.3em;
+	color: #336699;
+}
+
+a.help:hover {
+	text-decoration: none;
+               }
+
+.menusection { 
+               padding: 1em;
+               }
+
+.menusection:hover { 
+             background: #cccccc;
+                 color: black;
+                     
+               }
+
+a.active { 
+           color: #333366;
+           }
+
+a.active:hover { 
+           color: #333366;
+           }
+
+.menusectionhome { 
+                   color: black;
+                   padding: 1em;
+                   background: #ececec;
+                   }
+
+.menusectionhome:hover { 
+             background: #cccccc;
+                 color: black;
+                     
+               }
+
+.menusectionactive { 
+                 color: black;
+                     padding: 1em;
+                     background: #999999;
+                     }
+
+.menusection ul, .menusectionactive ul { 
+                  list-style-type: none;
+                  padding-left: 1em;
+                  margin: 0.3em;
+                  }
+pre { 
+      background: #f0f0f0;
+      padding: 20px;
+      }
+
+caption {
+          font-size: 130%;
+          font-family: "trebuchet ms", sans-serif;
+          font-weight: bold;
+          margin: 0.5em;
+          }
