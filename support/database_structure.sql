@@ -23,17 +23,6 @@ CREATE TABLE currentplayers (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'karma'
---
-
-CREATE TABLE karma (
-  _from int(11) NOT NULL default '0',
-  _to int(11) NOT NULL default '0',
-  karma int(11) NOT NULL default '0',
-  PRIMARY KEY  (_from,_to)
-) TYPE=MyISAM;
-
---
 -- Table structure for table 'miscinfo'
 --
 

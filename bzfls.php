@@ -431,9 +431,6 @@ if ($action == "LIST" ) {
     actions: CHECKTOKEN<br>
     playerid:<input type="text" name="playerid" size="80"><br>
     token:<input type="text" name="token" size="80"><br>
-    actions: SETKARMA GETKARMA<br>
-    target:<input type="text" name="target" size="80"><br>
-    karma:<input type="text" name="karma" size="80"><br>
     <input type="submit" value="Post entry">
     <input type="reset" value="Clear form">
   </form>
