@@ -31,41 +31,41 @@ a.navbar:link {
   color: #000000;
   text-decoration: none;
   font-style: normal;
-  font-size: 12px;
+  /*font-size: 12px;*/
 }
 
 a.navbar:visited {
   color: #000000;
   text-decoration: none;
   font-style: normal;
-  font-size: 12px;
+  /*font-size: 12px;*/
 }
 
 a.navbar:active {
   color: #000000;
   text-decoration: none;
   font-style: normal;
-  font-size: 12px;
+  /*font-size: 12px;*/
 }
 
 a.navbar:hover {
   color: #000000;
   text-decoration: underline;
   font-style: normal;
-  font-size: 12px;
+  /*font-size: 12px;*/
 }
 
 .content {
   color: #000000;
-  font-size: 12px;
+  /*font-size: 12px;*/
 }
 
 table {
   color: #000000;
-  font-size: 12px;
+  /*font-size: 12px;*/
 }
 
 .copyright {
   color: #000000;
-  font-size: 12px;
+  /*font-size: 12px;*/
 }
