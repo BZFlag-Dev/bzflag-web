@@ -1,0 +1,4 @@
+208.48.199.220
+end: 0
+banner: Patlabor221
+reason: that jeffm guy is just a right bastard (testing ban)
