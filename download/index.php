@@ -23,6 +23,7 @@ BZFlag supports the following operating systems:<br>
 <li>Mac OS X</li>
 <li>Solaris (all versions)</li>
 <li>Irix 5.3 or newer</li>
+<li>FreeBSD (in ports)</li>
 </ul>
 BZFlag requires at least 4MB of disk space and 16MB of RAM. A working internet
 connection is also required to play.<br><br>
