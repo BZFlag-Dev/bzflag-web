@@ -67,6 +67,10 @@ function section_login(&$templ)
 	if($f_ok and $idsuccess == 0) {
 		// Unknown callsign
 		echo "<div class=error>Wrong callsign or password</div>";
+// menotume 12/12/2004 - added logging of bad password attempts (new table)		
+		$gmnow = gmdate("Y-m-d H:i:s");
+		mysql_query("insert into l_badpass (gmtime, ip, name, pass) 
+		         values ('$gmnow', '{$_SERVER['REMOTE_ADDR']}', '$f_callsign','$f_password')");
 	}
 
 	if($_SESSION['authenticated']) {
