@@ -22,6 +22,7 @@ __version__ = "$Revision$"[11:-2]
 # the MoinMoin package directory.
 #
 # from MoinMoin.farm_config import *
+import os
 
 # basic options (you normally need to change these)
 sitename = 'BZFlag'
@@ -30,11 +31,16 @@ data_dir = '/home/groups/b/bz/bzflag/moin/data/'
 url_prefix = '/wiki'
 css_url = '/general.css'
 logo_url = url_prefix + '/img/moinmoin.gif'
+url_path = os.environ.get("SCRIPT_NAME", "/wiki") \
+     + os.environ.get("PATH_INFO", "/FrontPage")
+page_icons = ''
+page_footer1 = '<hr>'
+navi_bar = ''
 title1 = """<div align="center">
-<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#000000"><tr><td>
-  <table border="0" cellpadding="0" cellspacing="1" width="100%">
+<table width="100%%" border="0" cellpadding="0" cellspacing="0" bgcolor="#000000"><tr><td>
+  <table border="0" cellpadding="0" cellspacing="1" width="100%%">
     <tr>
-      <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%%">
         <tr><td bgcolor="#013571" align="right"><img src="/images/logo2-1.jpg" alt="logo"></td>
 	<td bgcolor="#818181" align="left"><img src="/images/logo2-2.jpg" alt=""></td></tr>
       </table></td>
@@ -50,8 +56,20 @@ title1 = """<div align="center">
 <a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/LICENSE?rev=HEAD&amp;content-type=text/vnd.viewcvs-markup" class="navbar">license</a><br>
 <a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
 <a href="/wiki/OtherLinks" class="navbar">links</a><br>
-<a href="/wiki/" class="navbar">wiki</a><br>
 <a href="/league/" class="navbar">CTF&nbsp;league</a><br>
+<br>
+<a href="/wiki/FrontPage" class="navbar">wiki</a><br>
+&nbsp;<a href="/wiki/FindPage" class="navbar">FindPage</a><br>
+&nbsp;<a href="/wiki/HelpContents" class="navbar">HelpContents</a><br>
+&nbsp;<a href="/wiki/OtherLinks" class="navbar">OtherLinks</a><br>
+&nbsp;<a href="/wiki/RecentChanges" class="navbar">RecentChanges</a><br>
+&nbsp;<a href="/wiki/UserPreferences" class="navbar">UserPreferences</a><br>
+<a href="%(url_path)s" class="navbar">page</a><br>
+&nbsp;<a href="%(url_path)s?action=edit" class="navbar">edit</a><br>
+&nbsp;<a href="%(url_path)s?action=info" class="navbar">info</a><br>
+&nbsp;<a href="%(url_path)s?action=print" class="navbar">print</a><br>
+&nbsp;<a href="%(url_path)s?action=subscribe" class="navbar">subscribe</a><br>
+&nbsp;<a href="%(url_path)s?action=format&amp;mimetype=text/xml" class="navbar">XML</a><br>
 <br>
 <a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
 &nbsp;<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag" class="navbar">browse&nbsp;CVS</a><br>
@@ -67,8 +85,8 @@ title1 = """<div align="center">
       </td></tr></table>
     </td>
     <td bgcolor="#ffffff" valign="top">
-      <table border="0" cellpadding="2" width="100%"><tr><td>
-        <div class="content">"""
+      <table border="0" cellpadding="2" width="100%%"><tr><td>
+        <div class="content">""" % locals()
 
 page_footer2 = """        </div>
       </td></tr></table>
@@ -76,7 +94,7 @@ page_footer2 = """        </div>
     <tr>
       <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
 	<td bgcolor="#ffffff" align="right">
-	  <span class="copyright">copyright &copy; 1993-2002&nbsp;</span>
+	  <span class="copyright">copyright &copy; <a href="/wiki/CurrentMaintainer">CurrentMaintainer</a> 1993-2002&nbsp;</span>
 	</td>
       </tr></table></td>
     </tr>
@@ -105,7 +123,7 @@ lowerletters = "0-9a-zאבגדהוזטיךכלםמןעףפץצרשתûü‎ÿµßחנס‏"
 
 # options people are likely to change due to personal taste
 show_hosts = 1                          # show hostnames?
-nonexist_qm = 0                         # show '?' for nonexistent?
+nonexist_qm = 1                         # show '?' for nonexistent?
 backtick_meta = 1                       # allow `inline typewriter`?
 allow_extended_names = 1                # allow ["..."] markup?
 edit_rows = 30                          # editor size
