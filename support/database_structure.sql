@@ -85,7 +85,6 @@ CREATE TABLE serverinfo (
   players int(11) NOT NULL default '0',
   ctf enum('Y','N') NOT NULL default 'N',
   superflags enum('Y','N') NOT NULL default 'N',
-  rogues enum('Y','N') NOT NULL default 'N',
   jumping enum('Y','N') NOT NULL default 'N',
   inertia enum('Y','N') NOT NULL default 'N',
   ricochet enum('Y','N') NOT NULL default 'N',

@@ -45,7 +45,7 @@ for (;;) {
 	$refreshquery .= "server != '$server' AND ";
 
 	my $query = "INSERT INTO `serverinfo` (`server` , `players` ,
-	`ctf` , `superflags` , `rogues` , `jumping` , `inertia` ,
+	`ctf` , `superflags` , `jumping` , `inertia` ,
 	`ricochet` , `shakable` , `antidoteflags` , `handicap` ,
 	`rabbitchase` , `maxshots` , `shakewins` , `shaketimeout` ,
 	`maxplayerscore` , `maxteamscore` , `maxtime` , `maxplayers` ,
@@ -53,7 +53,7 @@ for (;;) {
 	`greenmax` , `bluesize` , `bluemax` , `purplesize` ,
 	`purplemax` , `observersize` , `observermax` , `ip` ,
 	`version` , `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,
-	?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+	?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
 	?, ?, ?, ?);";
 
 	my $sth = $dbh->prepare($query);
@@ -62,7 +62,6 @@ for (;;) {
 		      $numplayers                                                                    ,
 		      &tf_yn($serverlist->{servers}->{$_}->{serverconfig}->{style}->{ctf})           ,
 		      &tf_yn($serverlist->{servers}->{$_}->{serverconfig}->{style}->{superflags})    ,
-		      &tf_yn($serverlist->{servers}->{$_}->{serverconfig}->{style}->{rogues})        ,
 		      &tf_yn($serverlist->{servers}->{$_}->{serverconfig}->{style}->{jumping})       ,
 		      &tf_yn($serverlist->{servers}->{$_}->{serverconfig}->{style}->{inertia})       ,
 		      &tf_yn($serverlist->{servers}->{$_}->{serverconfig}->{style}->{ricochet})      ,

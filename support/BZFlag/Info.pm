@@ -299,12 +299,6 @@ sub parsestyle ($) {
 	$response->{superflags} = 0;
     }
 
-    if ($style & 0x0004) {
-	$response->{rogues} = 1;
-    } else {
-	$response->{rogues} = 0;
-    }
-
     if ($style & 0x0008) {
 	$response->{jumping} = 1;
     } else {
@@ -423,7 +417,6 @@ like this:
 	    'handicap' => 0,
 	    'rabbitchase' => 0,
 	    'superflags' => 1,
-	    'rogues' => 0
 	  },
 	  'maxshots' => 10,
 	  'maxteamscore' => 0,
@@ -475,7 +468,6 @@ structure that would be displayed by C<Data::Dumper> like this:
 	'timesync' => 0,
 	'rabbitchase' => 0,
 	'superflags' => 1,
-	'rogues' => 0
       },
       'maxshots' => 2,
       'maxteamscore' => 10,
@@ -563,7 +555,6 @@ structure that would be displayed by C<Data::Dumper> like this:
     'handicap' => 0,
     'rabbitchase' => 0,
     'superflags' => 1,
-    'rogues' => 0
   },
 
 =back
