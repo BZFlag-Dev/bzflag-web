@@ -168,23 +168,13 @@ if ($action == "LIST" ) {
     print "$line\n";
   }
 
-  if ($local != 1){
-	foreach($alternateServers as $thisSever ){
-		if ($thisSever != "")
-			readfile($thisSever.'?action=LIST&local=1');
-	}
+  if ($local != 1) {
+    // check the old list server and append
+    foreach($alternateServers as $thisSever ){
+      if ($thisSever != "")
+	readfile($thisSever.'?action=LIST&local=1');
+    }
   }
-  // check the old list server and append
- // readfile($oldListServer);
-	if($_GET['style'] == "rss"){
-
-/* The-ERM, THIS IS WHERE I GOT STARTED...... THIS SHOULD CHECK TO SEE IF IT IS ?action=list&style=rss
-	PLEASE FIX... I WOULD REALLY APPRECIATE IT.... - Amathis
-
-	*/
-
-	}
-
 } elseif ($action == "ADD") {
   #  -- ADD --
   # Server either requests to be added to DB, or to issue a keep-alive so that it
@@ -419,6 +409,7 @@ if ($action == "LIST" ) {
     </select><br>
     actions: LIST<br>
     version:<input type="text" name="version" size="80"><br>
+    local:<input type="text" name="local" size="5" value="1"><br>
     actions: ADD REMOVE<br>
     nameport:<input type="text" name="nameport" size="80"><br>
     build:<input type="text" name="build" size="80"><br>
