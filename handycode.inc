@@ -119,10 +119,10 @@ if (isset($_SERVER['SCRIPT_FILENAME'])) {
 		$title = "Player Search";
 		break;
 	case "playerinfo.php":
-		$title = "Player Info";
+		$title = "Player Info - $callsign";
 		break;
 	case "serverinfo.php":
-		$title = "Server Info";
+		$title = "Server Info - $server";
 		break;
 	case "serverlist.php":
 		$title = "Server List";
