@@ -344,27 +344,27 @@ if ($action == "LIST" ) {
 } elseif ($action == "CONFIRM") {
   #  -- CONFIRM --
   # Confirms a registration
-  header("Content-type: text/plain");
+  header("Content-type: text/html");
+  print("<html><head><title>Confirm registration</title></head><body>\n");
   $result = mysql_query("SELECT randtext FROM players WHERE email='$email'", $link)
     or die ("Invalid query: " . mysql_error());
   $row = mysql_fetch_row($result);
   $randtext = $row[0];
   if ( $randtext == NULL ) {
-    print("You have already confirmed your account registration");
+    print("You have already confirmed your account registration<br>\n");
   } else {
     if ( $password != $randtext ) {
-      print("Failed to confirm registration since generated key did not match");
+      print("Failed to confirm registration since generated key did not match<br>\n");
     } else {
       $result = mysql_query("UPDATE players SET "
 	  . "randtext = NULL, "
 	  . "lastmod = '" . time() . "' "
 	  . "WHERE email='$email'", $link)
 	or die ("Invalid query: " . mysql_error());
-      print("Your account has been successfully activated.\n");
-      # TODO It would be nice to say more here
-      print("http://BZFlag.org/");
+      print("Your account has been successfully activated.<br>\n");
     }
   }
+  print('See <a href="http://BZFlag.org">http://BZFlag.org</a></body></html>');
 } elseif ($action == "CHECKTOKEN") {
   #  -- CHECKTOKEN --
   # validate player token for connecting player on a game server
