@@ -221,8 +221,6 @@ if ($action == "LIST" ) {
   $pos = strpos($version, "BZFS");
   if ($pos === false || $pos > 0)
     return;
-  # Test to see whether nameport is valid by attempting to establish a
-  # connection to it
   $split = explode(":", $nameport);
   $servname = $split[0];
   if (array_key_exists(1, $split))
@@ -244,6 +242,10 @@ if ($action == "LIST" ) {
 	. " while server is at " . $servip );
     die();
   }
+
+  # Test to see whether nameport is valid by attempting to establish a
+  # connection to it
+  # FIXME - should callback and update all stats instead of bzupdate.pl
 
   $fp = fsockopen ($servname, $servport, $errno, $errstring, 30);
   if (!$fp) {
