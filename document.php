@@ -21,7 +21,7 @@ print <<< end
   <table border="0" cellpadding="0" cellspacing="1" width="100%">
     <tr>
       <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%">
-        <tr><td bgcolor="#013571" align="right"><img src="/images/logo2-1.jpg" alt="logo"></td>
+	<tr><td bgcolor="#013571" align="right"><img src="/images/logo2-1.jpg" alt="logo"></td>
 	<td bgcolor="#818181" align="left"><img src="/images/logo2-2.jpg" alt=""></td></tr>
       </table></td>
     </tr>
@@ -61,18 +61,18 @@ print <<< end
     </td>
     <td bgcolor="#ffffff" valign="top">
       <table border="0" cellpadding="2" width="100%"><tr><td>
-        <div class="content">
+	<div class="content">
 end;
   }
 
   function end() {
 print <<< end
-        </div>
+	</div>
       </td></tr></table>
     </td></tr>
-  </table>
-  <table border="0" cellpadding="0" cellspacing="1" width="100%">
-    <tr><td width="370" bgcolor="#ffffff" align="left">
+    <tr>
+      <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
+	<td bgcolor="#ffffff" align="left" width="370">
 <!-- Search Google Tim@BZFlag.org -->
 <form method="GET" action="http://www.google.com/custom">
 <input type="hidden" name="cof" value="AH:center;S:http://BZFlag.org/;AWFID:3e0e6d8d8d5bbf7d;">
@@ -81,11 +81,14 @@ print <<< end
 <a href="http://www.google.com"><img src="http://www.google.com/logos/Logo_25wht.gif" border="0" ALT="Google" align="middle" height="32" width="75"></a>&nbsp;<input type="text" name="q" size="31" maxlength="255" value="">&nbsp;<input type="submit" name="sa" value="Search">
 </form>
 <!-- Search Google -->
-    </td><td bgcolor="#ffffff" align="right">
+	</td>
+	<td bgcolor="#ffffff" align="right">
 end;
 echo '      <span class="copyright">copyright &copy; 1993-'.gmdate('Y').'&nbsp;</span>';
 print <<< end
-    </td></tr>
+	</td>
+      </tr></table></td>
+    </tr>
   </table>
 </td></tr></table>
 <br>

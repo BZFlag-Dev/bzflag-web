@@ -73,9 +73,9 @@ title1 = """<div align="center">
 page_footer2 = """        </div>
       </td></tr></table>
     </td></tr>
-  </table>
-  <table border="0" cellpadding="0" cellspacing="1" width="100%">
-    <tr><td width="50" bgcolor="#ffffff" align="left">
+    <tr>
+      <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
+	<td bgcolor="#ffffff" align="left" width="370">
 <!-- Search Google Tim@BZFlag.org -->
 <form method="GET" action="http://www.google.com/custom">
 <input type="hidden" name="cof" value="AH:center;S:http://BZFlag.org/;AWFID:3e0e6d8d8d5bbf7d;">
@@ -84,9 +84,12 @@ page_footer2 = """        </div>
 <a href="http://www.google.com"><img src="http://www.google.com/logos/Logo_25wht.gif" border="0" ALT="Google" align="middle" height="32" width="75"></a>&nbsp;<input type="text" name="q" size="31" maxlength="255" value="">&nbsp;<input type="submit" name="sa" value="Search">
 </form>
 <!-- Search Google -->
-    </td><td bgcolor="#ffffff" align="right">
-      <span class="copyright">copyright &copy; 1993-2002&nbsp;</span>
-    </td></tr>
+	</td>
+	<td bgcolor="#ffffff" align="right">
+	  <span class="copyright">copyright &copy; 1993-2002&nbsp;</span>
+	</td>
+      </tr></table></td>
+    </tr>
   </table>
 </td></tr></table>
 <br>
