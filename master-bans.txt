@@ -8,10 +8,6 @@ banner: JeffM2501
 reason: shot type cheats
 24.218.232.213
 end: 0
-banner: Jeff Myers
-reason: admin abbuse, cursing, and being a bastard
-209.216.156.3
-end: 0
 banner: bzflag developers
 reason: Wikipedia abuse (dirtytroll/dj28)
 140.247.60.133
