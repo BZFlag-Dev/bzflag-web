@@ -146,7 +146,7 @@ if ($row = mysql_fetch_array($currentplayers, MYSQL_ASSOC)) {
 
 ?></td></tr>
 
-<tr class="oddrow"><td>Team on <?=serverlink('xmission.bzflag.org:5154')?> that is doing the same</td><td><?
+<!--<tr class="oddrow"><td>Team on <?=serverlink('xmission.bzflag.org:5154')?> that is doing the same</td><td><?
 $currentplayers = mysql_query ("SELECT server,team,score FROM `teaminfo` WHERE `server` = 'xmission.bzflag.org:5154' ORDER BY score DESC");
 
 if ($row = mysql_fetch_array($currentplayers, MYSQL_ASSOC)) {
@@ -155,7 +155,7 @@ if ($row = mysql_fetch_array($currentplayers, MYSQL_ASSOC)) {
 ?><strong>Nobody</strong><?
 }
 
-?></td></tr>
+?></td></tr>-->
 
 </table>
 
