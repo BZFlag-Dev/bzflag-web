@@ -27,7 +27,7 @@ include('serversettings.php');
 # Common to all
 $action   = $_REQUEST['action'];
 if (!array_key_exists("action", $_REQUEST)) {
-  $action = "UNKNOWN";
+  $action = "";
 }
 
 # For bzfs
@@ -133,7 +133,7 @@ function testform ($message) {
 function action_list () {
   #  -- LIST --
   # Same as LIST in the old bzfls
-  global $link, $callsign, $password, $version, $local;
+  global $link, $callsign, $password, $version, $local, $alternateServers;
   header("Content-type: text/plain");
   debug("Fetching LIST");
 
