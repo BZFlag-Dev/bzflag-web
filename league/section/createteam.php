@@ -60,7 +60,7 @@ function section_createteam(&$templ)
 	} else {
 		// Insert data into table
 		$f_name = htmlentities($f_name);
-		mysql_query("insert into l_team (id, name, comment, leader, logo, status, score, password, adminclosed) values(0, '".addSlashes($f_name)."', '".addSlashes($f_comment)."', ".$_SESSION['playerid'].", '".addSlashes($f_logo)."', 'opened', 1200, '".$cypher."', 
+		mysql_query("insert into l_team (id, name, comment, leader, logo, status, score, password, adminclosed) values(0, '".addSlashes($f_name)."', '".addSlashes($f_comment)."', ".$_SESSION['playerid'].", '".addSlashes($f_logo)."', 'opened', 1200, '".$cypher."',
 		'no')");
 
 		$_SESSION['teamid'] = mysql_insert_id();

@@ -13,7 +13,7 @@ echo '<HTML><CENTER>';
 $res = mysql_query("select  l_fight.*,  l_team1.score as rating1, l_team2.score as rating2
 													from l_fight
 													left join l_team l_team1 on l_team1.id = team1
-													left join l_team l_team2 on l_team2.id = team2 
+													left join l_team l_team2 on l_team2.id = team2
 													order by tstamp");
 while ($row = mysql_fetch_object ($res)){
 	test ($row->score1, $row->score2, $row->rating1, $row->rating2 );
@@ -23,12 +23,12 @@ exit;
 
 
 
-if ( !isset($_SESSION['authenticated']) 
+if ( !isset($_SESSION['authenticated'])
 ||   !$_SESSION['authenticated']
 ||	$_SESSION['level'] != 'admin'){
 	echo 'You are not authorized for this. Shame on you.<BR>';
 	exit;
-}   
+}
 
 echo '<font size=+2><B>DELETE LAST ENTERED MATCH</b></font><BR>';
 $Callsign = $_SESSION['callsign'];
@@ -46,17 +46,17 @@ else
 
 
 function presentForm ($action){
-	$row = mysql_fetch_object(mysql_query("select l_fight.*, 
-													l_team1.name as name1, l_team2.name as name2, 
+	$row = mysql_fetch_object(mysql_query("select l_fight.*,
+													l_team1.name as name1, l_team2.name as name2,
 													l_team1.score as rating1, l_team2.score as rating2
-													from l_fight 
+													from l_fight
 													left join l_team l_team1 on l_team1.id = team1
-													left join l_team l_team2 on l_team2.id = team2 
+													left join l_team l_team2 on l_team2.id = team2
 													order by tstamp desc limit 1"));
 	if (!$row){
 		echo "SQL error - can't do this right now, sorry!<BR>";
 		exit;
-	}													
+	}
 
 	echo "<BR><TABLE bgcolor=e0e0e0><TR align=center><TD colspan=3>Currently, the last entered match is:<HR></td></tr>
 			<TR><TD width=200 align=right><nobr>$row->name1:</nobr></td><TD width=5></td><TD width=200>$row->score1</td></tr>
@@ -69,7 +69,7 @@ function presentForm ($action){
 				<TD align=right><b>$row->name1</b></td><TD> rating will change from $row->rating1 to $new1 </td><tr>
 				<TD align=right><b>$row->name2</b></td><TD> rating will change from $row->rating2 to $new2 </td><tr>
 				</table>";
-				
+
 	echo '<font size=+1 color=660000><BR>Are you absolutely sure that you want to <b>DELETE this match</b> ?</font><BR>';
 
 	echo "<FORM method=post>
@@ -91,23 +91,23 @@ function backToMain (){
 
 
 function undoLastMatch (){
-	$row = mysql_fetch_object(mysql_query("select l_fight.*, 
-													l_team1.name as name1, l_team2.name as name2, 
+	$row = mysql_fetch_object(mysql_query("select l_fight.*,
+													l_team1.name as name1, l_team2.name as name2,
 													l_team1.score as rating1, l_team2.score as rating2
-													from l_fight 
+													from l_fight
 													left join l_team l_team1 on l_team1.id = team1
-													left join l_team l_team2 on l_team2.id = team2 
+													left join l_team l_team2 on l_team2.id = team2
 													order by tstamp desc limit 1"));
 	if (!$row){
 		echo "SQL error - can't do this right now, sorry!<BR>";
 		backToMain ();
 		exit;
-	}													
+	}
 
-	if ($row->tstamp != $_POST['matchtstamp'] 
-	||  $row->team1 != $_POST['matcht1'] 
-	||  $row->team2 != $_POST['matcht2'] 
-	||  $row->score1 != $_POST['matchs1'] 
+	if ($row->tstamp != $_POST['matchtstamp']
+	||  $row->team1 != $_POST['matcht1']
+	||  $row->team2 != $_POST['matcht2']
+	||  $row->score1 != $_POST['matchs1']
 	||  $row->score2 != $_POST['matchs2']	){
 		echo "WHOAH! Someone just entered a newer match - cannot honor your request<BR>";
 		backToMain ();
@@ -141,10 +141,10 @@ function backoutRatings ($scoreA, $scoreB, $newA, $newB, &$oldA, &$oldB){
 	$high =  50;
 	while (($high-$low) > 0.05 && ++$tries<50) {
 		$try = $low + ($high-$low)/2;
-		calculateRatings ($scoreA, $scoreB, $newA-$try, $newB+$try, $tryA, $tryB);	
+		calculateRatings ($scoreA, $scoreB, $newA-$try, $newB+$try, $tryA, $tryB);
 		if ($tryA < $newA)
 			$high = $try;
-		else	
+		else
 			$low = $try;
 	}
 	if ($tries>49){

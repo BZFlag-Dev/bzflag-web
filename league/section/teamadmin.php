@@ -98,7 +98,7 @@ function section_teamadmin(&$templ)
 			} else {
 				echo "<tr><td align=center colspan=2 class=tablehead><div class=teamname><b>".$obj->name."</b></div><input type=hidden name=f_name value=\"$f_name\"></td></tr>";
 			}
-			
+
 			// Logo
 			if($obj->logo != "") {
 				echo '<tr><td align=center colspan=2><img src="'.$obj->logo.'"></td></tr>';
@@ -149,7 +149,7 @@ function section_teamadmin(&$templ)
 				echo "<tr>";
 				echo "<td>Leader</td>";
 				echo "<td><select name=\"f_leader\">";
-				$sql = "SELECT id, callsign FROM l_player WHERE team = '$id' ORDER by callsign"; 
+				$sql = "SELECT id, callsign FROM l_player WHERE team = '$id' ORDER by callsign";
 				$res = mysql_query($sql);
 				while($row = mysql_fetch_row($res))
 				{
@@ -204,7 +204,7 @@ function section_teamadmin(&$templ)
 				set logo="'.addSlashes($f_logo).'",
 				comment="'.addSlashes($f_comment).'" '.$cypher.',
 				name="'.addSlashes(htmlentities($f_name)).'",
-				adminclosed="'.$adminclosed.'", ' . $f_leader . ' 
+				adminclosed="'.$adminclosed.'", ' . $f_leader . '
 				status="'.$f_status.'"
 				where id='.$id);
 

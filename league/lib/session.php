@@ -18,7 +18,7 @@ function mysql_session_open($session_path, $session_name)
 function mysql_session_close()
 {
 	return 1;
-} 
+}
 
 function mysql_session_read($SID)
 {

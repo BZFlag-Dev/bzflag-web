@@ -1,4 +1,4 @@
-<?php 
+<?php
 function section_admin(&$templ)
 {
 	$f_faq		= $_POST['f_faq'];
@@ -39,6 +39,6 @@ function section_admin(&$templ)
 		}
 	} else {
 		echo "Your have no permission to go here";
-	}					
+	}
 }
 ?>

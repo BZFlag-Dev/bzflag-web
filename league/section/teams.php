@@ -6,17 +6,17 @@ function section_teams(&$teams)
 	$s_teamid	= $_SESSION['teamid'];
 
 	$res = mysql_query("
-		SELECT	l_team.id, l_team.name, l_team.logo, l_team.score, 
-				player2.callsign leader, player2.id leaderid, 
+		SELECT	l_team.id, l_team.name, l_team.logo, l_team.score,
+				player2.callsign leader, player2.id leaderid,
 				l_team.status, count(distinct l_player.callsign) numplayers,
 				count(distinct l_fight.tstamp) nfights, count(distinct l_fight.tstamp)>0 sorter,
 				l_team.active = 'yes' activeteam
 		FROM	l_team, l_player player2
 		LEFT JOIN l_player ON l_player.team = l_team.id
 		LEFT JOIN l_fight ON (team1 = l_team.id OR team2 = l_team.id)
-		WHERE player2.id = l_team.leader 
-		 AND l_team.status != 'deleted' 
-		 AND l_team.id != 251 
+		WHERE player2.id = l_team.leader
+		 AND l_team.status != 'deleted'
+		 AND l_team.id != 251
 		GROUP BY l_team.name, l_team.leader, l_team.status, l_team.score
 		ORDER BY sorter desc, activeteam desc, l_team.score desc, nfights desc, l_team.name");
 

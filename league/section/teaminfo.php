@@ -129,7 +129,7 @@ function section_teaminfo(&$templ)
 				$cl = "biobg2";
 
 			$tmp .= "<tr class=\"$cl\">";
-			
+
 			$tmp .= '<td align="right">' . $new1. $row[6] . $new2. '</td>';
 			if( $row[0] != $id )
 			{
@@ -150,7 +150,7 @@ function section_teaminfo(&$templ)
 
 			$tmp .= "<td>$new1";
 
-			$oppname = '<a href="index.php?link=teaminfo&id=' . $oppid . '&' . SID . '">' . 
+			$oppname = '<a href="index.php?link=teaminfo&id=' . $oppid . '&' . SID . '">' .
 				$new1 . $oppname . $new2 . '</a>';
 
 			if( $oppscore < $teamscore )

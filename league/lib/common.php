@@ -37,8 +37,8 @@ function displayRating($id) {
 */
 function sendMessage($fromid, $toid, $subject, $msg, $toteam = 'no') {
 				$now = gmdate("Y-m-d H:i:s");
-				mysql_query("insert into l_message values(0, $toid, $fromid, '$now', 
-					\"".(strip_tags(addslashes($subject)))."\", 
+				mysql_query("insert into l_message values(0, $toid, $fromid, '$now',
+					\"".(strip_tags(addslashes($subject)))."\",
 					\"".(addslashes($msg))."\", 'new', '$toteam')");
 }
 

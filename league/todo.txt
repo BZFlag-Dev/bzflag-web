@@ -6,7 +6,7 @@ always:
 misc:
 	+ fix the design (or use the old one)
 	- a generic makeLink function()
-	- use templates 
+	- use templates
 	+ fix entermatch (displayes SID)
 	+ highligt new matches, since last login.
 	+ fix authentication. You need to reload to get the correct menu,

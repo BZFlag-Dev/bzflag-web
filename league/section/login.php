@@ -36,7 +36,7 @@ function section_login(&$templ)
 					$idsuccess = 1;
 				else
 					$idsuccess = 0;
-				
+
 			}
 			if($idsuccess == 1) {
 				// Logged in!
@@ -44,7 +44,7 @@ function section_login(&$templ)
 
 // added IP logging - menotume 2004-12-10
 //				mysql_query("insert into l_visit values(sysdate(), '$obj->callsign')");
-				mysql_query("insert into l_visit values(sysdate(), '$obj->callsign', 
+				mysql_query("insert into l_visit values(sysdate(), '$obj->callsign',
 					'{$_SERVER['REMOTE_ADDR']}', $obj->id)");
 
 

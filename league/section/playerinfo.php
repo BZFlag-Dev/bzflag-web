@@ -40,7 +40,7 @@ function section_playerinfo(&$templ)
 			$f_callsign = $obj->callsign;
 		}
 		// Check logo
-		//$msg = checkLogoSize($f_logo); - this always returned "" 
+		//$msg = checkLogoSize($f_logo); - this always returned ""
 		$msg = '';
 		if($msg != '') {
 			$error = 1;
@@ -66,8 +66,8 @@ function section_playerinfo(&$templ)
 			}
 		}
 	}
-	
-	
+
+
 	if($link == "playeradmin") {
 // security check ...
 if ($id!=$_SESSION['playerid'] && $_SESSION['level']!='admin'){

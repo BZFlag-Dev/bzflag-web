@@ -18,7 +18,7 @@ function section_entermatch(&$templ)
 
 				if($scorea == $scoreb) {
 					$score = 0;
-				} else { 
+				} else {
 					if($scorea < $scoreb) {
 						$score = -1;
 					} else {

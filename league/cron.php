@@ -150,7 +150,7 @@ function deletePlayer($id,$name)
 
 	$sql = array();
 
-	// Assign posts to a deleted player 
+	// Assign posts to a deleted player
 	$sql[] = "UPDATE l_forummsg SET fromid = $deadplayer WHERE fromid=$id";
 	$sql[] = "UPDATE l_forumthread SET creatorid = $deadplayer WHERE creatorid = $id";
 
