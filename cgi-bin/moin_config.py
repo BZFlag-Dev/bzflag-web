@@ -31,8 +31,9 @@ data_dir = '/home/groups/b/bz/bzflag/moin/data/'
 url_prefix = '/wiki'
 css_url = '/general.css'
 logo_url = url_prefix + '/img/moinmoin.gif'
-url_path = os.environ.get("SCRIPT_NAME", "/wiki") \
-     + os.environ.get("PATH_INFO", "/FrontPage")
+#url_path = os.environ.get("SCRIPT_NAME", "/wiki") \
+#     + os.environ.get("PATH_INFO", "/FrontPage")
+url_path = "/wiki" + os.environ.get("PATH_INFO", "/FrontPage")
 page_icons = ''
 page_footer1 = '<hr>'
 navi_bar = ''
@@ -156,4 +157,3 @@ if 1:
     class SecurityPolicy(Permissions):
         edit = 1
         delete = 1
-
