@@ -1,0 +1,159 @@
+body {
+/*  background-color: #efefef; */
+  background-color: #D0BC91;
+  color: #000000;
+  font-family: verdana;
+}
+
+a:link {
+  color: #000000;
+  text-decoration: none;
+  font-style:italic;
+}
+
+a:visited {
+  color: #000000;
+  text-decoration: none;
+  font-style:italic;
+}
+
+a:active {
+  color: #000000;
+  text-decoration: none;
+  font-style:italic;
+}
+
+a:hover {
+  color: white;
+  background:black;
+  text-decoration: none;
+}
+
+.content {
+  color: #000000;
+  font-size: 12px;
+}
+
+table {
+  color: #000000;
+  font-size: 12px;
+}
+
+INPUT,TEXTAREA {
+	border: 1px solid black;
+}
+
+
+.big {
+	color: #ff8080;
+	font-size: medium;
+}
+
+.copyright {
+  color: #000000;
+  font-size: 10px;
+}
+
+.newsbg {
+	background : #D0BC91;
+}
+
+.forum1 {
+	background: #f0f0f0;
+}
+
+.forum2 {
+	background: #fffff0;
+}
+
+.teambg {
+	background: #e0e0ff;
+}
+
+.playerbg {
+	background: #e0e0ff;
+}
+
+.motd {
+	background: #e0e0ff;
+	font-style: italic;
+	color : #5C5C5C;
+	font : italic;
+}
+
+.teamname {
+	font-size: 18px;
+	font-style: italic;
+	background-color: #D0BC91;
+}
+
+.playername {
+	font-size: 18px;
+	font-style: italic;
+}
+
+.error {
+	font-size: 12px;
+	color: Red;
+}
+
+.loginfo {
+	font-size: 10px;
+	color: #000000;
+}
+
+.biobg1 {
+	background : #D0BC91;
+}
+
+.biobg2 {
+	background: #e0cCa1;
+}
+
+.playerbio {
+	font-size: 10px;
+}
+
+.areasmall {
+	font-size: 10px;
+}
+.afaq {
+	font-size: 12px;
+	color: #00CC00;
+}
+
+.msginfo {
+	background: Yellow;
+}
+
+.myteam {
+	background: #f0f0ff;
+}
+
+.deletedteam {
+	
+}
+
+.hfaq {
+	font-size: 14px;
+	color: #3333CC;
+}
+.qfaqbg {
+	background: #f0f0ff;
+}
+.qfaq{
+	font-size: 12px;	
+	color: #ff9933;
+}
+
+.playerbiobig {
+	font-size: 12px;
+}
+.tablehead {
+	background: #D0BC91;
+	font-weight : bold;
+}
+
+.msgquote {
+	background: #f0f0ff;
+}

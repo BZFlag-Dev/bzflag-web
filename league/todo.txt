@@ -1,0 +1,35 @@
+TODO:
+
+always:
+	- better security (eg. .. )
+
+misc:
+	+ fix the design (or use the old one)
+	- a generic makeLink function()
+	- use templates 
+	+ fix entermatch (displayes SID)
+	+ highligt new matches, since last login.
+	+ fix authentication. You need to reload to get the correct menu,
+	  just after authentication.
+	- restructure every file, one by one.
+	+ chestal: one more suggestion for the league code: When replying, the code adds Re:. When replying to a reply, it does so again, I think it should stick with just one Re:, not Re: re: Re: etc.
+	+ add flag to forums, to disable team. (done directly in database)
+
+	- remember: check todo list after migration.
+
+teams:
+	+ add state active.
+	+ dont show deleted teams.
+	+ teampage: display fights
+	+ teamadmin: teamleader/admin can change leadership
+
+cron:
+	+ delete a team when none of its memebrs has been logged on for 3 months
+	+ delete team, when its flagged deleted (dissmissed)
+	+ after the team removal, remove all teamless players that haven't been logged in for 3 months, too
+	+ check if teams have played a match during the last 3 months, mark these as active, others are inactive
+	+ assign playerposts to a "deleted player"
+	+ assign teamsfights to a "deleted team"
+	- change deleted player/team to a special player (dosnt make sense to send mail to deleted player)
+
+look at todo on site.

@@ -1,0 +1,33 @@
+*	12-05-2003:
+		- Changed sendmessage. Now only one "Re:" should appear even if replying to a message prefixed with "Re:"
+		- recreated the following teams (with matches): penguins, BZ:Evolved, The Untouchables. The are already 
+		  flagged for deletion. :) Recreating these teams is done by migration.php
+*	11-05-2003:
+		- changed teams listing. Now the list is divided into "active", "inactive", and "havnt played matches" (as the current production site)
+		- improved session handling. Not possible to steal session unless you share the ip of the target.
+		- added last 10 matches on teampage.
+		- added the possibility to change leader (by either leader or admin)
+		- created cron.php. it cleans up playerlist, teamlist and marks active teams.
+		- changed displayRating() to reflect changes made by chestal on production site.
+		- changed "entermatch". now displays active teams at top.
+		- update migration.php: now drops unused tables.
+		- changed "entermatch". Now marks both teams as active when a result is entered. 
+		- bzforum: new topics since last login is displayed with red in the overview.
+		- posts with no subject, is no renamed to "(no subject)" - and is therefor clickable.
+
+*	10-05-2003: migration.php
+		Migration script created. Takes care of all database changes.
+
+*	13-04-2003: New structure. 
+		Done restructuring. The code itself wasnt changed much (except for get/post/session handling/vars). To enabled the new SESSION handling, the table l_session now allows empty callsigns. SQL: ALTER TABLE `l_session` CHANGE `callsign` `callsign` VARCHAR( 40 )
+
+*	13-04-2003: Changed l_player. added "created" and last_login. Both datetime. 
+		SQL: ALTER TABLE `l_player` ADD `created` DATETIME NOT NULL AFTER `level` , ADD `last_login` DATETIME NOT NULL AFTER `created` ; 
+		To update these fields, you need to run migration.php
+
+*	13-04-2003: Changed l_team.status from SET to ENUM. Added 'deleted' as possible value from status.
+		SQL: ALTER TABLE `l_team` CHANGE `status` `status` ENUM( 'opened', 'closed', 'deleted' ) DEFAULT 'opened' NOT NULL
+		SQL: ALTER TABLE `l_team` ADD `status_changed` DATETIME NOT NULL AFTER `status` 
+		* should "teams" (the page) contain deleted teams as well?
+		* some cronjob should check the database from deleted teams, with no matches. And remove them with DELETE from DB. Perhaps
+		* having a week or two before it will be removed.

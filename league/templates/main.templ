@@ -1,0 +1,78 @@
+<html>
+<head>
+	<title><tag:page.title /></title>
+</head>
+<link rel="stylesheet" type="text/css" href="general.css">
+<body>
+<table align="center" border=0 cellspacing=0 cellpadding=0>
+<tr>
+  <td colspan=2><img src="images/logo.jpg" alt="BZFlag League"></td>
+</tr>
+</table>
+<table align="center" border=0 cellspacing=0 cellpadding=0 width=800>
+<tr>
+  <td bgcolor="#f6ebd0" width="160" style="border: 1px solid black;" valign="top"><img src="images/menulogo.jpg"><br>
+	<a href="index.php?link=home<tag:SID />"><img border=0 src="images/home.png" alt="Home"></a><br><hr>
+	<a href="index.php?link=news<tag:SID />"><img border=0 src="images/news.gif"></a><br>
+	<a href="index.php?link=todo<tag:SID />"><img border=0 src="images/todo.gif"></a><br><hr>
+
+	<if:is_guest>
+		<a href="index.php?link=register<tag:SID />"><img border=0 src="images/register.gif"></a><br>
+	</if:is_guest>
+
+	<a href="index.php?link=login<tag:SID />"><img border=0 src="images/login.gif"></a><br><hr>
+
+	<if:is_authenticated>
+		<a href="index.php?link=messages<tag:SID />"><img border=0 src="images/messages.gif"></a><br>
+	</if:is_authenticated>
+
+	<a href="index.php?link=bzforums<tag:SID />"><img border=0 src="images/bzforums.gif"></a><br><hr>
+	<a href="index.php?link=fights<tag:SID />"><img border=0 src="images/fights.gif"></a><br><hr>
+	<a href="index.php?link=teams<tag:SID />"><img border=0 src="images/teams.gif"></a><br>
+	<a href="index.php?link=players<tag:SID />"><img border=0 src="images/players.gif"></a><br><hr>
+	<a href="index.php?link=faq<tag:SID />"><img border=0 src="images/faq.gif"></a><br><hr>
+	<a href="index.php?link=links<tag:SID />"><img border=0 src="images/links.gif"></a><br>
+	<a href="index.php?link=contact<tag:SID />"><img border=0 src="images/contact.gif"></a>
+
+	<if:is_admin>
+		<hr><a href="index.php?link=admin<tag:SID />"><img border=0 src="images/admin.gif"></a><br>
+		<a href="index.php?link=entermatch<tag:SID />"><img border=0 src="images/matchresult.gif"></a><br>
+	</if:is_admin>
+				
+	<hr>
+	<center>
+	<div class=loginfo>
+		<if:is_authenticated2>
+			<a href="index.php?link=playerinfo&id=<tag:user.id /><tag:SID />"><tag:user.name /></a><br>
+			Logged in <tag:user.level /><br>
+			<div class=msginfo><tag:login_message /></div><br>
+			<form method=post>
+				<input type=image name=logout src="images/logout.gif"><tag:SID_FORM />
+			</form>
+		</if:is_authenticated2>
+	</div>
+	</center>
+  </td>
+  <td bgcolor="#f6ebd0" width=5 style="border-top: 1px solid black; border-bottom: 1px solid black;">&nbsp;</td>
+  <td bgcolor="#F6EBD0" width="635" style="border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black;" valign="top">&nbsp;<br>
+	<tag:page.content />
+  </td>
+</tr>
+<tr>
+	<td colspan=3>
+		<table width=100%>
+		<tr>
+			<td align=left>
+				<div class=copyright>UTC Time: <tag:utc_time /></div>
+			</td>
+			<td align=right>
+				<a href="index.php?link=online"><div class=copyright><tag:users_online /> user(s) online.</a></div>
+				<div class=copyright>Copyright (c) 1993-<tag:current_year />&nbsp;</div>
+			</td>
+		</tr>
+		</table>
+	</td>
+</tr>
+</table>
+</body>
+</html>
