@@ -1,3 +1,7 @@
+66.218.54.83
+end: 0
+banner: JeffM2501
+reason: Impersonating, and being disruptive 
 24.218.232.213
 end: 0
 banner: JeffM2501
