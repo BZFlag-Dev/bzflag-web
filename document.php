@@ -81,15 +81,14 @@ print <<< end
     </tr>
   </table>
 </td></tr></table>
-<br>
-<table border="0"><tr><td valign="bottom">
+<table border="0" cellpadding="2"><tr><td valign="middle" align="center">
 <form method="GET" action="http://www.google.com/custom">
 <input type="hidden" name="cof" value="AH:center;S:http://BZFlag.org/;AWFID:3e0e6d8d8d5bbf7d;">
 <input type="hidden" name="domains" value="BZFlag.org">
 <input type="hidden" name="sitesearch" value="BZFlag.org">
-<a href="http://www.google.com"><img src="http://www.google.com/logos/Logo_25wht.gif" border="0" ALT="Google" align="middle" height="32" width="75"></a>&nbsp;<input type="text" name="q" size="31" maxlength="255" value="">&nbsp;<input type="submit" name="sa" value="Search">
+<a href="http://www.google.com"><img src="http://www.google.com/logos/Logo_25wht.gif" border="0" alt="Google" height="32" width="75" align="middle"></a>&nbsp;<input type="text" name="q" size="31" maxlength="255" value="">&nbsp;<input type="submit" name="sa" value="Search">
 </form>
-</td><td valign="middle">
+</td></tr><tr><td align="center">
 <a href="http://www.opengl.org/"><img src="/images/opengl.gif" alt="opengl" width="88" height="31" border="0"></a>
 <a href="http://sourceforge.net/project/?group_id=3248"><img src="http://sourceforge.net/sflogo.php?group_id=3248&amp;type=1" width="88" height="31" alt="sourceforge" border="0"></a>
 <a href="http://www.linuxgames.com/"><img src="/images/linuxgames.gif" width="88" height="31" alt="linuxgames" border="0"></a>
