@@ -40,7 +40,11 @@ $title    = $_GET['title'];
 $callsign = $_GET['callsign'];  # urlencoded
 $email    = $_GET['email'];     # urlencoded
 $password = $_GET['password'];  # urlencoded
-$conntime = $_GET['conntime'];
+$conntime = $_GET['conntime'];  # TODO kill this. use db server time for everything
+
+# for CHECKTOKEN
+$playerid = $_GET['playerid'];
+$token = $_GET['token'];
 
 # For karma
 $target   = $_GET['target'];    # urlencoded
@@ -89,7 +93,18 @@ if (!array_key_exists("action", $_GET)) {
 <body>
   <h1>BZFlag db server</h1>
   <form action="" method="get">
-    action:<input type="text" name="action" value="LIST" size="80"><br>
+    action:<select name="action">
+	<option value="LIST" selected>LIST - list servers</option>
+	<option value="ADD">ADD - add a server</option>
+	<option value="REMOVE">REMOVE - remove a server</option>
+	<option value="REGISTER">REGISTER - new player</option>
+	<option value="CONFORM">CONFIRM - confirm registration</option>
+	<option value="QUIT">QUIT - FIXME</option>
+	<option value="CHECKTOKEN">CHECKTOKEN - verify player token from game server</option>
+	<option value="SETKARMA">SETKARMA - FIXME karma someone else</option>
+	<option value="GETKARMA">GETKARMA - FIXME get karma for a player</option>
+	<option value="UNKNOWN">UNKNOWN - test invalid request</option>
+    </select><br>
     actions: LIST<br>
     version:<input type="text" name="version" size="80"><br>
     actions: ADD REMOVE<br>
@@ -97,11 +112,13 @@ if (!array_key_exists("action", $_GET)) {
     build:<input type="text" name="build" size="80"><br>
     gameinfo:<input type="text" name="gameinfo" size="80"><br>
     title:<input type="text" name="title" size="80"><br>
-    actions:  REGISTER CONFIRM AUTH JOIN QUIT<br>
+    actions: REGISTER CONFIRM QUIT<br>
     callsign:<input type="text" name="callsign" size="80"><br>
     password:<input type="text" name="password" size="80"><br>
     email:<input type="text" name="email" size="80"><br>
-    conntime:<input type="text" name="conntime" size="80"><br>
+    actions: CHECKTOKEN<br>
+    playerid:<input type="text" name="playerid" size="80"><br>
+    token:<input type="text" name="token" size="80"><br>
     actions: SETKARMA GETKARMA<br>
     target:<input type="text" name="target" size="80"><br>
     karma:<input type="text" name="karma" size="80"><br>
@@ -332,7 +349,7 @@ if ($action == "LIST" ) {
        "http://" . $_SERVER['SERVER_NAME']. "/db/?action=CONFIRM&email=$email&password=$randtext\n")
     or die ("Could not send mail");
   $result = mysql_query("INSERT INTO players "
-      . "(email, callsign, password, lastmod, randtext) VALUES "
+      . "(email, callsign, password, created, randtext) VALUES "
       . "('$email', '$callsign', '$password', '" . time() . "', "
       . "'$randtext')", $link)
   or die ("Invalid query: ". mysql_error());
@@ -351,39 +368,43 @@ if ($action == "LIST" ) {
     if ( $password != $randtext ) {
       print("Failed to confirm registration since generated key did not match");
     } else {
-      $result = mysql_query("UPDATE players SET randtext=NULL "
+      $result = mysql_query("UPDATE players SET "
+	  . "randtext = NULL, "
+	  . "lastmod = '" . time() . "' "
 	  . "WHERE email='$email'", $link)
 	or die ("Invalid query: " . mysql_error());
-      print("Your account has been successfully activated");
+      print("Your account has been successfully activated.");
+      print("It would be nice to say more here.");
+      print("<a href=\"http://BZFlag.org/\">BZFlag.org</a>");
     }
   }
-} elseif ($action == "AUTH") {
-  #  -- AUTH --
-  # A player authenticates
-  $result = mysql_query("SELECT password FROM players WHERE callsign='$callsign'", $link)
+} elseif ($action == "CHECKTOKEN") {
+  #  -- CHECKTOKEN --
+  # validate player token for connecting player on a game server
+  # TODO add grouplist support
+  $timeout = 600; # 10 minutes while testing
+  $staletime = time() - $timeout;
+  $result = mysql_query("SELECT callsign,karma FROM players "
+      . "WHERE playerid = '$playerid' "
+      . "AND token = '$token' "
+      . "AND tokendate > $staletime", $link)
     or die ("Invalid query: " . mysql_error());
   $row = mysql_fetch_row($result);
-  $pwd = $row[0];
-  if ( $pwd != $password ) {
-    print("Authentication FAILED: incorrect password");
-  } else {
-    setcookie("BZPlayerAuth", md5($pwd), time()+60);
-    print("Authentication SUCCESSFUL");
-  }
-} elseif ($action == "JOIN") {
-  #  -- JOIN --
-  # Server to handle a joining player
-  $result = mysql_query("SELECT password FROM players WHERE callsign='$callsign'", $link)
+  $callsign = $row[0];
+  $karma = $row[1];
+  # clear tokendate so nasty game server admins can't login someplace else
+  $result = mysql_query("UPDATE players SET "
+      . "lastmod = '" . time() . "', "
+      . "tokendate = '0' "
+      . "WHERE playerid='$playerid'", $link)
     or die ("Invalid query: " . mysql_error());
-  $row = mysql_fetch_row($result);
-  $pwd = $row[0];
-  if ( md5($pwd) != $password )
-    print ("OK");
+  if ($callsign)
+    print ("$callsign:$karma\n");
   else
     print ("FAIL");
 } elseif ($action == "QUIT") {
   #  -- QUIT --
-  # Server to handle a disconnecting player
+  # handle disconnecting player
   $result = mysql_query("UPDATE players SET lastmod=" . time()
       . ", playtime=playtime+$conntime WHERE callsign='$callsign'", $link)
     or die ("Invalid query: " . mysql_error());
