@@ -2,3 +2,7 @@
 end: 0
 banner: Patlabor221
 reason: sample ban
+68.109.43.46
+end: 0
+banner: bzflag developers
+reason: gross abbuse and cheating(knightmare).
