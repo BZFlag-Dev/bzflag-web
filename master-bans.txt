@@ -1,3 +1,7 @@
+68.85.3.150
+end: 0
+banner: Sean Morrison
+reason: List server profanity (Darth Vader)
 24.218.232.213
 end: 0
 banner: Jeff Myers
