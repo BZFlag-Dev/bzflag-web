@@ -101,16 +101,15 @@ Servers
 <div class="menusection">
 Other Links
 <ul>
+<li><a href="http://bzflag.org/">BZFlag.org</a></li>
 <li><a href="/irc/irc.cgi">IRC Chat</a></li>
-<li><a href="http://www.bzflag.org/cvs/">Nightly Snapshots</a></li>
-<li><a href="http://files.noodleroni.com/pub/bzflag/nightlies/">Nightly RPMs</a></li>
 <li><a href="http://bzbb.bzflag.org/">BZBB</a></li>
-<li><a href="http://www.bzflag.org/league/">CTF League</a></li>
-<li><a href="http://www.bzflag.org/">BZFlag.org</a></li>
-<li><a href="http://www.noodleroni.com/">Noodleroni.com</a></li>
-<li><a href="http://www.tuckermclean.com/">TuckerMcLean.com</a></li>
+<li><a href="http://bzflag.org/league/">CTF League</a></li>
+<li><a href="http://bzflag.org/cvs/">Nightly Snapshots</a></li>
+<li><a href="http://files.noodleroni.com/pub/bzflag/nightlies/">Nightly RPMs</a></li>
 <li><em><a href="link.php">Link to us!</a></em></li>
 <li><a href="bzfls.php">list server script</a></li>
+<li><a href="http://bzflag.org/wiki/OtherLinks">OtherLinks</a></li>
 </ul>
 </div>
 
