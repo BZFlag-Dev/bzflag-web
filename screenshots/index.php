@@ -14,9 +14,33 @@ print <<< end
 <table border=0 cellspacing=16 ><tr><td align="center">
 
 <table border=0><tr><td align="center">
+<a href="tablehead.jpg"><img src="t-tablehead.jpg" border=0 alt="lookie at the bunny up high"></a>
+</td></tr><tr><td align="center">
+Head spawns to the head of the table for six
+</td></tr></table>
+
+</td><td align="center">
+
+<table border=0><tr><td align="center">
 <a href="c3po.jpg"><img src="t-c3po.jpg" border=0 alt="he didn't even see him coming"></a>
 </td></tr><tr><td align="center">
 c3po destroys a guided missle shooter with grace and style
+</td></tr></table>
+
+</td></tr><tr><td align="center">
+
+<table border=0><tr><td align="center">
+<a href="dinner.jpg"><img src="t-dinner.jpg" border=0 alt="boom go the little tankies"></a>
+</td></tr><tr><td align="center">
+Dinner for six mayhem and destruction, the Mad Hatter is ready to take someone away
+</td></tr></table>
+
+</td><td align="center">
+
+<table border=0><tr><td align="center">
+<a href="dinner2.jpg"><img src="t-dinner2.jpg" border=0 alt="perched and ready to snipe"></a>
+</td></tr><tr><td align="center">
+More dinner for six chaos, bryjen shoots himself in the confusion ;)
 </td></tr></table>
 
 </td></tr><tr><td align="center">
