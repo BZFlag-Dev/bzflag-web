@@ -50,12 +50,13 @@ line</a>, and give me some feedback.</p>
 
 <h2>Commonly queried servers:</h2>
 
+<!-- This list should be generated statistically -->
 <ul>
 <li><?=serverlink('bzflag.hashmark.net:5154')?></li>
+<li><?=serverlink('bzflag.secretplace.us:5255')?></li>
 <li><?=serverlink('dragon.org:5255')?></li>
+<li><?=serverlink('ducati.bzflag.org:5155')?></li>
 <li><?=serverlink('ducati.bzflag.org:5156')?></li>
-<!--<?=serverlink('quol.bzflag.org:8083')?><br />-->
-<li><?=serverlink('xmission.bzflag.org:5154')?></li>
 </ul>
 
 <?=$separator?>
