@@ -6,7 +6,16 @@ require('serversettings.php');
 /** set the theme and appearance of the interface
  */
 $theme = 'industrial';
-if (in_array('theme', $_GET)) {
+if (isset($_COOKIE['theme'])) {
+	if($_COOKIE['theme'] == 'industrial') {
+		setcookie ("theme", 'industrial', time()+60*60*24*30);
+		$theme = 'industrial';
+	} elseif($_COOKIE['theme'] == 'none') {
+		setcookie ("theme", 'none', time()+60*60*24*30);
+		$theme = 'none';
+	}
+}
+if (isset($_GET['theme'])) {
 	if ($_GET['theme'] == 'industrial') {
 		setcookie ("theme", 'industrial', time()+60*60*24*30);
 		$theme = 'industrial';
@@ -18,20 +27,20 @@ if (in_array('theme', $_GET)) {
 		$theme = 'bluetangerine';
 	}
 }
-if (in_array('theme', $_COOKIE)) {
-	if($_COOKIE['theme'] == 'industrial') {
-		setcookie ("theme", 'industrial', time()+60*60*24*30);
-		$theme = 'industrial';
-	} elseif($_COOKIE['theme'] == 'none') {
-		setcookie ("theme", 'none', time()+60*60*24*30);
-		$theme = 'none';
-	}
-}
 
 /** set whether the page should auto-refresh
  */
 $refresh = 'no';
-if (in_array('refresh', $_GET)) {
+if (isset($_COOKIE['refresh'])) {
+	if($_COOKIE['refresh'] == 'no') {
+		setcookie ("refresh", 'no', time()+60*60*24*30);
+		$refresh = 'no';
+	} elseif($_COOKIE['refresh'] == 'yes') {
+		setcookie ("refresh", 'yes', time()+60*60*24*30);
+		$refresh = 'yes';
+	}
+}
+if (isset($_GET['refresh'])) {
 	if($_GET['refresh'] == '' and $optionschanged != 'yes') {
 		setcookie ("refresh", 'yes', time()+60*60*24*30);
 		$refresh = 'yes';
@@ -43,29 +52,10 @@ if (in_array('refresh', $_GET)) {
 		$refresh = 'yes';
 	}
 }
-if (in_array('refresh', $_COOKIE)) {
-	if($_COOKIE['refresh'] == 'no') {
-		setcookie ("refresh", 'no', time()+60*60*24*30);
-		$refresh = 'no';
-	} elseif($_COOKIE['refresh'] == 'yes') {
-		setcookie ("refresh", 'yes', time()+60*60*24*30);
-		$refresh = 'yes';
-	}
-}
 
 
 /*
-if ($_GET['language'] == 'it') {
-	include ('i18n_it.inc');
-	setcookie ("language", 'it', time()+60*60*24*30);
-} elseif ($_GET['language'] == 'de') {
-	include ('i18n_de.inc');
-	setcookie ("language", 'de', time()+60*60*24*30);
-} elseif ($_GET['language'] == 'en') {
-	include ('i18n_en.inc');
-	setcookie ("language", 'en', time()+60*60*24*30);
-} else {
-
+if (isset($_COOKIE['language'])) {
 	if ($_COOKIE['language'] == 'it') {
 		include ('i18n_it.inc');
 		setcookie ("language", 'it', time()+60*60*24*30);
@@ -76,12 +66,29 @@ if ($_GET['language'] == 'it') {
 		include ('i18n_en.inc');
 		setcookie ("language", 'en', time()+60*60*24*30);
 	}
+} elseif (isset($_GET['language'])) {
+	if ($_GET['language'] == 'it') {
+		include ('i18n_it.inc');
+		setcookie ("language", 'it', time()+60*60*24*30);
+	} elseif ($_GET['language'] == 'de') {
+		include ('i18n_de.inc');
+		setcookie ("language", 'de', time()+60*60*24*30);
+	} elseif ($_GET['language'] == 'en') {
+		include ('i18n_en.inc');
+		setcookie ("language", 'en', time()+60*60*24*30);
+	} else {
+		include ('i18n_en.inc');
+		setcookie ("language", 'en', time()+60*60*24*30);
+	}
+} else {
+	include ('i18n_en.inc');
+	setcookie ("language", 'en', time()+60*60*24*30);
 }
 */
 
 /** set the title depending on how the url was called
  */
-if (in_array('SCRIPT_FILENAME', $_SERVER)) {
+if (isset($_SERVER['SCRIPT_FILENAME'])) {
 	switch ($SCRIPT_FILENAME) {
 	case "$dbroot/stats.php":
 		$title = "Welcome!";
