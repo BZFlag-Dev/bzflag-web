@@ -28,6 +28,7 @@ case "$QUERY_STRING" in
   echo '<li><a href="?bzadmin">bzadmin</a></li>'
   echo '<li><a href="?bzflag">bzflag</a></li>'
   echo '<li><a href="?bzfs">bzfs</a></li>'
+  echo '<li><a href="?bzw">bzw</a></li>'
   echo '</ul>'
   echo '</body>'
   echo '</html>'
