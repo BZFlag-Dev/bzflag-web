@@ -35,6 +35,7 @@ $build    = $_GET['build'];
 $version  = $_GET['version']; # also on LIST
 $gameinfo = $_GET['gameinfo'];
 $title    = $_GET['title'];
+$local    = $_GET['local'];
 
 # For players
 $callsign = $_GET['callsign'];  # urlencoded
@@ -59,7 +60,7 @@ $banlist = array(
   "255.255.255.255" => "globalbroadcast"
 );
 
-$oldListServer = "http://db.bzflag.org/db/";
+$alternateServers = array("http://db.bzflag.org/db/","");
 
 # log function
 if ($enableDebug) {
@@ -218,8 +219,14 @@ if ($action == "LIST" ) {
     print "$line\n";
   }
   
+  if ($local != 1){
+  	foreach($alternateServers as $thisSever ){
+		if ($thisSever != "")
+			readfile($thisSever.'?action=LIST&local=1');
+	}
+  }
   // check the old list server and append
-  readfile($oldListServer);
+ // readfile($oldListServer);
 
   
 } elseif ($action == "ADD") {
