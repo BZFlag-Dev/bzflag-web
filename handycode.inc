@@ -10,6 +10,9 @@ if (isset($_COOKIE['theme'])) {
 	if($_COOKIE['theme'] == 'industrial') {
 		setcookie ("theme", 'industrial', time()+60*60*24*30);
 		$theme = 'industrial';
+	} elseif ($_COOKIE['theme'] == 'bluetangerine') {
+		setcookie ("theme", 'bluetangerine', time()+60*60*24*30);
+		$theme = 'bluetangerine';
 	} elseif($_COOKIE['theme'] == 'none') {
 		setcookie ("theme", 'none', time()+60*60*24*30);
 		$theme = 'none';
@@ -19,12 +22,12 @@ if (isset($_GET['theme'])) {
 	if ($_GET['theme'] == 'industrial') {
 		setcookie ("theme", 'industrial', time()+60*60*24*30);
 		$theme = 'industrial';
-	} elseif ($_GET['theme'] == 'none') {
-		setcookie ("theme", 'none', time()+60*60*24*30);
-		$theme = 'none';
 	} elseif ($_GET['theme'] == 'bluetangerine') {
 		setcookie ("theme", 'bluetangerine', time()+60*60*24*30);
 		$theme = 'bluetangerine';
+	} elseif ($_GET['theme'] == 'none') {
+		setcookie ("theme", 'none', time()+60*60*24*30);
+		$theme = 'none';
 	}
 }
 
@@ -40,16 +43,26 @@ if (isset($_COOKIE['refresh'])) {
 		$refresh = 'yes';
 	}
 }
-if (isset($_GET['refresh'])) {
-	if($_GET['refresh'] == '' and $optionschanged != 'yes') {
-		setcookie ("refresh", 'yes', time()+60*60*24*30);
-		$refresh = 'yes';
-	} elseif($_GET['refresh'] == '' and $optionschanged == 'yes') {
+if (isset($_GET['optionschanged'])) {
+	if (isset($_GET['refresh'])) {
+		if($_GET['refresh'] == 'yes') {
+			setcookie ("refresh", 'yes', time()+60*60*24*30);
+			$refresh = 'yes';
+		} else {
+			setcookie ("refresh", 'no', time()+60*60*24*30);
+			$refresh = 'no';
+		}
+	} else {
 		setcookie ("refresh", 'no', time()+60*60*24*30);
 		$refresh = 'no';
-	} elseif($_GET['refresh'] == 'yes') {
+	}
+} elseif (isset($_GET['refresh'])) {
+	if($_GET['refresh'] == 'yes') {
 		setcookie ("refresh", 'yes', time()+60*60*24*30);
 		$refresh = 'yes';
+	} else {
+		setcookie ("refresh", 'no', time()+60*60*24*30);
+		$refresh = 'no';
 	}
 }
 
