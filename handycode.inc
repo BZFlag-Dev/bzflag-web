@@ -1,62 +1,75 @@
 <?
 
-if ($_GET[theme] == 'industrial') {
-	setcookie ("theme", 'industrial', time()+60*60*24*30);
-	$theme = 'industrial';
-} elseif ($_GET[theme] == 'none') {
-	setcookie ("theme", 'none', time()+60*60*24*30);
-	$theme = 'none';
-} elseif ($_GET[theme] == 'bluetangerine') {
-	setcookie ("theme", 'bluetangerine', time()+60*60*24*30);
-	$theme = 'bluetangerine';
-} else {
-	if($_COOKIE[theme] == 'industrial') {
+require('serversettings.php');
+
+
+/** set the theme and appearance of the interface
+ */
+$theme = 'industrial';
+if (in_array('theme', $_GET)) {
+	if ($_GET['theme'] == 'industrial') {
 		setcookie ("theme", 'industrial', time()+60*60*24*30);
 		$theme = 'industrial';
-	} elseif($_COOKIE[theme] == 'none') {
+	} elseif ($_GET['theme'] == 'none') {
 		setcookie ("theme", 'none', time()+60*60*24*30);
 		$theme = 'none';
-	} else {
+	} elseif ($_GET['theme'] == 'bluetangerine') {
 		setcookie ("theme", 'bluetangerine', time()+60*60*24*30);
 		$theme = 'bluetangerine';
 	}
 }
-	
-if($_GET[refresh] == '' and $optionschanged != 'yes') {
-	setcookie ("refresh", 'yes', time()+60*60*24*30);
-	$refresh = 'yes';
-} elseif($_GET[refresh] == '' and $optionschanged == 'yes') {
-	setcookie ("refresh", 'no', time()+60*60*24*30);
-	$refresh = 'no';
-} elseif($_GET[refresh] == 'yes') {
-	setcookie ("refresh", 'yes', time()+60*60*24*30);
-	$refresh = 'yes';
-} else {
-	if($_COOKIE[refresh] == 'no') {
+if (in_array('theme', $_COOKIE)) {
+	if($_COOKIE['theme'] == 'industrial') {
+		setcookie ("theme", 'industrial', time()+60*60*24*30);
+		$theme = 'industrial';
+	} elseif($_COOKIE['theme'] == 'none') {
+		setcookie ("theme", 'none', time()+60*60*24*30);
+		$theme = 'none';
+	}
+}
+
+/** set whether the page should auto-refresh
+ */
+$refresh = 'no';
+if (in_array('refresh', $_GET)) {
+	if($_GET['refresh'] == '' and $optionschanged != 'yes') {
+		setcookie ("refresh", 'yes', time()+60*60*24*30);
+		$refresh = 'yes';
+	} elseif($_GET['refresh'] == '' and $optionschanged == 'yes') {
 		setcookie ("refresh", 'no', time()+60*60*24*30);
 		$refresh = 'no';
-	} else {
+	} elseif($_GET['refresh'] == 'yes') {
+		setcookie ("refresh", 'yes', time()+60*60*24*30);
+		$refresh = 'yes';
+	}
+}
+if (in_array('refresh', $_COOKIE)) {
+	if($_COOKIE['refresh'] == 'no') {
+		setcookie ("refresh", 'no', time()+60*60*24*30);
+		$refresh = 'no';
+	} elseif($_COOKIE['refresh'] == 'yes') {
 		setcookie ("refresh", 'yes', time()+60*60*24*30);
 		$refresh = 'yes';
 	}
 }
 
+
 /*
-if ($_GET[language] == 'it') {
+if ($_GET['language'] == 'it') {
 	include ('i18n_it.inc');
 	setcookie ("language", 'it', time()+60*60*24*30);
-} elseif ($_GET[language] == 'de') {
+} elseif ($_GET['language'] == 'de') {
 	include ('i18n_de.inc');
 	setcookie ("language", 'de', time()+60*60*24*30);
-} elseif ($_GET[language] == 'en') {
+} elseif ($_GET['language'] == 'en') {
 	include ('i18n_en.inc');
 	setcookie ("language", 'en', time()+60*60*24*30);
 } else {
 
-	if ($_COOKIE[language] == 'it') {
+	if ($_COOKIE['language'] == 'it') {
 		include ('i18n_it.inc');
 		setcookie ("language", 'it', time()+60*60*24*30);
-	} elseif ($_COOKIE[language] == 'de') {
+	} elseif ($_COOKIE['language'] == 'de') {
 		include ('i18n_de.inc');
 		setcookie ("language", 'de', time()+60*60*24*30);
 	} else {
@@ -66,43 +79,46 @@ if ($_GET[language] == 'it') {
 }
 */
 
-switch ($SCRIPT_FILENAME) {
-   case "/var/www/db/stats.php":
-      $title = "Welcome!";
-      break;
-   case "/var/www/db/currentplayers.php":
-      $title = "Current Players";
-      break;
-   case "/var/www/db/playerstats.php":
-      $title = "Player Stats";
-      break;
-   case "/var/www/db/playersearch.php":
-      $title = "Player Search";
-      break;
-   case "/var/www/db/playerinfo.php":
-      $title = "Player Info";
-      break;
-   case "/var/www/db/serverinfo.php":
-      $title = "Server Info";
-      break;
-   case "/var/www/db/serverlist.php":
-      $title = "Server List";
-      break;
-   case "/var/www/db/help.php":
-      $title = "Help";
-      break;
-   case "/var/www/db/copyright.php":
-      $title = "Copyright Info";
-      break;
-   case "/var/www/db/link.php":
-      $title = "Link to Us";
-      break;
-   case "/var/www/db/rssgenerator.php":
-      $title = "RSS Feed Generator";
-      break;
+/** set the title depending on how the url was called
+ */
+if (in_array('SCRIPT_FILENAME', $_SERVER)) {
+	switch ($SCRIPT_FILENAME) {
+	case "$dbroot/stats.php":
+		$title = "Welcome!";
+		break;
+	case "$dbroot/currentplayers.php":
+		$title = "Current Players";
+		break;
+	case "$dbroot/playerstats.php":
+		$title = "Player Stats";
+		break;
+	case "$dbroot/playersearch.php":
+		$title = "Player Search";
+		break;
+	case "$dbroot/playerinfo.php":
+		$title = "Player Info";
+		break;
+	case "$dbroot/serverinfo.php":
+		$title = "Server Info";
+		break;
+	case "$dbroot/serverlist.php":
+		$title = "Server List";
+		break;
+	case "$dbroot/help.php":
+		$title = "Help";
+		break;
+	case "$dbroot/copyright.php":
+		$title = "Copyright Info";
+		break;
+	case "$dbroot/link.php":
+		$title = "Link to Us";
+		break;
+	case "$dbroot/rssgenerator.php":
+		$title = "RSS Feed Generator";
+		break;
+	}
 }
 
-require_once ('serversettings.php');
 
 $link = mysql_pconnect($dbhost, $dbuname, $dbpass) or die("Could not connect");
 mysql_select_db("bzflag", $link) or die("Could not select database");
@@ -116,7 +132,7 @@ function num_rows ($query)
 		mysql_free_result ($result);
 		return $numrows;
 	} else {
-	  echo mysql_error();
+		echo mysql_error();
 		return 0;
 	}
 }
@@ -170,9 +186,11 @@ function teamname ($team)
 $lastrefreshed = mysql_query ("SELECT * FROM `miscinfo`");
 
 if ($row = mysql_fetch_array($lastrefreshed, MYSQL_ASSOC)) {
-  $refreshed_date = date('D, M d H:i:s T Y', $row[lastrefreshed]);
-  $refreshed_epoch = $row[lastrefreshed];
-  $refreshed_rfc2822 = date('r', $row[lastrefreshed]);
+	$refreshed_date = date('D, M d H:i:s T Y', $row['lastrefreshed']);
+	$refreshed_epoch = $row['lastrefreshed'];
+	$refreshed_rfc2822 = date('r', $row['lastrefreshed']);
+} else {
+	$refreshed_date = "never";
 }
 
 ?>
