@@ -73,7 +73,7 @@ print <<< end
     <tr>
       <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
 	<td bgcolor="#ffffff" align="left" width="370">
-<!-- Search Google Tim@BZFlag.org -->
+<!-- Search Google - Tim@BZFlag.org -->
 <form method="GET" action="http://www.google.com/custom">
 <input type="hidden" name="cof" value="AH:center;S:http://BZFlag.org/;AWFID:3e0e6d8d8d5bbf7d;">
 <input type="hidden" name="domains" value="BZFlag.org">
