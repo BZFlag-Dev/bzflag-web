@@ -54,7 +54,7 @@ $karma    = $_GET['karma'];
 # ip address. value is not used at present.
 # FIXME this should be in an sql table with a remote admin interface
 $banlist = array(
-#  "68.109.43.46" => "knightmare.kicks-ass.net",
+  "68.109.43.46" => "knightmare.kicks-ass.net",
 #  "127.0.0.1" => "localhost"
   "255.255.255.255" => "globalbroadcast"
 );
@@ -71,6 +71,7 @@ if ($enableDebug) {
       print("Unable to write to to log file [$filename]");
     }
   }
+  
 } else {
   function debug ($filename, $message) {
   }
@@ -86,7 +87,10 @@ if ($banlist[$_SERVER['REMOTE_ADDR']] != "") {
 }
 
 if (!array_key_exists("action", $_GET)) {
-  header("Content-type: text/html");
+	if (!$enableDebug){
+	$action = "LIST";
+	}else{
+	 header("Content-type: text/html");
   die('<html>
 <head>
 <title>BZFlag db server</title>
@@ -128,7 +132,8 @@ if (!array_key_exists("action", $_GET)) {
     <input type="reset" value="Clear form">
   </form>
 </body>
-</html>');
+</html>'); 
+	}
 }
 
 header("Content-type: text/plain");
