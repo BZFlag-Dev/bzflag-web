@@ -169,7 +169,7 @@ $password = vcsoe($_REQUEST['password']);  # urlencoded
 # for LIST
 $local    = vcsoe($_REQUEST['local']);
 
-function testform ($message) {
+function testform($message) {
   global $action;
   header('Content-type: text/html');
   print('<html>
@@ -204,7 +204,7 @@ function testform ($message) {
     title:<input type="text" name="title" size="80"><br>
     actions: ADD CHECKTOKENS<br>
     checktokens:<textarea name="checktokens" rows="3" style="width:100%">
-CallSign0=01234567
+CallSign0@127.0.0.1=01234567
 CallSign1=89abcdef</textarea>
     groups:<textarea name="groups" rows="3" style="width:100%">
 Group0
@@ -225,7 +225,7 @@ Group1</textarea>
 </html>');
 }
 
-function action_list () {
+function action_list() {
   #  -- LIST --
   # Same as LIST in the old bzfls
   global $bbdbname, $dbname, $link, $callsign, $password, $version, $local, $alternateServers;
@@ -258,7 +258,8 @@ function action_list () {
       $token = rand(0,2147483647);
       $result = mysql_query("UPDATE phpbb_users SET "
 	  . "user_token='$token', "
-	  . "user_tokendate='" . time() . "'"
+	  . "user_tokendate='" . time() . "', "
+	  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
 	  . "WHERE user_id='$playerid'", $link)
 	or die ("Invalid query: ". mysql_error());
       print("TOKEN: $token\n");
@@ -296,11 +297,11 @@ function action_list () {
   }
 }
 
-function checktoken ($callsign, $token, $garray) {
+function checktoken($callsign, $ip, $token, $garray) {
   # validate player token for connecting player on a game server
   global $bbdbname, $dbname, $link;
   # TODO add grouplist support
-  print("MSG: checktoken callsign=$callsign, token=$token ");
+  print("MSG: checktoken callsign=$callsign, ip=$ip, token=$token ");
   foreach($garray as $group) {
     print(" group=$group");
   }
@@ -311,18 +312,26 @@ function checktoken ($callsign, $token, $garray) {
     debug("Database $bbdbname did not exist");
     die('Could not open db: ' . mysql_error());
   }
+  # include server-reported IP so other server admins can't steal tokens
+  if ($ip) {
+    $testip = "AND user_tokenip='$ip' ";
+  } else {
+    $testip = "";
+  }
   $result = mysql_query("SELECT user_id FROM phpbb_users "
       . "WHERE username='$callsign' "
       . "AND user_token='$token' "
+      . $testip
       . "AND user_tokendate > $staletime", $link)
     or die ('Invalid query: ' . mysql_error());
   $row = mysql_fetch_row($result);
   $playerid = $row[0];
   if ($playerid) {
     # clear tokendate so nasty game server admins can't login someplace else
-#	. "lastmod = '" . time() . "', "
     $result = mysql_query("UPDATE phpbb_users SET "
-	. "user_tokendate='" . time() . "'"
+	. "user_lastvisit='" . time() . "', "
+	#. "user_tokendate='" . time() . "'"
+	. "user_tokendate='0'"
 	. "WHERE user_id='$playerid'", $link)
       or die ('Invalid query: ' . mysql_error());
     print ("TOKGOOD: $callsign");
@@ -342,7 +351,7 @@ function checktoken ($callsign, $token, $garray) {
     print ("TOKBAD: $callsign\n");
 }
 
-function action_checktokens () {
+function action_checktokens() {
   #  -- CHECKTOKENS --
   # validate callsigns and tokens (clears tokens)
   global $link, $checktokens, $groups;
@@ -350,13 +359,19 @@ function action_checktokens () {
     function remove_empty ($value) { return empty($value) ? false : true; }
     $garray = array_filter(explode("\r\n", $groups), 'remove_empty');
     foreach(array_filter(explode("\r\n", $checktokens), 'remove_empty') as $checktoken) {
-      list($callsign, $token) = explode("=", $checktoken);
-      if ($token) checktoken($callsign, $token, $garray);
+      list($callsign, $rest) = explode("@", $checktoken);
+      if ($rest) {
+	list($ip, $token) = explode("=", $rest);
+      } else {
+	$ip = "";
+	list($callsign, $token) = explode("=", $checktoken);
+      }
+      if ($token) checktoken($callsign, $ip, $token, $garray);
     }
   }
 }
 
-function action_add () {
+function action_add() {
   #  -- ADD --
   # Server either requests to be added to DB, or to issue a keep-alive so that it
   # does not get dropped due to a timeout...
@@ -445,7 +460,7 @@ function action_add () {
   print "ADD $nameport\n";
 }
 
-function action_remove () {
+function action_remove() {
   #  -- REMOVE --
   # Server requests to be removed from the DB.
   global $link, $nameport;
@@ -479,7 +494,7 @@ function action_remove () {
   print("REMOVE: $nameport\n");
 }
 
-function action_register () {
+function action_register() {
   #  -- REGISTER --
   # Registers a player onto the players database.
   global $link, $callsign, $email, $password;
@@ -527,7 +542,7 @@ function action_register () {
   #     "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'] . "?action=CONFIRM&email=$email&password=$randtext\n");
 }
 
-function action_confirm () {
+function action_confirm() {
   #  -- CONFIRM --
   # Confirm a registration
   global $link, $email, $password;
