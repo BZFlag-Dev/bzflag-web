@@ -7,8 +7,7 @@ include('document.php');
 if ($action == "rss")	// generate a feed
 {
 	echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n";
-	$content .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3V//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">]>\n";
-	$content .= "<rss version=\"0.92\" xml:base=\"http://jeffm.bakadigital.com/\">\n";
+	$content .= '<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">';
 	$content .= "<channel>\n";
 	$content .= "  <title>BZFlag Message of the Day</title>\n";
 	$content .= "  <description>BZFlag MOTD Rss Feed</description>\n";
@@ -23,7 +22,7 @@ if ($action == "rss")	// generate a feed
 	{
 		$content .= "  <item>\n";
 		$content .= "    <title>$row[message]</title>\n";
-		$content .= "    <message>$row[message]</message>\n";
+		$content .= "    <description>$row[message]</description>\n";
 		$content .= "  </item>\n";
 	}
 	
