@@ -121,75 +121,22 @@ $link = mysql_pconnect($dbhost, $dbuname, $dbpass)
 if (!mysql_select_db($dbname)) {
   debug($debugFile, "Database did not exist, creating a new one");
 
-  mysql_create_db($dbname) or die("Could not create db: " . mysql_error());
+  die("Could not open db: " . mysql_error());
 }
-
-# FIXME something quicker to test for the table?
-$result = mysql_query("SELECT * FROM servers", $link);
-
-# If the servers table does not exist, create it.
-if (!$result) {
-  debug($debugFile, "Database table did not exist, creating a new one");
-
-  mysql_query("CREATE TABLE servers " .
-              "(nameport varchar(60) NOT NULL, " .
-              " build varchar(60), " .
-              " version varchar(9) NOT NULL, " .
-              " gameinfo varchar(73) NOT NULL, " .
-              " ipaddr varchar(17) NOT NULL, " .
-              " title varchar(80), " .
-              " lastmod INT NOT NULL DEFAULT '0', ".
-              " PRIMARY KEY (nameport))", $link)
-    or die ("Could not create table: " . mysql_error());
-}
-
-# FIXME don't do this check on every LIST
-# if the registered players table does not exist, create .
-# FIXME something quicker to test for the table?
-$result = mysql_query("SELECT * FROM players", $link);
-
-if (!$result) {
-  debug($debugFile, "Registered players table did not exist, creating a new one");
-
-  # FIXME need id for reference from karma table
-  mysql_query("CREATE TABLE players " .
-              "(email varchar(64) NOT NULL, " .
-              " callsign varchar(32) NOT NULL, " .
-              " password varchar(16) NOT NULL, " .
-              " karma TINYINT NOT NULL DEFAULT '0', " .
-              " assignments TEXT, " .
-              " playtime BIGINT UNSIGNED NOT NULL DEFAULT '0', " .
-              " lastmod INT NOT NULL, " .
-              " randtext varchar(8), " .
-              " PRIMARY KEY (email))", $link)
-    or die ("Could not create players table: " . mysql_error());
-}
-
-# FIXME need to check/create karma table
-
-debug($debugFile, "Deleting inactive servers from list");
-
-# remove all inactive servers from the table
-$timeout = 1800;    # timeout in seconds
-$staletime = time() - $timeout;
-mysql_query("DELETE FROM servers WHERE lastmod < $staletime", $link)
-     or die("Could not drop old items" . mysql_error());
 
 # remove all inactive registered players from the table
 # FIXME this should not happen on every request
 $timeout = 31536000; # timeout in seconds, 365 days
 $staletime = time() - $timeout;
 mysql_query("DELETE FROM players WHERE lastmod < $staletime", $link)
-     or die ("Could not remove inactive players" . mysql_error());
+  or die ("Could not remove inactive players" . mysql_error());
 
 # remove all players who have not confirmed registration
 # FIXME this should not happen on every request
 $timeout = 259200;  # timeout in seconds, 72h
 $staletime = time() - $timeout;
 mysql_query("DELETE FROM players WHERE lastmod < $staletime AND randtext != NULL", $link)
-     or die ("Could not remove inactive players" . mysql_error());
-
-
+  or die ("Could not remove inactive players" . mysql_error());
 
 # Do stuff based on what the 'action' is...
 if ($action == "LIST" ) {
@@ -197,14 +144,44 @@ if ($action == "LIST" ) {
   # Same as LIST in the old bzfls
   debug($debugFile, "Fetching LIST");
 
+  # remove all inactive servers from the table
+  debug($debugFile, "Deleting inactive servers from list");
+  $timeout = 1800;    # timeout in seconds
+  $staletime = time() - $timeout;
+  mysql_query("DELETE FROM servers WHERE lastmod < $staletime", $link)
+    or die("Could not drop old servers" . mysql_error());
+
+
+  if ($callsign && $password) {
+    # TODO we have user credentials, verify, create a token
+    $result = mysql_query("SELECT playerid FROM players "
+	. "WHERE callsign='$callsign' "
+	. "AND password = '$password'", $link)
+      or die ("Invalid query: " . mysql_error());
+    $row = mysql_fetch_row($result);
+    $playerid = $row[0];
+    if (!$playerid) {
+      print("ERROR: invalid callsign or password ($callsign:$password)\n");
+    } else {
+      srand(microtime() * 100000000);
+      $token = rand(0,2147483647);
+      $result = mysql_query("UPDATE players SET "
+	  . "token = '$token', "
+	  . "tokendate = '" . time() . "'"
+	  . "WHERE playerid = '$playerid'", $link)
+	or die ("Invalid query: ". mysql_error());
+      print("$playerid:$token\n");
+    }
+  }
+
   if ($version)
     $result = mysql_query("SELECT nameport,version,gameinfo,ipaddr,title "
-			  . " FROM servers WHERE version = '$version'"
-			  . " ORDER BY `nameport` ASC", $link)
+	. " FROM servers WHERE version = '$version'"
+	. " ORDER BY `nameport` ASC", $link)
       or die ("Invalid query: ". mysql_error());
   else
     $result = mysql_query("SELECT nameport,version,gameinfo,ipaddr,title "
-			  . " FROM servers ORDER BY `nameport` ASC", $link)
+	. " FROM servers ORDER BY `nameport` ASC", $link)
       or die ("Invalid query: ". mysql_error());
   while (TRUE) {
     $row = mysql_fetch_row($result);
@@ -236,15 +213,15 @@ if ($action == "LIST" ) {
 
   if ($servip == "0.0.0.0") {
     debug($debugFile, "Changed " . $servip . " to requesting address: "
-        . $_SERVER['REMOTE_ADDR'] );
+	. $_SERVER['REMOTE_ADDR'] );
     $servip =  $_SERVER['REMOTE_ADDR'];
     $servname = $servip;
     $nameport = $servip . ":" . $servport;
   }elseif ($_SERVER['REMOTE_ADDR'] != $servip) {
     debug($debugFile, "Requesting address is " . $_SERVER['REMOTE_ADDR']
-        . " while server is at " . $servip );
+	. " while server is at " . $servip );
     print("Requesting address is " . $_SERVER['REMOTE_ADDR']
-        . " while server is at " . $servip );
+	. " while server is at " . $servip );
     die();
   }
 
@@ -253,12 +230,13 @@ if ($action == "LIST" ) {
     print "failed to connect\n";
     return;
   }
+  # TODO should check additional info for stats here.
   fclose ($fp);
 
   $curtime = time();
 
-  $result = mysql_query("SELECT * FROM servers " .
-			"WHERE nameport = '$nameport'", $link)
+  $result = mysql_query("SELECT * FROM servers "
+      . "WHERE nameport = '$nameport'", $link)
     or die ("Invalid query: ". mysql_error());
   $count = mysql_num_rows($result);
   if (!$count) {
@@ -266,10 +244,10 @@ if ($action == "LIST" ) {
 
     # Server does not already exist in DB so insert into DB
     $result = mysql_query("INSERT INTO servers "
-			  . "(nameport, build, version, gameinfo, ipaddr,"
-                          . " title, lastmod) VALUES "
-			  . "('$nameport', '$build', '$version',"
-			  . " '$gameinfo', '$servip', '$title', $curtime)", $link)
+	. "(nameport, build, version, gameinfo, ipaddr,"
+	. " title, lastmod) VALUES "
+	. "('$nameport', '$build', '$version',"
+	. " '$gameinfo', '$servip', '$title', $curtime)", $link)
       or die ("Invalid query: ". mysql_error());
   } else {
 
@@ -278,13 +256,13 @@ if ($action == "LIST" ) {
     # Server exists already, so update the table entry
     # ASSUMPTION: only the 'lastmod' column of table needs updating since all
     # else should remain the same as before
-    $result = mysql_query("UPDATE servers SET " .
-			  "build = '$build', " .
-			  "version = '$version', " .
-			  "gameinfo = '$gameinfo', " .
-			  "title = '$title', " .
-			  "lastmod = $curtime " .
-			  "WHERE nameport = '$nameport'", $link)
+    $result = mysql_query("UPDATE servers SET "
+	. "build = '$build', "
+	. "version = '$version', "
+	. "gameinfo = '$gameinfo', "
+	. "title = '$title', "
+	. "lastmod = $curtime "
+	. "WHERE nameport = '$nameport'", $link)
       or die ("Invalid query: ". mysql_error());
   }
 
@@ -305,15 +283,15 @@ if ($action == "LIST" ) {
   $servip = gethostbyname($servname);
   if ($servip == "0.0.0.0") {
     debug($debugFile, "Changed " . $servip . " to requesting address: "
-        . $_SERVER['REMOTE_ADDR'] );
+	. $_SERVER['REMOTE_ADDR'] );
     $servip =  $_SERVER['REMOTE_ADDR'];
     $servname = $servip;
     $nameport = $servip . ":" . $servport;
   } elseif ($_SERVER['REMOTE_ADDR'] != $servip) {
     debug($debugFile, "Requesting address is " . $_SERVER['REMOTE_ADDR']
-                      . " while server is at " . $servip );
+	. " while server is at " . $servip );
     print("Requesting address is " . $_SERVER['REMOTE_ADDR']
-                      . " while server is at " . $servip );
+	. " while server is at " . $servip );
     die();
   }
 
@@ -354,9 +332,9 @@ if ($action == "LIST" ) {
        "http://" . $_SERVER['SERVER_NAME']. "/db/?action=CONFIRM&email=$email&password=$randtext\n")
     or die ("Could not send mail");
   $result = mysql_query("INSERT INTO players "
-                      . "(email, callsign, password, lastmod, randtext) VALUES "
-                      . "('$email', '$callsign', '$password', '" . time() . "', "
-                      . "'$randtext')", $link)
+      . "(email, callsign, password, lastmod, randtext) VALUES "
+      . "('$email', '$callsign', '$password', '" . time() . "', "
+      . "'$randtext')", $link)
   or die ("Invalid query: ". mysql_error());
   print("Registration SUCCESSFUL: ");
   print("You will receive an email informing you on how to complete your account registration\n");
@@ -373,9 +351,9 @@ if ($action == "LIST" ) {
     if ( $password != $randtext ) {
       print("Failed to confirm registration since generated key did not match");
     } else {
-      $result = mysql_query("UPDATE players SET randtext=NULL " .
-                            "WHERE email='$email'", $link)
-        or die ("Invalid query: " . mysql_error());
+      $result = mysql_query("UPDATE players SET randtext=NULL "
+	  . "WHERE email='$email'", $link)
+	or die ("Invalid query: " . mysql_error());
       print("Your account has been successfully activated");
     }
   }
@@ -406,16 +384,17 @@ if ($action == "LIST" ) {
 } elseif ($action == "QUIT") {
   #  -- QUIT --
   # Server to handle a disconnecting player
-  $result = mysql_query("UPDATE players SET lastmod=" . time() .
-                        ", playtime=playtime+$conntime WHERE callsign='$callsign'", $link)
+  $result = mysql_query("UPDATE players SET lastmod=" . time()
+      . ", playtime=playtime+$conntime WHERE callsign='$callsign'", $link)
     or die ("Invalid query: " . mysql_error());
 } elseif ($action == "SETKARMA") {
   #  -- SETKARMA --
   # Set's a player's karma
   # FIXME should add/update an entry in the karma table
-  # FIXME should not use a text field assignments
-  $result = mysql_query("SELECT assignments FROM players WHERE callsign='$callsign' " .
-                        "AND password='$password'", $link)
+  # FIXME should not use a text field
+  $result = mysql_query("SELECT assignments FROM players "
+      . "WHERE callsign='$callsign' "
+      . "AND password='$password'", $link)
     or die ("Invalid query: " . mysql_error());
   if ( mysql_num_rows($result) == 0 ) {
     print ("Karma adjustment FAILED: incorrect callsign/password");
@@ -433,19 +412,19 @@ if ($action == "LIST" ) {
       $indv_assignments = explode(",", $assignments);
       $found = 0;
       for ( $i = 0; $i < count($indv_assignments); $i++ ) {
-        list($player, $kval) = explode("=", $indv_assignments[$i]);
-        if ( $player == $target ) {
-          $indv_assignments[$i] = "$target=$karma";
-          $found = 1;
-        }
+	list($player, $kval) = explode("=", $indv_assignments[$i]);
+	if ( $player == $target ) {
+	  $indv_assignments[$i] = "$target=$karma";
+	  $found = 1;
+	}
       }
       if ( !found ) {
-        $indv_assignments[$i] = "$target=$karma";
+	$indv_assignments[$i] = "$target=$karma";
       }
       $assignments = implode(",", $indv_assignments);
-      $result = mysql_query("UPDATE players SET assignments='$assignments' " .
-                            "WHERE callsign='$callsign'", $link)
-        or die ("Invalid query: " . mysql_error());
+      $result = mysql_query("UPDATE players SET assignments='$assignments' "
+	. "WHERE callsign='$callsign'", $link)
+	or die ("Invalid query: " . mysql_error());
       print ("Karma adjustment SUCCESSFUL");
     }
   }
@@ -470,7 +449,7 @@ if ($link) {
   # debug($debugFile, "Closing link to database");
 
   # say bye bye (shouldn't need to ever really, especially for persistent..)
-  #	mysql_close($link);
+  #mysql_close($link);
 }
 
 debug($debugFile, "End session");
