@@ -385,6 +385,9 @@ function action_confirm () {
   print('See <a href="http://BZFlag.org">http://BZFlag.org</a></body></html>');
 }
 
+# TODO combine with ADD and accept multiple callsigns/tokens at one time
+# TODO accept list of groups and return membership info
+# TODO convert to callsign instead of playerid cause we need to check that too
 function action_checktoken () {
   #  -- CHECKTOKEN --
   # validate player token for connecting player on a game server
