@@ -90,7 +90,7 @@ function validate_string_or_die($string, $valid_chars, $return_invalid_chars) {
     return($string);
   }
   header("Content-type: text/html");
-  die("Invalid chars in \"$string\": \"$invalid_chars\"");
+  die("MSG: Invalid chars in \"$string\": \"$invalid_chars\"");
 }
 
 # validate callsign or die (restrictive, used for more than callsign)
