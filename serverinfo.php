@@ -20,6 +20,7 @@ $serverinfo = mysql_query ("SELECT * FROM `serverinfo` WHERE `server` = '$safese
 if ($row = mysql_fetch_array($serverinfo, MYSQL_ASSOC)) {
 
   ?>
+<h3><?=$row['description']?></h3>
  <table>
 
     <caption>Server Configuration</caption>
