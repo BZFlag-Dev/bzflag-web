@@ -316,7 +316,7 @@ function checktoken($callsign, $ip, $token, $garray) {
   if ($ip) {
     $testip = "AND user_tokenip='$ip' ";
   } else {
-    $testip = "";
+    $testip = '';
   }
   $result = mysql_query("SELECT user_id FROM phpbb_users "
       . "WHERE username='$callsign' "
@@ -359,12 +359,12 @@ function action_checktokens() {
     function remove_empty ($value) { return empty($value) ? false : true; }
     $garray = array_filter(explode("\r\n", $groups), 'remove_empty');
     foreach(array_filter(explode("\r\n", $checktokens), 'remove_empty') as $checktoken) {
-      list($callsign, $rest) = explode("@", $checktoken);
+      list($callsign, $rest) = explode('@', $checktoken);
       if ($rest) {
-	list($ip, $token) = explode("=", $rest);
+	list($ip, $token) = explode('=', $rest);
       } else {
-	$ip = "";
-	list($callsign, $token) = explode("=", $checktoken);
+	$ip = '';
+	list($callsign, $token) = explode('=', $checktoken);
       }
       if ($token) checktoken($callsign, $ip, $token, $garray);
     }
@@ -464,33 +464,33 @@ function action_remove() {
   #  -- REMOVE --
   # Server requests to be removed from the DB.
   global $link, $nameport;
-  header("Content-type: text/plain");
+  header('Content-type: text/plain');
   print("MSG: REMOVE request from $nameport\n");
   debug("REMOVE request from $nameport");
 
-  $split = explode(":", $nameport);
+  $split = explode(':', $nameport);
   $servname = $split[0];
   if (array_key_exists(1, $split))
     $servport = $split[1];
   else
     $servport = 5154;
   $servip = gethostbyname($servname);
-  if ($servip == "0.0.0.0") {
-    debug("Changed " . $servip . " to requesting address: "
+  if ($servip == '0.0.0.0') {
+    debug('Changed ' . $servip . ' to requesting address: '
 	. $_SERVER['REMOTE_ADDR'] );
     $servip =  $_SERVER['REMOTE_ADDR'];
     $servname = $servip;
     $nameport = $servip . ":" . $servport;
   } elseif ($_SERVER['REMOTE_ADDR'] != $servip) {
-    debug("Requesting address is " . $_SERVER['REMOTE_ADDR']
-	. " while server is at " . $servip );
-    print("ERROR: Requesting address is " . $_SERVER['REMOTE_ADDR']
-	. " while server is at " . $servip );
+    debug('Requesting address is ' . $_SERVER['REMOTE_ADDR']
+	. ' while server is at ' . $servip );
+    print('ERROR: Requesting address is ' . $_SERVER['REMOTE_ADDR']
+	. ' while server is at ' . $servip );
     die();
   }
 
   $result = mysql_query("DELETE FROM servers WHERE nameport = '$nameport'", $link)
-    or die ("Invalid query: ". mysql_error());
+    or die ('Invalid query: '. mysql_error());
   print("REMOVE: $nameport\n");
 }
 
@@ -499,25 +499,25 @@ function action_register() {
   # Registers a player onto the players database.
   global $link, $callsign, $email, $password;
   # see if there is an existing entry
-  header("Content-type: text/plain");
+  header('Content-type: text/plain');
   $result = mysql_query("SELECT * FROM players WHERE email = '$email'", $link)
-    or die ("Invalid query: ". mysql_error());
+    or die ('Invalid query: '. mysql_error());
   if ( mysql_num_rows($result) > 0 ) {
-    print("Registration FAILED: ");
+    print('Registration FAILED: ');
     print("A player has already registered with the email address: $email");
     exit;
   }
   $result = mysql_query("SELECT * FROM players WHERE callsign = '$callsign'", $link)
-    or die ("Invalid query: ". mysql_error());
+    or die ('Invalid query: '. mysql_error());
   if ( mysql_num_rows($result) > 0 ) {
-    print("Registration FAILED: ");
+    print('Registration FAILED: ');
     print("A player has already registered with the callsign: $callsign");
     exit;
   }
 
   # no existing entry found - proceed to complete the registration
-  $alphanum = "abcdefghijklmnopqrstuvwxyz0123456789";
-  $randtext = "";
+  $alphanum = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  $randtext = '';
   srand(microtime() * 100000000);
   for ( $i = 0; $i < 8; $i++ )
     $randtext .= $alphanum{rand(0,35)};
@@ -546,10 +546,10 @@ function action_confirm() {
   #  -- CONFIRM --
   # Confirm a registration
   global $link, $email, $password;
-  header("Content-type: text/html");
+  header('Content-type: text/html');
   print("<html><head><title>Confirm registration</title></head><body>\n");
   $result = mysql_query("SELECT randtext FROM players WHERE email='$email'", $link)
-    or die ("Invalid query: " . mysql_error());
+    or die ('Invalid query: ' . mysql_error());
   $row = mysql_fetch_row($result);
   $randtext = $row[0];
   if ( $randtext == NULL ) {
@@ -562,7 +562,7 @@ function action_confirm() {
 	  . "randtext = NULL, "
 	  . "lastmod = '" . time() . "' "
 	  . "WHERE email='$email'", $link)
-	or die ("Invalid query: " . mysql_error());
+	or die ('Invalid query: ' . mysql_error());
       print("The account for $email has been successfully activated.<br>\n");
     }
   }
@@ -572,21 +572,21 @@ function action_confirm() {
 # ignore banned servers outright
 if ($banlist[$_SERVER['REMOTE_ADDR']] != "") {
   # reject the connection attempt
-  header("Content-type: text/plain");
+  header('Content-type: text/plain');
   $remote_addr = $_SERVER['REMOTE_ADDR'];
   debug("Connection rejected from $remote_addr");
-  die("Connection attempt rejected.  See #bzflag on irc.freenode.net");
+  die('Connection attempt rejected.  See #bzflag on irc.freenode.net');
 }
 
-debug("Connecting to the database");
+debug('Connecting to the database');
 
 # Connect to the server database persistently.
 $link = mysql_pconnect($dbhost, $dbuname, $dbpass)
-     or die("Could not connect: " . mysql_error());
+     or die('Could not connect: ' . mysql_error());
 if (!mysql_select_db($dbname)) {
   debug("Database $dbname did not exist");
 
-  die("Could not open db: " . mysql_error());
+  die('Could not open db: ' . mysql_error());
 }
 
 # remove all inactive registered players from the table
@@ -594,37 +594,41 @@ if (!mysql_select_db($dbname)) {
 $timeout = 31536000; # timeout in seconds, 365 days
 $staletime = time() - $timeout;
 mysql_query("DELETE FROM players WHERE lastmod < $staletime", $link)
-  or die ("Could not remove inactive players" . mysql_error());
+  or die ('Could not remove inactive players' . mysql_error());
 
 # remove all players who have not confirmed registration
 # FIXME this should not happen on every request
 $timeout = 259200;  # timeout in seconds, 72h
 $staletime = time() - $timeout;
 mysql_query("DELETE FROM players WHERE lastmod < $staletime AND randtext != NULL", $link)
-  or die ("Could not remove inactive players" . mysql_error());
+  or die ('Could not remove inactive players' . mysql_error());
+
+# tell the proxies not to cache
+header('Cache-Control: no-cache');
+header('Pragma: no-cache');
 
 # Do stuff based on what the 'action' is...
 switch ($action) {
-case "LIST":
+case 'LIST':
   action_list();
   break;
-case "ADD":
+case 'ADD':
   action_add();
   break;
-case "REMOVE":
+case 'REMOVE':
   action_remove();
   break;
-case "REGISTER":
+case 'REGISTER':
   action_register();
   break;
-case "CONFIRM";
+case 'CONFIRM';
   action_confirm();
   break;
-case "CHECKTOKENS":
-  header("Content-type: text/plain");
+case 'CHECKTOKENS':
+  header('Content-type: text/plain');
   action_checktokens();
   break;
-case "DEBUG":
+case 'DEBUG':
   testform('');
   break;
 default:
@@ -635,16 +639,16 @@ default:
 # make sure the connection to mysql is severed
 if ($link) {
   # for a transaction commit just in case
-  debug("Commiting any pending transactions");
-  mysql_query("COMMIT", $link);
+  debug('Commiting any pending transactions');
+  mysql_query('COMMIT', $link);
 
-  # debug("Closing link to database");
+  # debug('Closing link to database');
 
   # say bye bye (shouldn't need to ever really, especially for persistent..)
   #mysql_close($link);
 }
 
-debug("End session");
+debug('End session');
 
 # Local Variables: ***
 # mode:php ***
