@@ -20,6 +20,7 @@ BZFlag supports the following operating systems:<br>
 <ul>
 <li>Windows 95 or newer</li>
 <li>Linux 2.1 or newer</li>
+<li>Mac OS X</li>
 <li>Solaris (all versions)</li>
 <li>Irix 5.3 or newer</li>
 </ul>
