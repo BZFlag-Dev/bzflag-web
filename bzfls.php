@@ -115,8 +115,8 @@ function testform ($message) {
     title:<input type="text" name="title" size="80"><br>
     actions: ADD CHECKTOKENS<br>
     checktokens:<textarea name="checktokens" rows="3" style="width:100%">
-CallSign0=7654321089abcdef
-CallSign1=1234567812345678</textarea>
+CallSign0=01234567
+CallSign1=89abcdef</textarea>
     groups:<textarea name="groups" rows="3" style="width:100%">
 Group0
 Group1</textarea>
@@ -234,11 +234,11 @@ function action_checktokens () {
   # validate callsigns and tokens (clears tokens)
   global $link, $checktokens, $groups;
   if ($checktokens != "") {
-    # TODO discard empty garray entries
-    $garray = explode("\r\n", $groups);
-    foreach(explode("\r\n", $checktokens) as $checktoken) {
-      $split = explode("=", $checktoken);
-      if ($split[1]) checktoken($split[0], $split[1], $garray);
+    function remove_empty ($value) { return empty($value) ? false : true; }
+    $garray = array_filter(explode("\r\n", $groups), 'remove_empty');
+    foreach(array_filter(explode("\r\n", $checktokens), 'remove_empty') as $checktoken) {
+      list($callsign, $token) = explode("=", $checktoken);
+      if ($token) checktoken($callsign, $token, $garray);
     }
   }
 }
