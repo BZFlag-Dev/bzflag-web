@@ -21,7 +21,7 @@ body, table {
 	width: 213px;
 } */
 
-a  {
+a {
 	color: #ee8800;
 /*	color: #cc6600; */
 	text-decoration: none;
@@ -32,15 +32,15 @@ td.score, td.killquotient {
 	text-align: right
 }
 /*
-a:active  {
-            color: #ff3300;
+a:active {
+	color: #ff3300;
 }
 
-a:visited  {
-             color: #336699;
+a:visited {
+	color: #336699;
 }*/
 
-a:hover  {
+a:hover {
 	color: #5588bb;
 /*	color: #336699;*/
 	text-decoration: underline;
@@ -49,7 +49,7 @@ a:hover  {
 tr.tableheader {
 	background: #ffddbb;
 /*	background: #ffcc99;*/
-                 color: black;
+	color: black;
 }
 
 tr.tableheader a {
@@ -80,8 +80,8 @@ tr.oddrow {
 table {
 	width: 100%;
 	margin: 1em auto;
-/*        border: 0.1em solid #6699cc; */
-        border: 0.1em solid #88aacc;
+/*	border: 0.1em solid #6699cc; */
+	border: 0.1em solid #88aacc;
 }
 
 table td {
@@ -101,7 +101,7 @@ p.pages {
 
 .teamgreen {
 	color: #33bb33;
-/*        color: #00bb00;*/
+/*	color: #00bb00;*/
 	font-weight: bold;
 }
 
@@ -141,105 +141,104 @@ p.pages {
 	padding: 1em;
 }
 
-#content { 
-           margin-left: 17em;
-           width: 59em;
+#content {
+	margin-left: 17em;
+	width: 59em;
 }
 
-#footercontainer { 
-                   text-align: center;
-                   font-size: 90%;             
-                   clear: both;
-                   }
+#footercontainer {
+	text-align: center;
+	font-size: 90%;
+	clear: both;
+	}
 
-#footercontainer div { 
-                       margin: 1em;
-                       }
+#footercontainer div {
+	margin: 1em;
+	}
 
 h1 {
 	font-size: 200%;
-     font-family: "trebuchet ms", sans-serif;
-     
+	font-family: "trebuchet ms", sans-serif;
 }
 
 h2 {
 	font-size: 150%;
-     font-family: "trebuchet ms", sans-serif;
+	font-family: "trebuchet ms", sans-serif;
 }
 
 
 h3 {
 	font-size: 120%;
-     font-family: "trebuchet ms", sans-serif;
+	font-family: "trebuchet ms", sans-serif;
 }
 
 h4 {
 	font-size: 100%;
-     font-family: "trebuchet ms", sans-serif;
+	font-family: "trebuchet ms", sans-serif;
 }
 
-#menu { 
-        float: left;
-        width: 14em;
-        border-right: 0.1em dashed #666666;
-/*        border-right: 0.1em dashed #333333;*/
-        padding: 1em;
+#menu {
+	float: left;
+	width: 14em;
+	border-right: 0.1em dashed #666666;
+/*	border-right: 0.1em dashed #333333;*/
+	padding: 1em;
 }
 
 #menubar {
-           position: relative;
-           top: 8.7em;
-           left: 17em;
-           height: 2.4em;
-           line-height: 2.4em;
-           width: 40em;
-           }
+	position: relative;
+	top: 8.7em;
+	left: 17em;
+	height: 2.4em;
+	line-height: 2.4em;
+	width: 40em;
+	}
 
 #menubar a {
-             font-size: 1.6em;
-             font-weight: normal;
-             color: #444444;
-/*             color: #333333;*/
-             background: #cccccc;
-/*             background: #cccccc;*/
-             padding: 0.125em;
-             padding-left: 0.5em;
-             padding-right: 0.5em;
-             border-top: 0.0625em solid #333333;
-             border-right: 0.0625em solid #666666;
-             border-bottom: 0.0625em solid #999999;
-                  border-left: 0.0625em solid #333333;
-             margin-right: -0.25em;
-             }
+	font-size: 1.6em;
+	font-weight: normal;
+	color: #444444;
+/*	color: #333333;*/
+	background: #cccccc;
+/*	background: #cccccc;*/
+	padding: 0.125em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	border-top: 0.0625em solid #333333;
+	border-right: 0.0625em solid #666666;
+	border-bottom: 0.0625em solid #999999;
+	border-left: 0.0625em solid #333333;
+	margin-right: -0.25em;
+	}
 
 #menubar a:hover {
-                   color: #333333;
-/*                   color: black;*/
-                   text-decoration: none;
-                   background: #ffcc99;
-                   border-right: 0.0625em solid #996666;
-                   border-bottom: 0.0625em solid #cc9966;
-                  border-left: 0.0625em solid #333333;
-                   }
+	color: #333333;
+/*	color: black;*/
+	text-decoration: none;
+	background: #ffcc99;
+	border-right: 0.0625em solid #996666;
+	border-bottom: 0.0625em solid #cc9966;
+	border-left: 0.0625em solid #333333;
+	}
 
 #menubar a.active {
-                   color: #333333;
-/*                   color: black;*/
-                    text-decoration: none;
-                    background: white;
-                    border-bottom: 0.0625em solid white;
-                        border-left: 0.0625em solid #333333;
-                    }
+	color: #333333;
+/*	color: black;*/
+	text-decoration: none;
+	background: white;
+	border-bottom: 0.0625em solid white;
+	border-left: 0.0625em solid #333333;
+	}
 
 #menubar a.active:hover {
-                   color: #333333;
-/*                   color: black;*/
-                          text-decoration: none;
-                          background: white;
-                          border-bottom: 0.0625em solid white;
-                          border-right: 0.0625em solid #666666;
-                        border-left: 0.0625em solid #333333;
-                    }
+	color: #333333;
+/*	color: black;*/
+	text-decoration: none;
+	background: white;
+	border-bottom: 0.0625em solid white;
+	border-right: 0.0625em solid #666666;
+	border-left: 0.0625em solid #333333;
+	}
 
 
 
@@ -254,8 +253,8 @@ img {
 }
 
 p.refreshed {
-/*              float: right; */
-              text-align: right;
+/*	float: right; */
+	text-align: right;
 	font-style: italic;
 }
 
@@ -278,65 +277,63 @@ a.help {
 
 a.help:hover {
 	text-decoration: none;
-               }
+	}
 
-.menusection { 
-               padding: 1em;
-               }
+.menusection {
+	padding: 1em;
+	}
 
-.menusection:hover { 
-             background: #bbddff;
-/*             background: #99ccff;*/
-                 color: black;
-                     
-               }
+.menusection:hover {
+	background: #bbddff;
+/*	background: #99ccff;*/
+	color: black;
+	}
 
-a.active { 
-           color: #ff3333;
-/*           color: #ff3300;*/
-           }
+a.active {
+	color: #ff3333;
+/*	color: #ff3300;*/
+	}
 
-a.active:hover { 
-           color: #ff3333;
-/*           color: #ff3300;*/
-           }
+a.active:hover {
+	color: #ff3333;
+/*	color: #ff3300;*/
+	}
 
-.menusectionhome { 
-                   color: black;
-                   padding: 1em;
-                   background: #e0f0ff;
-/*                   background: #e0eeff;*/
-                   }
+.menusectionhome {
+	color: black;
+	padding: 1em;
+	background: #e0f0ff;
+/*	background: #e0eeff;*/
+	}
 
-.menusectionhome:hover { 
-             background: #bbddff;
-/*             background: #99ccff;*/
-                 color: black;
-                     
-               }
+.menusectionhome:hover {
+	background: #bbddff;
+/*	background: #99ccff;*/
+	color: black;
+	}
 
-.menusectionactive { 
-                 color: black;
-                     padding: 1em;
-                     background: #ffcc99;
-/*                     background: #ffcc99;*/
-                     }
+.menusectionactive {
+	color: black;
+	padding: 1em;
+	background: #ffcc99;
+/*	background: #ffcc99;*/
+	}
 
-.menusection ul, .menusectionactive ul { 
-                  list-style-type: none;
-                  padding-left: 1em;
-                  margin: 0.3em;
-                  }
-pre { 
-      background: #e0f0ff;
-/*      background: #e0eeff;*/
-      padding: 20px;
-      }
+.menusection ul, .menusectionactive ul {
+	list-style-type: none;
+	padding-left: 1em;
+	margin: 0.3em;
+	}
+pre {
+	background: #e0f0ff;
+/*	background: #e0eeff;*/
+	padding: 20px;
+	}
 
 caption {
 	font-size: 130%;
-     font-family: "trebuchet ms", sans-serif;
-          font-weight: bold;
-          margin: 0.5em;
+	font-family: "trebuchet ms", sans-serif;
+	font-weight: bold;
+	margin: 0.5em;
 }
 

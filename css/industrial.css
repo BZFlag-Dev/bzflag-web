@@ -21,7 +21,7 @@ body, table {
 	width: 213px;
 } */
 
-a  {
+a {
 	color: #333333;
 	text-decoration: none;
 	font-weight: bold;
@@ -31,22 +31,22 @@ td.score, td.killquotient {
 	text-align: right
 }
 /*
-a:active  {
-            color: #ff3300;
+a:active {
+	color: #ff3300;
 }
 
-a:visited  {
-             color: #336699;
+a:visited {
+	color: #336699;
 }*/
 
-a:hover  {
+a:hover {
 	color: #333399;
 	text-decoration: underline;
 }
 
 tr.tableheader {
 	background: #cccccc;
-                 color: black;
+	color: black;
 }
 
 tr.tableheader a {
@@ -78,7 +78,7 @@ tr.oddrow:hover {
 table {
 	width: 100%;
 	margin: 1em auto;
-        border: 0.1em solid #999999;
+	border: 0.1em solid #999999;
 }
 
 table td {
@@ -133,99 +133,98 @@ p.pages {
 	padding: 1em;
 }
 
-#content { 
-           margin-left: 17em;
-           width: 59em;
+#content {
+	margin-left: 17em;
+	width: 59em;
 }
 
-#footercontainer { 
-                   text-align: center;
-                   font-size: 90%;             
-                   clear: both;
-                   }
+#footercontainer {
+	text-align: center;
+	font-size: 90%;
+	clear: both;
+}
 
-#footercontainer div { 
-                       margin: 1em;
-                       }
+#footercontainer div {
+	margin: 1em;
+}
 
 h1 {
 	font-size: 200%;
-     font-family: "trebuchet ms", sans-serif;
-     
+	font-family: "trebuchet ms", sans-serif;
 }
 
 h2 {
 	font-size: 150%;
-     font-family: "trebuchet ms", sans-serif;
+	font-family: "trebuchet ms", sans-serif;
 }
 
 
 h3 {
 	font-size: 120%;
-     font-family: "trebuchet ms", sans-serif;
+	font-family: "trebuchet ms", sans-serif;
 }
 
 h4 {
 	font-size: 100%;
-     font-family: "trebuchet ms", sans-serif;
+	font-family: "trebuchet ms", sans-serif;
 }
 
-#menu { 
-        float: left;
-        width: 14em;
-        border-right: 0.1em dashed #333333;
-        padding: 1em;
+#menu {
+	float: left;
+	width: 14em;
+	border-right: 0.1em dashed #333333;
+	padding: 1em;
 }
 
 #menubar {
-           position: relative;
-           top: 8.7em;
-           left: 17em;
-           height: 2.4em;
-           line-height: 2.4em;
-           width: 40em;
-           }
+	position: relative;
+	top: 8.7em;
+	left: 17em;
+	height: 2.4em;
+	line-height: 2.4em;
+	width: 40em;
+}
 
 #menubar a {
-             font-size: 1.6em;
-             font-weight: normal;
-             color: #333333;
-             background: #cccccc;
-             padding: 0.125em;
-             padding-left: 0.5em;
-             padding-right: 0.5em;
-             border-top: 0.0625em solid #333333;
-             border-right: 0.0625em solid #666666;
-             border-bottom: 0.0625em solid #999999;
-             border-left: 0.0625em solid #333333;
-             margin-right: -0.25em;
-             }
+	font-size: 1.6em;
+	font-weight: normal;
+	color: #333333;
+	background: #cccccc;
+	padding: 0.125em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	border-top: 0.0625em solid #333333;
+	border-right: 0.0625em solid #666666;
+	border-bottom: 0.0625em solid #999999;
+	border-left: 0.0625em solid #333333;
+	margin-right: -0.25em;
+}
 
 #menubar a:hover {
-                   color: black;
-                   text-decoration: none;
-                   background: #ccccff;
-                   border-right: 0.0625em solid #666666;
-                   border-bottom: 0.0625em solid #999999;
-                   border-left: 0.0625em solid #333333;
-                   }
+	color: black;
+	text-decoration: none;
+	background: #ccccff;
+	border-right: 0.0625em solid #666666;
+	border-bottom: 0.0625em solid #999999;
+	border-left: 0.0625em solid #333333;
+}
 
 #menubar a.active {
-                    color: black;
-                    text-decoration: none;
-                    background: white;
-                    border-bottom: 0.0625em solid white;
-                    border-left: 0.0625em solid #333333;
-                    }
+	color: black;
+	text-decoration: none;
+	background: white;
+	border-bottom: 0.0625em solid white;
+	border-left: 0.0625em solid #333333;
+}
 
 #menubar a.active:hover {
-                          color: black;
-                          text-decoration: none;
-                          background: white;
-                          border-bottom: 0.0625em solid white;
-                          border-right: 0.0625em solid #666666;
-                          border-left: 0.0625em solid #333333;
-                          }
+	color: black;
+	text-decoration: none;
+	background: white;
+	border-bottom: 0.0625em solid white;
+	border-right: 0.0625em solid #666666;
+	border-left: 0.0625em solid #333333;
+}
 
 
 
@@ -240,8 +239,8 @@ img {
 }
 
 p.refreshed {
-/*              float: right; */
-              text-align: right;
+/*	float: right; */
+	text-align: right;
 	font-style: italic;
 }
 
@@ -264,57 +263,55 @@ a.help {
 
 a.help:hover {
 	text-decoration: none;
-               }
+}
 
-.menusection { 
-               padding: 1em;
-               }
+.menusection {
+	padding: 1em;
+}
 
-.menusection:hover { 
-             background: #cccccc;
-                 color: black;
-                     
-               }
+.menusection:hover {
+	background: #cccccc;
+	color: black;
+}
 
-a.active { 
-           color: #333366;
-           }
+a.active {
+	color: #333366;
+}
 
-a.active:hover { 
-           color: #333366;
-           }
+a.active:hover {
+	color: #333366;
+}
 
-.menusectionhome { 
-                   color: black;
-                   padding: 1em;
-                   background: #ececec;
-                   }
+.menusectionhome {
+	color: black;
+	padding: 1em;
+	background: #ececec;
+}
 
-.menusectionhome:hover { 
-             background: #cccccc;
-                 color: black;
-                     
-               }
+.menusectionhome:hover {
+	background: #cccccc;
+	color: black;
+}
 
-.menusectionactive { 
-                 color: black;
-                     padding: 1em;
-                     background: #999999;
-                     }
+.menusectionactive {
+	color: black;
+	padding: 1em;
+	background: #999999;
+}
 
-.menusection ul, .menusectionactive ul { 
-                  list-style-type: none;
-                  padding-left: 1em;
-                  margin: 0.3em;
-                  }
-pre { 
-      background: #f0f0f0;
-      padding: 20px;
-      }
+.menusection ul, .menusectionactive ul {
+	list-style-type: none;
+	padding-left: 1em;
+	margin: 0.3em;
+}
+pre {
+	background: #f0f0f0;
+	padding: 20px;
+}
 
 caption {
-          font-size: 130%;
-          font-family: "trebuchet ms", sans-serif;
-          font-weight: bold;
-          margin: 0.5em;
-          }
+	font-size: 130%;
+	font-family: "trebuchet ms", sans-serif;
+	font-weight: bold;
+	margin: 0.5em;
+}
