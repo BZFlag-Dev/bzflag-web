@@ -38,6 +38,7 @@ print <<< end
 <a href="/wiki/OtherLinks" class="navbar">links</a><br>
 <a href="/wiki/" class="navbar">wiki</a><br>
 <a href="/league/" class="navbar">CTF&nbsp;league</a><br>
+<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/TODO?rev=HEAD" class="navbar">TODO</a><br>
 <br>
 <a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
 &nbsp;<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag" class="navbar">browse&nbsp;CVS</a><br>
