@@ -71,6 +71,10 @@ tr.oddrow {
 	background: white;
 }
 
+tr.evenrow:hover {
+	background: #ececec;
+}
+
 tr.oddrow:hover {
 	background: #ececec;
 }
