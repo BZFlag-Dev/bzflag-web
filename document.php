@@ -30,8 +30,7 @@ print <<< end
       <table border="0" cellpadding="2"><tr><td>
 <a href="/" class="navbar">home</a><br>
 <a href="/wiki/GettingHelp" class="navbar">getting&nbsp;help</a><br>
-<a href="/download/" class="navbar">download</a><br>
-<a href="/wiki/BetaImages" class="navbar">beta&nbsp;images</a><br>
+<a href="/wiki/Download" class="navbar">download</a><br>
 <a href="/help/" class="navbar">help</a><br>
 <a href="/developers/" class="navbar">developers</a><br>
 <a href="/screenshots/" class="navbar">screenshots</a><br>
@@ -47,8 +46,6 @@ print <<< end
 &nbsp;<a href="/doxygen/" class="navbar">browse&nbsp;doxygen</a><br>
 &nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=103248" class="navbar">bug&nbsp;reports</a><br>
 &nbsp;<a href="http://sourceforge.net/cvs/?group_id=3248" class="navbar">CVS&nbsp;access</a><br>
-&nbsp;<a href="http://sourceforge.net/project/showfiles.php?group_id=3248" class="navbar">downloads</a><br>
-&nbsp;<a href="http://ftp.BZFlag.org/bzflag/" class="navbar">download&nbsp;dir</a><br>
 &nbsp;<a href="http://sourceforge.net/tracker/?atid=353248&amp;group_id=3248&amp;func=browse" class="navbar">feature&nbsp;requests</a><br>
 &nbsp;<a href="http://sourceforge.net/forum/?group_id=3248" class="navbar">forums</a><br>
 &nbsp;<a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">mailing&nbsp;lists</a><br>
