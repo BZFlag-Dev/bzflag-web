@@ -1,6 +1,6 @@
 -- MySQL dump 8.21
 --
--- Host: localhost    Database: bzflag
+-- Host: localhost    Database: bzflaglsdb
 ---------------------------------------------------------
 -- Server version	3.23.49-log
 
@@ -21,6 +21,32 @@ CREATE TABLE currentplayers (
   PRIMARY KEY  (id),
   KEY server (server)
 ) TYPE=MyISAM;
+
+--
+-- Table structure for table 'groupmembers'
+--
+
+CREATE TABLE groupmembers (
+  playerid int(10) unsigned NOT NULL default '0',
+  groupid int(10) unsigned NOT NULL default '0',
+  adddate int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (playerid,groupid),
+  KEY playerid (playerid),
+  KEY groupid (groupid)
+) TYPE=MyISAM COMMENT='many to many link - players to groups';
+
+--
+-- Table structure for table 'groups'
+--
+
+CREATE TABLE groups (
+  groupid int(10) unsigned NOT NULL auto_increment,
+  groupname varchar(32) NOT NULL default '',
+  playerid int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (groupid),
+  UNIQUE KEY groupname (groupname),
+  KEY playerid (playerid)
+) TYPE=MyISAM COMMENT='names of central groups - playerid is the owner/editor';
 
 --
 -- Table structure for table 'miscinfo'
@@ -65,14 +91,13 @@ CREATE TABLE players (
   email varchar(64) NOT NULL default '',
   callsign varchar(32) NOT NULL default '',
   password varchar(16) NOT NULL default '',
-  playtime int(10) unsigned NOT NULL default '0',
   lastmod int(10) unsigned NOT NULL default '0',
   randtext varchar(8) default NULL,
   token int(10) unsigned NOT NULL default '0',
   tokendate int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (playerid),
-  UNIQUE KEY callsign (callsign),
-  UNIQUE KEY email (email)
+  UNIQUE KEY email (email),
+  UNIQUE KEY callsign (callsign)
 ) TYPE=MyISAM;
 
 --
@@ -123,6 +148,7 @@ CREATE TABLE serverinfo (
 --
 
 CREATE TABLE servers (
+  players int(11) NOT NULL default '0',
   nameport varchar(60) NOT NULL default '',
   build varchar(60) default NULL,
   version varchar(9) NOT NULL default '',
@@ -130,6 +156,34 @@ CREATE TABLE servers (
   ipaddr varchar(17) NOT NULL default '',
   title varchar(80) default NULL,
   lastmod int(11) NOT NULL default '0',
+  ctf enum('Y','N') NOT NULL default 'N',
+  superflags enum('Y','N') NOT NULL default 'N',
+  jumping enum('Y','N') NOT NULL default 'N',
+  inertia enum('Y','N') NOT NULL default 'N',
+  ricochet enum('Y','N') NOT NULL default 'N',
+  shakable enum('Y','N') NOT NULL default 'N',
+  antidoteflags enum('Y','N') NOT NULL default 'N',
+  handicap enum('Y','N') NOT NULL default 'N',
+   rabbitchase  enum('Y','N') NOT NULL default 'N',
+  maxshots int(11) NOT NULL default '0',
+  shakewins int(11) NOT NULL default '0',
+  shaketimeout int(11) NOT NULL default '0',
+  maxplayerscore int(11) NOT NULL default '0',
+  maxteamscore int(11) NOT NULL default '0',
+  maxtime int(11) NOT NULL default '0',
+  maxplayers int(11) NOT NULL default '0',
+  roguesize int(11) NOT NULL default '0',
+  roguemax int(11) NOT NULL default '0',
+  redsize int(11) NOT NULL default '0',
+  redmax int(11) NOT NULL default '0',
+  greensize int(11) NOT NULL default '0',
+  greenmax int(11) NOT NULL default '0',
+  bluesize int(11) NOT NULL default '0',
+  bluemax int(11) NOT NULL default '0',
+  purplesize int(11) NOT NULL default '0',
+  purplemax int(11) NOT NULL default '0',
+  observersize int(11) NOT NULL default '0',
+  observermax int(11) NOT NULL default '0',
   PRIMARY KEY  (nameport)
 ) TYPE=MyISAM;
 
