@@ -412,7 +412,7 @@ if ($action == "LIST" ) {
 	<option value="ADD">ADD - add a server</option>
 	<option value="REMOVE">REMOVE - remove a server</option>
 	<option value="REGISTER">REGISTER - new player</option>
-	<option value="CONFORM">CONFIRM - confirm registration</option>
+	<option value="CONFIRM">CONFIRM - confirm registration</option>
 	<option value="QUIT">QUIT - FIXME</option>
 	<option value="CHECKTOKEN">CHECKTOKEN - verify player token from game server</option>
 	<option value="UNKNOWN">UNKNOWN - test invalid request</option>
