@@ -7,7 +7,7 @@ $doc->begin("home");
 $result = mysql_query("SELECT * FROM news ORDER BY date DESC");
 
 print <<< end
-BZFlag is a multiplayer 3D tank battle game. Its one of the most popular
+BZFlag is a free multiplayer 3D tank battle game. Its one of the most popular
 games ever on Silicon Graphics machines. For more information, check out
 some of the <a href="reviews.php">reviews</a>.<br><br>
 
