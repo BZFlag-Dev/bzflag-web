@@ -21,6 +21,7 @@ $debugFile	= "bzfls.log";
 include('serversettings.php');
 // $dbhost  = "localhost";
 // $dbname  = "bzflag";
+$bbdbname = "bzbb";
 // $dbuname = "bzflag";
 // $dbpass  = "bzflag";
 
@@ -215,7 +216,7 @@ Group1</textarea>
 function action_list () {
   #  -- LIST --
   # Same as LIST in the old bzfls
-  global $link, $callsign, $password, $version, $local, $alternateServers;
+  global $bbdbname, $dbname, $link, $callsign, $password, $version, $local, $alternateServers;
   header("Content-type: text/plain");
   debug("Fetching LIST");
 
@@ -227,10 +228,14 @@ function action_list () {
     or die("Could not drop old servers" . mysql_error());
 
   if ($callsign && $password) {
-    $result = mysql_query("SELECT playerid FROM players "
-	. "WHERE callsign='$callsign' "
-	. "AND password = '$password'"
-	. "AND randtext IS NULL", $link)
+    if (!mysql_select_db($bbdbname)) {
+      debug("Database $bbdbname did not exist");
+      die("Could not open db: " . mysql_error());
+    }
+    $result = mysql_query("SELECT user_id FROM phpbb_users "
+	. "WHERE username='$callsign' "
+	. "AND user_password=MD5('$password')"
+	. "AND user_active=1", $link)
       or die ("Invalid query: " . mysql_error());
     $row = mysql_fetch_row($result);
     $playerid = $row[0];
@@ -239,12 +244,17 @@ function action_list () {
     } else {
       srand(microtime() * 100000000);
       $token = rand(0,2147483647);
-      $result = mysql_query("UPDATE players SET "
-	  . "token = '$token', "
-	  . "tokendate = '" . time() . "'"
-	  . "WHERE playerid = '$playerid'", $link)
+      $result = mysql_query("UPDATE phpbb_users SET "
+	  . "user_token='$token', "
+	  . "user_tokendate='" . time() . "'"
+	  . "WHERE user_id='$playerid'", $link)
 	or die ("Invalid query: ". mysql_error());
       print("TOKEN: $token\n");
+    }
+    if (!mysql_select_db($dbname)) {
+      debug("Database $dbname did not exist");
+
+      die("Could not open db: " . mysql_error());
     }
   }
 
@@ -276,35 +286,39 @@ function action_list () {
 
 function checktoken ($callsign, $token, $garray) {
   # validate player token for connecting player on a game server
-  global $link;
+  global $bbdbname, $dbname, $link;
   # TODO add grouplist support
   print("MSG: checktoken callsign=$callsign, token=$token ");
   foreach($garray as $group) {
     print(" group=$group");
   }
   print("\n");
-  $timeout = 600; # 10 minutes while testing
+  $timeout = 3600; # 60 minutes while testing
   $staletime = time() - $timeout;
-  $result = mysql_query("SELECT playerid FROM players "
-      . "WHERE callsign = '$callsign' "
-      . "AND token = '$token' "
-      . "AND tokendate > $staletime", $link)
+  if (!mysql_select_db($bbdbname)) {
+    debug("Database $bbdbname did not exist");
+    die("Could not open db: " . mysql_error());
+  }
+  $result = mysql_query("SELECT user_id FROM phpbb_users "
+      . "WHERE username='$callsign' "
+      . "AND user_token='$token' "
+      . "AND user_tokendate > $staletime", $link)
     or die ("Invalid query: " . mysql_error());
   $row = mysql_fetch_row($result);
   $playerid = $row[0];
   if ($playerid) {
     # clear tokendate so nasty game server admins can't login someplace else
-    $result = mysql_query("UPDATE players SET "
-	. "lastmod = '" . time() . "', "
-	. "tokendate = '0' "
-	. "WHERE playerid='$playerid'", $link)
+#	. "lastmod = '" . time() . "', "
+    $result = mysql_query("UPDATE phpbb_users SET "
+	. "user_tokendate='" . time() . "'"
+	. "WHERE user_id='$playerid'", $link)
       or die ("Invalid query: " . mysql_error());
     print ("TOKGOOD: $callsign");
     if (count($garray)) {
-      $query = "SELECT groups.groupname FROM groups, groupmembers "
-	  . "WHERE groupmembers.playerid='$playerid' "
-	  . "AND groupmembers.groupid=groups.groupid "
-	  . "and (groups.groupname='" . implode("' or groups.groupname='", $garray) . "' )";
+      $query = "SELECT phpbb_groups.group_name FROM phpbb_groups, phpbb_user_group "
+	  . "WHERE phpbb_user_group.user_id='$playerid' "
+	  . "AND phpbb_user_group.group_id=phpbb_groups.group_id "
+	  . "and (phpbb_groups.group_name='" . implode("' or phpbb_groups.group_name='", $garray) . "' )";
       $result = mysql_query("$query")
 	or die ("Invalid query: " . mysql_error());
       while ($row = mysql_fetch_row($result)) {
@@ -543,7 +557,7 @@ debug("Connecting to the database");
 $link = mysql_pconnect($dbhost, $dbuname, $dbpass)
      or die("Could not connect: " . mysql_error());
 if (!mysql_select_db($dbname)) {
-  debug("Database did not exist");
+  debug("Database $dbname did not exist");
 
   die("Could not open db: " . mysql_error());
 }
