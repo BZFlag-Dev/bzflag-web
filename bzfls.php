@@ -123,6 +123,11 @@ function veod($string) {
   return(validate_string_or_die($string, $valid_chars, true));
 }
 
+# maybeaddslashes
+function maybe_add_slashes($string) {
+  return get_magic_quotes_gpc() ? $string : addslashes($string);
+}
+
 # Common to all
 if (array_key_exists("action", $_REQUEST)) {
   $action = vcsod($_REQUEST['action']);
@@ -137,7 +142,7 @@ $nameport = vnpod($_REQUEST['nameport']);
 $build    = vcsod($_REQUEST['build']);
 $version  = vcsod($_REQUEST['version']); # also on LIST
 $gameinfo = vhod($_REQUEST['gameinfo']);
-$unsafetitle    = $_REQUEST['title']; # escape for ALL SQL calls!
+$slashtitle = maybe_add_slashes($_REQUEST['title']); # escape for SQL calls
 # for ADD CHECKTOKENS
 $checktokens = vctod($_REQUEST['checktokens']); # callsign0=token\ncallsign1=token\n...
 $groups   = vctod($_REQUEST['groups']); # groups server is interested in
@@ -328,12 +333,12 @@ function action_add () {
   #  -- ADD --
   # Server either requests to be added to DB, or to issue a keep-alive so that it
   # does not get dropped due to a timeout...
-  global $link, $nameport, $version, $build, $gameinfo, $unsafetitle, $checktokens, $groups;
+  global $link, $nameport, $version, $build, $gameinfo, $slashtitle, $checktokens, $groups;
   header("Content-type: text/plain");
-  debug("Attempting to ADD $nameport $version $gameinfo $unsafetitle");
+  debug("Attempting to ADD $nameport $version $gameinfo " . stripslashes($slashtitle));
 
   # Filter out badly formatted or buggy versions
-  print "MSG: ADD $nameport $version $gameinfo $unsafetitle\n";
+  print "MSG: ADD $nameport $version $gameinfo " . stripslashes($slashtitle) . "\n";
   $pos = strpos($version, "BZFS");
   if ($pos === false || $pos > 0)
     return;
@@ -385,7 +390,7 @@ function action_add () {
 	. "(nameport, build, version, gameinfo, ipaddr,"
 	. " title, lastmod) VALUES "
 	. "('$nameport', '$build', '$version',"
-	. " '$gameinfo', '$servip', '$unsafetitle', $curtime)", $link)
+	. " '$gameinfo', '$servip', '$slashtitle', $curtime)", $link)
       or die ("Invalid query: ". mysql_error());
   } else {
 
@@ -400,7 +405,7 @@ function action_add () {
 	. "build = '$build', "
 	. "version = '$version', "
 	. "gameinfo = '$gameinfo', "
-	. "title = '$unsafetitle', "
+	. "title = '$slashtitle', "
 	. "lastmod = $curtime "
 	. "WHERE nameport = '$nameport'", $link)
       or die ("Invalid query: ". mysql_error());
