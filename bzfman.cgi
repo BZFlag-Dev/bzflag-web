@@ -1,7 +1,7 @@
 #!/bin/sh
 case "$QUERY_STRING" in
  bzadmin|bzflag|bzfs)
-  wget -O - http://cvs.sourceforge.net/viewcvs.py/*checkout\*/bzflag/bzflag/man/bzfs.6s?rev=HEAD \
+  wget -O - http://cvs.sourceforge.net/viewcvs.py/*checkout\*/bzflag/bzflag/man/$QUERY_STRING.6s?rev=HEAD \
   | man2html \
   | sed -e "s~^using the manual pages.<BR>$~using the manual pages from http://cvs.sourceforge.net/viewcvs.py/*checkout\*/bzflag/bzflag/man/$QUERY_STRING.6s<BR>~"
   ;;
