@@ -2,7 +2,7 @@
 include('serversettings.php');
 $link = mysql_pconnect($dbhost, $dbuname, $dbpass)or die("Could not connect: " . mysql_error($link));
 $rss['title'] = "Bzflag List Server";  
-$rss['description'] = "Bzflag's Award Winning List Server";
+$rss['description'] = "Bzflag's List Server";
 $rss['link'] = "http://bzflag.org";
     echo ('<?xml version="1.0"?>');
     echo ('<rss version="2.0">');
@@ -12,13 +12,12 @@ $rss['link'] = "http://bzflag.org";
     echo "<link>{$rss['link']}</link>\n";
     
    $result = mysql_query("SELECT nameport,title FROM servers ORDER BY `nameport` ASC", $link);
-    
    
         if(mysql_num_rows($result) > 0) {
-            while($row = mysql_fetch_array($result)) {
+            while($row = mysql_fetch_array($result)) { 
                  echo "<item>\n";
 
-                echo "<title>{$row['title']} - {$row['nameport']}</title>\n";
+                echo "<title>{$row['nameport']}</title>\n";
                 $time = strtotime("{$row['date']} {$row['time']}");
                 echo "<pubDate>".date("r",$time)."</pubDate>\n";
                 
