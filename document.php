@@ -14,6 +14,7 @@ print <<< end
 <title>BZFlag - $title</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css" href="/general.css">
+<link href="/favicon.ico" rel="shortcut icon">
 </head>
 <body>
 <div align="center">
