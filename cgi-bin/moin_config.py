@@ -37,6 +37,8 @@ url_path = "/wiki" + os.environ.get("PATH_INFO", "/FrontPage")
 page_icons = ''
 page_footer1 = '<hr>'
 navi_bar = ''
+mail_smarthost = 'localhost'
+mail_from = 'BZFlag Wiki <noreply@BZFlag.org>'
 title1 = """<div align="center">
 <table width="100%%" border="0" cellpadding="0" cellspacing="0" bgcolor="#000000"><tr><td>
   <table border="0" cellpadding="0" cellspacing="1" width="100%%">
@@ -153,10 +155,16 @@ html_head = """
 
 # security (deactivated by default)
 if 1:
-#    allowed_actions = ['DeletePage', 'AttachFile']
-    allowed_actions = ['AttachFile']
+    allowed_actions = ['DeletePage', 'AttachFile']
 
     from MoinMoin.security import Permissions
     class SecurityPolicy(Permissions):
         edit = 1
         delete = 1
+        def __init__(self, user):
+                global excluded_actions
+                self.user = user
+
+                # only allow edits/deletes by logged-in users
+                self.edit = self.edit and user.valid
+                self.delete = self.edit and user.valid
