@@ -44,7 +44,6 @@ $local    = $_REQUEST['local'];
 $callsign = $_REQUEST['callsign'];  # urlencoded
 $email    = $_REQUEST['email'];     # urlencoded
 $password = $_REQUEST['password'];  # urlencoded
-$conntime = $_REQUEST['conntime'];  # TODO kill this. use db server time for everything
 
 # for CHECKTOKEN
 $playerid = $_REQUEST['playerid'];
@@ -99,7 +98,6 @@ function testform ($message) {
 	<option value="REMOVE">REMOVE - remove a server</option>
 	<option value="REGISTER">REGISTER - new player</option>
 	<option value="CONFIRM">CONFIRM - confirm registration</option>
-	<option value="QUIT">QUIT - FIXME</option>
 	<option value="CHECKTOKEN">CHECKTOKEN - verify player token from game server</option>
 	<option value="UNKNOWN">UNKNOWN - test invalid request</option>
     </select><br>
@@ -113,7 +111,7 @@ function testform ($message) {
     build:<input type="text" name="build" size="80"><br>
     gameinfo:<input type="text" name="gameinfo" size="80"><br>
     title:<input type="text" name="title" size="80"><br>
-    actions: REGISTER CONFIRM QUIT<br>
+    actions: REGISTER CONFIRM<br>
     email:<input type="text" name="email" size="80"><br>
     actions: CHECKTOKEN<br>
     playerid:<input type="text" name="playerid" size="80"><br>
@@ -414,16 +412,6 @@ function action_checktoken () {
     print ("FAIL");
 }
 
-function action_quit () {
-  #  -- QUIT --
-  # handle disconnecting player
-  # TODO not actually used yet
-  global $link, $callsign;
-  $result = mysql_query("UPDATE players SET lastmod=" . time()
-      . ", playtime=playtime+$conntime WHERE callsign='$callsign'", $link)
-    or die ("Invalid query: " . mysql_error());
-}
-
 # ignore banned servers outright
 if ($banlist[$_SERVER['REMOTE_ADDR']] != "") {
   # reject the connection attempt
@@ -477,9 +465,6 @@ case "CONFIRM";
   break;
 case "CHECKTOKEN":
   action_checktoken();
-  break;
-case "QUIT":
-  action_quit();
   break;
 case "DEBUG":
   testform('');
