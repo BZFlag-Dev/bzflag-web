@@ -388,7 +388,7 @@ function action_register () {
   # no existing entry found - proceed to complete the registration
   $alphanum = "abcdefghijklmnopqrstuvwxyz0123456789";
   $randtext = "";
-  srand(microtime());
+  srand(microtime() * 100000000);
   for ( $i = 0; $i < 8; $i++ )
     $randtext .= $alphanum{rand(0,35)};
   # FIXME remove `` etc from email
