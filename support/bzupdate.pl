@@ -200,7 +200,7 @@ for (;;) {
     my $delta = gettimeofday() - $starttime;
     print "$delta seconds to scan servers\n" if $debug;
 
-    print "$refreshquery\n" if $debug;
+    #print "$refreshquery\n" if $debug;
 
     $dbh->do("DELETE FROM `currentplayers` $refreshquery 1");
     $dbh->do("DELETE FROM `teaminfo` $refreshquery 1");
