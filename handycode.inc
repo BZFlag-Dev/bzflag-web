@@ -103,9 +103,6 @@ if (isset($_COOKIE['language'])) {
  */
 if (isset($_SERVER['SCRIPT_FILENAME'])) {
 	switch (basename($_SERVER['SCRIPT_FILENAME'])) {
-	case "stats.php":
-		$title = "Welcome!";
-		break;
 	case "currentplayers.php":
 		$title = "Current Players";
 		break;
@@ -136,6 +133,11 @@ if (isset($_SERVER['SCRIPT_FILENAME'])) {
 	case "rssgenerator.php":
 		$title = "RSS Feed Generator";
 		break;
+	case "stats.php":
+	default:
+		$title = "Welcome!";
+		break;
+		
 	}
 }
 
