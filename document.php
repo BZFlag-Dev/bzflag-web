@@ -8,11 +8,13 @@ mysql_select_db("bzflag");
 class Document {
   function begin($title, $session = 0) {
 print <<< end
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <title>BZFlag - $title</title>
-</head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link rel="stylesheet" type="text/css" href="/general.css">
+</head>
 <body>
 <div align="center">
 <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#000000"><tr><td>
@@ -31,7 +33,7 @@ print <<< end
 <a href="/help/" class="navbar">help</a><br>
 <a href="/developers/" class="navbar">developers</a><br>
 <a href="/screenshots/" class="navbar">screenshots</a><br>
-<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/LICENSE?rev=HEAD&content-type=text/vnd.viewcvs-markup" class="navbar">license</a><br>
+<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/LICENSE?rev=HEAD&amp;content-type=text/vnd.viewcvs-markup" class="navbar">license</a><br>
 <a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
 <a href="/cgi-bin/moin.cgi/OtherLinks" class="navbar">links</a><br>
 <a href="/cgi-bin/moin.cgi/" class="navbar">wiki</a><br>
@@ -39,15 +41,15 @@ print <<< end
 <br>
 <a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
 <a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag" class="navbar">&nbsp;browse&nbsp;CVS</a><br>
-<a href="http://sourceforge.net/tracker/?group_id=3248&atid=103248" class="navbar">&nbsp;bug&nbsp;reports</a><br>
+<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=103248" class="navbar">&nbsp;bug&nbsp;reports</a><br>
 <a href="http://sourceforge.net/cvs/?group_id=3248" class="navbar">&nbsp;CVS&nbsp;access</a><br>
 <a href="http://sourceforge.net/project/showfiles.php?group_id=3248" class="navbar">&nbsp;downloads</a><br>
 <a href="http://ftp1.sourceforge.net/bzflag/" class="navbar">&nbsp;download&nbsp;dir</a><br>
-<a href="http://sourceforge.net/tracker/?atid=353248&group_id=3248&func=browse" class="navbar">&nbsp;feature&nbsp;requests</a><br>
+<a href="http://sourceforge.net/tracker/?atid=353248&amp;group_id=3248&amp;func=browse" class="navbar">&nbsp;feature&nbsp;requests</a><br>
 <a href="http://sourceforge.net/forum/?group_id=3248" class="navbar">&nbsp;forums</a><br>
 <a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">&nbsp;mailing&nbsp;lists</a><br>
-<a href="http://sourceforge.net/tracker/?atid=423059&group_id=3248&func=browse" class="navbar">&nbsp;maps</a><br>
-<a href="http://sourceforge.net/tracker/?group_id=3248&atid=203248" class="navbar">&nbsp;support</a><br>
+<a href="http://sourceforge.net/tracker/?atid=423059&amp;group_id=3248&amp;func=browse" class="navbar">&nbsp;maps</a><br>
+<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=203248" class="navbar">&nbsp;support</a><br>
 end;
     if($session == 1) {
 print <<< end
@@ -88,7 +90,7 @@ print <<< end
 </td></tr></table>
 <br>
 <table border="0"><tr><td>
-<a href="http://sourceforge.net/project/?group_id=3248"><img src="http://sourceforge.net/sflogo.php?group_id=3248&type=1" alt="sourceforge" border="0"></a>
+<a href="http://sourceforge.net/project/?group_id=3248"><img src="http://sourceforge.net/sflogo.php?group_id=3248&amp;type=1" alt="sourceforge" border="0"></a>
 &nbsp;
 <a href="http://www.opengl.org/"><img src="/images/opengl.gif" alt="opengl" border="0"></a>
 &nbsp;
