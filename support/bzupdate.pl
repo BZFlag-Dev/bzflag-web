@@ -12,13 +12,15 @@ my $debug = 0; # if (shift eq '-d');
 $debug = 1 if (shift eq '-d');
 
 # get settings
-use vars qw($mysqluser $mysqlpassword);
-#$mysqluser = "bzflag";
-#$mysqlpassword = "password";
+use vars qw($dbhost $dbname $dbuname $dbpass);
+#$dbhost = "localhost";
+#$dbname = "bzflag";
+#$dbuser = "bzflag";
+#$dbpassword = "password";
 do ".mysqlconnect";
 # Connect to the database
-my $dbh = DBI->connect("DBI:mysql:bzflag:localhost",
-		       "$mysqluser", "$mysqlpassword",
+my $dbh = DBI->connect("DBI:mysql:$dbname:$dbhost",
+		       "$dbuname", "$dbpass",
 		       {'RaiseError' => 1});
 
 my $bzinfo = new BZFlag::Info;
