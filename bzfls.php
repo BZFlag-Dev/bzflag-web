@@ -14,40 +14,40 @@
 
 # where to send debug printing (might override below)
 $enableDebug	= 0;
-$debugFile	= "bzfls.log";
+$debugFile	= 'bzfls.log';
 
 // define dbhost/dbuname/dbpass/dbname here
 // NOTE it's .php so folks can't read the source
 include('serversettings.php');
-// $dbhost  = "localhost";
-// $dbname  = "bzflag";
-$bbdbname = "bzbb";
-// $dbuname = "bzflag";
-// $dbpass  = "bzflag";
+// $dbhost  = 'localhost';
+// $dbname  = 'bzflag';
+$bbdbname = 'bzbb';
+// $dbuname = 'bzflag';
+// $dbpass  = 'bzflag';
 
 # for banning.  provide key => value pairs where the key is an
 # ip address. value is not used at present.
 # FIXME this should be in an sql table with a remote admin interface
 $banlist = array(
-  "68.109.43.46" => "knightmare.kicks-ass.net",
-#  "127.0.0.1" => "localhost"
-  "255.255.255.255" => "globalbroadcast"
+  '68.109.43.46' => 'knightmare.kicks-ass.net',
+#  '127.0.0.1' => 'localhost'
+  '255.255.255.255' => 'globalbroadcast'
 );
 
-// $alternateServers = array("http://db.bzflag.org/db/","");
-$alternateServers = array("");
+// $alternateServers = array('http://db.bzflag.org/db/','');
+$alternateServers = array('');
 
 # log function
 if ($enableDebug) {
   function debug ($message) {
     global $debugFile;
-    $fp = fopen($debugFile, "a");
+    $fp = fopen($debugFile, 'a');
     if ($fp) {
       # output the message with a BSD-style timestamp
-      fwrite($fp, date("D M j G:i:s T Y") . " " . $_SERVER['REMOTE_ADDR'] . " " . $message . "\n");
+      fwrite($fp, date('D M j G:i:s T Y') . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . $message . '\n');
       fclose($fp);
     } else {
-      print("Unable to write to to log file [$filename]");
+      print('Unable to write to to log file [$filename]');
     }
   }
 } else {
@@ -57,9 +57,9 @@ if ($enableDebug) {
 
 function validate_string($string, $valid_chars, $return_invalid_chars) {
   # thanx http://scripts.franciscocharrua.com/validate-string.php =)
-  $invalid_chars = "";
+  $invalid_chars = '';
 
-  if ($string == null || $string == "")
+  if ($string == null || $string == '')
     return(true);
 
   # for every char
@@ -78,51 +78,64 @@ function validate_string($string, $valid_chars, $return_invalid_chars) {
   # if the string does not contain invalid characters, the function will return true.
   # if it does, it will either return false or a list of the invalid characters used
   # in the string, depending on the value of the second parameter.
-  if($return_invalid_chars == true && $invalid_chars != "")
+  if($return_invalid_chars == true && $invalid_chars != '')
     return($invalid_chars);
   else
-    return($invalid_chars == "");
+    return($invalid_chars == '');
+}
+
+# validate string or error
+function validate_string_or_error($string, $valid_chars) {
+  $invalid_chars = validate_string($string, $valid_chars, true);
+  if ($invalid_chars == true) {
+    return($string);
+  }
+  header('Content-type: text/html');
+  print("ERROR: Invalid chars in \"$string\": \"$invalid_chars\"");
+  return('');
 }
 
 # validate string or die
-function validate_string_or_die($string, $valid_chars, $return_invalid_chars) {
-  $invalid_chars = validate_string($string, $valid_chars, true);
-  if ($invalid_chars === true) {
-    return($string);
+function validate_string_or_die($string, $valid_chars) {
+  if ($string == '') {
+    return $string;
   }
-  header("Content-type: text/html");
-  die("ERROR: Invalid chars in \"$string\": \"$invalid_chars\"");
+  $string = validate_string_or_error($string, $valid_chars);
+  if ($string === '') {
+    die('');
+  }
+  return($string);
 }
 
-# validate callsign or die (restrictive, used for more than callsign)
-function vcsod($string) {
+# validate callsign or error (restrictive, used for more than callsign)
+function vcsoe($string) {
   # against better judgement " " is valid here =(
-  $valid_chars = " -_.1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  return(validate_string_or_die($string, $valid_chars, true));
+  $valid_chars = ' -_.1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  return(validate_string_or_error($string, $valid_chars));
 }
 
 # validate hex or die
 function vhod($string) {
-  $valid_chars = "1234567890abcdef";
-  return(validate_string_or_die($string, $valid_chars, true));
+  $valid_chars = '1234567890abcdef';
+  return(validate_string_or_die($string, $valid_chars));
 }
 
 # validate nameport or die
 function vnpod($string) {
-  $valid_chars = "-.:1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  return(validate_string_or_die($string, $valid_chars, true));
+  $valid_chars = '-.:1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  return(validate_string_or_die($string, $valid_chars));
 }
 
 # validate checktoken or die
 function vctod($string) {
-  $valid_chars = "\r\n=-_.1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  return(validate_string_or_die($string, $valid_chars, true));
+  $valid_chars = '\r\n=-_.1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  return(validate_string_or_die($string, $valid_chars));
 }
 
 # validate email or die
 function veod($string) {
-  $valid_chars = "-.@1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  return(validate_string_or_die($string, $valid_chars, true));
+  $valid_chars = '-.@1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  return(validate_string_or_die($string, $valid_chars));
 }
 
 # maybeaddslashes
@@ -131,18 +144,17 @@ function maybe_add_slashes($string) {
 }
 
 # Common to all
-if (array_key_exists("action", $_REQUEST)) {
-  $action = vcsod($_REQUEST['action']);
+if (array_key_exists('action', $_REQUEST)) {
+  $action = vcsoe($_REQUEST['action']);
 } else {
-  $action = "";
+  $action = '';
 }
-
 # For ADD REMOVE
 $nameport = vnpod($_REQUEST['nameport']);
 
 # For ADD
-$build    = vcsod($_REQUEST['build']);
-$version  = vcsod($_REQUEST['version']); # also on LIST
+$build    = vcsoe($_REQUEST['build']);
+$version  = vcsoe($_REQUEST['version']); # also on LIST
 $gameinfo = vhod($_REQUEST['gameinfo']);
 $slashtitle = maybe_add_slashes($_REQUEST['title']); # escape for SQL calls
 # for ADD CHECKTOKENS
@@ -150,16 +162,16 @@ $checktokens = vctod($_REQUEST['checktokens']); # callsign0=token\ncallsign1=tok
 $groups   = vctod($_REQUEST['groups']); # groups server is interested in
 
 # For players
-$callsign = vcsod($_REQUEST['callsign']);  # urlencoded
+$callsign = vcsoe($_REQUEST['callsign']);  # urlencoded
 $email    = veod($_REQUEST['email']);     # urlencoded
-$password = vcsod($_REQUEST['password']);  # urlencoded
+$password = vcsoe($_REQUEST['password']);  # urlencoded
 
 # for LIST
-$local    = vcsod($_REQUEST['local']);
+$local    = vcsoe($_REQUEST['local']);
 
 function testform ($message) {
   global $action;
-  header("Content-type: text/html");
+  header('Content-type: text/html');
   print('<html>
 <head>
 <title>BZFlag db server</title>
@@ -203,7 +215,7 @@ Group1</textarea>
     <input type="reset" value="Clear form">
   </form>
 </body>');
-  if ($action == "DEBUG") {
+  if ($action == 'DEBUG') {
     print('<PRE>\n');
     var_dump($GLOBALS);
     print('</PRE>\n');
@@ -217,20 +229,20 @@ function action_list () {
   #  -- LIST --
   # Same as LIST in the old bzfls
   global $bbdbname, $dbname, $link, $callsign, $password, $version, $local, $alternateServers;
-  header("Content-type: text/plain");
-  debug("Fetching LIST");
+  header('Content-type: text/plain');
+  debug('Fetching LIST');
 
   # remove all inactive servers from the table
-  debug("Deleting inactive servers from list");
+  debug('Deleting inactive servers from list');
   $timeout = 1800;    # timeout in seconds
   $staletime = time() - $timeout;
   mysql_query("DELETE FROM servers WHERE lastmod < $staletime", $link)
-    or die("Could not drop old servers" . mysql_error());
+    or die('Could not drop old servers' . mysql_error());
 
   if ($callsign && $password) {
     if (!mysql_select_db($bbdbname)) {
       debug("Database $bbdbname did not exist");
-      die("Could not open db: " . mysql_error());
+      die('Could not open db: ' . mysql_error());
     }
     $result = mysql_query("SELECT user_id FROM phpbb_users "
 	. "WHERE username='$callsign' "
@@ -254,7 +266,7 @@ function action_list () {
     if (!mysql_select_db($dbname)) {
       debug("Database $dbname did not exist");
 
-      die("Could not open db: " . mysql_error());
+      die('Could not open db: ' . mysql_error());
     }
   }
 
@@ -267,18 +279,18 @@ function action_list () {
     $result = mysql_query("SELECT nameport,version,gameinfo,ipaddr,title "
 	. " FROM servers ORDER BY `nameport` ASC", $link)
       or die ("Invalid query: ". mysql_error());
-  while (TRUE) {
+  while (true) {
     $row = mysql_fetch_row($result);
     if (!$row)
       break;
-    $line = implode(" ", $row);
+    $line = implode(' ', $row);
     print "$line\n";
   }
 
   if ($local != 1) {
     // check the old list server and append
     foreach($alternateServers as $thisSever ){
-      if ($thisSever != "")
+      if ($thisSever != '')
 	readfile($thisSever.'?action=LIST&local=1');
     }
   }
@@ -292,18 +304,18 @@ function checktoken ($callsign, $token, $garray) {
   foreach($garray as $group) {
     print(" group=$group");
   }
-  print("\n");
+  print('\n');
   $timeout = 3600; # 60 minutes while testing
   $staletime = time() - $timeout;
   if (!mysql_select_db($bbdbname)) {
     debug("Database $bbdbname did not exist");
-    die("Could not open db: " . mysql_error());
+    die('Could not open db: ' . mysql_error());
   }
   $result = mysql_query("SELECT user_id FROM phpbb_users "
       . "WHERE username='$callsign' "
       . "AND user_token='$token' "
       . "AND user_tokendate > $staletime", $link)
-    or die ("Invalid query: " . mysql_error());
+    or die ('Invalid query: ' . mysql_error());
   $row = mysql_fetch_row($result);
   $playerid = $row[0];
   if ($playerid) {
@@ -312,7 +324,7 @@ function checktoken ($callsign, $token, $garray) {
     $result = mysql_query("UPDATE phpbb_users SET "
 	. "user_tokendate='" . time() . "'"
 	. "WHERE user_id='$playerid'", $link)
-      or die ("Invalid query: " . mysql_error());
+      or die ('Invalid query: ' . mysql_error());
     print ("TOKGOOD: $callsign");
     if (count($garray)) {
       $query = "SELECT phpbb_groups.group_name FROM phpbb_groups, phpbb_user_group "
@@ -320,12 +332,12 @@ function checktoken ($callsign, $token, $garray) {
 	  . "AND phpbb_user_group.group_id=phpbb_groups.group_id "
 	  . "and (phpbb_groups.group_name='" . implode("' or phpbb_groups.group_name='", $garray) . "' )";
       $result = mysql_query("$query")
-	or die ("Invalid query: " . mysql_error());
+	or die ('Invalid query: ' . mysql_error());
       while ($row = mysql_fetch_row($result)) {
-	print(":" . $row[0]);
+	print(':' . $row[0]);
       }
     }
-    print ("\n");
+    print ('\n');
   } else
     print ("TOKBAD: $callsign\n");
 }
@@ -334,10 +346,10 @@ function action_checktokens () {
   #  -- CHECKTOKENS --
   # validate callsigns and tokens (clears tokens)
   global $link, $checktokens, $groups;
-  if ($checktokens != "") {
+  if ($checktokens != '') {
     function remove_empty ($value) { return empty($value) ? false : true; }
-    $garray = array_filter(explode("\r\n", $groups), 'remove_empty');
-    foreach(array_filter(explode("\r\n", $checktokens), 'remove_empty') as $checktoken) {
+    $garray = array_filter(explode('\r\n', $groups), 'remove_empty');
+    foreach(array_filter(explode('\r\n', $checktokens), 'remove_empty') as $checktoken) {
       list($callsign, $token) = explode("=", $checktoken);
       if ($token) checktoken($callsign, $token, $garray);
     }
@@ -349,15 +361,15 @@ function action_add () {
   # Server either requests to be added to DB, or to issue a keep-alive so that it
   # does not get dropped due to a timeout...
   global $link, $nameport, $version, $build, $gameinfo, $slashtitle, $checktokens, $groups;
-  header("Content-type: text/plain");
+  header('Content-type: text/plain');
   debug("Attempting to ADD $nameport $version $gameinfo " . stripslashes($slashtitle));
 
   # Filter out badly formatted or buggy versions
   print "MSG: ADD $nameport $version $gameinfo " . stripslashes($slashtitle) . "\n";
-  $pos = strpos($version, "BZFS");
+  $pos = strpos($version, 'BZFS');
   if ($pos === false || $pos > 0)
     return;
-  $split = explode(":", $nameport);
+  $split = explode(':', $nameport);
   $servname = $split[0];
   if (array_key_exists(1, $split))
     $servport = $split[1];
@@ -365,17 +377,17 @@ function action_add () {
     $servport = 5154;
   $servip = gethostbyname($servname);
 
-  if ($servip == "0.0.0.0") {
-    debug("Changed " . $servname . " to requesting address: "
+  if ($servip == '0.0.0.0') {
+    debug("Changed $servname to requesting address: "
 	. $_SERVER['REMOTE_ADDR'] );
     $servip =  $_SERVER['REMOTE_ADDR'];
     $servname = $servip;
-    $nameport = $servip . ":" . $servport;
+    $nameport = $servip . ':' . $servport;
   }elseif ($_SERVER['REMOTE_ADDR'] != $servip) {
-    debug("Requesting address is " . $_SERVER['REMOTE_ADDR']
-	. " while server is at " . $servip );
-    print("ERROR: Requesting address is " . $_SERVER['REMOTE_ADDR']
-	. " while server is at " . $servip );
+    debug('Requesting address is ' . $_SERVER['REMOTE_ADDR']
+	. ' while server is at ' . $servip );
+    print('ERROR: Requesting address is ' . $_SERVER['REMOTE_ADDR']
+	. ' while server is at ' . $servip );
     die();
   }
 
@@ -383,7 +395,7 @@ function action_add () {
   # connection to it
   $fp = fsockopen ($servname, $servport, $errno, $errstring, 30);
   if (!$fp) {
-    print "failed to connect\n";
+    print 'failed to connect\n';
     return;
   }
   # FIXME - should callback and update all stats instead of bzupdate.pl
@@ -393,10 +405,10 @@ function action_add () {
 
   $result = mysql_query("SELECT * FROM servers "
       . "WHERE nameport = '$nameport'", $link)
-    or die ("Invalid query: ". mysql_error());
+    or die ('Invalid query: ' . mysql_error());
   $count = mysql_num_rows($result);
   if (!$count) {
-    debug("Server does not already exist in database -- adding");
+    debug('Server does not already exist in database -- adding');
     print("MSG: adding $nameport\n");
 
     # Server does not already exist in DB so insert into DB
