@@ -51,6 +51,15 @@ title1 = """<div align="center">
 <a href="/cgi-bin/moin.cgi/OtherLinks" class="navbar">links</a><br>
 <a href="/cgi-bin/moin.cgi/" class="navbar">wiki</a><br>
 <a href="/league/" class="navbar">CTF&nbsp;league</a><br>
+<br>
+<a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
+<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag" class="navbar">&nbsp;browse&nbsp;source</a><br>
+<a href="http://sourceforge.net/tracker/?group_id=3248&atid=103248" class="navbar">&nbsp;bug&nbsp;reports</a><br>
+<a href="http://sourceforge.net/cvs/?group_id=3248" class="navbar">&nbsp;source&nbsp;access</a><br>
+<a href="http://sourceforge.net/tracker/?atid=353248&group_id=3248&func=browse" class="navbar">&nbsp;feature&nbsp;requests</a><br>
+<a href="http://sourceforge.net/forum/?group_id=3248" class="navbar">&nbsp;forums</a><br>
+<a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">&nbsp;mailing&nbsp;lists</a><br>
+<a href="http://sourceforge.net/tracker/?group_id=3248&atid=203248" class="navbar">&nbsp;support</a><br>
       </td></tr></table>
     </td>
     <td bgcolor="#ffffff" valign="top">
@@ -101,7 +110,8 @@ except ImportError:
     pass
 
 # values that depend on above configuration settings
-logo_string = '<img src="%s" border="0" alt="%s">' % (logo_url, sitename)
+#logo_string = '<img src="%s" border="0" alt="%s">' % (logo_url, sitename)
+logo_string = sitename
 css_url = url_prefix + '/css/moinmoin.css' # stylesheet link, or ''
 html_head = """
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html;charset=%s">
