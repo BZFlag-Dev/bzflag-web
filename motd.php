@@ -40,7 +40,6 @@ else
 	while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
 	{
 		echo $row[message]; // message
-		echo " "; 
 	}
 }
 ?>
