@@ -6,3 +6,7 @@ reason: sample ban
 end: 0
 banner: bzflag developers
 reason: gross abuse and cheating (knightmare).
+68.109.41.113
+end: 0
+banner: bzflag developers
+reason: gross abuse and cheating (knightmare).
