@@ -3,7 +3,8 @@ case "$QUERY_STRING" in
  bzadmin|bzflag|bzfs)
   wget -O - http://cvs.sourceforge.net/viewcvs.py/*checkout\*/bzflag/bzflag/man/$QUERY_STRING.6s?rev=HEAD \
   | man2html \
-  | sed -e "s~^using the manual pages.<BR>$~using the manual pages from http://cvs.sourceforge.net/viewcvs.py/*checkout\*/bzflag/bzflag/man/$QUERY_STRING.6s<BR>~"
+  | sed -e "s~^using the manual pages.<BR>$~using the manual pages from http://cvs.sourceforge.net/viewcvs.py/*checkout\*/bzflag/bzflag/man/$QUERY_STRING.6s<BR>~" \
+  | sed -e 's~<A HREF="/cgi-bin/man/man2html">Return to Main Contents</A><HR>~<HR>~'
   ;;
  *)
   echo 'Content-type: text/html'
