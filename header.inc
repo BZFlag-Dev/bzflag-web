@@ -122,6 +122,7 @@ Other Links
 <option value="">Choose a theme</option>
 <option value="bluetangerine">Blue Tangerine<?=($theme == 'bluetangerine')?' *':''?></option>
 <option value="industrial">Industrial<?=($theme == 'industrial')?' *':''?></option>
+<option value="test">Test<?=($theme == 'test')?' *':''?></option>
 <option value="none">No theme<?=($theme == 'none')?' *':''?></option>
 </select></p>
 

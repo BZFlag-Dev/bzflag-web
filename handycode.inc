@@ -13,6 +13,9 @@ if (isset($_COOKIE['theme'])) {
 	} elseif ($_COOKIE['theme'] == 'bluetangerine') {
 		setcookie ("theme", 'bluetangerine', time()+60*60*24*30);
 		$theme = 'bluetangerine';
+	} elseif ($_COOKIE['theme'] == 'test') {
+		setcookie ("theme", 'test', time()+60*60*24*30);
+		$theme = 'test';
 	} elseif($_COOKIE['theme'] == 'none') {
 		setcookie ("theme", 'none', time()+60*60*24*30);
 		$theme = 'none';
@@ -25,6 +28,9 @@ if (isset($_GET['theme'])) {
 	} elseif ($_GET['theme'] == 'bluetangerine') {
 		setcookie ("theme", 'bluetangerine', time()+60*60*24*30);
 		$theme = 'bluetangerine';
+	} elseif ($_GET['theme'] == 'test') {
+		setcookie ("theme", 'test', time()+60*60*24*30);
+		$theme = 'test';
 	} elseif ($_GET['theme'] == 'none') {
 		setcookie ("theme", 'none', time()+60*60*24*30);
 		$theme = 'none';
