@@ -76,13 +76,13 @@ page_footer2 = """        </div>
   </table>
   <table border="0" cellpadding="0" cellspacing="1" width="100%">
     <tr><td width="50" bgcolor="#ffffff" align="left">
-<!-- Search Google -->
-<FORM method=GET action=http://www.google.com/custom>
-<INPUT type=hidden name=cof VALUE="AH:center;S:http://BZFlag.org/;AWFID:3e0e6d8d8d5bbf7d;">
-<input type=hidden name=domains value="BZFlag.org">
-<input type=hidden name=sitesearch value="BZFlag.org">
-<IMG SRC="http://www.google.com/logos/Logo_25wht.gif" border=0 ALT=Google align=middle height=32 width=75></A>&nbsp;<INPUT TYPE=text name=q size=31 maxlength=255 value="">&nbsp;<INPUT type=submit name=sa VALUE="Search">
-</FORM>
+<!-- Search Google Tim@BZFlag.org -->
+<form method="GET" action="http://www.google.com/custom">
+<input type="hidden" name="cof" value="AH:center;S:http://BZFlag.org/;AWFID:3e0e6d8d8d5bbf7d;">
+<input type="hidden" name="domains" value="BZFlag.org">
+<input type="hidden" name="sitesearch" value="BZFlag.org">
+<a href="http://www.google.com"><img src="http://www.google.com/logos/Logo_25wht.gif" border="0" ALT="Google" align="middle" height="32" width="75"></a>&nbsp;<input type="text" name="q" size="31" maxlength="255" value="">&nbsp;<input type="submit" name="sa" value="Search">
+</form>
 <!-- Search Google -->
     </td><td bgcolor="#ffffff" align="right">
       <span class="copyright">copyright &copy; 1993-2002&nbsp;</span>
