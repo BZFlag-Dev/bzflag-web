@@ -76,10 +76,10 @@ if ($row = mysql_fetch_array($currentplayers, MYSQL_ASSOC)) {
 ?></td></tr>
 
 <tr class="oddrow"><td>Player with highest score</td><td><?
-$currentplayers = mysql_query ("SELECT callsign,score FROM `currentplayers` ORDER BY `score` DESC LIMIT 1");
+$currentplayers = mysql_query ("SELECT callsign,score,server FROM `currentplayers` ORDER BY `score` DESC LIMIT 1");
 
 if ($row = mysql_fetch_array($currentplayers, MYSQL_ASSOC)) {
-?><?=callsignlink($row[callsign])?> with a score of <strong><?=$row[score]?></strong><?
+?><?=callsignlink($row[callsign])?> on <?=serverlink($row[server])?> with a score of <strong><?=$row[score]?></strong><?
 } else {
 ?>No info available<?
 }
@@ -100,10 +100,10 @@ if ($row = mysql_fetch_array($currentplayers, MYSQL_ASSOC)) {
 
 
 <tr class="oddrow"><td>Player with lowest score</td><td><?
-$currentplayers = mysql_query ("SELECT callsign,score FROM `currentplayers` ORDER BY `score` LIMIT 1");
+$currentplayers = mysql_query ("SELECT callsign,score,server FROM `currentplayers` ORDER BY `score` LIMIT 1");
 
 if ($row = mysql_fetch_array($currentplayers, MYSQL_ASSOC)) {
-?><?=callsignlink($row[callsign])?> with a score of <strong><?=$row[score]?></strong><?
+?><?=callsignlink($row[callsign])?> on <?=serverlink($row[server])?> with a score of <strong><?=$row[score]?></strong><?
 } else {
 ?>No info available<?
 }
