@@ -9,6 +9,7 @@ print <<< end
 There you'll find BZFlag source code, helpful documentation, as well as
 mailing lists and various trackers.</p>
 <p>
+<a href="../doxygen/">Source Code Documentation (doxygen)</a><br>
 <a href="networking.php">Networking</a><br>
 <a href="clientserver.php">Client/Server communication</a><br>
 <a href="clientclient.php">Client/Client communication</a><br>
