@@ -44,7 +44,7 @@ print <<< end
 <a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=103248" class="navbar">&nbsp;bug&nbsp;reports</a><br>
 <a href="http://sourceforge.net/cvs/?group_id=3248" class="navbar">&nbsp;CVS&nbsp;access</a><br>
 <a href="http://sourceforge.net/project/showfiles.php?group_id=3248" class="navbar">&nbsp;downloads</a><br>
-<a href="http://ftp1.sourceforge.net/bzflag/" class="navbar">&nbsp;download&nbsp;dir</a><br>
+<a href="http://download.sourceforge.net/bzflag/" class="navbar">&nbsp;download&nbsp;dir</a><br>
 <a href="http://sourceforge.net/tracker/?atid=353248&amp;group_id=3248&amp;func=browse" class="navbar">&nbsp;feature&nbsp;requests</a><br>
 <a href="http://sourceforge.net/forum/?group_id=3248" class="navbar">&nbsp;forums</a><br>
 <a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">&nbsp;mailing&nbsp;lists</a><br>
