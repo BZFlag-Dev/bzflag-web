@@ -21,7 +21,7 @@ if (isset($viewsource)) { $title = "View Source"; }
 <?=(isset($print))?'<style type="text/css">@import css/print.css</style>':''?>
 <link rel="stylesheet" type="text/css" media="print" href="css/print.css?" />
 <? } ?>
-<title>db.BZFlag.org - <?=(isset($title) ? $title : "I'm working on it!")?></title>
+<title><? echo $_SERVER['SERVER_NAME']; ?> - <?=(isset($title) ? $title : "I'm working on it!")?></title>
 </head>
 
 <!-- Theme: <?=$theme?> -->
@@ -75,7 +75,7 @@ if ($_SERVER['PHP_SELF'] == '/help.php') {
 Languages: <a href="<?=$_SERVER['PHP_SELF']?>?language=en"><img src="flags/f0-us.gif" alt="en" /></a> | <a href="<?=$_SERVER['PHP_SELF']?>?language=it"><img src="flags/f0-it.gif" alt="it" /></a>
 </div>-->
 
-<h1>db.BZFlag.org - <?=(isset($title) ? $title : "I'm working on it!")?></h1>
+<h1><? echo $_SERVER['SERVER_NAME']; ?> - <?=(isset($title) ? $title : "I'm working on it!")?></h1>
 
 <div id="menu">
 <div class="<?=(isset($markhome) ? 'menusectionactive' : 'menusectionhome')?>"><a <?=($_SERVER['PHP_SELF'] == "/stats.php") ? 'class="active" ' : ''?>href="stats.php">Home</a></div>

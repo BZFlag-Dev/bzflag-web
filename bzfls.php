@@ -352,7 +352,7 @@ if ($action == "LIST" ) {
        "    callsign: $callsign\n" .
        "    password: $password\n" .
        "To activate this account, please go to the following URL:\n\n" .
-       "http://db.bzflag.org/bzflsMyTest.php?action=CONFIRM&email=$email&password=$randtext\n")
+       "http://$_SERVER['SERVER_NAME']/db/?action=CONFIRM&email=$email&password=$randtext\n")
     or die ("Could not send mail");
   $result = mysql_query("INSERT INTO players "
                       . "(email, callsign, password, lastmod, randtext) VALUES "

@@ -5,13 +5,13 @@ something here that isn't, <a
 href="http://www.noodleroni.com/contact.php">email me</a>.</p>
 
 <p>
-<a href="#outdated">Why doesn't db.BZFlag.org show someone online that I know is online?</a><br />
+<a href="#outdated">Why doesn't <? echo $_SERVER['SERVER_NAME']; ?> show someone online that I know is online?</a><br />
 <a href="#strengthindex">What is the Strength Index?</a>
 </p>
 
 <h2>
 <a name="outdated"></a>
-Why doesn't db.BZFlag.org show someone online that I know is online?
+Why doesn't <? echo $_SERVER['SERVER_NAME']; ?> show someone online that I know is online?
 </h2>
 
 <p>Several things can be happening to cause this:</p>

@@ -43,7 +43,7 @@ if ($submitted == "yes") {
 if (isset($rssfeed)) {
   ?>
 <pre>
-http://db.bzflag.org/rss.php?feed=players<?=$rssfeed?>
+http://<? echo $_SERVER['SERVER_NAME']; ?>/rss.php?feed=players<?=$rssfeed?>
 </pre>
 <?
    }
