@@ -18,7 +18,8 @@ CREATE TABLE currentplayers (
   strengthindex float NOT NULL default '0',
   killratio float NOT NULL default '0',
   team enum('X','R','G','B','P','O','H') NOT NULL default 'X',
-  PRIMARY KEY  (id)
+  PRIMARY KEY  (id),
+  KEY server (server)
 ) TYPE=MyISAM;
 
 --
@@ -61,7 +62,8 @@ CREATE TABLE playerinfo (
   mostlosses int(11) NOT NULL default '0',
   lastseen int(11) NOT NULL default '0',
   lastserver varchar(128) NOT NULL default '',
-  PRIMARY KEY  (id)
+  PRIMARY KEY  (id),
+  UNIQUE KEY callsign (callsign)
 ) TYPE=MyISAM;
 
 --
@@ -69,18 +71,21 @@ CREATE TABLE playerinfo (
 --
 
 CREATE TABLE players (
-  id int(10) unsigned NOT NULL auto_increment,
+  playerid int(10) unsigned NOT NULL auto_increment,
+  created int(10) unsigned NOT NULL default '0',
   email varchar(64) NOT NULL default '',
   callsign varchar(32) NOT NULL default '',
   password varchar(16) NOT NULL default '',
   karma tinyint(4) NOT NULL default '0',
   assignments text,
-  playtime bigint(20) unsigned NOT NULL default '0',
-  lastmod int(11) NOT NULL default '0',
+  playtime int(10) unsigned NOT NULL default '0',
+  lastmod int(10) unsigned NOT NULL default '0',
   randtext varchar(8) default NULL,
-  PRIMARY KEY  (id),
-  UNIQUE KEY email (email),
-  UNIQUE KEY callsign (callsign)
+  token int(10) unsigned NOT NULL default '0',
+  tokendate int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (playerid),
+  UNIQUE KEY callsign (callsign),
+  UNIQUE KEY email (email)
 ) TYPE=MyISAM;
 
 --
@@ -123,7 +128,8 @@ CREATE TABLE serverinfo (
   ip text NOT NULL,
   version text NOT NULL,
   description text NOT NULL,
-  PRIMARY KEY  (id)
+  PRIMARY KEY  (id),
+  KEY server (server)
 ) TYPE=MyISAM;
 
 --
@@ -153,6 +159,7 @@ CREATE TABLE teaminfo (
   score int(11) NOT NULL default '0',
   won int(11) NOT NULL default '0',
   lost int(11) NOT NULL default '0',
-  PRIMARY KEY  (id)
+  PRIMARY KEY  (id),
+  KEY server (server)
 ) TYPE=MyISAM;
 

@@ -1,0 +1,10 @@
+bzupdate.pl is the script used to populate the stats tables.
+
+It needs to die.
+
+bzfls.php should gather the stats when it connects back
+instead of just connecting and closing the connection.
+
+mysqldump -d -h localhost -u{user} -p{password} bzflag > database_structure.sql
+
+generates the dump
