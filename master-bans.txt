@@ -26,6 +26,10 @@ reason: gross abuse and cheating (knightmare).
 end: 0
 banner: bzflag developers
 reason: gross abuse and cheating (knightmare).
+68.96.122.219
+end: 0
+banner: bzflag developers
+reason: cheating ( knightmare )
 1.0.0.0
 end: 0
 banner: Patlabor221
