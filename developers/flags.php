@@ -33,7 +33,7 @@ A flag that seriously disables a tank is not as bad because the player can still
 Some flags seem pretty dull to some players. The steamroller and the phantom zone come to mind, or quick turn. These aren't the most powerful flags, but they do have their uses and some people enjoy them. However, i think i should have removed SR and PZ. Steamroller's usefulness is very limited and looks pretty weak compared to shock wave. PZ tends to encourage very defensive play, which slows the game down. But quick turn can be very effective when used well; put it in a tight furball and it'll do serious damage. You just have to learn how to take full advantage of it.</dd>
 </dl><br><br>
 
-The list itself has been moved to a <a href="/cgi-bin/moin.cgi/FlagList">wiki page</a>.
+The list itself has been moved to a <a href="/wiki/FlagList">wiki page</a>.
 
 end;
 $doc->end();

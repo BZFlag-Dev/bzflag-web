@@ -49,8 +49,8 @@ title1 = """<div align="center">
 <a href="/screenshots/" class="navbar">screenshots</a><br>
 <a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/LICENSE?rev=HEAD&amp;content-type=text/vnd.viewcvs-markup" class="navbar">license</a><br>
 <a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
-<a href="/cgi-bin/moin.cgi/OtherLinks" class="navbar">links</a><br>
-<a href="/cgi-bin/moin.cgi/" class="navbar">wiki</a><br>
+<a href="/wiki/OtherLinks" class="navbar">links</a><br>
+<a href="/wiki/" class="navbar">wiki</a><br>
 <a href="/league/" class="navbar">CTF&nbsp;league</a><br>
 <br>
 <a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
