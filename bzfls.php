@@ -116,6 +116,10 @@ function testform ($message) {
     actions: CHECKTOKEN<br>
     playerid:<input type="text" name="playerid" size="80"><br>
     token:<input type="text" name="token" size="80"><br>
+    savetext:<textarea name="savetext" rows="5" style="width:100%">
+multiple
+lines
+    </textarea
     <input type="submit" value="Post entry">
     <input type="reset" value="Clear form">
   </form>
