@@ -59,6 +59,8 @@ $banlist = array(
   "255.255.255.255" => "globalbroadcast"
 );
 
+$oldListServer = "http://db.bzflag.org/db/";
+
 # log function
 if ($enableDebug) {
   function debug ($filename, $message) {
@@ -215,6 +217,11 @@ if ($action == "LIST" ) {
     $line = implode(" ", $row);
     print "$line\n";
   }
+  
+  // check the old list server and append
+  readfile($oldListServer);
+
+  
 } elseif ($action == "ADD") {
   #  -- ADD --
   # Server either requests to be added to DB, or to issue a keep-alive so that it
