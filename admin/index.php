@@ -22,6 +22,13 @@ print <<< end
 <a href="/admin/deletenews.php">Delete news</a><br>
 end;
     }
+	 if($substr[2] >= 1) {
+print <<< end
+<br>
+<b>MOTD:</b><br>
+<a href="/admin/setMOTD.php">Set MOTD</a><br>
+end;
+    }
     if($substr[2] >= 3) {
 print <<< end
 <br>
