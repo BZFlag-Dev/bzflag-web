@@ -41,7 +41,7 @@ print <<< end
 <a href="/wiki/" class="navbar">wiki</a><br>
 <a href="http://my.BZFlag.org/" class="navbar">stats</a><br>
 <a href="http://my.BZFlag.org/bb/" class="navbar">forums</a><br>
-<a href="/league/" class="navbar">CTF&nbsp;league</a><br>
+<a href="http://my.BZFlag.org/league/" class="navbar">CTF&nbsp;league</a><br>
 <a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/TODO?rev=HEAD" class="navbar">TODO</a><br>
 <br>
 <a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>

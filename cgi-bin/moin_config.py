@@ -62,7 +62,7 @@ title1 = """<div align="center">
 <a href="/wiki/OtherLinks" class="navbar">links</a><br>
 <a href="http://my.BZFlag.org/" class="navbar">stats</a><br>
 <a href="http://my.BZFlag.org/bb/" class="navbar">forums</a><br>
-<a href="/league/" class="navbar">CTF&nbsp;league</a><br>
+<a href="http://my.BZFlag.org/league/" class="navbar">CTF&nbsp;league</a><br>
 <a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/TODO?rev=HEAD" class="navbar">TODO</a><br>
 <br>
 <a href="/wiki/FrontPage" class="navbar">wiki</a><br>
