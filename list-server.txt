@@ -1,1 +1,1 @@
-bzflist://68.33.165.229:5156/
+bzflist://list.bzflag.org:5156/
