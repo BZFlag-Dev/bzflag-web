@@ -43,3 +43,14 @@ table {
   color: #000000;
   /*font-size: 12px;*/
 }
+
+div.diffold {
+    background-color: #FFFF80;
+    border-style:none;
+    border-width:thin;
+}
+div.diffnew {
+    background-color: #80FF80;
+    border-style:none;
+    border-width:thin;
+}
