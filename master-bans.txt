@@ -1,4 +1,4 @@
-208.48.199.220
+127.0.0.1
 end: 0
-banner: Patlabor221
-reason: that jeffm guy is just a right bastard (testing ban)
+banner: locals_unwanted
+reason: because there's no place like 127.0.0.1
