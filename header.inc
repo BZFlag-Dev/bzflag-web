@@ -9,6 +9,7 @@ if (isset($viewsource)) { $title = "View Source"; }
 <html>
 
 <head>
+<link href="/favicon.ico" rel="shortcut icon">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <? if ($_SERVER['PHP_SELF'] != "/help.php" and $_SERVER['PHP_SELF'] != "/copyright.php" and $_SERVER['PHP_SELF'] != "/link.php" and $_SERVER['PHP_SELF'] != "/rssgenerator.php" and (!isset($viewsource))) {
 	if ($refresh == "yes") {
