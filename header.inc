@@ -32,8 +32,8 @@ if (isset($viewsource)) { $title = "View Source"; }
 
 <div id="menubar"><?
 
-if ($_SERVER['PHP_SELF'] == '/stats.php') {
-      ?><a class="active" href="stats.php">Home</a> <?
+if ($_SERVER['PHP_SELF'] == '/index.php') {
+      ?><a class="active" href="/">Home</a> <?
        $markhome = 'yes';
     } else {
   ?><a href="stats.php">Home</a> <?
@@ -78,7 +78,7 @@ Languages: <a href="<?=$_SERVER['PHP_SELF']?>?language=en"><img src="flags/f0-us
 <h1><? echo $_SERVER['SERVER_NAME']; ?> - <?=(isset($title) ? $title : "I'm working on it!")?></h1>
 
 <div id="menu">
-<div class="<?=(isset($markhome) ? 'menusectionactive' : 'menusectionhome')?>"><a <?=($_SERVER['PHP_SELF'] == "/stats.php") ? 'class="active" ' : ''?>href="stats.php">Home</a></div>
+<div class="<?=(isset($markhome) ? 'menusectionactive' : 'menusectionhome')?>"><a <?=($_SERVER['PHP_SELF'] == "/index.php") ? 'class="active" ' : ''?>href="/">Home</a></div>
 
 <div class="<?=(isset($markplayers) ? 'menusectionactive' : 'menusection')?>">
 Players
