@@ -26,6 +26,9 @@ include('serversettings.php');
 
 # Common to all
 $action   = $_GET['action'];
+if (!array_key_exists("action", $_GET)) {
+  $action = "UNKNOWN";
+}
 
 # For bzfs
 $nameport = $_GET['nameport'];
@@ -46,10 +49,6 @@ $conntime = $_GET['conntime'];  # TODO kill this. use db server time for everyth
 # for CHECKTOKEN
 $playerid = $_GET['playerid'];
 $token = $_GET['token'];
-
-# For karma
-$target   = $_GET['target'];    # urlencoded
-$karma    = $_GET['karma'];
 
 # for banning.  provide key => value pairs where the key is an
 # ip address. value is not used at present.
@@ -90,57 +89,6 @@ if ($banlist[$_SERVER['REMOTE_ADDR']] != "") {
   die("Connection attempt rejected.  See #bzflag on irc.freenode.net");
 }
 
-if (!array_key_exists("action", $_GET)) {
-	if (!$enableDebug){
-	$action = "LIST";
-	}else{
-	 header("Content-type: text/html");
-  die('<html>
-<head>
-<title>BZFlag db server</title>
-</head>
-<body>
-  <h1>BZFlag db server</h1>
-  <p>This is the development interface to the <a href="http://BZFlag.org/">BZFlag</a> list server.</p>
-  <form action="" method="get">
-    action:<select name="action">
-	<option value="LIST" selected>LIST - list servers</option>
-	<option value="ADD">ADD - add a server</option>
-	<option value="REMOVE">REMOVE - remove a server</option>
-	<option value="REGISTER">REGISTER - new player</option>
-	<option value="CONFORM">CONFIRM - confirm registration</option>
-	<option value="QUIT">QUIT - FIXME</option>
-	<option value="CHECKTOKEN">CHECKTOKEN - verify player token from game server</option>
-	<option value="SETKARMA">SETKARMA - FIXME karma someone else</option>
-	<option value="GETKARMA">GETKARMA - FIXME get karma for a player</option>
-	<option value="UNKNOWN">UNKNOWN - test invalid request</option>
-    </select><br>
-    actions: LIST<br>
-    version:<input type="text" name="version" size="80"><br>
-    actions: ADD REMOVE<br>
-    nameport:<input type="text" name="nameport" size="80"><br>
-    build:<input type="text" name="build" size="80"><br>
-    gameinfo:<input type="text" name="gameinfo" size="80"><br>
-    title:<input type="text" name="title" size="80"><br>
-    actions: REGISTER CONFIRM QUIT<br>
-    callsign:<input type="text" name="callsign" size="80"><br>
-    password:<input type="text" name="password" size="80"><br>
-    email:<input type="text" name="email" size="80"><br>
-    actions: CHECKTOKEN<br>
-    playerid:<input type="text" name="playerid" size="80"><br>
-    token:<input type="text" name="token" size="80"><br>
-    actions: SETKARMA GETKARMA<br>
-    target:<input type="text" name="target" size="80"><br>
-    karma:<input type="text" name="karma" size="80"><br>
-    <input type="submit" value="Post entry">
-    <input type="reset" value="Clear form">
-  </form>
-</body>
-</html>');
-	}
-}
-
-header("Content-type: text/plain");
 debug($debugFile, "Connecting to the database");
 
 # Connect to the server database persistently.
@@ -170,6 +118,7 @@ mysql_query("DELETE FROM players WHERE lastmod < $staletime AND randtext != NULL
 if ($action == "LIST" ) {
   #  -- LIST --
   # Same as LIST in the old bzfls
+  header("Content-type: text/plain");
   debug($debugFile, "Fetching LIST");
 
   # remove all inactive servers from the table
@@ -178,7 +127,6 @@ if ($action == "LIST" ) {
   $staletime = time() - $timeout;
   mysql_query("DELETE FROM servers WHERE lastmod < $staletime", $link)
     or die("Could not drop old servers" . mysql_error());
-
 
   if ($callsign && $password) {
     # TODO we have user credentials, verify, create a token
@@ -241,6 +189,7 @@ if ($action == "LIST" ) {
   #  -- ADD --
   # Server either requests to be added to DB, or to issue a keep-alive so that it
   # does not get dropped due to a timeout...
+  header("Content-type: text/plain");
   debug($debugFile, "Attempting to ADD $nameport $version $gameinfo $title");
 
   # Filter out badly formatted or buggy versions
@@ -321,6 +270,7 @@ if ($action == "LIST" ) {
 } elseif ($action == "REMOVE") {
   #  -- REMOVE --
   # Server requests to be removed from the DB.
+  header("Content-type: text/plain");
   debug($debugFile, "REMOVE request from $nameport");
 
   $split = explode(":", $nameport);
@@ -350,6 +300,7 @@ if ($action == "LIST" ) {
   #  -- REGISTER --
   # Registers a player onto the players database.
   # see if there is an existing entry
+  header("Content-type: text/plain");
   $result = mysql_query("SELECT * FROM players WHERE email = '$email'", $link)
     or die ("Invalid query: ". mysql_error());
   if ( mysql_num_rows($result) > 0 ) {
@@ -393,6 +344,7 @@ if ($action == "LIST" ) {
 } elseif ($action == "CONFIRM") {
   #  -- CONFIRM --
   # Confirms a registration
+  header("Content-type: text/plain");
   $result = mysql_query("SELECT randtext FROM players WHERE email='$email'", $link)
     or die ("Invalid query: " . mysql_error());
   $row = mysql_fetch_row($result);
@@ -417,16 +369,16 @@ if ($action == "LIST" ) {
   #  -- CHECKTOKEN --
   # validate player token for connecting player on a game server
   # TODO add grouplist support
+  header("Content-type: text/plain");
   $timeout = 600; # 10 minutes while testing
   $staletime = time() - $timeout;
-  $result = mysql_query("SELECT callsign,karma FROM players "
+  $result = mysql_query("SELECT callsign FROM players "
       . "WHERE playerid = '$playerid' "
       . "AND token = '$token' "
       . "AND tokendate > $staletime", $link)
     or die ("Invalid query: " . mysql_error());
   $row = mysql_fetch_row($result);
   $callsign = $row[0];
-  $karma = $row[1];
   # clear tokendate so nasty game server admins can't login someplace else
   $result = mysql_query("UPDATE players SET "
       . "lastmod = '" . time() . "', "
@@ -434,7 +386,7 @@ if ($action == "LIST" ) {
       . "WHERE playerid='$playerid'", $link)
     or die ("Invalid query: " . mysql_error());
   if ($callsign)
-    print ("$callsign:$karma\n");
+    print ("$callsign:\n");
   else
     print ("FAIL");
 } elseif ($action == "QUIT") {
@@ -443,57 +395,50 @@ if ($action == "LIST" ) {
   $result = mysql_query("UPDATE players SET lastmod=" . time()
       . ", playtime=playtime+$conntime WHERE callsign='$callsign'", $link)
     or die ("Invalid query: " . mysql_error());
-} elseif ($action == "SETKARMA") {
-  #  -- SETKARMA --
-  # Set's a player's karma
-  # FIXME should add/update an entry in the karma table
-  # FIXME should not use a text field
-  $result = mysql_query("SELECT assignments FROM players "
-      . "WHERE callsign='$callsign' "
-      . "AND password='$password'", $link)
-    or die ("Invalid query: " . mysql_error());
-  if ( mysql_num_rows($result) == 0 ) {
-    print ("Karma adjustment FAILED: incorrect callsign/password");
-    exit;
-  } else {
-    $row = mysql_fetch_row($result);
-    $assignments = $row[0];
-
-    $result = mysql_query("SELECT * FROM players WHERE callsign='$target'", $link)
-      or die ("Invalid query: " . mysql_error());
-    if ( mysql_num_rows($result) == 0 ) {
-      print ("Karma adjustment FAILED: target player is not registered");
-      exit;
-    } else {
-      $indv_assignments = explode(",", $assignments);
-      $found = 0;
-      for ( $i = 0; $i < count($indv_assignments); $i++ ) {
-	list($player, $kval) = explode("=", $indv_assignments[$i]);
-	if ( $player == $target ) {
-	  $indv_assignments[$i] = "$target=$karma";
-	  $found = 1;
-	}
-      }
-      if ( !found ) {
-	$indv_assignments[$i] = "$target=$karma";
-      }
-      $assignments = implode(",", $indv_assignments);
-      $result = mysql_query("UPDATE players SET assignments='$assignments' "
-	. "WHERE callsign='$callsign'", $link)
-	or die ("Invalid query: " . mysql_error());
-      print ("Karma adjustment SUCCESSFUL");
-    }
-  }
-} elseif ($action == "GETKARMA") {
-  #  -- GETKARMA --
-  # Views the karma for a particular player
-  $result = mysql_query("SELECT karma FROM players WHERE callsign='$callsign'", $link)
-    or die ("Invalid query: " . mysql_error());
-  $row = mysql_fetch_row($result);
-  print_r("Karma for $callsign is: " . $row[0]);
 } else {
-  print "Unknown command: '$action'\n";
+  header("Content-type: text/html");
   # TODO dump the default form here but still close the database connection
+  die('<html>
+<head>
+<title>BZFlag db server</title>
+</head>
+<body>
+  <h1>BZFlag db server</h1>
+  Unknown command: \'' . $action . '\'
+  <p>This is the development interface to the <a href="http://BZFlag.org/">BZFlag</a> list server.</p>
+  <form action="" method="get">
+    action:<select name="action">
+	<option value="LIST" selected>LIST - list servers</option>
+	<option value="ADD">ADD - add a server</option>
+	<option value="REMOVE">REMOVE - remove a server</option>
+	<option value="REGISTER">REGISTER - new player</option>
+	<option value="CONFORM">CONFIRM - confirm registration</option>
+	<option value="QUIT">QUIT - FIXME</option>
+	<option value="CHECKTOKEN">CHECKTOKEN - verify player token from game server</option>
+	<option value="UNKNOWN">UNKNOWN - test invalid request</option>
+    </select><br>
+    actions: LIST<br>
+    version:<input type="text" name="version" size="80"><br>
+    actions: ADD REMOVE<br>
+    nameport:<input type="text" name="nameport" size="80"><br>
+    build:<input type="text" name="build" size="80"><br>
+    gameinfo:<input type="text" name="gameinfo" size="80"><br>
+    title:<input type="text" name="title" size="80"><br>
+    actions: REGISTER CONFIRM QUIT<br>
+    callsign:<input type="text" name="callsign" size="80"><br>
+    password:<input type="text" name="password" size="80"><br>
+    email:<input type="text" name="email" size="80"><br>
+    actions: CHECKTOKEN<br>
+    playerid:<input type="text" name="playerid" size="80"><br>
+    token:<input type="text" name="token" size="80"><br>
+    actions: SETKARMA GETKARMA<br>
+    target:<input type="text" name="target" size="80"><br>
+    karma:<input type="text" name="karma" size="80"><br>
+    <input type="submit" value="Post entry">
+    <input type="reset" value="Clear form">
+  </form>
+</body>
+</html>');
 }
 
 # make sure the connection to mysql is severed
