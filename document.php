@@ -72,16 +72,6 @@ print <<< end
     </td></tr>
     <tr>
       <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
-	<td bgcolor="#ffffff" align="left" width="370">
-<!-- Search Google - Tim@BZFlag.org -->
-<form method="GET" action="http://www.google.com/custom">
-<input type="hidden" name="cof" value="AH:center;S:http://BZFlag.org/;AWFID:3e0e6d8d8d5bbf7d;">
-<input type="hidden" name="domains" value="BZFlag.org">
-<input type="hidden" name="sitesearch" value="BZFlag.org">
-<a href="http://www.google.com"><img src="http://www.google.com/logos/Logo_25wht.gif" border="0" ALT="Google" align="middle" height="32" width="75"></a>&nbsp;<input type="text" name="q" size="31" maxlength="255" value="">&nbsp;<input type="submit" name="sa" value="Search">
-</form>
-<!-- Search Google -->
-	</td>
 	<td bgcolor="#ffffff" align="right">
 end;
 echo '      <span class="copyright">copyright &copy; 1993-'.gmdate('Y').'&nbsp;</span>';
@@ -91,6 +81,13 @@ print <<< end
     </tr>
   </table>
 </td></tr></table>
+<br>
+<form method="GET" action="http://www.google.com/custom">
+  <input type="hidden" name="cof" value="AH:center;S:http://BZFlag.org/;AWFID:3e0e6d8d8d5bbf7d;">
+  <input type="hidden" name="domains" value="BZFlag.org">
+  <input type="hidden" name="sitesearch" value="BZFlag.org">
+  <a href="http://www.google.com"><img src="http://www.google.com/logos/Logo_25wht.gif" border="0" ALT="Google" align="middle" height="32" width="75"></a>&nbsp;<input type="text" name="q" size="31" maxlength="255" value="">&nbsp;<input type="submit" name="sa" value="Search">
+</form>
 <br>
 <table border="0"><tr><td>
 <a href="http://sourceforge.net/project/?group_id=3248"><img src="http://sourceforge.net/sflogo.php?group_id=3248&amp;type=1" alt="sourceforge" border="0"></a>
