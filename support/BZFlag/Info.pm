@@ -7,7 +7,7 @@ use warnings;
 use LWP::UserAgent;
 use Socket;
 
-our $VERSION = '1.9.3';
+our $VERSION = '2.0.0';
 
 sub new {
     my $self = { };
@@ -110,8 +110,7 @@ sub queryserver(%) {
     my $hostandport = $options{Server};
     my $timeout = $options{Timeout};
 
-    my @teamName = ("X", "R", "G", "B", "P", "O", "H");
-#    my @teamName     = ("X", "R", "G", "B", "P");
+    my @teamName = ('X', 'R', 'G', 'B', 'P', 'O', 'H');
     my ($message, $server);
     my $response;
     my ($servername, $port) = split(/:/, $hostandport);
@@ -243,12 +242,16 @@ sub queryserver(%) {
 	    $response->{teams}->{$teamName[$team]}->{score}  = $score;
 	    $response->{teams}->{$teamName[$team]}->{wins}   = $wins;
 	    $response->{teams}->{$teamName[$team]}->{losses} = $losses;
-
 	}
 
 	# get the players
 	for (1..$numPlayers) {
-	    next unless (read(S, $buffer, 175) == 175);
+	    # one MsgAddPlayer per player
+	    my $bytesRead = read(S, $buffer, 175);
+	    while ($bytesRead != 175 && $bytesRead != 0) {
+		$bytesRead += read(S, $buffer, 175-$bytesRead)
+	    }
+	    next unless ($bytesRead == 175);
 	    my ($len, $code, $pID, $type, $team, $wins, $losses, $tks, $callsign, $email) =
 		unpack("n2 C n5 A32 A128", $buffer);
 
@@ -266,9 +269,8 @@ sub queryserver(%) {
 	    $response->{players}->{$callsign}->{losses} = $losses;
 	    $response->{players}->{$callsign}->{tks}    = $tks;
 	    $response->{players}->{$callsign}->{pID}    = $pID;
-
 	}
-	if ($numPlayers <= 1) {
+	if ($numPlayers < 1) {
 	    $self->{error} = 'errNoPlayers';
 	    return undef;
 	}
@@ -354,7 +356,6 @@ sub queryserver(%) {
 	    $response->{teams}->{$teamName[$team]}->{score}  = $score;
 	    $response->{teams}->{$teamName[$team]}->{wins}   = $wins;
 	    $response->{teams}->{$teamName[$team]}->{losses} = $losses;
-
 	}
 
 	# get the players
@@ -377,7 +378,6 @@ sub queryserver(%) {
 	    $response->{players}->{$callsign}->{losses} = $losses;
 	    $response->{players}->{$callsign}->{tks}    = $tks;
 	    $response->{players}->{$callsign}->{pID}    = $pID;
-
 	}
 	if ($numPlayers <= 1) {
 	    $self->{error} = 'errNoPlayers';
@@ -389,12 +389,10 @@ sub queryserver(%) {
 	return undef;
     }
 
-
     # close socket
     close(S);
 
     return $response;
-
 }
 
 sub parsestyle ($) {
@@ -574,6 +572,7 @@ structure that would be displayed by C<Data::Dumper> like this:
       'shakewins' => 0,
       'greenmax' => 200,
       'roguemax' => 200,
+      'obsevermax' => 200,
       'style' => {
 	'ctf' => 1,
 	'jumping' => 1,
@@ -677,15 +676,16 @@ structure that would be displayed by C<Data::Dumper> like this:
 
 =head1 BUGS
 
-I have no idea, tell me if there are any.
+We have no idea, tell us if there are any.
 
 =head1 AUTHOR
 
 Tucker McLean, tuckerm@noodleroni.com
+Tim Riker, Tim@Rikers.org
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003 Tucker McLean, Tim Riker.
+Copyright (c) 2003-2005 Tucker McLean, Tim Riker.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
