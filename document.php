@@ -43,6 +43,7 @@ print <<< end
 <br>
 <a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
 &nbsp;<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag" class="navbar">browse&nbsp;CVS</a><br>
+&nbsp;<a href="/doxygen/" class="navbar">browse&nbsp;doxygen</a><br>
 &nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=103248" class="navbar">bug&nbsp;reports</a><br>
 &nbsp;<a href="http://sourceforge.net/cvs/?group_id=3248" class="navbar">CVS&nbsp;access</a><br>
 &nbsp;<a href="http://sourceforge.net/project/showfiles.php?group_id=3248" class="navbar">downloads</a><br>
