@@ -1,17 +1,9 @@
 #!/bin/sh
 case "$QUERY_STRING" in
- bzadmin|bzflag|bzfs|bzw)
-  case "$QUERY_STRING" in
-    bzw)
-      MAN_EXTENSION=5s
-      ;;
-    *)
-      MAN_EXTENSION=6s
-      ;;
-  esac
-  wget -O - http://cvs.sourceforge.net/viewcvs.py/*checkout\*/bzflag/bzflag/man/$QUERY_STRING.$MAN_EXTENSION?rev=HEAD \
+ bzadmin.6s|bzflag.6s|bzfs.6s|bzw.5s)
+  wget -O - http://cvs.sourceforge.net/viewcvs.py/*checkout\*/bzflag/bzflag/man/$QUERY_STRING?rev=HEAD \
   | man2html \
-  | sed -e "s~^using the manual pages.<BR>$~using the manual pages from http://cvs.sourceforge.net/viewcvs.py/*checkout\*/bzflag/bzflag/man/$QUERY_STRING.$MAN_EXTENSION<BR>~" \
+  | sed -e "s~^using the manual pages.<BR>$~using the manual pages from http://cvs.sourceforge.net/viewcvs.py/*checkout\*/bzflag/bzflag/man/$QUERY_STRING<BR>~" \
   | sed -e "s~<A HREF=\"/cgi-bin/man/man2html\">Return to Main Contents</A><HR>~<a href=\"$SCRIPT_NAME\">Top</a><HR>~"
   ;;
  *)
@@ -25,10 +17,10 @@ case "$QUERY_STRING" in
   echo '<body>'
   echo '<h1>Display <a href="http://BZFlag.org/">BZFlag</a> man pages from CVS.</h1>'
   echo '<ul>'
-  echo '<li><a href="?bzadmin">bzadmin</a></li>'
-  echo '<li><a href="?bzflag">bzflag</a></li>'
-  echo '<li><a href="?bzfs">bzfs</a></li>'
-  echo '<li><a href="?bzw">bzw</a></li>'
+  echo '<li><a href="?bzadmin.6s">bzadmin</a></li>'
+  echo '<li><a href="?bzflag.6s">bzflag</a></li>'
+  echo '<li><a href="?bzfs.6s">bzfs</a></li>'
+  echo '<li><a href="?bzw.5s">bzw</a></li>'
   echo '</ul>'
   echo '</body>'
   echo '</html>'
