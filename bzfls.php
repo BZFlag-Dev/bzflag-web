@@ -224,7 +224,7 @@ function checktoken ($callsign, $token, $garray) {
 	. "tokendate = '0' "
 	. "WHERE playerid='$playerid'", $link)
       or die ("Invalid query: " . mysql_error());
-    print ("TOKGOOD: $callsign\n");
+    print ("TOKGOOD: $callsign TODO NO GROUPS HERE YET\n");
   } else
     print ("TOKBAD: $callsign\n");
 }
