@@ -10,7 +10,7 @@ if (isset($viewsource)) { $title = "View Source"; }
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<? if ($PHP_SELF != "/help.php" and $PHP_SELF != "/copyright.php" and $PHP_SELF != "/link.php" and $PHP_SELF != "/rssgenerator.php" and (!isset($viewsource))) {
+<? if ($_SERVER['PHP_SELF'] != "/help.php" and $_SERVER['PHP_SELF'] != "/copyright.php" and $_SERVER['PHP_SELF'] != "/link.php" and $_SERVER['PHP_SELF'] != "/rssgenerator.php" and (!isset($viewsource))) {
 	if ($refresh == "yes") { 
 ?><meta http-equiv="Refresh" content="50" />
 <?
@@ -21,7 +21,7 @@ if (isset($viewsource)) { $title = "View Source"; }
 <?=(isset($print))?'<style type="text/css">@import css/print.css</style>':''?>
 <link rel="stylesheet" type="text/css" media="print" href="css/print.css?" />
 <? } ?>
-<title>db.BZFlag.org - <?=(($title) ? $title : "I'm working on it!")?></title>
+<title>db.BZFlag.org - <?=(isset($title) ? $title : "I'm working on it!")?></title>
 </head>
 
 <!-- Theme: <?=$theme?> -->
@@ -32,32 +32,32 @@ if (isset($viewsource)) { $title = "View Source"; }
 
 <div id="menubar"><?
 
-if ($PHP_SELF == '/stats.php') {
+if ($_SERVER['PHP_SELF'] == '/stats.php') {
       ?><a class="active" href="stats.php">Home</a> <?
        $markhome = 'yes';
     } else {
   ?><a href="stats.php">Home</a> <?
     }
 
-if ($PHP_SELF == '/currentplayers.php' or
-    $PHP_SELF == '/playerstats.php' or
-    $PHP_SELF == '/playersearch.php' or
-    $PHP_SELF == '/playerinfo.php') {
+if ($_SERVER['PHP_SELF'] == '/currentplayers.php' or
+    $_SERVER['PHP_SELF'] == '/playerstats.php' or
+    $_SERVER['PHP_SELF'] == '/playersearch.php' or
+    $_SERVER['PHP_SELF'] == '/playerinfo.php') {
       ?><a class="active" href="currentplayers.php">Players</a> <?
        $markplayers = 'yes';
     } else {
   ?><a href="currentplayers.php">Players</a> <?
     }
 
-if ($PHP_SELF == '/serverlist.php' or
-    $PHP_SELF == '/serverinfo.php') {
+if ($_SERVER['PHP_SELF'] == '/serverlist.php' or
+    $_SERVER['PHP_SELF'] == '/serverinfo.php') {
       ?><a class="active" href="serverlist.php">Servers</a> <?
        $markservers = 'yes';
     } else {
   ?><a href="serverlist.php">Servers</a> <?
     }
 
-if ($PHP_SELF == '/help.php') {
+if ($_SERVER['PHP_SELF'] == '/help.php') {
       ?><a class="active" href="help.php">Help</a> <?
        $markhelp = 'yes';
     } else {
@@ -72,31 +72,31 @@ if ($PHP_SELF == '/help.php') {
 <div id="main">
 
 <!--<div id="languages">
-Languages: <a href="<?=$PHP_SELF?>?language=en"><img src="flags/f0-us.gif" alt="en" /></a> | <a href="<?=$PHP_SELF?>?language=it"><img src="flags/f0-it.gif" alt="it" /></a>
+Languages: <a href="<?=$_SERVER['PHP_SELF']?>?language=en"><img src="flags/f0-us.gif" alt="en" /></a> | <a href="<?=$_SERVER['PHP_SELF']?>?language=it"><img src="flags/f0-it.gif" alt="it" /></a>
 </div>-->
 
-<h1>db.BZFlag.org - <?=(($title) ? $title : "I'm working on it!")?></h1>
+<h1>db.BZFlag.org - <?=(isset($title) ? $title : "I'm working on it!")?></h1>
 
 <div id="menu">
-<div class="<?=(isset($markhome) ? 'menusectionactive' : 'menusectionhome')?>"><a <?=($PHP_SELF == "/stats.php") ? 'class="active" ' : ''?>href="stats.php">Home</a></div>
+<div class="<?=(isset($markhome) ? 'menusectionactive' : 'menusectionhome')?>"><a <?=($_SERVER['PHP_SELF'] == "/stats.php") ? 'class="active" ' : ''?>href="stats.php">Home</a></div>
 
 <div class="<?=(isset($markplayers) ? 'menusectionactive' : 'menusection')?>">
 Players
 <ul>
-<li><a <?=($PHP_SELF == "/currentplayers.php") ? 'class="active" ' : ''?>href="currentplayers.php">Current Players</a></li>
-<li><a <?=($PHP_SELF == "/playerstats.php") ? 'class="active" ' : ''?>href="playerstats.php">Player Stats</a></li>
-<li><a <?=($PHP_SELF == "/playersearch.php") ? 'class="active" ' : ''?>href="playersearch.php">Player Search</a></li>
+<li><a <?=($_SERVER['PHP_SELF'] == "/currentplayers.php") ? 'class="active" ' : ''?>href="currentplayers.php">Current Players</a></li>
+<li><a <?=($_SERVER['PHP_SELF'] == "/playerstats.php") ? 'class="active" ' : ''?>href="playerstats.php">Player Stats</a></li>
+<li><a <?=($_SERVER['PHP_SELF'] == "/playersearch.php") ? 'class="active" ' : ''?>href="playersearch.php">Player Search</a></li>
 </ul>
 </div>
 
 <div class="<?=(isset($markservers) ? 'menusectionactive' : 'menusection')?>">
 Servers
 <ul>
-<li><a <?=($PHP_SELF == "/serverlist.php") ? 'class="active" ' : ''?>href="serverlist.php">Server List</a></li>
+<li><a <?=($_SERVER['PHP_SELF'] == "/serverlist.php") ? 'class="active" ' : ''?>href="serverlist.php">Server List</a></li>
 </ul>
 </div>
 
-<div class="<?=(isset($markhelp) ? 'menusectionactive' : 'menusection')?>"><a <?=($PHP_SELF == "/help.php") ? 'class="active" ' : ''?>href="help.php">Help</a></div>
+<div class="<?=(isset($markhelp) ? 'menusectionactive' : 'menusection')?>"><a <?=($_SERVER['PHP_SELF'] == "/help.php") ? 'class="active" ' : ''?>href="help.php">Help</a></div>
 
 <div class="menusection">
 Other Links
@@ -113,7 +113,7 @@ Other Links
 </div>
 
 <div class="menusection">
-<form action="<?=$PHP_SELF?>" method="get">
+<form action="<?=$_SERVER['PHP_SELF']?>" method="get">
 <p>Options</p>
 
 <p><select name="theme" style="width: 120px;">
@@ -137,7 +137,7 @@ Auto refresh?</p>
 <div class="menusection">
 
 <div class="center">
-<p><a href="rssgenerator.php"><img src="xml.gif" alt="RSS Feed" /></a></p>
+<p><a href="rssgenerator.php"><img src="images/xml.gif" alt="RSS Feed" /></a></p>
 <p><a href="link.php"><img src="images/link_<?=($theme == 'bluetangerine')?'bronze':(($theme == 'industrial')?'silver':'blue')?>.png" alt="got stats?" /></a></p>
 <p><a href="http://validator.w3.org/check/referer"><img src="images/valid-xhtml10.png" alt="Valid XHTML 1.0!" /></a></p>
 </div>
@@ -157,9 +157,14 @@ that might be a security concern, please <a
 href=\"http://www.noodleroni.com/contact.php\">notify me</a>
 immediately!</p>";
 
+if (in_array('viewsource', $_GET)) {
+	$viewsource = $_GET['viewsource'];
+} else {
+	$viewsource = '';
+}
 if ($viewsource == 1) {
 	echo $ossmessage;
-	highlight_file(".$PHP_SELF");
+	highlight_file("./" . $_SERVER['PHP_SELF']);
 	include ('footer.inc');
 	exit;
 }
@@ -187,4 +192,4 @@ if ($viewsource == 'rss') {
 
 ?>
 
-<!-- End header.inc, begin <?=$PHP_SELF?> -->
+<!-- End header.inc, begin <?=$_SERVER['PHP_SELF']?> -->
