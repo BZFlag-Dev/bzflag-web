@@ -95,7 +95,8 @@ function validate_string_or_die($string, $valid_chars, $return_invalid_chars) {
 
 # validate callsign or die (restrictive, used for more than callsign)
 function vcsod($string) {
-  $valid_chars = "-_.1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  # against better judgement " " is valid here =(
+  $valid_chars = " -_.1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   return(validate_string_or_die($string, $valid_chars, true));
 }
 
