@@ -19,11 +19,11 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 //if ($feed == 'players') {
   if (!isset($server)) {
     $title = "Current Players";
-    $link = "http://$_SERVER['SERVER_NAME']/currentplayers.php";
+    $link = "http://" . $_SERVER['SERVER_NAME'] . "/currentplayers.php";
     $where = 1;
   } else {
     $title = "Player info for $server";
-    $link = "http://$_SERVER['SERVER_NAME']/".serverlink($server, 0);
+    $link = "http://" . $_SERVER['SERVER_NAME'] . "/" . serverlink($server, 0);
     $where = "`server` = '$server'";
   }
 //}
