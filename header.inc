@@ -157,11 +157,12 @@ that might be a security concern, please <a
 href=\"http://www.noodleroni.com/contact.php\">notify me</a>
 immediately!</p>";
 
-if (in_array('viewsource', $_GET)) {
+if (isset($_GET['viewsource'])) {
 	$viewsource = $_GET['viewsource'];
 } else {
 	$viewsource = '';
 }
+
 if ($viewsource == 1) {
 	echo $ossmessage;
 	highlight_file("./" . $_SERVER['PHP_SELF']);
