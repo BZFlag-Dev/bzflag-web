@@ -17,6 +17,19 @@ include('config.php.inc');
 
 $TheRootDataPath = $rootDataPath;
 
+// cheap out a md5_file method for old phps
+if (!function_exists('md5_file')) {
+   function md5_file($file_name)
+   {
+       if (!file_exists($file_name)) {
+           trigger_error('md5_file(): Unable to open file', E_USER_WARNING);
+       } else {
+           $file_string = implode('', file($file_name));
+           return md5($file_string);
+       }
+   }
+}
+
 function isRealDir ( $name )
 {
 	if ( $name == ".")
