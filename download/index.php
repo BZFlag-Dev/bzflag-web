@@ -5,10 +5,9 @@ $doc = new Document;
 $doc->begin("download");
 print <<< end
 The newest downloads are available on the SourceForge
-<a href="http://www.sourceforge.net/projects/bzflag">download page</a>.<br>
-
-You can browse the
-<a href="http://ftp1.sourceforge.net/bzflag/">downloads directory</a> as well.<br>
+<a href="http://www.sourceforge.net/projects/bzflag">download page</a>
+or from the
+<a href="http://ftp1.sourceforge.net/bzflag/">downloads directory</a>.<br><br>
 
 For those of you who like to be on the bleeding edge, you can download
 the <a href="http://sourceforge.net/cvs/?group_id=3248">CVS sources</a>
