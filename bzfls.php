@@ -151,7 +151,6 @@ function action_list () {
     or die("Could not drop old servers" . mysql_error());
 
   if ($callsign && $password) {
-    # TODO we have user credentials, verify, create a token
     $result = mysql_query("SELECT playerid FROM players "
 	. "WHERE callsign='$callsign' "
 	. "AND password = '$password'"
@@ -224,7 +223,15 @@ function checktoken ($callsign, $token, $garray) {
 	. "tokendate = '0' "
 	. "WHERE playerid='$playerid'", $link)
       or die ("Invalid query: " . mysql_error());
-    print ("TOKGOOD: $callsign TODO NO GROUPS HERE YET\n");
+    print ("TOKGOOD: $callsign");
+    $result = mysql_query("SELECT groups.groupname FROM groups, groupmembers "
+	. "WHERE groupmembers.playerid='$playerid' "
+	. "AND groupmembers.groupid=groups.groupid")
+      or die ("Invalid query: " . mysql_error());
+    while ($row = mysql_fetch_row($result)) {
+      print(" " . $row[0]);
+    }
+    print ("\n");
   } else
     print ("TOKBAD: $callsign\n");
 }
