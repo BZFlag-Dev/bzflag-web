@@ -111,7 +111,7 @@ if (!array_key_exists("action", $_GET)) {
 </body>
 </html>');
 }
- 
+
 header("Content-type: text/plain");
 debug($debugFile, "Connecting to the database");
 
@@ -150,8 +150,8 @@ $result = mysql_query("SELECT * FROM players", $link);
 
 if (!$result) {
   debug($debugFile, "Registered players table did not exist, creating a new one");
- 
-  # FIXME need id for reference from karma table 
+
+  # FIXME need id for reference from karma table
   mysql_query("CREATE TABLE players " .
               "(email varchar(64) NOT NULL, " .
               " callsign varchar(32) NOT NULL, " .
@@ -337,7 +337,7 @@ if ($action == "LIST" ) {
     print("A player has already registered with the callsign: $callsign");
     exit;
   }
-  
+
   # no existing entry found - proceed to complete the registration
   $alphanum = "abcdefghijklmnopqrstuvwxyz0123456789";
   $randtext = "";
@@ -423,7 +423,7 @@ if ($action == "LIST" ) {
   } else {
     $row = mysql_fetch_row($result);
     $assignments = $row[0];
-    
+
     $result = mysql_query("SELECT * FROM players WHERE callsign='$target'", $link)
       or die ("Invalid query: " . mysql_error());
     if ( mysql_num_rows($result) == 0 ) {

@@ -19,7 +19,7 @@ if (isset($order)) {
 	$order = 'callsign';
 	$orderby = '`callsign`';
 }
-		
+
 
 if ((num_rows("SELECT * FROM `currentplayers` ORDER BY $orderby")) > 0) {
 
@@ -81,9 +81,3 @@ if ((num_rows("SELECT * FROM `currentplayers` ORDER BY $orderby")) > 0) {
 </table>
 
 <? include('footer.inc'); ?>
-
-
-
-
-
-

@@ -33,4 +33,3 @@ if ($row = mysql_fetch_array($player, MYSQL_ASSOC)) {
 include ('footer.inc');
 
 ?>
-

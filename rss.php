@@ -1,4 +1,4 @@
-<? 
+<?
 
 include ('handycode.inc');
 
@@ -71,7 +71,7 @@ if (isset($order)) {
 	$order = 'callsign';
 	$orderby = '`callsign`';
 }
-		
+
 
 if ((num_rows("SELECT * FROM `currentplayers` WHERE $where ORDER BY $orderby")) > 0) {
 

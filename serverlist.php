@@ -55,9 +55,3 @@ if (num_rows($query) > 0) {
 </table>
 
 <? include('footer.inc'); ?>
-
-
-
-
-
-

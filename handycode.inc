@@ -143,7 +143,7 @@ if (isset($_SERVER['SCRIPT_FILENAME'])) {
 	default:
 		$title = "Welcome!";
 		break;
-		
+
 	}
 }
 
@@ -201,7 +201,7 @@ $teamnames = array(
 		   'H' => 'Rabbit',
 		   'X' => 'Rogue',
 		   );
-		   
+
 
 function teamname ($team)
 {

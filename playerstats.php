@@ -38,14 +38,14 @@ while ($row = mysql_fetch_array($highscore, MYSQL_ASSOC)) {
 <td class="score"><?=$row[highscore]?>     </td>
 <td class="strengthindex"><?=number_format($row[highstrengthindex], 3)?> </td></tr>
 
-<? 
+<?
 	if ($row = mysql_fetch_array($highscore, MYSQL_ASSOC)) {
 ?>
 <tr class="evenrow"><td><?=callsignlink($row[callsign])?> </td>
 <td class="score"><?=$row[highscore]?>     </td>
 <td class="strengthindex"><?=number_format($row[highstrengthindex], 3)?> </td></tr>
 
-<? 
+<?
 	}
 }
 ?>
@@ -67,14 +67,14 @@ while ($row = mysql_fetch_array($highstrengthindex, MYSQL_ASSOC)) {
 <td class="score"><?=$row[highscore]?>     </td>
 <td class="strengthindex"><?=number_format($row[highstrengthindex], 3)?> </td></tr>
 
-<? 
+<?
 	if ($row = mysql_fetch_array($highstrengthindex, MYSQL_ASSOC)) {
 ?>
 <tr class="evenrow"><td><?=callsignlink($row[callsign])?> </td>
 <td class="score"><?=$row[highscore]?>     </td>
 <td class="strengthindex"><?=number_format($row[highstrengthindex], 3)?> </td></tr>
 
-<? 
+<?
 	}
 }
 ?>
@@ -99,14 +99,14 @@ while ($row = mysql_fetch_array($lowscore, MYSQL_ASSOC)) {
 <td class="score"><?=$row[lowscore]?>     </td>
 <td class="strengthindex"><?=number_format($row[lowstrengthindex], 3)?> </td></tr>
 
-<? 
+<?
 	if ($row = mysql_fetch_array($lowscore, MYSQL_ASSOC)) {
 ?>
 <tr class="evenrow"><td><?=callsignlink($row[callsign])?> </td>
 <td class="score"><?=$row[lowscore]?>     </td>
 <td class="strengthindex"><?=number_format($row[lowstrengthindex], 3)?> </td></tr>
 
-<? 
+<?
 	}
 }
 ?>
@@ -128,19 +128,17 @@ while ($row = mysql_fetch_array($lowstrengthindex, MYSQL_ASSOC)) {
 <td class="score"><?=$row[lowscore]?>     </td>
 <td class="strengthindex"><?=number_format($row[lowstrengthindex], 3)?> </td></tr>
 
-<? 
+<?
 	if ($row = mysql_fetch_array($lowstrengthindex, MYSQL_ASSOC)) {
 ?>
 <tr class="evenrow"><td><?=callsignlink($row[callsign])?> </td>
 <td class="score"><?=$row[lowscore]?>     </td>
 <td class="strengthindex"><?=number_format($row[lowstrengthindex], 3)?> </td></tr>
 
-<? 
+<?
 	}
 }
 ?>
 </table>
-
-
 
 <? include('footer.inc'); ?>

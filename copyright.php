@@ -15,7 +15,7 @@ Version 2, June 1991
 </p>
 
 <pre>
-Copyright (C) 1989, 1991 Free Software Foundation, Inc.  
+Copyright (C) 1989, 1991 Free Software Foundation, Inc.
 59 Temple Place - Suite 330,
 Everyone is permitted to copy and distribute verbatim copies
 of this license document, but changing it is not allowed.</pre>
@@ -483,7 +483,7 @@ Gnomovision version 69, Copyright (C) <var>year</var> <var>name of author</var>
 
 Gnomovision comes with ABSOLUTELY NO WARRANTY; for details
 type `show w'.  This is free software, and you are welcome
-to redistribute it under certain conditions; type `show c' 
+to redistribute it under certain conditions; type `show c'
 for details.
 </pre>
 
@@ -506,7 +506,7 @@ necessary.  Here is a sample; alter the names:
 <pre>
 Yoyodyne, Inc., hereby disclaims all copyright
 interest in the program `Gnomovision'
-(which makes passes at compilers) written 
+(which makes passes at compilers) written
 by James Hacker.
 
 <var>signature of Ty Coon</var>, 1 April 1989

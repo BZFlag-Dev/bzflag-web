@@ -56,4 +56,3 @@ the Strength Index is:</p>
 <p><a href="#top">Top</a></p>
 
 <? include('footer.inc') ?>
-

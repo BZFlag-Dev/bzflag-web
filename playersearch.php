@@ -5,7 +5,7 @@
 <p><input type="text" name="callsign" <?=((isset($callsign)) ? "value=\"$callsign\" " : '')?>/><input type="submit" /></p>
 </form>
 
-<? if (isset($callsign)) { 
+<? if (isset($callsign)) {
 
 	$safecallsign = $callsign;
 	$safepage = $page;
@@ -61,12 +61,3 @@
 include('footer.inc');
 
 ?>
-
-
-
-
-
-
-
-
-
