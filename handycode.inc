@@ -102,38 +102,38 @@ if (isset($_COOKIE['language'])) {
 /** set the title depending on how the url was called
  */
 if (isset($_SERVER['SCRIPT_FILENAME'])) {
-	switch ($_SERVER['SCRIPT_FILENAME']) {
-	case "$dbroot/stats.php":
+	switch (basename($_SERVER['SCRIPT_FILENAME'])) {
+	case "stats.php":
 		$title = "Welcome!";
 		break;
-	case "$dbroot/currentplayers.php":
+	case "currentplayers.php":
 		$title = "Current Players";
 		break;
-	case "$dbroot/playerstats.php":
+	case "playerstats.php":
 		$title = "Player Stats";
 		break;
-	case "$dbroot/playersearch.php":
+	case "playersearch.php":
 		$title = "Player Search";
 		break;
-	case "$dbroot/playerinfo.php":
+	case "playerinfo.php":
 		$title = "Player Info";
 		break;
-	case "$dbroot/serverinfo.php":
+	case "serverinfo.php":
 		$title = "Server Info";
 		break;
-	case "$dbroot/serverlist.php":
+	case "serverlist.php":
 		$title = "Server List";
 		break;
-	case "$dbroot/help.php":
+	case "help.php":
 		$title = "Help";
 		break;
-	case "$dbroot/copyright.php":
+	case "copyright.php":
 		$title = "Copyright Info";
 		break;
-	case "$dbroot/link.php":
+	case "link.php":
 		$title = "Link to Us";
 		break;
-	case "$dbroot/rssgenerator.php":
+	case "rssgenerator.php":
 		$title = "RSS Feed Generator";
 		break;
 	}

@@ -16,14 +16,13 @@
 $enableDebug	= 0;
 $debugFile 	= "bzfls.log";
 
-// define dbhost/dbuname/dbpass/dbname/dbroot here
+// define dbhost/dbuname/dbpass/dbname here
 // NOTE it's .php so folks can't read the source
 include('serversettings.php');
 // $dbhost  = "localhost";
 // $dbname  = "bzflag";
 // $dbuname = "bzflag";
 // $dbpass  = "bzflag";
-// $dbroot  = "/path/to/db/dir";
 
 # Common to all
 $action   = $_GET['action'];
