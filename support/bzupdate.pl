@@ -32,7 +32,6 @@ for (;;) {
     my $refreshquery = "WHERE ";
 
     foreach(keys(%{ $serverlist->{servers} })) {
-	print "$$: $_\n" if $debug;
 	print "$$: $_ ".$serverlist->{servers}->{$_}->{numplayers}."\n" if $debug;
 
 	my $server = $_;
@@ -94,6 +93,8 @@ for (;;) {
 		      $serverlist->{servers}->{$_}->{description}                                    ,
 		      );
 
+	next if ($numplayers == 0);
+
 	my $serverinfo = $bzinfo->queryserver(Server => $_);
 
 	unless (defined($serverinfo)) {
@@ -101,7 +102,7 @@ for (;;) {
 	    next;
 	}
 
-	print Dumper($serverinfo) if $debug;
+	#print Dumper($serverinfo) if $debug;
 	# Insert the team info into the database
 	foreach (keys(%{ $serverinfo->{teams} })) {
 	    my $team   = $_;
