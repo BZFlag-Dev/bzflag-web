@@ -44,7 +44,7 @@ print <<< end
 &nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=103248" class="navbar">bug&nbsp;reports</a><br>
 &nbsp;<a href="http://sourceforge.net/cvs/?group_id=3248" class="navbar">CVS&nbsp;access</a><br>
 &nbsp;<a href="http://sourceforge.net/project/showfiles.php?group_id=3248" class="navbar">downloads</a><br>
-&nbsp;<a href="http://download.sourceforge.net/bzflag/" class="navbar">download&nbsp;dir</a><br>
+&nbsp;<a href="http://ftp.BZFlag.org/bzflag/" class="navbar">download&nbsp;dir</a><br>
 &nbsp;<a href="http://sourceforge.net/tracker/?atid=353248&amp;group_id=3248&amp;func=browse" class="navbar">feature&nbsp;requests</a><br>
 &nbsp;<a href="http://sourceforge.net/forum/?group_id=3248" class="navbar">forums</a><br>
 &nbsp;<a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">mailing&nbsp;lists</a><br>
@@ -74,7 +74,7 @@ print <<< end
       <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
 	<td bgcolor="#ffffff" align="right">
 end;
-echo '      <span class="copyright">copyright &copy; 1993-'.gmdate('Y').'&nbsp;</span>';
+echo '      <span class="copyright">copyright &copy; <a href="/wiki/CurrentMaintainer">CurrentMaintainer</a> 1993-'.gmdate('Y').'&nbsp;</span>';
 print <<< end
 	</td>
       </tr></table></td>
