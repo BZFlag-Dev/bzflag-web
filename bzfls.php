@@ -247,7 +247,7 @@ function action_add () {
   #  -- ADD --
   # Server either requests to be added to DB, or to issue a keep-alive so that it
   # does not get dropped due to a timeout...
-  global $link, $nameport, $version, $gameinfo, $title, $checktokens, $groups;
+  global $link, $nameport, $version, $build, $gameinfo, $title, $checktokens, $groups;
   header("Content-type: text/plain");
   debug("Attempting to ADD $nameport $version $gameinfo $title");
 
