@@ -224,12 +224,16 @@ function checktoken ($callsign, $token, $garray) {
 	. "WHERE playerid='$playerid'", $link)
       or die ("Invalid query: " . mysql_error());
     print ("TOKGOOD: $callsign");
-    $result = mysql_query("SELECT groups.groupname FROM groups, groupmembers "
-	. "WHERE groupmembers.playerid='$playerid' "
-	. "AND groupmembers.groupid=groups.groupid")
-      or die ("Invalid query: " . mysql_error());
-    while ($row = mysql_fetch_row($result)) {
-      print(" " . $row[0]);
+    if (count($garray)) {
+      $query = "SELECT groups.groupname FROM groups, groupmembers "
+	  . "WHERE groupmembers.playerid='$playerid' "
+	  . "AND groupmembers.groupid=groups.groupid "
+	  . "and (groups.groupname='" . implode("' or groups.groupname='", $garray) . "' )";
+      $result = mysql_query("$query")
+	or die ("Invalid query: " . mysql_error());
+      while ($row = mysql_fetch_row($result)) {
+	print(" " . $row[0]);
+      }
     }
     print ("\n");
   } else
