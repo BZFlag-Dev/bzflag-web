@@ -227,7 +227,14 @@ if ($action == "LIST" ) {
   }
   // check the old list server and append
  // readfile($oldListServer);
-
+	if($_GET['style'] == "rss"){
+	
+/* The-ERM, THIS IS WHERE I GOT STARTED...... THIS SHOULD CHECK TO SEE IF IT IS ?action=list&style=rss   
+	PLEASE FIX... I WOULD REALLY APPRECIATE IT.... - Amathis 
+	
+	*/	
+	
+	}	
   
 } elseif ($action == "ADD") {
   #  -- ADD --
