@@ -1,3 +1,7 @@
+67.163.160.42
+end: 0
+banner: JeffM2501
+reason: shot type cheats
 24.218.232.213
 end: 0
 banner: Jeff Myers
