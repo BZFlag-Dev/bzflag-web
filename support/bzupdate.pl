@@ -33,7 +33,7 @@ for (;;) {
     my $serverlist = $bzinfo->serverlist;
     my $refreshquery = "WHERE ";
 
-    foreach(keys(%{ $serverlist->{servers} })) {
+    foreach(sort keys(%{ $serverlist->{servers} })) {
 	my $server = $_;
 	my $numplayers = $serverlist->{servers}->{$_}->{numplayers};
 	print "$$: $server $numplayers\n" if $debug;
