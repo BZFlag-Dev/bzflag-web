@@ -50,7 +50,7 @@ if ($row = mysql_fetch_array($serverinfo, MYSQL_ASSOC)) {
     <td align="right"><?=$row['greensize']?><?=($row['greenmax'] == 200) ? '' : "/$row[greenmax]" ?></td>
     <td><?=teamname('G')?></td>
     <td><?=yn_img($row[antidoteflags])?> Antidote Flags</td>
-    <td><?=yn_img($row[timesync])?> Time Sync</td>
+    <td><?=yn_img($row[handicap])?> Handicap</td>
     </tr>
 
     <tr class="evenrow">
