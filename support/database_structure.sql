@@ -104,7 +104,7 @@ CREATE TABLE serverinfo (
   ricochet enum('Y','N') NOT NULL default 'N',
   shakable enum('Y','N') NOT NULL default 'N',
   antidoteflags enum('Y','N') NOT NULL default 'N',
-  timesync enum('Y','N') NOT NULL default 'N',
+  handicap enum('Y','N') NOT NULL default 'N',
   rabbitchase enum('Y','N') NOT NULL default 'N',
   maxshots int(11) NOT NULL default '0',
   shakewins int(11) NOT NULL default '0',
