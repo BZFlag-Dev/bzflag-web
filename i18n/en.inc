@@ -1,31 +1,31 @@
 <?
 
 switch ($SCRIPT_FILENAME) {
-   case "/home/tuckerm/ftp/webs/stats.bzflag.org/index.php":
+   case "index.php":
       $i18n[title] = "Welcome!";
       break;
-   case "/home/tuckerm/ftp/webs/stats.bzflag.org/currentplayers.php":
+   case "currentplayers.php":
       $i18n[title] = "Current Players";
       break;
-   case "/home/tuckerm/ftp/webs/stats.bzflag.org/playerstats.php":
+   case "playerstats.php":
       $i18n[title] = "Player Stats";
       break;
-   case "/home/tuckerm/ftp/webs/stats.bzflag.org/playersearch.php":
+   case "playersearch.php":
       $i18n[title] = "Player Search";
       break;
-   case "/home/tuckerm/ftp/webs/stats.bzflag.org/playerinfo.php":
+   case "playerinfo.php":
       $i18n[title] = "Player Info";
       break;
-   case "/home/tuckerm/ftp/webs/stats.bzflag.org/serverinfo.php":
+   case "serverinfo.php":
       $i18n[title] = "Server Info";
       break;
-   case "/home/tuckerm/ftp/webs/stats.bzflag.org/serverlist.php":
+   case "serverlist.php":
       $i18n[title] = "Server List";
       break;
-   case "/home/tuckerm/ftp/webs/stats.bzflag.org/help.php":
+   case "help.php":
       $i18n[title] = "Help";
       break;
-   case "/home/tuckerm/ftp/webs/stats.bzflag.org/copyright.php":
+   case "copyright.php":
       $i18n[title] = "Copyright Info";
       break;
 }

@@ -21,7 +21,7 @@ if (isset($viewsource)) { $title = "View Source"; }
 <?=(isset($print))?'<style type="text/css">@import css/print.css</style>':''?>
 <link rel="stylesheet" type="text/css" media="print" href="css/print.css?" />
 <? } ?>
-<title>Stats.BZFlag.org - <?=(($title) ? $title : "I'm working on it!")?></title>
+<title>db.BZFlag.org - <?=(($title) ? $title : "I'm working on it!")?></title>
 </head>
 
 <!-- Theme: <?=$theme?> -->
@@ -75,7 +75,7 @@ if ($PHP_SELF == '/help.php') {
 Languages: <a href="<?=$PHP_SELF?>?language=en"><img src="flags/f0-us.gif" alt="en" /></a> | <a href="<?=$PHP_SELF?>?language=it"><img src="flags/f0-it.gif" alt="it" /></a>
 </div>-->
 
-<h1>Stats.BZFlag.org - <?=(($title) ? $title : "I'm working on it!")?></h1>
+<h1>db.BZFlag.org - <?=(($title) ? $title : "I'm working on it!")?></h1>
 
 <div id="menu">
 <div class="<?=(isset($markhome) ? 'menusectionactive' : 'menusectionhome')?>"><a <?=($PHP_SELF == "/stats.php") ? 'class="active" ' : ''?>href="stats.php">Home</a></div>

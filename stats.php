@@ -8,15 +8,15 @@
 
 <p><strong>1/11/2004:</strong> A happy new layout for the happy New Year!</p>
 
-<p><strong>12/22/2003:</strong> Check out the new server info pages and the new <a href="http://stats.bzflag.org/serverlist.php">server list</a> page. Stats.BZFlag.org - More Useful, Every Day!&trade;</p>
+<p><strong>12/22/2003:</strong> Check out the new server info pages and the new <a href="http://db.bzflag.org/serverlist.php">server list</a> page. db.BZFlag.org - More Useful, Every Day!&trade;</p>
 
 <p><strong>12/15/2003:</strong> I've updated <a
 href="http://search.cpan.org/~tuckerm/BZFlag-Info/Info.pm">BZFlag::Info</a>
 to support 1.10 servers! It also reports more fun junk, for all you
-fun junk junkies out there. S.B.o also is now only querying the 1.10
+fun junk junkies out there. db.BZFlag.org also is now only querying the 1.10
 servers.</p>
 
-<!-- <p><strong>11/29/2003:</strong> Stats.BZFlag.org now supports multiple
+<!-- <p><strong>11/29/2003:</strong> db.BZFlag.org now supports multiple
 languages! And, thanks to <a
 href="http://tupone.dyndns.org/">Tupone</a>, we now have an Italian
 translation as well! We are also looking for more people who are
@@ -41,7 +41,7 @@ href="http://search.cpan.org/">CPAN</a>!</p>
 request, for now :-) ) the <a href="maps/">maps</a> are again
 available for download.</p>
 
-<p><strong>10/31/2003:</strong> Stats.BZFlag.org is back! It has been
+<p><strong>10/31/2003:</strong> db.BZFlag.org is back! It has been
 completely redesigned, and should now work much smoother and look more
 consistent. <a href="http://www.noodleroni.com/contact.php">Drop me a
 line</a>, and give me some feedback.</p>

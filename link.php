@@ -19,7 +19,7 @@
 <p>Then put this code in your page where you want to display the link. Be sure to replace <em>color</em> with the color of the link you have chosen.</p>
 
 <pre>
-&lt;a href="http://stats.bzflag.org/"&gt;
+&lt;a href="http://db.bzflag.org/"&gt;
 &lt;img src="images/link_<em>color</em>.png" alt="got stats?" /&gt;
 &lt;/a&gt;
 </pre>
