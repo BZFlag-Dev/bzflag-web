@@ -194,7 +194,6 @@ for (;;) {
 		$dbh->do("INSERT INTO playerinfo (`callsign`, `email`, `highscore`, `lowscore`, `mosttks`, `leasttks`, `highstrengthindex`, `lowstrengthindex`, `highkillratio`, `lowkillratio`, `mostwins`, `mostlosses`, `lastseen`, `lastserver`) VALUES ('$callsign', '$email', '$score', '$score', '$tks', '$tks', '$strengthindex', '$strengthindex', '$killratio', '$killratio', '$wins', '$losses', '".time."', '$server')");
 	    }
 	}
-
     }
 
     my $endtime = gettimeofday();
