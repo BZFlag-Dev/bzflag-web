@@ -10,6 +10,14 @@ reason: Impersonating, and being disruptive
 end: 0
 banner: JeffM2501
 reason: Bot abuse, hacking threats, inapropriate messages ( redsoxfan90, redsoxfan00 )
+24.218.238.239
+end: 0
+banner: JeffM2501
+reason: Bot abuse, hacking threats, inapropriate messages ( redsoxfan90, redsoxfan00 )
+209.213.73.76
+end: 0
+banner: JeffM2501
+reason: Bot abuse, hacking threats, inapropriate messages ( redsoxfan90, redsoxfan00 )
 67.21.107.174
 end: 0
 banner: JeffM2501
