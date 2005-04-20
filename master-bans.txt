@@ -1,3 +1,7 @@
+68.225.226.37
+end: 0
+banner: JeffM2501
+reason: spaming bzbb ( sharp shooter )
 65.125.185.2
 end: 0
 banner: JeffM2501
