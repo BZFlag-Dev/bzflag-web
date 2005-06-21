@@ -216,6 +216,13 @@ Group1</textarea>
   </form>
 </body>');
   if ($action == 'DEBUG') {
+    # clear secure bits
+    global $dbhost, $dbname, $bbdbname, $dbuname, $dbpass;
+    $dbhost  = 'HIDDEN';
+    $dbname  = 'HIDDEN';
+    $bbdbname = 'HIDDEN';
+    $dbuname = 'HIDDEN';
+    $dbpass  = 'HIDDEN';
     print("<PRE>\n");
     var_dump($GLOBALS);
     print("</PRE>\n");
