@@ -1,3 +1,7 @@
+24.190.58.202
+end: 0
+banner: bzflag developers
+reason: Racist and bigoted remarks. Disruptive behavor
 69.119.240.73
 end: 0
 banner: menotume and the rest of #bzflag
