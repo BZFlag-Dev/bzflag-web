@@ -14,18 +14,6 @@ reason: spaming and racist remarks (white aryan resistance)
 end: 0
 banner: JeffM2501
 reason: Impersonating, and being disruptive 
-24.218.232.213
-end: 0
-banner: JeffM2501
-reason: Bot abuse, hacking threats, inapropriate messages ( redsoxfan90, redsoxfan00 )
-24.218.238.239
-end: 0
-banner: JeffM2501
-reason: Bot abuse, hacking threats, inapropriate messages ( redsoxfan90, redsoxfan00 )
-209.213.73.76
-end: 0
-banner: JeffM2501
-reason: Bot abuse, hacking threats, inapropriate messages ( redsoxfan90, redsoxfan00 )
 67.21.107.174
 end: 0
 banner: JeffM2501
