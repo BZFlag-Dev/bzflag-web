@@ -69,4 +69,4 @@ reason: sample ban
 12.158.242.12
 end: 0
 banner: trepan
-reason: bigotry on #bzflag
+reason: bigotry  on #bzflag
