@@ -21,7 +21,7 @@ $debugFile	= 'bzfls.log';
 include('serversettings.php');
 // $dbhost  = 'localhost';
 // $dbname  = 'bzflag';
-$bbdbname = 'bzbb';
+// $bbdbname = 'bzbb';
 // $dbuname = 'bzflag';
 // $dbpass  = 'bzflag';
 
