@@ -13,8 +13,9 @@
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 # where to send debug printing (might override below)
-$enableDebug	= 0;
-$debugFile	= 'bzfls.log';
+$enableDebug= 0;      // set to >1 to see all sql queries (>2 to see GET/POST input args also)
+$debugFile	= 'dbtest/xxx.log';
+$debugNoIpCheck = 0;  // for testing ONLY !!!
 
 // define dbhost/dbuname/dbpass/dbname here
 // NOTE it's .php so folks can't read the source
@@ -47,13 +48,25 @@ if ($enableDebug) {
       fwrite($fp, date('D M j G:i:s T Y') . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . $message . "\n");
       fclose($fp);
     } else {
-      print('Unable to write to to log file [$filename]');
+      print('Unable to write to to log file [$debugFile]');
     }
   }
 } else {
   function debug ($message) {
   }
 }
+
+// Query helper. This should be used instead of mysql_query()
+function sqlQuery ($qry){
+  global $enableDebug;
+  if ( ! ($set = mysql_query ($qry))){
+    debug ("*** QUERY FAILED:\n$qry\n*** ERROR: ". mysql_error());
+    die ("Invalid query: " . mysql_error());  
+  } else if ($enableDebug > 1)
+    debug ("SUCCESS: $qry");
+  return $set;
+}
+
 
 function validate_string($string, $valid_chars, $return_invalid_chars) {
   # thanx http://scripts.franciscocharrua.com/validate-string.php =)
@@ -189,6 +202,7 @@ function testform($message) {
 	<option value="REGISTER">REGISTER - new player</option>
 	<option value="CONFIRM">CONFIRM - confirm registration</option>
 	<option value="CHECKTOKENS">CHECKTOKENS - verify player token from game server</option>
+	<option value="GETTOKEN">GETTOKEN - get player token</option>
 	<option value="UNKNOWN">UNKNOWN - test invalid request</option>
     </select><br>
     actions: LIST<br>
@@ -202,6 +216,7 @@ function testform($message) {
     build:<input type="text" name="build" size="80"><br>
     gameinfo:<input type="text" name="gameinfo" size="80"><br>
     title:<input type="text" name="title" size="80"><br>
+    advertgroups:<input type="text" name="advertgroups" size="40" maxsize=1000><br>
     actions: ADD CHECKTOKENS<br>
     checktokens:<textarea name="checktokens" rows="3" style="width:100%">
 CallSign0@127.0.0.1=01234567
@@ -232,6 +247,18 @@ Group1</textarea>
 </html>');
 }
 
+function advertlistCleanup (){
+  $result = sqlQuery ('
+      SELECT SAV.server_id from server_advert_groups as SAV
+      LEFT JOIN servers  S ON S.server_id=SAV.server_id WHERE S.server_id is null');
+  if ( ($row = mysql_fetch_row($result)) )
+    $list = $row[0];
+  while ( ($row = mysql_fetch_row($result)) )
+    $list .= ',' . $row[0];
+  sqlQuery ("DELETE FROM server_advert_groups WHERE server_id IN ($list)");
+}
+
+
 function action_list() {
   #  -- LIST --
   # Same as LIST in the old bzfls
@@ -241,10 +268,13 @@ function action_list() {
 
   # remove all inactive servers from the table
   debug('Deleting inactive servers from list');
-  $timeout = 1800;    # timeout in seconds
+  $timeout = 1830;    # timeout in seconds
   $staletime = time() - $timeout;
   mysql_query("DELETE FROM servers WHERE lastmod < $staletime", $link)
     or die('Could not drop old servers' . mysql_error());
+
+  if (mysql_affected_rows($link) > 0)
+    advertlistCleanup();
 
   if ($callsign && $password) {
     if (!mysql_select_db($bbdbname)) {
@@ -273,20 +303,32 @@ function action_list() {
     }
     if (!mysql_select_db($dbname)) {
       debug("Database $dbname did not exist");
-
       die('Could not open db: ' . mysql_error());
     }
   }
 
+  $advertList = "0";    // marker for phantom group 'EVERYONE'
+  if ($playerid){
+    sqlQuery ("USE $bbdbname");
+    // get list of groups player belongs to ...
+    debug ("FETCHING GROUPS");
+
+    $result = sqlQuery ("
+      SELECT g.group_id FROM phpbb_user_group ug, phpbb_groups g
+      WHERE g.group_id=ug.group_id AND ug.user_id = $playerid AND g.group_name<>''");  
+    while ($row = mysql_fetch_row($result))
+      $advertList .= ",$row[0]";
+    sqlQuery ("USE $dbname");
+  }
+
   if ($version)
-    $result = mysql_query("SELECT nameport,version,gameinfo,ipaddr,title "
-	. " FROM servers WHERE version = '$version'"
-	. " ORDER BY `nameport` ASC", $link)
-      or die ("Invalid query: ". mysql_error());
-  else
-    $result = mysql_query("SELECT nameport,version,gameinfo,ipaddr,title "
-	. " FROM servers ORDER BY `nameport` ASC", $link)
-      or die ("Invalid query: ". mysql_error());
+    $qryv = "AND version='$version'";
+  $result = sqlQuery("
+    SELECT nameport,version,gameinfo,ipaddr,title FROM servers, server_advert_groups as sav
+    WHERE servers.server_id=sav.server_id 
+    AND  sav.group_id IN ($advertList) $qryv
+    ORDER BY `nameport` ASC");
+
   while (true) {
     $row = mysql_fetch_row($result);
     if (!$row)
@@ -300,6 +342,39 @@ function action_list() {
     foreach($alternateServers as $thisSever ){
       if ($thisSever != '')
 	readfile($thisSever.'?action=LIST&local=1');
+    }
+  }
+}
+
+function action_gettoken (){
+  global $bbdbname, $dbname, $link, $callsign, $password, $version, $local, $alternateServers;
+  header('Content-type: text/plain');
+  debug('Fetching TOKEN');
+
+  if ($callsign && $password) {
+    if (!mysql_select_db($bbdbname)) {
+      debug("Database $bbdbname did not exist");
+      die('Could not open db: ' . mysql_error());
+    }
+    $result = mysql_query("SELECT user_id FROM phpbb_users "
+	. "WHERE username='$callsign' "
+	. "AND user_password=MD5('$password')"
+	. "AND user_active=1", $link)
+      or die ("Invalid query: " . mysql_error());
+    $row = mysql_fetch_row($result);
+    $playerid = $row[0];
+    if (!$playerid) {
+      print("NOTOK: invalid callsign or password ($callsign:$password)\n");
+    } else {
+      srand(microtime() * 100000000);
+      $token = rand(0,2147483647);
+      $result = mysql_query("UPDATE phpbb_users SET "
+	  . "user_token='$token', "
+	  . "user_tokendate='" . time() . "', "
+	  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
+	  . "WHERE user_id='$playerid'", $link)
+      	or die ("Invalid query: ". mysql_error());
+      print("TOKEN: $token\n");
     }
   }
 }
@@ -378,11 +453,35 @@ function action_checktokens() {
   }
 }
 
+
+function add_advertList ($serverID){
+  global $bbdbname;
+
+  $adverts = $_REQUEST['advertgroups'];
+
+  if ( ! isset($adverts) ){
+    sqlQuery ("INSERT INTO server_advert_groups (server_id, group_id) VALUES ($serverID, 0)");
+  } else {
+  // bzfs makes sure that no quotes are in group names, so if present - is an invalid request
+    if (strcspn($adverts ,"'\"")!=strlen($adverts) || strlen($adverts)>2048)
+      die ('invalid request (advertgroups)');
+    $advertList = explode (',', $adverts);
+    if (in_array('EVERYONE', $advertList) || count($advertList)==0 ){
+      sqlQuery ("INSERT INTO server_advert_groups (server_id, group_id) VALUES ($serverID, 0)");
+    } else {
+      sqlQuery ("
+        INSERT INTO server_advert_groups (server_id, group_id)
+        SELECT $serverID, group_id FROM $bbdbname.phpbb_groups 
+        WHERE group_name IN ('". implode ("','", $advertList) ."')");
+    }
+  }
+}
+
 function action_add() {
   #  -- ADD --
   # Server either requests to be added to DB, or to issue a keep-alive so that it
   # does not get dropped due to a timeout...
-  global $link, $nameport, $version, $build, $gameinfo, $slashtitle, $checktokens, $groups;
+  global $link, $nameport, $version, $build, $gameinfo, $slashtitle, $checktokens, $groups, $debugNoIpCheck;
   header('Content-type: text/plain');
   debug("Attempting to ADD $nameport $version $gameinfo " . stripslashes($slashtitle));
 
@@ -405,7 +504,7 @@ function action_add() {
     $servip =  $_SERVER['REMOTE_ADDR'];
     $servname = $servip;
     $nameport = $servip . ':' . $servport;
-  }elseif ($_SERVER['REMOTE_ADDR'] != $servip) {
+  }elseif ($_SERVER['REMOTE_ADDR'] != $servip && !$debugNoIpCheck) {
     debug('Requesting address is ' . $_SERVER['REMOTE_ADDR']
 	. ' while server is at ' . $servip );
     print('ERROR: Requesting address is ' . $_SERVER['REMOTE_ADDR']
@@ -417,7 +516,7 @@ function action_add() {
   # connection to it
   $fp = fsockopen ($servname, $servport, $errno, $errstring, 30);
   if (!$fp) {
-    print("failed to connect\n");
+    print("failed to connect: $errstring\n");
     return;
   }
   # FIXME - should callback and update all stats instead of bzupdate.pl
@@ -441,6 +540,8 @@ function action_add() {
 	. "('$nameport', '$build', '$version',"
 	. " '$gameinfo', '$servip', '$slashtitle', $curtime)", $link)
       or die ("Invalid query: ". mysql_error());
+
+    add_advertList(mysql_insert_id());
   } else {
 
     debug("Server already exists in database -- updating");
@@ -461,16 +562,14 @@ function action_add() {
   }
 
   action_checktokens();
-
   debug("ADD $nameport");
-
   print "ADD $nameport\n";
 }
 
 function action_remove() {
   #  -- REMOVE --
   # Server requests to be removed from the DB.
-  global $link, $nameport;
+  global $link, $nameport, $debugNoIpCheck;
   header('Content-type: text/plain');
   print("MSG: REMOVE request from $nameport\n");
   debug("REMOVE request from $nameport");
@@ -488,7 +587,7 @@ function action_remove() {
     $servip =  $_SERVER['REMOTE_ADDR'];
     $servname = $servip;
     $nameport = $servip . ":" . $servport;
-  } elseif ($_SERVER['REMOTE_ADDR'] != $servip) {
+  } elseif ($_SERVER['REMOTE_ADDR'] != $servip && !$debugNoIpCheck) {
     debug('Requesting address is ' . $_SERVER['REMOTE_ADDR']
 	. ' while server is at ' . $servip );
     print('ERROR: Requesting address is ' . $_SERVER['REMOTE_ADDR']
@@ -496,8 +595,11 @@ function action_remove() {
     die();
   }
 
-  $result = mysql_query("DELETE FROM servers WHERE nameport = '$nameport'", $link)
-    or die ('Invalid query: '. mysql_error());
+  $result = sqlQuery("SELECT server_id FROM servers WHERE nameport = '$nameport'");
+  if ( ($row=mysql_fetch_row($result)) ){
+    sqlQuery ("DELETE FROM servers WHERE server_id = $row[0]");  
+    sqlQuery ("DELETE FROM server_advert_groups WHERE server_id = $row[0]");  
+  }
   print("REMOVE: $nameport\n");
 }
 
@@ -614,10 +716,23 @@ mysql_query("DELETE FROM players WHERE lastmod < $staletime AND randtext != NULL
 header('Cache-Control: no-cache');
 header('Pragma: no-cache');
 
+
+if ($enableDebug > 2){
+  ob_start(debug);
+  echo ("\n*** START\n");
+  echo ("POST:");  print_r ($GLOBALS['_POST']);
+  echo (" GET:");  print_r ($GLOBALS['_GET']);
+  ob_end_flush();
+}
+
+
 # Do stuff based on what the 'action' is...
 switch ($action) {
 case 'LIST':
   action_list();
+  break;
+case 'GETTOKEN':
+  action_gettoken();
   break;
 case 'ADD':
   action_add();
