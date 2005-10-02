@@ -7,6 +7,9 @@ use warnings;
 use LWP::UserAgent;
 use Socket;
 
+use constant MsgQueryGame => 0x7167;	# ascii 'qg'
+use constant MsgGameTime => 0x6774;		# ascii 'gt'
+
 our $VERSION = '2.0.0';
 
 sub new {
@@ -161,24 +164,47 @@ sub queryserver(%) {
     if ($version == '0026') {
 	# 2.0.x
 	# send game request
-	print S pack("n2", 0, 0x7167);
+	print S pack("n2", 0, MsgQueryGame);
 
-	# get reply
-	unless (read(S, $buffer, 46) == 46) {
+	# get reply, just the first 4 bytes
+	unless (read (S, $buffer, 4) == 4) {
+	    $self->{error} = 'errServerReadError';
+		return undef;
+	}
+	my ($infolen, $infocode) = unpack("n2", $buffer);
+
+	# As of 2.0.4, a MsgGameTime response precedes 
+	# the requested MsgQueryGame.  So if that's what 
+	# we have here, read and discard its data, and 
+	# get the next $infolen, $infocode header.
+	if ($infocode == MsgGameTime) {
+		unless (read (S, $buffer, $infolen) == $infolen) {
+	    	$self->{error} = 'errServerReadError';
+			return undef;
+		}
+
+		unless (read (S, $buffer, 4) == 4) {
+	    	$self->{error} = 'errServerReadError';
+			return undef;
+		}
+		($infolen, $infocode) = unpack("n2", $buffer);
+	}
+
+	unless ($infocode == MsgQueryGame) {
+	   	$self->{error} = 'errBadServerData';
+	   	return undef;
+	}
+
+	unless (read(S, $buffer, $infolen) == $infolen) {
 	    $self->{error} = 'errServerReadError';
 	    return undef;
 	}
 
-	my ($infolen,$infocode,$style,$maxPlayers,$maxShots,
+	my ($style,$maxPlayers,$maxShots,
 	    $rogueSize,$redSize,$greenSize,$blueSize,$purpleSize,$observerSize,
 	    $rogueMax,$redMax,$greenMax,$blueMax,$purpleMax,$observerMax,
 	    $shakeWins,$shakeTimeout,
-	    $maxPlayerScore,$maxTeamScore,$maxTime,$timeElapsed) = unpack("n23", $buffer);
-
-	unless ($infocode == 0x7167) {
-	    $self->{error} = 'errBadServerData';
-	    return undef;
-	}
+	    $maxPlayerScore,$maxTeamScore,$maxTime,$timeElapsed) = unpack("n21", $buffer);
 
 	$response->{serverconfig}->{style} = $self->parsestyle($style);
 
@@ -277,7 +303,7 @@ sub queryserver(%) {
     } elsif ($version == '1910') {
 	# 1.10.x
 	# send game request
-	print S pack("n2", 0, 0x7167);
+	print S pack("n2", 0, MsgQueryGame);
 
 	# get reply
 	unless (read(S, $buffer, 40) == 40) {
@@ -291,7 +317,7 @@ sub queryserver(%) {
 	    $shakeWins,$shakeTimeout,
 	    $maxPlayerScore,$maxTeamScore,$maxTime) = unpack("n20", $buffer);
 
-	unless ($infocode == 0x7167) {
+	unless ($infocode == MsgQueryGame) {
 	    $self->{error} = 'errBadServerData';
 	    return undef;
 	}
