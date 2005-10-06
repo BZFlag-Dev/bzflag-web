@@ -446,7 +446,7 @@ function checktoken($callsign, $ip, $token, $garray) {
     if ($tokenPresent) {
       print ("TOKBAD: $callsign\n");
     } else {
-      print ("TOKUNR: $callsign\n");
+      print ("UNK: $callsign\n");
     }
   }
 }
