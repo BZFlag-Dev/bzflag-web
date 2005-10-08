@@ -394,21 +394,22 @@ function checktoken($callsign, $ip, $token, $garray) {
     debug("Database $bbdbname did not exist");
     die('Could not open db: ' . mysql_error());
   }
-  # token NONE :
-  #    unregistered player can enter without a token
-  # token not NONE
-  #    registered player must validate with token
-  # 
-  # registered player must enter with a valid token
-  $tokenPresent = ($token != "NONE");
+
+  # Check if player exists. if not, just return UNK
+  $result = mysql_query("SELECT user_id FROM phpbb_users "
+			. "WHERE username='$callsign' ", $link)
+    or die ('Invalid query: ' . mysql_error());
+  $rows = mysql_num_rows($result);
+  if (!mysql_num_rows($result)) {
+    print ("UNK: $callsign\n");
+    return;
+  }
+
   # include server-reported IP so other server admins can't steal tokens
   # include token if specified
-  $testtoken = '';
-  if ($tokenPresent) {
-    if ($ip) {
-      $testtoken .= "AND user_tokenip='$ip' ";
-    }
-    $testtoken .= "AND user_token='$token' AND user_tokendate > $staletime";
+  $testtoken = "AND user_token='$token' AND user_tokendate > $staletime ";
+  if ($ip) {
+    $testtoken .= "AND user_tokenip='$ip'";
   }
   $result = mysql_query("SELECT user_id FROM phpbb_users "
       . "WHERE username='$callsign' "
@@ -417,37 +418,29 @@ function checktoken($callsign, $ip, $token, $garray) {
   $row = mysql_fetch_row($result);
   $playerid = $row[0];
   if ($playerid) {
-    if ($tokenPresent) {
-      # clear tokendate so nasty game server admins can't login someplace else
-      $result = mysql_query("UPDATE phpbb_users SET "
-			    . "user_lastvisit='" . time() . "', "
-      #. "user_tokendate='" . time() . "'"
-			    . "user_tokendate='0'"
-			    . "WHERE user_id='$playerid'", $link)
+    # clear tokendate so nasty game server admins can't login someplace else
+    $result = mysql_query("UPDATE phpbb_users SET "
+			  . "user_lastvisit='" . time() . "', "
+    #. "user_tokendate='" . time() . "'"
+			  . "user_tokendate='0'"
+			  . "WHERE user_id='$playerid'", $link)
+      or die ('Invalid query: ' . mysql_error());
+    print ("TOKGOOD: $callsign");
+    if (count($garray)) {
+      $query = "SELECT phpbb_groups.group_name FROM phpbb_groups, phpbb_user_group "
+	. "WHERE phpbb_user_group.user_id='$playerid' "
+	. "AND phpbb_user_group.group_id=phpbb_groups.group_id "
+	. "and (phpbb_groups.group_name='"
+	. implode("' or phpbb_groups.group_name='", $garray) . "' )";
+      $result = mysql_query("$query")
 	or die ('Invalid query: ' . mysql_error());
-      print ("TOKGOOD: $callsign");
-      if (count($garray)) {
-	$query = "SELECT phpbb_groups.group_name FROM phpbb_groups, phpbb_user_group "
-	  . "WHERE phpbb_user_group.user_id='$playerid' "
-	  . "AND phpbb_user_group.group_id=phpbb_groups.group_id "
-	  . "and (phpbb_groups.group_name='"
-	  . implode("' or phpbb_groups.group_name='", $garray) . "' )";
-	$result = mysql_query("$query")
-	  or die ('Invalid query: ' . mysql_error());
-	while ($row = mysql_fetch_row($result)) {
-	  print(':' . $row[0]);
-	}
+      while ($row = mysql_fetch_row($result)) {
+	print(':' . $row[0]);
       }
-      print ("\n");
-    } else {
-      print ("TOKBAD: $callsign\n");
     }
+    print ("\n");
   } else {
-    if ($tokenPresent) {
-      print ("TOKBAD: $callsign\n");
-    } else {
-      print ("UNK: $callsign\n");
-    }
+    print ("TOKBAD: $callsign\n");
   }
 }
 
