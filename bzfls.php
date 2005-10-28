@@ -300,6 +300,16 @@ function action_list() {
 	  . "WHERE user_id='$playerid'", $link)
 	or die ("Invalid query: ". mysql_error());
       print("TOKEN: $token\n");
+      # check for private messages and send a notice if there is one
+      $result = mysql_query("SELECT user_new_privmsg FROM phpbb_users "
+	  . "WHERE username='$callsign' "
+	  . "AND user_password=MD5('$password')"
+	  . "AND user_active=1", $link)
+	or die ("Invalid query: " . mysql_error());
+      $pms = mysql_result($result, 0);
+      if ($pms) {
+	print("NOTICE: You have $pms private messages waiting for you, $callsign.  Log in at http://my.bzflag.org/bb/ to read them.\n");
+      }
     }
     if (!mysql_select_db($dbname)) {
       debug("Database $dbname did not exist");
