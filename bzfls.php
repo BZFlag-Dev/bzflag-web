@@ -449,6 +449,11 @@ function checktoken($callsign, $ip, $token, $garray) {
       }
     }
     print ("\n");
+
+    # Send the BZID
+    # - the BZID can be any uniquely identifying invariant string
+    # - bzfs is setup to accept spaces if the strings is "quoted"
+    print ("BZID: $playerid $callsign\n");
   } else {
     print ("TOKBAD: $callsign\n");
   }
