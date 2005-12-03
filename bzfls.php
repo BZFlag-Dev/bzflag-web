@@ -325,7 +325,7 @@ function action_list() {
 
     $result = sqlQuery ("
       SELECT g.group_id FROM phpbb_user_group ug, phpbb_groups g
-      WHERE g.group_id=ug.group_id AND ug.user_id = $playerid AND g.group_name<>''");  
+      WHERE g.group_id=ug.group_id AND (ug.user_id = $playerid AND g.group_name<>'') OR g.group_name='VERIFIED'");  
     while ($row = mysql_fetch_row($result))
       $advertList .= ",$row[0]";
     sqlQuery ("USE $dbname");
