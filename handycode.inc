@@ -119,7 +119,7 @@ if (isset($_SERVER['SCRIPT_FILENAME'])) {
 		$title = "Player Search";
 		break;
 	case "playerinfo.php":
-		$title = "Player Info - $callsign";
+		$title = "Player Info - " . htmlentities($callsign);
 		break;
 	case "serverinfo.php":
 		$title = "Server Info - $server";
@@ -176,7 +176,7 @@ $teamclass = (($team == 'R') ? "class=\"teamred\" " :
 		))));
 
  if ($link) {
-	return "<a ".(($teamclass) ? $teamclass : "") . "href=\"playerinfo.php?callsign=".(urlencode($callsign)) . "\">$callsign".(($email)?" ($email)":'')."</a>";
+	return "<a ".(($teamclass) ? $teamclass : "") . "href=\"playerinfo.php?callsign=".(urlencode($callsign)) . "\">" . htmlentities($callsign) .(($email)?" (htmlentities($email))":'')."</a>";
  } else {
    return "playerinfo.php?callsign=".(urlencode($callsign));
  }

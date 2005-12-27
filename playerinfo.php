@@ -1,6 +1,6 @@
 <? include('header.inc') ?>
 
-<h2>Stats for player <?=$callsign?></h2>
+<h2>Stats for player <?=htmlentities($callsign)?></h2>
 
 <?
 
@@ -13,7 +13,7 @@ if ($row = mysql_fetch_array($player, MYSQL_ASSOC)) {
 ?>
 <table>
 <caption>Player Info</caption>
-<tr class="evenrow"><td><strong>Email String</strong></td><td><?=$row[email]?></td></tr>
+<tr class="evenrow"><td><strong>Email String</strong></td><td><?=htmlentities($row[email])?></td></tr>
 <tr class="oddrow"><td><strong>High Score</strong></td><td><?=$row[highscore]?></td></tr>
 <tr class="evenrow"><td><strong>Low Score</strong></td><td><?=$row[lowscore]?></td></tr>
 <tr class="oddrow"><td><strong>High Strength Index</strong></td><td><?=$row[highstrengthindex]?></td></tr>
@@ -27,7 +27,7 @@ if ($row = mysql_fetch_array($player, MYSQL_ASSOC)) {
 <tr class="evenrow"><td><strong>Last Server</strong></td><td><?=serverlink($row[lastserver])?> </td></tr>
 </table>
 <? } else { ?>
-<p>No info available for player <strong><?=$callsign?></strong></p>
+<p>No info available for player <strong><?=htmlentities($callsign)?></strong></p>
 <? }
 
 include ('footer.inc');

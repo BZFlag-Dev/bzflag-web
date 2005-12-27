@@ -2,7 +2,7 @@
 
 <form method="get" action="<?=$_SERVER['PHP_SELF']?>">
 <p>Callsign</p>
-<p><input type="text" name="callsign" <?=((isset($callsign)) ? "value=\"$callsign\" " : '')?>/><input type="submit" /></p>
+<p><input type="text" name="callsign" <?=((isset($callsign)) ? "value=\"" . htmlentities($callsign) . "\" " : '')?>/><input type="submit" /></p>
 </form>
 
 <? if (isset($callsign)) {
@@ -53,7 +53,7 @@
 		}
 	} else {
 ?>
-<p>No player by the name '<?=$callsign?>'</p>
+<p>No player by the name '<?=htmlentities($callsign)?>'</p>
 <?
 	}
 }
