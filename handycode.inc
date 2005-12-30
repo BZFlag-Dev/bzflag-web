@@ -176,7 +176,7 @@ $teamclass = (($team == 'R') ? "class=\"teamred\" " :
 		))));
 
  if ($link) {
-	return "<a ".(($teamclass) ? $teamclass : "") . "href=\"playerinfo.php?callsign=".(urlencode($callsign)) . "\">" . htmlentities($callsign) .(($email)?" (htmlentities($email))":'')."</a>";
+	return "<a ".(($teamclass) ? $teamclass : "") . "href=\"playerinfo.php?callsign=".(urlencode($callsign)) . "\">" . htmlentities($callsign) .(($email)?"(". htmlentities($email) . ")":'')."</a>";
  } else {
    return "playerinfo.php?callsign=".(urlencode($callsign));
  }
