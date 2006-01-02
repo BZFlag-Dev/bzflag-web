@@ -5,12 +5,27 @@ $doc = new Document;
 $doc->begin("screenshots");
 print <<< end
 <h1>Screenshots</h1>
+
+<p>Screenshots should now go on the <a href="http://sourceforge.net/project/screenshots.php?group_id=3248">SourceForge Screenshots</a> tracker. The rest of this page is just here for reference.</p>
+
+<hr>
+
 <p>Feel free to <a href="mailto:learner AT brlcad DOT org">submit a screenshot</a> that you would like to see added.  Screenshots can be created while playing BZFlag by pressing the F5 key.  This will generate either a raw image (sgi format) or a gamma-corrected png, depending on your version of BZFlag.</p>
 
 <p>Fullsize mages should be converted to either jpeg or png format.  Any resolution is okay, but please include a jpeg thumbnail if you would.  Thumbnail images should be approximately no more than 128 pixels wide, preserving the original aspect ratio.  <tiny>(*nix users can try running "<code>djpeg image.jpg  | pnmscale -pixels 16384 | cjpeg -progressive > t-image.jpg</code>")</tiny></p>
 
 <br>
+<hr>
+<h2>Version 2.0</h2>
+<p>Version 2 marks the beginning of enhanced graphics support, improved texturing, more detailed models, more detailed worlds and more more more.</p>
+<br>
 
+<p>There are a lot of nice 2.0 screenshots provided by <i>romfls</i> on his site at  <b><a href="http://bzflag.at/screenshots/">http://bzflag.at/screenshots/</a></b>.  Enjoy!</p>
+
+<br>
+<hr>
+<h2>Version 1.10</h2>
+<br>
 <table border=0 cellspacing=16 ><tr><td align="center">
 
 <table border=0><tr><td align="center">
@@ -53,8 +68,9 @@ Nidhoggr shows bzadmin running on his phone
 
 </td></tr></table>
 
-<br><br>
+<br>
 <hr>
+<h2>Version 1.8</h2>
 <p>These are some screenshots of the experimental 1.8 version.  Much of the effort for this release was included in the 1.10 version.</p>
 <br>
 <a href="bzfi0000.jpg"><img src="t-bzfi0000.jpg" border="0" alt="screenshot 0000"></a>
@@ -90,7 +106,7 @@ Nidhoggr shows bzadmin running on his phone
 <a href="bzfi0030.jpg"><img src="t-bzfi0030.jpg" border="0" alt="screenshot 0030"></a>
 
 <hr>
-<h1>Other Images</h1>
+<h2>Other Images</h2>
 
 <p>Here are some fun images to look at.  Feel free to <a href="mailto:learne AT brlcad DOT org">submit</a> other BZFlag-related artwork.</p>
 <br>
