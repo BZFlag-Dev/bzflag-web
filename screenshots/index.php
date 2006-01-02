@@ -6,7 +6,7 @@ $doc->begin("screenshots");
 print <<< end
 <h1>Screenshots</h1>
 
-<p>Screenshots should now go on the <a href="http://sourceforge.net/project/screenshots.php?group_id=3248">SourceForge Screenshots</a> tracker. The rest of this page is just here for reference.</p>
+<p>Six screenshots are in the <a href="http://sourceforge.net/project/screenshots.php?group_id=3248">SourceForge Screenshots</a> tracker. That is all it can handle. Obviously we need a better solution.</p>
 
 <hr>
 
