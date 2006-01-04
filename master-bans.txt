@@ -2,6 +2,10 @@
 end: 0
 banner: JeffM2501
 reason: Spamming inappropriate message. Disruptive behavor
+61.132.133.146
+end: 0
+banner: JeffM2501
+reason: Spamming inappropriate message. Disruptive behavor
 24.190.58.202
 end: 0
 banner: bzflag developers
