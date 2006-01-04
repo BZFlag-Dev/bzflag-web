@@ -66,10 +66,6 @@ reason: gross abuse and cheating (knightmare).
 end: 0
 banner: bzflag developers
 reason: cheating ( knightmare )
-1.0.0.0
-end: 0
-banner: Patlabor221
-reason: sample ban
 12.158.242.12
 end: 0
 banner: trepan
@@ -78,3 +74,11 @@ reason: bigotry  on #bzflag
 end: 0
 banner: timriker
 reason: DOS http://secunia.com/advisories/18238/
+221.159.234.87
+end: 0
+banner: brlcad
+reason: IRC network abuse
+61.42.152.11
+end: 0
+banner: brlcad
+reason: IRC network abuse (l33t_n3ss)
