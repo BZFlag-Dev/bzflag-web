@@ -1,3 +1,7 @@
+80.217.157.234
+end: 0
+banner: JeffM2501
+reason: Spamming inappropriate message. Disruptive behavor
 24.190.58.202
 end: 0
 banner: bzflag developers
