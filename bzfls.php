@@ -13,9 +13,10 @@
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 # where to send debug printing (might override below)
-$enableDebug= 0;      // set to >1 to see all sql queries (>2 to see GET/POST input args also)
-$debugFile	= 'dbtest/xxx.log';
+$debugLevel= 2;      // set to >2 to see all sql queries (>1 to see GET/POST input args)
+$debugFilename	= './bzfls.log';
 $debugNoIpCheck = 0;  // for testing ONLY !!!
+
 
 // define dbhost/dbuname/dbpass/dbname here
 // NOTE it's .php so folks can't read the source
@@ -39,31 +40,47 @@ $banlist = array(
 $alternateServers = array('');
 
 # log function
-if ($enableDebug) {
-  function debug ($message) {
-    global $debugFile;
-    $fp = fopen($debugFile, 'a');
-    if ($fp) {
-      # output the message with a BSD-style timestamp
-      fwrite($fp, date('D M j G:i:s T Y') . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . $message . "\n");
-      fclose($fp);
-    } else {
-      print('Unable to write to to log file [$debugFile]');
-    }
-  }
-} else {
-  function debug ($message) {
+if ($debugLevel > 0){
+  if ( ($fdDebug = fopen ($debugFilename, 'a')) == null)
+    print('Unable to write to to log file [$debugFile]');
+  else chmod ($debugFilename, 0660 );
+}
+
+function debug ($message, $level=1) {
+  global $fdDebug, $debugLevel;
+  if (($level <= $debugLevel) && $fdDebug) {
+    # output the message with a BSD-style timestamp
+    fwrite($fdDebug, date('D M j G:i:s T Y') . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . $message . "\n");
+    fflush($fdDebug);
   }
 }
 
+
+function debugArray ($a){
+  foreach ($a as $key => $val){
+    if ($msg)
+      $msg .= ', ';
+    $msg .= "$key=$val";
+  }
+  return str_replace (array ("\r", "\n"), array ('<\r>', '<\n>'), $msg);	
+}
+
+
+if ($debugLevel > 1){
+  if (count ($GLOBALS['_POST']))
+    debug ("POST ARGS: " . debugArray ($GLOBALS['_POST'], 0));
+  if (count ($GLOBALS['_GET']))
+    debug ("GET ARGS: " . debugArray ($GLOBALS['_GET'], 0));
+}
+
+
 // Query helper. This should be used instead of mysql_query()
 function sqlQuery ($qry){
-  global $enableDebug;
   if ( ! ($set = mysql_query ($qry))){
-    debug ("*** QUERY FAILED:\n$qry\n*** ERROR: ". mysql_error());
+    debug ("*** QUERY FAILED:\n$qry\n*** ERROR: ". mysql_error(), 1);
     die ("Invalid query: " . mysql_error());  
-  } else if ($enableDebug > 1)
-    debug ("SUCCESS: $qry");
+  } else 
+    debug ("SUCCESS: $qry", 3);
   return $set;
 }
 
@@ -264,10 +281,10 @@ function action_list() {
   # Same as LIST in the old bzfls
   global $bbdbname, $dbname, $link, $callsign, $password, $version, $local, $alternateServers;
   header('Content-type: text/plain');
-  debug('Fetching LIST');
+  debug('Fetching LIST', 3);
 
   # remove all inactive servers from the table
-  debug('Deleting inactive servers from list');
+  debug('Deleting inactive servers from list', 3);
   $timeout = 1830;    # timeout in seconds
   $staletime = time() - $timeout;
   mysql_query("DELETE FROM servers WHERE lastmod < $staletime", $link)
@@ -278,7 +295,7 @@ function action_list() {
 
   if ($callsign && $password) {
     if (!mysql_select_db($bbdbname)) {
-      debug("Database $bbdbname did not exist");
+      debug("Database $bbdbname did not exist", 1);
       die('Could not open db: ' . mysql_error());
     }
     $result = mysql_query("SELECT user_id FROM phpbb_users "
@@ -312,7 +329,7 @@ function action_list() {
       }
     }
     if (!mysql_select_db($dbname)) {
-      debug("Database $dbname did not exist");
+      debug("Database $dbname did not exist", 1);
       die('Could not open db: ' . mysql_error());
     }
   }
@@ -321,7 +338,7 @@ function action_list() {
   if ($playerid){
     sqlQuery ("USE $bbdbname");
     // get list of groups player belongs to ...
-    debug ("FETCHING GROUPS");
+    debug ("FETCHING GROUPS", 3);
 
     $result = sqlQuery ("
       SELECT g.group_id FROM phpbb_user_group ug, phpbb_groups g
@@ -359,11 +376,11 @@ function action_list() {
 function action_gettoken (){
   global $bbdbname, $dbname, $link, $callsign, $password, $version, $local, $alternateServers;
   header('Content-type: text/plain');
-  debug('Fetching TOKEN');
+  debug('Fetching TOKEN', 2);
 
   if ($callsign && $password) {
     if (!mysql_select_db($bbdbname)) {
-      debug("Database $bbdbname did not exist");
+      debug("Database $bbdbname did not exist", 1);
       die('Could not open db: ' . mysql_error());
     }
     $result = mysql_query("SELECT user_id FROM phpbb_users "
@@ -401,7 +418,7 @@ function checktoken($callsign, $ip, $token, $garray) {
   $timeout = 3600; # 60 minutes while testing
   $staletime = time() - $timeout;
   if (!mysql_select_db($bbdbname)) {
-    debug("Database $bbdbname did not exist");
+    debug("Database $bbdbname did not exist", 1);
     die('Could not open db: ' . mysql_error());
   }
 
@@ -509,7 +526,7 @@ function action_add() {
   # does not get dropped due to a timeout...
   global $link, $nameport, $version, $build, $gameinfo, $slashtitle, $checktokens, $groups, $debugNoIpCheck;
   header('Content-type: text/plain');
-  debug("Attempting to ADD $nameport $version $gameinfo " . stripslashes($slashtitle));
+  debug("Attempting to ADD $nameport $version $gameinfo " . stripslashes($slashtitle), 1);
 
   # Filter out badly formatted or buggy versions
   print "MSG: ADD $nameport $version $gameinfo " . stripslashes($slashtitle) . "\n";
@@ -526,13 +543,13 @@ function action_add() {
 
   if ($servip == '0.0.0.0') {
     debug("Changed $servname to requesting address: "
-	. $_SERVER['REMOTE_ADDR'] );
+	. $_SERVER['REMOTE_ADDR'], 1 );
     $servip =  $_SERVER['REMOTE_ADDR'];
     $servname = $servip;
     $nameport = $servip . ':' . $servport;
   }elseif ($_SERVER['REMOTE_ADDR'] != $servip && !$debugNoIpCheck) {
     debug('Requesting address is ' . $_SERVER['REMOTE_ADDR']
-	. ' while server is at ' . $servip );
+	. ' while server is at ' . $servip, 1 );
     print('ERROR: Requesting address is ' . $_SERVER['REMOTE_ADDR']
 	. ' while server is at ' . $servip );
     die();
@@ -555,7 +572,7 @@ function action_add() {
     or die ('Invalid query: ' . mysql_error());
   $count = mysql_num_rows($result);
   if (!$count) {
-    debug('Server does not already exist in database -- adding');
+    debug('Server does not already exist in database -- adding', 1);
     print("MSG: adding $nameport\n");
 
     # Server does not already exist in DB so insert into DB
@@ -570,7 +587,7 @@ function action_add() {
     add_advertList(mysql_insert_id());
   } else {
 
-    debug("Server already exists in database -- updating");
+    debug("Server already exists in database -- updating", 1);
     print("MSG: updating $nameport\n");
 
     # Server exists already, so update the table entry
@@ -588,7 +605,7 @@ function action_add() {
   }
 
   action_checktokens();
-  debug("ADD $nameport");
+  debug("ADD $nameport", 3);
   print "ADD $nameport\n";
 }
 
@@ -598,7 +615,7 @@ function action_remove() {
   global $link, $nameport, $debugNoIpCheck;
   header('Content-type: text/plain');
   print("MSG: REMOVE request from $nameport\n");
-  debug("REMOVE request from $nameport");
+  debug("REMOVE request from $nameport", 1);
 
   $split = explode(':', $nameport);
   $servname = $split[0];
@@ -609,13 +626,13 @@ function action_remove() {
   $servip = gethostbyname($servname);
   if ($servip == '0.0.0.0') {
     debug('Changed ' . $servip . ' to requesting address: '
-	. $_SERVER['REMOTE_ADDR'] );
+	. $_SERVER['REMOTE_ADDR'], 1 );
     $servip =  $_SERVER['REMOTE_ADDR'];
     $servname = $servip;
     $nameport = $servip . ":" . $servport;
   } elseif ($_SERVER['REMOTE_ADDR'] != $servip && !$debugNoIpCheck) {
     debug('Requesting address is ' . $_SERVER['REMOTE_ADDR']
-	. ' while server is at ' . $servip );
+	. ' while server is at ' . $servip, 1 );
     print('ERROR: Requesting address is ' . $_SERVER['REMOTE_ADDR']
 	. ' while server is at ' . $servip );
     die();
@@ -709,18 +726,17 @@ if ($banlist[$_SERVER['REMOTE_ADDR']] != "") {
   # reject the connection attempt
   header('Content-type: text/plain');
   $remote_addr = $_SERVER['REMOTE_ADDR'];
-  debug("Connection rejected from $remote_addr");
+  debug("Connection rejected from $remote_addr", 1);
   die('Connection attempt rejected.  See #bzflag on irc.freenode.net');
 }
 
-debug('Connecting to the database');
+debug('Connecting to the database', 3);
 
 # Connect to the server database persistently.
 $link = mysql_pconnect($dbhost, $dbuname, $dbpass)
      or die('Could not connect: ' . mysql_error());
 if (!mysql_select_db($dbname)) {
-  debug("Database $dbname did not exist");
-
+  debug("Database $dbname did not exist", 1);
   die('Could not open db: ' . mysql_error());
 }
 
@@ -741,15 +757,6 @@ mysql_query("DELETE FROM players WHERE lastmod < $staletime AND randtext != NULL
 # tell the proxies not to cache
 header('Cache-Control: no-cache');
 header('Pragma: no-cache');
-
-
-if ($enableDebug > 2){
-  ob_start(debug);
-  echo ("\n*** START\n");
-  echo ("POST:");  print_r ($GLOBALS['_POST']);
-  echo (" GET:");  print_r ($GLOBALS['_GET']);
-  ob_end_flush();
-}
 
 
 # Do stuff based on what the 'action' is...
@@ -787,7 +794,7 @@ default:
 # make sure the connection to mysql is severed
 if ($link) {
   # for a transaction commit just in case
-  debug('Commiting any pending transactions');
+  debug('Commiting any pending transactions', 3);
   mysql_query('COMMIT', $link);
 
   # debug('Closing link to database');
@@ -796,7 +803,7 @@ if ($link) {
   #mysql_close($link);
 }
 
-debug('End session');
+debug('End session', 4);
 
 # Local Variables: ***
 # mode:php ***
