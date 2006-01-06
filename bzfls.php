@@ -50,7 +50,7 @@ function debug ($message, $level=1) {
   global $fdDebug, $debugLevel;
   if (($level <= $debugLevel) && $fdDebug) {
     # output the message with a BSD-style timestamp
-    fwrite($fdDebug, date('D M j G:i:s T Y') . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . $message . "\n");
+    fwrite($fdDebug, date('D M j G:i:s T Y') . ' ' . str_pad($_SERVER['REMOTE_ADDR'],15) . ' ' . $message . "\n");
     fflush($fdDebug);
   }
 }
@@ -526,7 +526,7 @@ function action_add() {
   # does not get dropped due to a timeout...
   global $link, $nameport, $version, $build, $gameinfo, $slashtitle, $checktokens, $groups, $debugNoIpCheck;
   header('Content-type: text/plain');
-  debug("Attempting to ADD $nameport $version $gameinfo " . stripslashes($slashtitle), 1);
+  debug("Attempting to ADD $nameport $version $gameinfo " . stripslashes($slashtitle), 3);
 
   # Filter out badly formatted or buggy versions
   print "MSG: ADD $nameport $version $gameinfo " . stripslashes($slashtitle) . "\n";
@@ -572,7 +572,7 @@ function action_add() {
     or die ('Invalid query: ' . mysql_error());
   $count = mysql_num_rows($result);
   if (!$count) {
-    debug('Server does not already exist in database -- adding', 1);
+    debug('Server does not already exist in database -- adding', 3);
     print("MSG: adding $nameport\n");
 
     # Server does not already exist in DB so insert into DB
@@ -587,7 +587,7 @@ function action_add() {
     add_advertList(mysql_insert_id());
   } else {
 
-    debug("Server already exists in database -- updating", 1);
+    debug("Server already exists in database -- updating", 3);
     print("MSG: updating $nameport\n");
 
     # Server exists already, so update the table entry
@@ -794,7 +794,7 @@ default:
 # make sure the connection to mysql is severed
 if ($link) {
   # for a transaction commit just in case
-  debug('Commiting any pending transactions', 3);
+  debug('Commiting any pending (SQL) transactions', 3);
   mysql_query('COMMIT', $link);
 
   # debug('Closing link to database');
