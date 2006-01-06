@@ -77,7 +77,7 @@ reason: cheating ( knightmare )
 12.158.242.12
 end: 0
 banner: trepan
-reason: bigotry  on #bzflag
+reason: bigotry on #bzflag
 69.226.58.242
 end: 0
 banner: timriker
@@ -90,3 +90,7 @@ reason: IRC network abuse
 end: 0
 banner: brlcad
 reason: IRC network abuse (l33t_n3ss)
+70.247.47.30
+end: 2592000
+banner: Developers
+reason: Public network abuse, cheating, impersonating players, disruptive behavior (DB)
