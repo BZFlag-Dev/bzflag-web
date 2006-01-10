@@ -14,7 +14,8 @@
 
 # where to send debug printing (might override below)
 $debugLevel= 2;      // set to >2 to see all sql queries (>1 to see GET/POST input args)
-$debugFilename	= './bzfls.log';
+#$debugFilename	= '/var/log/bzfls/bzfls.log';
+$debugFilename	= '/var/www/dbtest/bzflstest.log';
 $debugNoIpCheck = 0;  // for testing ONLY !!!
 
 
@@ -39,22 +40,33 @@ $banlist = array(
 // $alternateServers = array('http://my.BZFlag.org/db/','');
 $alternateServers = array('');
 
-# log function
-if ($debugLevel > 0){
-  if ( ($fdDebug = fopen ($debugFilename, 'a')) == null)
-    print('Unable to write to to log file [$debugFile]');
-  else chmod ($debugFilename, 0660 );
-}
 
-function debug ($message, $level=1) {
-  global $fdDebug, $debugLevel;
-  if (($level <= $debugLevel) && $fdDebug) {
-    # output the message with a BSD-style timestamp
-    fwrite($fdDebug, date('D M j G:i:s T Y') . ' ' . str_pad($_SERVER['REMOTE_ADDR'],15) . ' ' . $message . "\n");
-    fflush($fdDebug);
+register_shutdown_function ('allDone');
+
+$debugMessage = null;
+
+function allDone (){
+  global $debugMessage, $debugFilename;
+  if ($debugMessage != null){
+    if ( ($fdDebug = fopen ($debugFilename, 'a')) == null)
+      print("Unable to write to to log file [$debugFilename]");
+    else {
+      fwrite($fdDebug, date('D M j G:i:s T Y') . ' ' . str_pad($_SERVER['REMOTE_ADDR'],15) 
+          . ' ' . str_replace ("\n", "\n  ", $debugMessage));
+      if ($debugMessage{strlen($debugMessage)-1} != "\n");
+        fputs ($fdDebug, "\n");    
+      fclose($fdDebug);
+    }
   }
 }
 
+
+function debug ($message, $level=1) {
+  global $debugMessage, $debugLevel;
+  if ($level <= $debugLevel) {
+    $debugMessage .= $message;
+  }
+}
 
 function debugArray ($a){
   foreach ($a as $key => $val){
@@ -281,7 +293,7 @@ function action_list() {
   # Same as LIST in the old bzfls
   global $bbdbname, $dbname, $link, $callsign, $password, $version, $local, $alternateServers;
   header('Content-type: text/plain');
-  debug('Fetching LIST', 3);
+  debug ("  :::::  ", 2);
 
   # remove all inactive servers from the table
   debug('Deleting inactive servers from list', 3);
@@ -307,7 +319,9 @@ function action_list() {
     $playerid = $row[0];
     if (!$playerid) {
       print("NOTOK: invalid callsign or password\n");
+      debug ("NOTOK", 2);
     } else {
+      debug ("OK", 2);
       srand(microtime() * 100000000);
       $token = rand(0,2147483647);
       $result = mysql_query("UPDATE phpbb_users SET "
@@ -429,6 +443,7 @@ function checktoken($callsign, $ip, $token, $garray) {
   $rows = mysql_num_rows($result);
   if (!mysql_num_rows($result)) {
     print ("UNK: $callsign\n");
+    debug ("UNK:$callsign ", 2);
     return;
   }
 
@@ -471,8 +486,10 @@ function checktoken($callsign, $ip, $token, $garray) {
     # - the BZID can be any uniquely identifying invariant string
     # - bzfs is setup to accept spaces if the strings is "quoted"
     print ("BZID: $playerid $callsign\n");
+    debug ("TOKGOOD: $callsign ", 2);
   } else {
     print ("TOKBAD: $callsign\n");
+    debug ("TOKBAD:$callsign ", 2);
   }
 }
 
@@ -480,6 +497,7 @@ function action_checktokens() {
   #  -- CHECKTOKENS --
   # validate callsigns and tokens (clears tokens)
   global $link, $checktokens, $groups;
+  debug ("  :::::  ", 2);
   if ($checktokens != '') {
     function remove_empty ($value) { return empty($value) ? false : true; }
     $garray = array_filter(explode("\r\n", $groups), 'remove_empty');
