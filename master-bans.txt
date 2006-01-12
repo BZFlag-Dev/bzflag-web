@@ -96,5 +96,5 @@ banner: Developers
 reason: Public network cheating, impersonating players, disruptive behavior (DB)
 172.216.38.191
 end: 0
-banner Developers
+banner: Developers
 reason: Extensive public network abuse, spamming, disruptive behavior (Mr_Molez)
