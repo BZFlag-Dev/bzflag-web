@@ -98,3 +98,7 @@ reason: Public network cheating, impersonating players, disruptive behavior (DB)
 end: 0
 banner: Developers
 reason: Extensive public network abuse, spamming, disruptive behavior (Mr_Molez)
+69.76.15.156
+end: 0
+banner: brlcad
+reason: Inappropriate public server callsigns, extensive teamkilling, groin obsessing
