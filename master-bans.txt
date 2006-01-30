@@ -90,10 +90,6 @@ reason: IRC network abuse
 end: 0
 banner: brlcad
 reason: IRC network abuse (l33t_n3ss)
-70.247.47.30
-end: 1139378117
-banner: Developers
-reason: Public network cheating, impersonating players, disruptive behavior (DB)
 172.216.38.191
 end: 0
 banner: Developers
