@@ -106,3 +106,7 @@ reason: Public server abuse, inappropriate language (ashole)
 end: 0
 banner: brlcad
 reason: Public server abuse, teamkilling, language (teamkiller)
+89.49.116.56
+end: 0
+banner: brlcad
+reason: Public server abuse, teamkilling, language
