@@ -1,5 +1,5 @@
 body {
-  background-color: #efefef;
+  background-color: #888888;
   color: #000000;
 }
 
@@ -60,12 +60,17 @@ a.navbar:hover {
   /*font-size: 12px;*/
 }
 
-table {
+/*table {
   color: #000000;
-  /*font-size: 12px;*/
-}
+  font-size: 12px;
+}*/
 
 .copyright {
   color: #000000;
   /*font-size: 12px;*/
+}
+
+.sidebar_border {
+	border: #000000; border-style: solid;
+	border-left-width: 1px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px
 }
