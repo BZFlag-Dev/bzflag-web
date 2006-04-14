@@ -33,11 +33,11 @@ if (isset($viewsource)) { $title = "View Source"; }
 
 <div id="menubar"><?
 
-if ($_SERVER['PHP_SELF'] == '/index.php') {
+if ($_SERVER['PHP_SELF'] == '/index.php' || $_SERVER['PHP_SELF'] == '/stats.php') {
       ?><a class="active" href="/">Home</a> <?
        $markhome = 'yes';
     } else {
-  ?><a href="stats.php">Home</a> <?
+  ?><a href="/">Home</a> <?
     }
 
 if ($_SERVER['PHP_SELF'] == '/currentplayers.php' or
