@@ -14,10 +14,9 @@
 
 # where to send debug printing (might override below)
 $debugLevel= 2;      // set to >2 to see all sql queries (>1 to see GET/POST input args)
-#$debugFilename	= '/var/log/bzfls/bzfls.log';
-$debugFilename	= '/var/www/dbtest/bzflstest.log';
+$debugFilename	= '/var/log/bzfls/bzfls.log';
+#$debugFilename	= '/var/www/dbtest/bzflstest.log';
 $debugNoIpCheck = 0;  // for testing ONLY !!!
-
 
 // define dbhost/dbuname/dbpass/dbname here
 // NOTE it's .php so folks can't read the source
@@ -33,13 +32,15 @@ include('serversettings.php');
 # FIXME this should be in an sql table with a remote admin interface
 $banlist = array(
   '68.109.43.46' => 'knightmare.kicks-ass.net',
+  '172.216.38.191' => 'Mr_Molez',
+  '84.121.235.192' => 'josago.homelinux.com',
+  'josago.homelinux.com' => 'josago.homelinux.com',
 #  '127.0.0.1' => 'localhost'
   '255.255.255.255' => 'globalbroadcast'
 );
 
 // $alternateServers = array('http://my.BZFlag.org/db/','');
 $alternateServers = array('');
-
 
 register_shutdown_function ('allDone');
 
@@ -51,15 +52,14 @@ function allDone (){
     if ( ($fdDebug = fopen ($debugFilename, 'a')) == null)
       print("Unable to write to to log file [$debugFilename]");
     else {
-      fwrite($fdDebug, date('D M j G:i:s T Y') . ' ' . str_pad($_SERVER['REMOTE_ADDR'],15) 
+      fwrite($fdDebug, date('D M j G:i:s T Y') . ' ' . str_pad($_SERVER['REMOTE_ADDR'],15)
           . ' ' . str_replace ("\n", "\n  ", $debugMessage));
       if ($debugMessage{strlen($debugMessage)-1} != "\n");
-        fputs ($fdDebug, "\n");    
+        fputs ($fdDebug, "\n");
       fclose($fdDebug);
     }
   }
 }
-
 
 function debug ($message, $level=1) {
   global $debugMessage, $debugLevel;
@@ -74,9 +74,14 @@ function debugArray ($a){
       $msg .= ', ';
     $msg .= "$key=$val";
   }
-  return str_replace (array ("\r", "\n"), array ('<\r>', '<\n>'), $msg);	
+  return str_replace (array ("\r", "\n"), array ('<\r>', '<\n>'), $msg);
 }
 
+// temp debug (menotume 2006-03-10)
+//if (strncasecmp ($_REQUEST['callsign'], "craxy", 5) == 0){
+//  debug ("\n***** GLOBALS[_SERVER]:\n");
+//  debug (  print_r ($GLOBALS['_SERVER'], true), 1 );
+//}
 
 if ($debugLevel > 1){
   if (count ($GLOBALS['_POST']))
@@ -85,17 +90,15 @@ if ($debugLevel > 1){
     debug ("GET ARGS: " . debugArray ($GLOBALS['_GET'], 0));
 }
 
-
 // Query helper. This should be used instead of mysql_query()
 function sqlQuery ($qry){
   if ( ! ($set = mysql_query ($qry))){
     debug ("*** QUERY FAILED:\n$qry\n*** ERROR: ". mysql_error(), 1);
-    die ("Invalid query: " . mysql_error());  
-  } else 
+    die ("Invalid query: " . mysql_error());
+  } else
     debug ("SUCCESS: $qry", 3);
   return $set;
 }
-
 
 function validate_string($string, $valid_chars, $return_invalid_chars) {
   # thanx http://scripts.franciscocharrua.com/validate-string.php =)
@@ -321,9 +324,9 @@ function action_list() {
       print("NOTOK: invalid callsign or password\n");
       debug ("NOTOK", 2);
     } else {
-      debug ("OK", 2);
       srand(microtime() * 100000000);
       $token = rand(0,2147483647);
+      debug ("OK   token=$token", 2);
       $result = mysql_query("UPDATE phpbb_users SET "
 	  . "user_token='$token', "
 	  . "user_tokendate='" . time() . "', "
@@ -356,7 +359,7 @@ function action_list() {
 
     $result = sqlQuery ("
       SELECT g.group_id FROM phpbb_user_group ug, phpbb_groups g
-      WHERE g.group_id=ug.group_id AND (ug.user_id = $playerid AND g.group_name<>'') OR g.group_name='VERIFIED'");  
+      WHERE g.group_id=ug.group_id AND (ug.user_id = $playerid AND g.group_name<>'') OR g.group_name='VERIFIED'");
     while ($row = mysql_fetch_row($result))
       $advertList .= ",$row[0]";
     sqlQuery ("USE $dbname");
@@ -366,7 +369,7 @@ function action_list() {
     $qryv = "AND version='$version'";
   $result = sqlQuery("
     SELECT nameport,version,gameinfo,ipaddr,title FROM servers, server_advert_groups as sav
-    WHERE servers.server_id=sav.server_id 
+    WHERE servers.server_id=sav.server_id
     AND  sav.group_id IN ($advertList) $qryv
     ORDER BY `nameport` ASC");
 
@@ -414,7 +417,7 @@ function action_gettoken (){
 	  . "user_tokendate='" . time() . "', "
 	  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
 	  . "WHERE user_id='$playerid'", $link)
-      	or die ("Invalid query: ". mysql_error());
+	or die ("Invalid query: ". mysql_error());
       print("TOKEN: $token\n");
     }
   }
@@ -453,6 +456,9 @@ function checktoken($callsign, $ip, $token, $garray) {
   if ($ip) {
     $testtoken .= "AND user_tokenip='$ip'";
   }
+
+//debug ( "SELECT user_id FROM phpbb_users ". "WHERE username='$callsign' " . $testtoken, 2);
+
   $result = mysql_query("SELECT user_id FROM phpbb_users "
       . "WHERE username='$callsign' "
       . $testtoken, $link)
@@ -514,7 +520,6 @@ function action_checktokens() {
   }
 }
 
-
 function add_advertList ($serverID){
   global $bbdbname;
 
@@ -532,7 +537,7 @@ function add_advertList ($serverID){
     } else {
       sqlQuery ("
         INSERT INTO server_advert_groups (server_id, group_id)
-        SELECT $serverID, group_id FROM $bbdbname.phpbb_groups 
+        SELECT $serverID, group_id FROM $bbdbname.phpbb_groups
         WHERE group_name IN ('". implode ("','", $advertList) ."')");
     }
   }
@@ -658,8 +663,8 @@ function action_remove() {
 
   $result = sqlQuery("SELECT server_id FROM servers WHERE nameport = '$nameport'");
   if ( ($row=mysql_fetch_row($result)) ){
-    sqlQuery ("DELETE FROM servers WHERE server_id = $row[0]");  
-    sqlQuery ("DELETE FROM server_advert_groups WHERE server_id = $row[0]");  
+    sqlQuery ("DELETE FROM servers WHERE server_id = $row[0]");
+    sqlQuery ("DELETE FROM server_advert_groups WHERE server_id = $row[0]");
   }
   print("REMOVE: $nameport\n");
 }
@@ -775,7 +780,7 @@ mysql_query("DELETE FROM players WHERE lastmod < $staletime AND randtext != NULL
 # tell the proxies not to cache
 header('Cache-Control: no-cache');
 header('Pragma: no-cache');
-
+header("Connection: close");
 
 # Do stuff based on what the 'action' is...
 switch ($action) {
