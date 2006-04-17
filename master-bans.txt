@@ -98,7 +98,13 @@ reason: Public server abuse, teamkilling, language
 end: 0
 banner: brlcad
 reason: Public server abuse (longdonisgay)
-68.7.107.207
+72.36.145.58
 end: 0
-banner: trepan
-reason: (Christening, jimmy the cricket) cheating
+banner: JeffM2501
+reason: Public player abuse (Death Barrel) 3rd strike
+70.247.47.30
+end: 0
+banner: JeffM2501
+reason: PPublic player abuse (Death Barrel) 3rd strike
+
+
