@@ -212,11 +212,11 @@ my $bzinfo = new BZFlag::Info;
     $delta = $endtime - $starttime;
     print "$delta seconds to scan and delete old records\n" if $debug;
 
-    if ($delta < 300) {
-	my $sleeptime = 300 - $delta;
-	print "sleeping for $sleeptime seconds\n" if $debug;
-	sleep($sleeptime)
-    }
+#    if ($delta < 300) {
+#	my $sleeptime = 300 - $delta;
+#	print "sleeping for $sleeptime seconds\n" if $debug;
+#	sleep($sleeptime)
+#    }
 # } # end infinite loop
 
 sub tf_yn ($) {
