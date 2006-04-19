@@ -25,12 +25,12 @@ my $dbh = DBI->connect("DBI:mysql:$dbname:$dbhost",
 
 my $bzinfo = new BZFlag::Info;
 
-for (;;) {
+#for (;;) {
 
-    alarm(300);
+#    alarm(300);
 
     my $starttime = gettimeofday;
-    my $serverlist = $bzinfo->serverlist;
+    my $serverlist = $bzinfo->serverlist(Server => "http://my.bzflag.bz/db/");
     my $refreshquery = "WHERE ";
 
     foreach(sort keys(%{ $serverlist->{servers} })) {
@@ -217,7 +217,7 @@ for (;;) {
 	print "sleeping for $sleeptime seconds\n" if $debug;
 	sleep($sleeptime)
     }
-}
+# } # end infinite loop
 
 sub tf_yn ($) {
     my $true = shift;

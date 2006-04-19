@@ -1,4 +1,5 @@
-bzupdate.pl is the script used to populate the stats tables.
+bzupdate.pl is the script used to populate the stats tables.  ths
+script should be added to cron to run every 5 or so minutes.
 
 It needs to die.
 
