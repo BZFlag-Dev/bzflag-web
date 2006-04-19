@@ -8,8 +8,10 @@ use DBI();
 use Data::Dumper;
 use Time::HiRes qw(gettimeofday);
 
-my $debug = 0; # if (shift eq '-d');
-$debug = 1 if (shift eq '-d');
+my $debug = 0;
+if ($#ARGV >= 0) {
+    $debug = 1;
+}
 
 # get settings
 use vars qw($dbhost $dbname $dbuname $dbpass);
