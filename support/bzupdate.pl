@@ -17,7 +17,7 @@ use vars qw($dbhost $dbname $dbuname $dbpass);
 #$dbname = "bzflag";
 #$dbuser = "bzflag";
 #$dbpassword = "password";
-do ".mysqlconnect";
+do "/etc/bzflag/.mysqlconnect";
 # Connect to the database
 my $dbh = DBI->connect("DBI:mysql:$dbname:$dbhost",
 		       "$dbuname", "$dbpass",
