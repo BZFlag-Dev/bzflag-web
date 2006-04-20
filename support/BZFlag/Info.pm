@@ -41,11 +41,16 @@ sub serverlist(%) {
 
     my $totalServers = 0;
     my $totalPlayers = 0;
+    my $extraneousData = 0;
 
     for my $line (split("\n",$res->content)) {
-        if ($line =~ m/^[^[:alnum:]]/) {
-	    print "WARNING: the list server is outputting extraneous data\n";
-	    return ($response);
+        if ($extraneousData == 0 && $line =~ m/^[^[:alnum:]]/) {
+	    print "WARNING: the list server is outputting extraneous data\n==== BEGIN EXTRANEOUS DATA ====\n";
+	    $extraneousData = 1;
+	}
+	if ($extraneousData == 1) {
+	    print "$line\n";
+	    next;
 	}
 
 	my ($serverport, $version, $flags, $ip, $description) = split(" ",$line,5);
@@ -107,6 +112,10 @@ sub serverlist(%) {
     }
     $response->{totalservers} = $totalServers;
     $response->{totalplayers} = $totalPlayers;
+
+    if ($extraneousData == 1) {
+        printf "==== END EXTRANEOUS DATA ====\n";
+    }
 
     return ($response);
 
