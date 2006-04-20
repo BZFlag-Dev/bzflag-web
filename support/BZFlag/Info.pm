@@ -43,6 +43,11 @@ sub serverlist(%) {
     my $totalPlayers = 0;
 
     for my $line (split("\n",$res->content)) {
+        if ($line =~ m/^[^[:alnum:]]/) {
+	    print "WARNING: the list server is outputting extraneous data\n";
+	    return ($response);
+	}
+
 	my ($serverport, $version, $flags, $ip, $description) = split(" ",$line,5);
 
 	my @fields = ('style','maxShots','shakeWins','shakeTimeout','maxPlayerScore',
@@ -58,7 +63,8 @@ sub serverlist(%) {
 	my %info;
 
 	foreach (@fields) {
-	    $info{$_} = oct('0x'.$info[$counter]);
+	    my $hex = $info[$counter];
+	    $info{$_} = oct('0x'.$hex);
 	    $counter++;
 	}
 
@@ -719,3 +725,11 @@ Copyright (c) 2003-2005 Tucker McLean, Tim Riker.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+# Local Variables: ***
+# mode:Perl ***
+# tab-width: 8 ***
+# c-basic-offset: 2 ***
+# indent-tabs-mode: t ***
+# End: ***
+# ex: shiftwidth=2 tabstop=8
