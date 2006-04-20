@@ -34,10 +34,14 @@ sub serverlist(%) {
 
     $ua->timeout(10);
 
-    my $req = HTTP::Request->new('GET', ($options{Server} ? $options{Server} : $self->listserver) . '?action=LIST');
+    my $url = ($options{Server} ? $options{Server} : $self->listserver) . '?action=LIST';
+    my $req = HTTP::Request->new('GET', $url);
     my $res = $ua->request($req);
+    die "Can't get $url" unless $res->is_success;
+
     my $totalServers = 0;
     my $totalPlayers = 0;
+
     for my $line (split("\n",$res->content)) {
 	my ($serverport, $version, $flags, $ip, $description) = split(" ",$line,5);
 
