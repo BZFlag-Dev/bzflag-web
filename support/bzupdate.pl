@@ -8,6 +8,8 @@ use DBI();
 use Data::Dumper;
 use Time::HiRes qw(gettimeofday);
 
+my $PASSFILE = "/etc/bzflag/.mysqlconnect";
+
 my $debug = 0;
 if ($#ARGV >= 0) {
     $debug = 1;
@@ -15,11 +17,15 @@ if ($#ARGV >= 0) {
 
 # get settings
 use vars qw($dbhost $dbname $dbuname $dbpass);
-#$dbhost = "localhost";
-#$dbname = "bzflag";
-#$dbuser = "bzflag";
-#$dbpassword = "password";
-do "/etc/bzflag/.mysqlconnect";
+
+# load the database connection parameters from a read-protected file containing:
+#   $dbhost = "localhost";
+#   $dbname = "bzflag";
+#   $dbuser = "bzflag";
+#   $dbpassword = "password";
+die "Error, unable to read $PASSFILE\n" unless (-r $PASSFILE);
+do "$PASSFILE";
+
 # Connect to the database
 my $dbh = DBI->connect("DBI:mysql:$dbname:$dbhost",
 		       "$dbuname", "$dbpass",
@@ -90,9 +96,9 @@ my $bzinfo = new BZFlag::Info;
 		      $serverlist->{servers}->{$_}->{serverconfig}->{purplemax}                      ,
 		      $serverlist->{servers}->{$_}->{observersize}                                   ,
 		      $serverlist->{servers}->{$_}->{serverconfig}->{observermax}                    ,
-		      $serverlist->{servers}->{$_}->{ip}                                             ,
+		      &not_null($serverlist->{servers}->{$_}->{ip}, "0.0.0.0")                       ,
 		      $serverlist->{servers}->{$_}->{version}                                        ,
-		      $serverlist->{servers}->{$_}->{description}                                    ,
+		      &not_null($serverlist->{servers}->{$_}->{description}, "No description given") ,
 		      );
 
 	next if ($numplayers == 0);
@@ -224,4 +230,11 @@ my $bzinfo = new BZFlag::Info;
 sub tf_yn ($) {
     my $true = shift;
     return ($true == 1 ? 'Y' : 'N');
+}
+sub not_null ($$) {
+    my $val = $_[0];
+    my $default = $_[1];
+    die "not_null given a null default\n" unless defined $default;
+    $val = $default unless defined $val;
+    return ($val);
 }
