@@ -359,7 +359,7 @@ function action_list() {
 
     $result = sqlQuery ("
       SELECT g.group_id FROM phpbb_user_group ug, phpbb_groups g
-      WHERE g.group_id=ug.group_id AND (ug.user_id = $playerid AND g.group_name<>'') OR g.group_name='VERIFIED'");
+      WHERE g.group_id=ug.group_id AND (ug.user_id = $playerid AND g.group_name<>'')");
     while ($row = mysql_fetch_row($result))
       $advertList .= ",$row[0]";
     sqlQuery ("USE $dbname");
@@ -763,19 +763,19 @@ if (!mysql_select_db($dbname)) {
   die('Could not open db: ' . mysql_error());
 }
 
-# remove all inactive registered players from the table
-# FIXME this should not happen on every request
-$timeout = 31536000; # timeout in seconds, 365 days
-$staletime = time() - $timeout;
-mysql_query("DELETE FROM players WHERE lastmod < $staletime", $link)
-  or die ('Could not remove inactive players' . mysql_error());
+if (rand(1, 100) == 50){     // reduce queries
+  # remove all inactive registered players from the table
+  $timeout = 31536000; # timeout in seconds, 365 days
+  $staletime = time() - $timeout;
+  mysql_query("DELETE FROM players WHERE lastmod < $staletime", $link)
+    or die ('Could not remove inactive players' . mysql_error());
 
-# remove all players who have not confirmed registration
-# FIXME this should not happen on every request
-$timeout = 259200;  # timeout in seconds, 72h
-$staletime = time() - $timeout;
-mysql_query("DELETE FROM players WHERE lastmod < $staletime AND randtext != NULL", $link)
-  or die ('Could not remove inactive players' . mysql_error());
+  # remove all players who have not confirmed registration
+  $timeout = 259200;  # timeout in seconds, 72h
+  $staletime = time() - $timeout;
+  mysql_query("DELETE FROM players WHERE lastmod < $staletime AND randtext != NULL", $link)
+    or die ('Could not remove inactive players' . mysql_error());
+}
 
 # tell the proxies not to cache
 header('Cache-Control: no-cache');
