@@ -2,6 +2,8 @@
 
 require('serversettings.php');
 
+define (MYSQL_PERSISTENT, true);
+
 
 /** set the theme and appearance of the interface
  */
@@ -147,8 +149,11 @@ if (isset($_SERVER['SCRIPT_FILENAME'])) {
 	}
 }
 
-
-$link = mysql_pconnect($dbhost, $dbuname, $dbpass) or die("Could not connect");
+if (MYSQL_PERSISTENT === true){
+  $link = mysql_pconnect($dbhost, $dbuname, $dbpass) or die("Could not connect");
+}else{
+  $link = mysql_connect($dbhost, $dbuname, $dbpass) or die("Could not connect");
+}
 mysql_select_db($dbname, $link) or die("Could not select database");
 
 $separator = '<div class="center">&middot; &middot; &middot; &middot; &middot; &middot; &middot;</div>';
