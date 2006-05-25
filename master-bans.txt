@@ -98,4 +98,9 @@ reason: Public server abuse (longdonisgay)
 end: 0
 banner: trepan
 reason: (Christening, jimmy the cricket) cheating
+69.113.27.92
+end: 0
+banner: JeffM2501
+reason: (mikeeusa) derogitory and abbusive network use.
+ 
 
