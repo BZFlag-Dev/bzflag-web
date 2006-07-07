@@ -13,6 +13,8 @@
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 define (MYSQL_PERSISTENT, false);  // user persistent connection ?
+define (MD5_PASSWORD, true);       // encrypt password in log file
+
 
 # where to send debug printing (might override below)
 $debugLevel= 2;      // set to >2 to see all sql queries (>1 to see GET/POST input args)
@@ -74,6 +76,8 @@ function debugArray ($a){
   foreach ($a as $key => $val){
     if ($msg)
       $msg .= ', ';
+    if (MD5_PASSWORD && strncasecmp ($key, "PASS", 4)==0)
+      $val = md5($val);
     $msg .= "$key=$val";
   }
   return str_replace (array ("\r", "\n"), array ('<\r>', '<\n>'), $msg);
