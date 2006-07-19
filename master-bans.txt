@@ -102,5 +102,7 @@ reason: (Christening, jimmy the cricket) cheating
 end: 0
 banner: JeffM2501
 reason: (mikeeusa) derogitory and abbusive network use.
- 
-
+217.237.115.157
+end: 0
+banner: brlcad
+reason: multiple public server cheating incidents, dynamic IP (T-90)
