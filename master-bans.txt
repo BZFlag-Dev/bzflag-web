@@ -101,12 +101,12 @@ reason: (Christening, jimmy the cricket) cheating
 69.113.27.92
 end: 0
 banner: JeffM2501
-reason: (Axl Rose) inappropriate language, web service abbuse.
-24.177.58.131
-end: 0
-banner: JeffM2501
 reason: (mikeeusa) derogitory and abbusive network use.
 217.237.115.157
 end: 0
 banner: brlcad
 reason: multiple public server cheating incidents, dynamic IP (T-90)
+24.177.58.131
+end: 0
+banner: JeffM2501
+reason: (Axl Rose) inappropriate language, web service abbuse.
