@@ -1,4 +1,4 @@
-69.199.237.214
+69.119.237.214
 end: 0
 banner: JeffM2501
 reason: Spamming inappropriate messages. Disruptive behavor, repeated COPPA violations (your dead)
