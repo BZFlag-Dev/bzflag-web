@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-15 -*-
 """
     MoinMoin - Configuration
 
@@ -40,55 +41,73 @@ navi_bar = ''
 mail_smarthost = 'localhost'
 mail_from = 'BZFlag Wiki <noreply@BZFlag.org>'
 title1 = """<div align="center">
-<table width="100%%" border="0" cellpadding="0" cellspacing="0" bgcolor="#000000"><tr><td>
-  <table border="0" cellpadding="0" cellspacing="1" width="100%%">
+  <table border="0" cellpadding="0" cellspacing="0" width="85%%">
     <tr>
-      <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%%">
-        <tr><td bgcolor="#013571" align="right"><img src="/images/logo2-1.jpg" alt="logo"></td>
-	<td bgcolor="#818181" align="left"><img src="/images/logo2-2.jpg" alt=""></td></tr>
-      </table></td>
+      <td align="center">
+        <img src="/images/title.png">
+      </td>
     </tr>
     <tr>
-    <td width="125" bgcolor="#ffffff" valign="top">
-      <table border="0" cellpadding="2"><tr><td>
-<a href="/" class="navbar">home</a><br>
-<a href="/wiki/GettingHelp" class="navbar">getting&nbsp;help</a><br>
-<a href="/wiki/Download" class="navbar">download</a><br>
-<a href="/help/" class="navbar">help</a><br>
-<a href="/wiki/Developers" class="navbar">developers</a><br>
-<a href="/screenshots/" class="navbar">screenshots</a><br>
-<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/LICENSE?rev=HEAD&amp;content-type=text/vnd.viewcvs-markup" class="navbar">license</a><br>
-<a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
-<a href="/wiki/OtherLinks" class="navbar">links</a><br>
-<a href="http://my.BZFlag.org/" class="navbar">stats</a><br>
-<a href="http://my.BZFlag.org/bb/" class="navbar">forums</a><br>
-<a href="http://my.BZFlag.org/league/" class="navbar">CTF&nbsp;league</a><br>
-<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/TODO?rev=HEAD" class="navbar">TODO</a><br>
-<br>
-<a href="/wiki/FrontPage" class="navbar">wiki</a><br>
-&nbsp;<a href="/wiki/FindPage" class="navbar">FindPage</a><br>
-&nbsp;<a href="/wiki/HelpContents" class="navbar">HelpContents</a><br>
-&nbsp;<a href="/wiki/OtherLinks" class="navbar">OtherLinks</a><br>
-&nbsp;<a href="/wiki/RecentChanges" class="navbar">RecentChanges</a><br>
-&nbsp;<a href="/wiki/UserPreferences" class="navbar">UserPreferences</a><br>
-<a href="%(url_path)s" class="navbar">page</a><br>
-&nbsp;<a href="%(url_path)s?action=edit" class="navbar">edit</a><br>
-&nbsp;<a href="%(url_path)s?action=info" class="navbar">info</a><br>
-&nbsp;<a href="%(url_path)s?action=print" class="navbar">print</a><br>
-&nbsp;<a href="%(url_path)s?action=subscribe" class="navbar">subscribe</a><br>
-&nbsp;<a href="%(url_path)s?action=format&amp;mimetype=text/xml" class="navbar">XML</a><br>
-<br>
-<a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
-&nbsp;<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag" class="navbar">browse&nbsp;CVS</a><br>
-&nbsp;<a href="/doxygen/" class="navbar">browse&nbsp;doxygen</a><br>
-&nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=103248" class="navbar">bug&nbsp;reports</a><br>
-&nbsp;<a href="http://sourceforge.net/cvs/?group_id=3248" class="navbar">CVS&nbsp;access</a><br>
-&nbsp;<a href="http://sourceforge.net/tracker/?atid=353248&amp;group_id=3248&amp;func=browse" class="navbar">feature&nbsp;requests</a><br>
-&nbsp;<a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">mailing&nbsp;lists</a><br>
-&nbsp;<a href="http://sourceforge.net/tracker/?atid=423059&amp;group_id=3248&amp;func=browse" class="navbar">maps</a><br>
-&nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=203248" class="navbar">support</a><br>
-      </td></tr></table>
-    </td>
+      <td>
+        &nbsp;
+      </td>
+    </tr>
+  </table>
+  <table border="0" cellpadding="0" cellspacing="0" width="85%%"><!-- Main table for entire page -->
+    <tr>
+    <td valign="top">  <!-- left sidebar, row 1 main table, field one -->
+    <table width="125" bgcolor="#AAAAAA" class="sidebar_border" border="0" cellspacing="0" cellpadding="4">
+      <tr><td align="center">
+      <table align="center" height="26" width="100" background="/images/content_header.png">
+        <tr><td align="center">Contents</td></tr>
+      </table>
+      </td></tr>
+      <tr><td align="center">
+      <table border="0" cellpadding="2">
+        <tr><td>
+          <table class="sidebar_border" bgcolor="#FFFFFF" border="0" cellpadding="0">
+          <tr><td>
+            <a href="/" class="navbar">home</a><br>
+            <a href="/wiki/GettingHelp" class="navbar">getting&nbsp;help</a><br>
+            <a href="/wiki/Download" class="navbar">download</a><br>
+            <a href="/help/" class="navbar">help</a><br>
+            <a href="/wiki/Developers" class="navbar">developers</a><br>
+            <a href="/screenshots/" class="navbar">screenshots</a><br>
+            <a href="http://bzflag.cvs.sourceforge.net/bzflag/bzflag/COPYING?view=markup" class="navbar">license</a><br>
+            <a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
+            <a href="/wiki/OtherLinks" class="navbar">links</a><br>
+            <a href="/wiki/" class="navbar">wiki</a><br>
+            <a href="http://my.BZFlag.org/" class="navbar">stats</a><br>
+            <a href="http://my.BZFlag.org/bb/" class="navbar">forums</a><br>
+            <a href="http://my.BZFlag.org/league/" class="navbar">CTF&nbsp;league</a><br>
+            <a href="http://bzflag.cvs.sourceforge.net/bzflag/bzflag/TODO?view=markup" class="navbar">TODO</a><br>
+            <br>
+            <a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
+            &nbsp;<a href="http://bzflag.cvs.sourceforge.net/bzflag" class="navbar">browse&nbsp;CVS</a><br>
+<!-- Is this still in use?      &nbsp;<a href="/doxygen/" class="navbar">browse&nbsp;doxygen</a><br> -->
+            &nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=103248" class="navbar">bug&nbsp;reports</a><br>
+            &nbsp;<a href="http://sourceforge.net/cvs/?group_id=3248" class="navbar">CVS&nbsp;access</a><br>
+            &nbsp;<a href="http://sourceforge.net/tracker/?atid=353248&amp;group_id=3248&amp;func=browse" class="navbar">feature&nbsp;requests</a><br>
+            &nbsp;<a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">mailing&nbsp;lists</a><br>
+            &nbsp;<a href="http://sourceforge.net/tracker/?atid=423059&amp;group_id=3248&amp;func=browse" class="navbar">maps</a><br>
+            &nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=203248" class="navbar">support</a><br>                  </td></tr>
+          </table>
+        </td></tr>
+        <tr>
+        <td align="center" >
+          <table align="center" border="0" cellspacing="0" cellpadding="0">
+          <tr><td><a href="http://www.opengl.org/"><img src="/images/opengl.gif" alt="opengl" width="88" height="31" border="0"></a></td></tr>
+          <tr><td><a href="http://sourceforge.net/project/?group_id=3248"><img src="http://sourceforge.net/sflogo.php?group_id=3248&amp;type=1" width="88" height="31" alt="sourceforge" border="0"></a></td></tr>
+          <tr><td><a href="http://sourceforge.net/donate/index.php?group_id=3248"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" border="0" alt="Support This Project"/></a></td></tr>
+          <tr><td><a href="http://www.linuxgames.com/"><img src="/images/linuxgames.gif" width="88" height="31" alt="linuxgames" border="0"></a></td></tr>
+          <tr><td><a href="http://www.telefragged.com/"><img src="/images/telefragged.gif" width="88" height="31" alt="telefragged" border="0"></a></td></tr>          </table>
+          </td>
+          </tr>
+          </table>
+        </td></tr>
+        </table>
+      </td>  <!-- End left sidebar, row 1 main table, field one -->
+
     <td bgcolor="#ffffff" valign="top">
       <table border="0" cellpadding="2" width="100%%"><tr><td>
         <div class="content">""" % locals()
@@ -97,10 +116,10 @@ page_footer2 = """        </div>
       </td></tr></table>
     </td></tr>
     <tr>
-      <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
-	<td bgcolor="#ffffff" align="right">
-	  <span class="copyright">copyright &copy; <a href="/wiki/CurrentMaintainer">CurrentMaintainer</a> 1993-2002&nbsp;</span>
-	</td>
+      <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%%"><tr>
+        <td bgcolor="#ffffff" align="right">
+          <span class="copyright">copyright &copy; <a href="/wiki/CurrentMaintainer">CurrentMaintainer</a> 1993-2002&nbsp;</span>
+        </td>
       </tr></table></td>
     </tr>
   </table>
@@ -147,9 +166,10 @@ except ImportError:
 # values that depend on above configuration settings
 #logo_string = '<img src="%s" border="0" alt="%s">' % (logo_url, sitename)
 logo_string = sitename
-css_url = url_prefix + '/css/moinmoin.css' # stylesheet link, or ''
+# css_url = url_prefix + '/css/moinmoin.css' # stylesheet link, or ''
 html_head = """
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html;charset=%s">
+<link rel="stylesheet" type="text/css" href="/general.css">
 <link href="/favicon.ico" rel="shortcut icon">
 """ % (charset,)
 
