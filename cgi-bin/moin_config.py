@@ -44,7 +44,7 @@ title1 = """<div align="center">
   <table border="0" cellpadding="0" cellspacing="0" width="85%%">
     <tr>
       <td align="center">
-        <img src="/images/title.png">
+        <img src="/images/title.png" alt="BZFlag">
       </td>
     </tr>
     <tr>
@@ -58,7 +58,7 @@ title1 = """<div align="center">
     <td valign="top">  <!-- left sidebar, row 1 main table, field one -->
     <table width="125" bgcolor="#AAAAAA" class="sidebar_border" border="0" cellspacing="0" cellpadding="4">
       <tr><td align="center">
-      <table align="center" height="26" width="100" background="/images/content_header.png">
+      <table align="center" width="100" height=26 background="/images/content_header.png">
         <tr><td align="center">Contents</td></tr>
       </table>
       </td></tr>
@@ -116,14 +116,14 @@ page_footer2 = """        </div>
       </td></tr></table>
     </td></tr>
     <tr>
-      <td colspan="2"><table border="0" cellpadding="0" cellspacing="0" width="100%%"><tr>
+      <td>&nbsp;</td><td><table border="0" cellpadding="0" cellspacing="0" width="100%%"><tr>
         <td bgcolor="#ffffff" align="right">
           <span class="copyright">copyright &copy; <a href="/wiki/CurrentMaintainer">CurrentMaintainer</a> 1993-2002&nbsp;</span>
         </td>
       </tr></table></td>
     </tr>
   </table>
-</td></tr></table>
+
 <table border="0" cellpadding="2"><tr><td valign="middle" align="center">
 <form method="GET" action="http://www.google.com/custom">
 <input type="hidden" name="cof" value="AH:center;S:http://BZFlag.org/;AWFID:3e0e6d8d8d5bbf7d;">
