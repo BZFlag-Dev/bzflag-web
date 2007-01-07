@@ -109,7 +109,7 @@ title1 = """<div align="center">
       </td>  <!-- End left sidebar, row 1 main table, field one -->
 
     <td bgcolor="#ffffff" valign="top">
-      <table border="0" cellpadding="2" width="100%%"><tr><td>
+      <table border="1" cellpadding="4" cellspacing="0" width="100%%"><tr><td>
         <div class="content">""" % locals()
 
 page_footer2 = """        </div>
@@ -117,20 +117,24 @@ page_footer2 = """        </div>
     </td></tr>
     <tr>
       <td>&nbsp;</td><td><table border="0" cellpadding="0" cellspacing="0" width="100%%"><tr>
-        <td bgcolor="#ffffff" align="right">
+        <td bgcolor="#888888" align="right">
           <span class="copyright">copyright &copy; <a href="/wiki/CurrentMaintainer">CurrentMaintainer</a> 1993-2002&nbsp;</span>
         </td>
       </tr></table></td>
     </tr>
-  </table>
+    <tr>
+      <td>&nbsp;</td><td>
+<table border="0" cellpadding="2" cellspacing="0" bgcolor="#888888" width="100%%"><tr><td valign="middle" align="center">
 
-<table border="0" cellpadding="2"><tr><td valign="middle" align="center">
+<table border="1" cellpadding="0" cellspacing="0" bgcolor="#ffffff"><tr><td valign="middle" align="center">
 <form method="GET" action="http://www.google.com/custom">
 <input type="hidden" name="cof" value="AH:center;S:http://BZFlag.org/;AWFID:3e0e6d8d8d5bbf7d;">
 <input type="hidden" name="domains" value="BZFlag.org">
 <input type="hidden" name="sitesearch" value="BZFlag.org">
 <a href="http://www.google.com"><img src="http://www.google.com/logos/Logo_25wht.gif" border="0" alt="Google" height="32" width="75" align="middle"></a>&nbsp;<input type="text" name="q" size="31" maxlength="255" value="">&nbsp;<input type="submit" name="sa" value="Search">
 </form>
+</td></tr></table>
+
 </td></tr><tr><td align="center">
 <a href="http://www.opengl.org/"><img src="/images/opengl.gif" alt="opengl" width="88" height="31" border="0"></a>
 <a href="http://sourceforge.net/project/?group_id=3248"><img src="http://sourceforge.net/sflogo.php?group_id=3248&amp;type=1" width="88" height="31" alt="sourceforge" border="0"></a>
@@ -138,6 +142,9 @@ page_footer2 = """        </div>
 <a href="http://www.linuxgames.com/"><img src="/images/linuxgames.gif" width="88" height="31" alt="linuxgames" border="0"></a>
 <a href="http://www.telefragged.com/"><img src="/images/telefragged.gif" width="88" height="31" alt="telefragged" border="0"></a>
 </td></tr></table>
+      </td>
+    </tr>
+  </table>
 </div>"""
 
 # encoding and WikiName char sets
