@@ -118,3 +118,7 @@ reason: (Axl Rose) inappropriate language, web service abbuse.
 end: 0
 banner: brlcad
 reason: (Philbrick0340) multiple public server cheating incidents
+68.105.103.234
+end: 0
+banner: brlcad
+reason: (CRW) multiple incidents of public server cheating and abuse
