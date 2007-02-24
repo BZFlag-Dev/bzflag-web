@@ -122,3 +122,20 @@ reason: (Philbrick0340) multiple public server cheating incidents
 end: 0
 banner: brlcad
 reason: (CRW) multiple incidents of public server cheating and abuse
+80.41.195.143
+end: 0
+banner: brlcad
+reason: (CRW) multiple incidents of public server cheating and abuse
+4.241.218.150
+end: 0
+banner: brlcad
+reason: (CRW) multiple incidents of public server cheating and abuse
+206.148.184.31
+end: 0
+banner: brlcad
+reason: (CRW) multiple incidents of public server cheating and abuse
+4.241.221.210
+end: 0
+banner: brlcad
+reason: (CRW) multiple incidents of public server cheating and abuse
+
