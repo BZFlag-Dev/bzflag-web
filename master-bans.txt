@@ -170,3 +170,7 @@ reason: (CRW) multiple incidents of public server cheating and abuse
 end: 0
 banner: brlcad
 reason: (CRW) multiple incidents of public server cheating and abuse
+64.40.47.42
+end: 0
+banner: brlcad
+reason: (CRW) multiple incidents of public server cheating and abuse
