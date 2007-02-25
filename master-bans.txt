@@ -114,10 +114,6 @@ reason: multiple public server cheating incidents, dynamic IP (T-90)
 end: 0
 banner: JeffM2501
 reason: (Axl Rose) inappropriate language, web service abbuse.
-74.65.128.48
-end: 0
-banner: brlcad
-reason: (Philbrick0340) multiple public server cheating incidents
 68.105.103.234
 end: 0
 banner: brlcad
