@@ -150,3 +150,7 @@ reason: (CRW) multiple incidents of public server cheating and abuse
 end: 0
 banner: brlcad
 reason: (CRW) multiple incidents of public server cheating and abuse
+66.109.197.15
+end: 0
+banner: brlcad
+reason: (CRW) multiple incidents of public server cheating and abuse
