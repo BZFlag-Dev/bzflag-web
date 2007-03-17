@@ -46,15 +46,15 @@ print <<< end
 								<table class="sidebar_border" bgcolor="#FFFFFF" border="0" cellpadding="0">
 									<tr><td>
 										<a href="/" class="navbar">home</a><br>
-										<a href="/wiki/GettingHelp" class="navbar">getting&nbsp;help</a><br>
-										<a href="/wiki/Download" class="navbar">download</a><br>
+										<a href="http://my.bzflag.org/w/Getting Help" class="navbar">getting&nbsp;help</a><br>
+										<a href="http://my.bzflag.org/w/Download" class="navbar">download</a><br>
 										<a href="/help/" class="navbar">help</a><br>
-										<a href="/wiki/Developers" class="navbar">developers</a><br>
+										<a href="http://my.bzflag.org/w/BZFlag_Source" class="navbar">developers</a><br>
 										<a href="/screenshots/" class="navbar">screenshots</a><br>
 										<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/COPYING?rev=HEAD&amp;content-type=text/vnd.viewcvs-markup" class="navbar">license</a><br>
 										<a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
-										<a href="/wiki/OtherLinks" class="navbar">links</a><br>
-										<a href="/wiki/" class="navbar">wiki</a><br>
+										<a href="http://my.bzflag.org/w/Other_Links" class="navbar">links</a><br>
+										<a href="http://my.bzflag.org/w/Main_Page" class="navbar">wiki</a><br>
 										<a href="http://my.BZFlag.org/" class="navbar">stats</a><br>
 										<a href="http://my.BZFlag.org/bb/" class="navbar">forums</a><br>
 										<a href="http://my.BZFlag.org/league/" class="navbar">CTF&nbsp;league</a><br>
