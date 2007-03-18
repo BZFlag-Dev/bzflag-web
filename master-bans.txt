@@ -121,56 +121,12 @@ reason: (CRW) multiple incidents of public server cheating and abuse
 80.41.195.143
 end: 0
 banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
-4.241.218.150
+reason: (CRW) multiple incidents of public server cheating and abuse (keep)
+76.210.66.59
 end: 0
 banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
-206.148.184.31
+reason: (CRW) multiple incidents of public server cheating and abuse (keep)
+138.89.37.253
 end: 0
 banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
-4.241.221.210
-end: 0
-banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
-4.242.144.44
-end: 0
-banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
-66.109.194.120
-end: 0
-banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
-66.109.197.15
-end: 0
-banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
-64.40.61.92
-end: 0
-banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
-4.242.144.136
-end: 0
-banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
-64.40.59.122
-end: 0
-banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
-64.40.63.27
-end: 0
-banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
-64.40.47.42
-end: 0
-banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
-66.109.193.57
-end: 0
-banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
-69.150.176.187
-end: 0
-banner: brlcad
-reason: (CRW) multiple incidents of public server cheating and abuse
+reason: (Outburst, blah blah) multiple public server cheating incidents
