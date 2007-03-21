@@ -126,7 +126,3 @@ reason: (CRW) multiple incidents of public server cheating and abuse (keep)
 end: 0
 banner: brlcad
 reason: (CRW) multiple incidents of public server cheating and abuse (keep)
-138.89.37.253
-end: 0
-banner: brlcad
-reason: (Outburst, blah blah) multiple public server cheating incidents
