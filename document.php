@@ -62,7 +62,6 @@ print <<< end
 										<br>
 										<a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
 										&nbsp;<a href="http://bzflag.svn.sourceforge.net/viewvc/bzflag/" class="navbar">browse&nbsp;Subversion</a><br>
-										&nbsp;<a href="/doxygen/" class="navbar">browse&nbsp;doxygen</a><br>
 										&nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=103248" class="navbar">bug&nbsp;reports</a><br>
 										&nbsp;<a href="http://my.bzflag.org/w/BZFlag_SVN" class="navbar">SVN&nbsp;access</a><br>
 										&nbsp;<a href="http://sourceforge.net/tracker/?atid=353248&amp;group_id=3248&amp;func=browse" class="navbar">feature&nbsp;requests</a><br>
