@@ -199,7 +199,7 @@ function action_webvalidate() {
 //	$redirURL = $URL . '?username=' . $username . '&token=' . $token;
 
 // let them specify the paramaters, we'll just replace them with real info
-	$redirURL = str_replace(Array('%TOKEN%', '%USERNAME%', '%BZID%'), Array($token, urlencode($username), $playerid), $URL);
+	$redirURL = str_replace(Array('%TOKEN%', '%USERNAME%'), Array($token, urlencode($username)), $URL);
 
 	header('location: ' . $redirURL);
     }
