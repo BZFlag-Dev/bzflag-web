@@ -126,3 +126,7 @@ reason: (CRW) multiple incidents of public server cheating and abuse (keep)
 end: 0
 banner: brlcad
 reason: (CRW) multiple incidents of public server cheating and abuse (keep)
+82.17.105.69
+end: 0
+banner: JeffM
+reason: (MIKE KUNT, PETER, Catoblepas ) spamming, public service abbuse. (keep)
