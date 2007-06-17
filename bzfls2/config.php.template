@@ -1,0 +1,15 @@
+<?php
+
+  // This should always be true, so that our main code knows we have loaded this
+  define('CONFIGURATION', true);
+
+
+  $config['sql']['hostname'] = "localhost";
+  $config['sql']['username'] = "";
+  $config['sql']['password'] = "";
+  $config['sql']['database'] = "";
+  
+  $config['disableIPCheck'] = false; // Default is false
+  $config['maximumServerAge'] = 1830; // 30.5 minutes
+
+?>
