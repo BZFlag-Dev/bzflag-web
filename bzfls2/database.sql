@@ -3,7 +3,7 @@
 -- 
 
 CREATE TABLE `servers` (
-  `serverid` smallint(5) unsigned NOT NULL,
+  `serverid` int(10) unsigned NOT NULL,
   `name` varchar(64) NOT NULL,
   `port` smallint(5) unsigned NOT NULL,
   `ipaddress` varchar(15) NOT NULL,
