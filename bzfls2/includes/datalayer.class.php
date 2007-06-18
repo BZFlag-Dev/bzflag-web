@@ -24,15 +24,45 @@ class DataLayer
     return mysql_ping($this->link);
   }
   
+  
+  //////////////////////////////////////////
+  // Table 'players'
+  //////////////////////////////////////////
+  
+  function Player_Insert($values)
+  {
+    $sql = "INSERT INTO ".TBL_SERVERS." ";
+    $sql .= "(username, password, email, created, lastaccess, newpassword, newemail, activationkey, activated, token, tokendate) ";
+    $sql .= "VALUES (";
+    $sql .= "'".mysql_real_escape_string($values['username'], $this->link)."', ";
+    $sql .= "'".mysql_real_escape_string($values['password'], $this->link)."', ";
+    $sql .= "'".mysql_real_escape_string($values['email'], $this->link)."', ";
+    $sql .= "FROM_UNIXTIME('".mysql_real_escape_string($values['created'], $this->link)."'), ";
+    $sql .= "'".mysql_real_escape_string($values['createdipaddress'], $this->link)."', ";
+    $sql .= "FROM_UNIXTIME('".mysql_real_escape_string($values['lastaccess'], $this->link)."'), ";
+    $sql .= "'".mysql_real_escape_string($values['lastaccessipaddress'], $this->link)."', ";
+    $sql .= "'".mysql_real_escape_string($values['newpassword'], $this->link)."', ";
+    $sql .= "'".mysql_real_escape_string($values['newemail'], $this->link)."', ";
+    $sql .= "'".mysql_real_escape_string($values['activationkey'], $this->link)."', ";
+    $sql .= "'".mysql_real_escape_string($values['activated'], $this->link)."', ";
+    $sql .= "'".mysql_real_escape_string($values['token'], $this->link)."', ";
+    $sql .= "FROM_UNIXTIME('".mysql_real_escape_string($values['tokendate'], $this->link)."')";
+    $sql .= ")";
+    
+    $result = mysql_query($sql);
+    if ($result) return mysql_insert_id();
+    else return false;
+  }
+  
   //////////////////////////////////////////
   // Table 'servers'
   //////////////////////////////////////////
   
   function Server_Insert($values)
   {
-    $sql = "INSERT INTO ".TBL_SERVERS;
-    $sql .= " (name, port, ipaddress, title, owner, build, version, gameinfo, lastmodified) ";
-    $sql .= " VALUES (";
+    $sql = "INSERT INTO ".TBL_SERVERS." ";
+    $sql .= "(name, port, ipaddress, title, owner, build, version, gameinfo, lastmodified) ";
+    $sql .= "VALUES (";
     $sql .= "'".mysql_real_escape_string($values['name'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['port'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['ipaddress'], $this->link)."', ";
