@@ -19,7 +19,10 @@
   
   */
   
-  include('config.php'); if (!defined('CONFIGURATION')) die("ERROR: Unable to load configuration\n");;
+  include('config.php'); if (!defined('CONFIGURATION')) die("ERROR: Unable to load configuration.\n");;
+
+  // Use the same time throughout the whole duration of the script
+  define('NOW', mktime());
  
   // Set up some headers right away
   header('Cache-Control: no-cache');
@@ -238,7 +241,7 @@
     }
     
     // Set up the lastmodified value
-    $values['lastmodified'] = mktime();
+    $values['lastmodified'] = NOW;
     
     
     // Now that we have the IP address, see if this server is already in our
@@ -249,6 +252,7 @@
     // Make sure the DataLayer class loaded sucessfully
     if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
     $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
     // Server already exists, update it
     if ($dl->Server_Exists_ByIPAddressPort($values) !== false)
@@ -274,6 +278,7 @@
     // Make sure the DataLayer class loaded sucessfully
     if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
     $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
     // Values that will be passed to our DataLayer
     $values = Array();
@@ -301,9 +306,10 @@
     // Make sure the DataLayer class loaded sucessfully
     if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
     $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
     // Prune out dead servers
-    $dl->Servers_Delete_ByAge(mktime()-$config['maximumServerAge']);
+    $dl->Servers_Delete_ByAge(NOW-$config['maximumServerAge']);
     
     // Are we filtering just for a specific version?
     if (isset($input['version']) && !empty($input['version']))
@@ -334,18 +340,18 @@
     {
       die("ERROR: A valid callsign was not specified. Callsigns must use only ".
           "alphanumeric characters, hyphens, underscores, or periods. Must be ".
-          "2 to 25 characters long.");
+          "2 to 25 characters long.\n");
     }
 
     // TODO: Allow banning of email addresses with wildcard support
     if (!isset($input['email']) || !valid_email($input['email']))
     {
-      die("ERROR: A valid email was not specified.");
+      die("ERROR: A valid email was not specified.\n");
     }
     
     if (!isset($input['password']) || !valid_password($input['password']))
     {
-      die("ERROR: Password must be between 4 and 30 characters long");
+      die("ERROR: Password must be between 4 and 30 characters long.\n");
     }
     
     // Load the DataLayer 
@@ -353,6 +359,7 @@
     // Make sure the DataLayer class loaded sucessfully
     if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
     $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
     
     $values = Array();
@@ -361,7 +368,7 @@
     // Check if the user already exists before going further
     if ($dl->Player_Exists_ByUsername($values))
     {
-      die("ERROR: The username '".$values['username']."' already exists. Please choose another username.");
+      die("ERROR: The username '".$values['username']."' already exists. Please choose another username.\n");
     }
     else
     {
@@ -370,7 +377,7 @@
       $values['email'] = '';
       $values['password'] = '';
       
-      $values['created'] = $values['lastaccess'] = mktime();
+      $values['created'] = $values['lastaccess'] = NOW;
       $values['createdipaddress'] = $values['lastaccessipaddress'] = $_SERVER['REMOTE_ADDR'];
       
       // When the account is activated, these will be moved to 'password' and
@@ -399,7 +406,7 @@ Before you begin, you need to activate your account. Please follow the link belo
 <a href="http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?action=CONFIRM&callsign='.urlencode($values['callsign']).'&activationkey='.urlencode($values['activationkey']).'">http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?action=CONFIRM&callsign='.urlencode($values['callsign']).'&activationkey='.urlencode($values['activationkey']).'</a>
 
 If the above link does not work, copy and paste the following URL into your address bar:
-http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?action=CONFIRM&callsign='.urlencode($values['callsign']).'&activationkey='.urlencode($values['activationkey']).'
+http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?action=CONFIRM&callsign='.urlencode($values['username']).'&activationkey='.urlencode($values['activationkey']).'
 
 
 Thank you for registering.';
@@ -420,7 +427,7 @@ Thank you for registering.';
     {
       die("ERROR: A valid callsign was not specified. Callsigns must use only ".
           "alphanumeric characters, hyphens, underscores, or periods. Must be ".
-          "2 to 25 characters long.");
+          "2 to 25 characters long.\n");
     }
     
     // Load the DataLayer 
@@ -428,6 +435,7 @@ Thank you for registering.';
     // Make sure the DataLayer class loaded sucessfully
     if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
     $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
     $values = Array();
     $values['username'] = $input['callsign'];
@@ -452,6 +460,9 @@ Thank you for registering.';
         
         $data['player']['activationkey'] = '';
         $data['player']['activated'] = 1;
+        
+        $values['lastaccess'] = NOW;
+        $values['lastaccessipaddress'] = $_SERVER['REMOTE_ADDR'];
         
         $data['updateplayer'] = $dl->Player_Update_ByUsername($data['player']);
         

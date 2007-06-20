@@ -14,14 +14,11 @@ class DataLayer
   {
     $this->link = mysql_connect($hostname, $username, $password);
     
-    // FIXME: Should not call die or exit from within the DataLayer, since we
-    // might want to show a graceful error message if this is reused for other
-    // services
+    // Make sure the link is valid, and then try to select the database
+    if (!$this->link || !mysql_select_db($database, $this->link)) return false;
     
-    if (!$this->link) die("ERROR: Unable to connect to database.");
-    
-    if (!mysql_select_db($database, $this->link)) die("ERROR: Unable to select database.");
-    
+    // This verifies that the database server is responding, and returns true
+    // if it is.
     return mysql_ping($this->link);
   }
   
