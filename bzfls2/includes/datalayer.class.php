@@ -55,9 +55,34 @@ class DataLayer
     else return false;
   }
   
+  function Player_Update_ByUsername($values)
+  {
+    $sql = "UPDATE ".TBL_PLAYERS." SET ";
+    $sql .= "username = '".mysql_real_escape_string($values['username'], $this->link)."', ";
+    $sql .= "password = '".mysql_real_escape_string($values['password'], $this->link)."', ";
+    $sql .= "email = '".mysql_real_escape_string($values['email'], $this->link)."', ";
+    $sql .= "created = FROM_UNIXTIME('".mysql_real_escape_string($values['created'], $this->link)."'), ";
+    $sql .= "createdipaddress = '".mysql_real_escape_string($values['createdipaddress'], $this->link)."', ";
+    $sql .= "lastaccess = FROM_UNIXTIME('".mysql_real_escape_string($values['lastaccess'], $this->link)."'), ";
+    $sql .= "lastaccessipaddress = '".mysql_real_escape_string($values['lastaccessipaddress'], $this->link)."', ";
+    $sql .= "newpassword = '".mysql_real_escape_string($values['newpassword'], $this->link)."', ";
+    $sql .= "newemail = '".mysql_real_escape_string($values['newemail'], $this->link)."', ";
+    $sql .= "activationkey = '".mysql_real_escape_string($values['activationkey'], $this->link)."', ";
+    $sql .= "activated = '".mysql_real_escape_string($values['activated'], $this->link)."', ";
+    $sql .= "token = '".mysql_real_escape_string($values['token'], $this->link)."', ";
+    $sql .= "tokendate = FROM_UNIXTIME('".mysql_real_escape_string($values['tokendate'], $this->link)."') ";
+    $sql .= "WHERE username = '".mysql_real_escape_string($values['username'], $this->link)."' ";
+    $sql .= "LIMIT 1";
+    
+    $result = mysql_query($sql);
+    
+    if ($result && mysql_affected_rows() === 1) return true;
+    else return false;
+  }
+  
   function Player_Fetch_ByUsername($values)
   {
-    $sql = "SELECT * FROM ".TBL_PLAYERS." WHERE ";
+    $sql = "SELECT username, password, email, UNIX_TIMESTAMP(created) as created, createdipaddress, UNIX_TIMESTAMP(lastaccess) as lastaccess, lastaccessipaddress, newpassword, newemail, activationkey, activated, token, UNIX_TIMESTAMP(tokendate) as tokendate FROM ".TBL_PLAYERS." WHERE ";
     $sql .= "username = '".mysql_real_escape_string($values['username'], $this->link)."' ";
     $sql .= "LIMIT 1";
     
@@ -72,7 +97,7 @@ class DataLayer
   
   function Player_Exists_ByUsername($values)
   {
-    $sql = "SELECT * FROM ".TBL_PLAYERS." WHERE ";
+    $sql = "SELECT playerid FROM ".TBL_PLAYERS." WHERE ";
     $sql .= "username = '".mysql_real_escape_string($values['username'], $this->link)."' ";
     $sql .= "LIMIT 1";
     
@@ -172,7 +197,7 @@ class DataLayer
   function Servers_Fetch_All()
   {
     $sql = "SELECT serverid, name, port, ipaddress, title, owner, build, ".
-           "version, gameinfo, UNIX_TIMESTAMP(lastmodified) FROM ".TBL_SERVERS;
+           "version, gameinfo, UNIX_TIMESTAMP(lastmodified) as lastmodified FROM ".TBL_SERVERS;
            
     $result = mysql_query($sql);
     
@@ -193,7 +218,7 @@ class DataLayer
   function Servers_Fetch_ByVersion($version)
   {
     $sql = "SELECT serverid, name, port, ipaddress, title, owner, build, ".
-           "version, gameinfo, UNIX_TIMESTAMP(lastmodified) FROM ".TBL_SERVERS." ".
+           "version, gameinfo, UNIX_TIMESTAMP(lastmodified) as lastmodified FROM ".TBL_SERVERS." ".
            "WHERE version = '".mysql_real_escape_string($version)."'";
            
     $result = mysql_query($sql);

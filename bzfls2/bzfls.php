@@ -438,16 +438,40 @@ Thank you for registering.';
     {
       if ($input['activationkey'] == $data['player']['activationkey'])
       {
-        // TODO: Activate the account here
+        if (isset($data['player']['newpassword']))
+        {
+          $data['player']['password'] = $data['player']['newpassword'];
+          $data['player']['newpassword'] = '';
+        }
+        
+        if (isset($data['player']['newemail']))
+        {
+          $data['player']['email'] = $data['player']['newemail'];
+          $data['player']['newemail'] = '';
+        }
+        
+        $data['player']['activationkey'] = '';
+        $data['player']['activated'] = 1;
+        
+        $data['updateplayer'] = $dl->Player_Update_ByUsername($data['player']);
+        
+        if ($data['updateplayer'])
+        {
+          die("NOTICE: Your account has been activated! Welcome to BZFlag!\n");
+        }
+        else
+        {
+          die("ERROR: There was an error activating your account. Please contact an administrator.\n");
+        }
       }
       else
       {
-        die("ERROR: The specified and activation key combination was not found in our database.");
+        die("ERROR: The specified and activation key combination was not found in our database.\n");
       }
     }
     else
     {
-      die("ERROR: The specified and activation key combination was not found in our database.");
+      die("ERROR: The specified and activation key combination was not found in our database.\n");
     }
   }
   
