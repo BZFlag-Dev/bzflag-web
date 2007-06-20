@@ -342,6 +342,42 @@
     {
       die("ERROR: Password must be between 4 and 30 characters long");
     }
+    
+    // Load the DataLayer 
+    @include_once('includes/datalayer.class.php');
+    // Make sure the DataLayer class loaded sucessfully
+    if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
+    $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    
+    
+    $values = Array();
+    $values['username'] = $input['callsign'];
+    $values['email'] = '';
+    $values['password'] = '';
+    
+    $values['created'] = $values['lastaccess'] = mktime();
+    $values['createdipaddress'] = $values['lastaccessipaddress'] = $_SERVER['REMOTE_ADDR'];
+    
+    // When the account is activated, these will be moved to 'password' and
+    // 'email', respectively.
+    $values['newpassword'] = md5($input['password']);
+    $values['newemail'] = $input['email'];
+    $values['activationkey'] = generate_random_string();
+    $values['activated'] = 0;
+    $values['token'] = '';
+    $values['tokendate'] = 0;
+    
+    // TODO: Check if the player already exists
+    $data['insertid'] = $dl->Player_Insert($values);
+    
+    if ($data['insertid'] !== false)
+    {
+      // TODO: Send email with confirmation link
+    }
+    else
+    {
+      die("ERROR: There was a problem during registration. Please contact an administrator.\n");
+    }
   }
   else if ($input['action'] == 'CONFIRM')
   {
@@ -472,6 +508,13 @@
     }
 
     return $value;
+  }
+  
+  function generate_random_string($length=32)
+  {
+    if ($length > 32) $length = 32;
+    else if ($length < 1) $length = 1;
+    return substr(md5(uniqid(rand(), true)), 0, $length);
   }
 
 

@@ -2,6 +2,7 @@
 
   $prefix = "";
   define('TBL_SERVERS', $prefix.'servers');
+  define('TBL_PLAYERS', $prefix.'players');
   define('TBL_GROUPS', $prefix.'groups');
   //define('TBL_', $prefix.'');
 
@@ -31,8 +32,8 @@ class DataLayer
   
   function Player_Insert($values)
   {
-    $sql = "INSERT INTO ".TBL_SERVERS." ";
-    $sql .= "(username, password, email, created, lastaccess, newpassword, newemail, activationkey, activated, token, tokendate) ";
+    $sql = "INSERT INTO ".TBL_PLAYERS." ";
+    $sql .= "(username, password, email, created, createdipaddress, lastaccess, lastaccessipaddress, newpassword, newemail, activationkey, activated, token, tokendate) ";
     $sql .= "VALUES (";
     $sql .= "'".mysql_real_escape_string($values['username'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['password'], $this->link)."', ";
