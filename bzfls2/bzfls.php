@@ -416,7 +416,39 @@ Thank you for registering.';
   }
   else if ($input['action'] == 'CONFIRM')
   {
-  
+    if (!isset($input['callsign']) || !valid_callsign($input['callsign']))
+    {
+      die("ERROR: A valid callsign was not specified. Callsigns must use only ".
+          "alphanumeric characters, hyphens, underscores, or periods. Must be ".
+          "2 to 25 characters long.");
+    }
+    
+    // Load the DataLayer 
+    @include_once('includes/datalayer.class.php');
+    // Make sure the DataLayer class loaded sucessfully
+    if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
+    $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    
+    $values = Array();
+    $values['username'] = $input['callsign'];
+    
+    $data['player'] = $dl->Player_Fetch_ByUsername($values);
+    
+    if ($data['player'] !== false)
+    {
+      if ($input['activationkey'] == $data['player']['activationkey'])
+      {
+        // TODO: Activate the account here
+      }
+      else
+      {
+        die("ERROR: The specified and activation key combination was not found in our database.");
+      }
+    }
+    else
+    {
+      die("ERROR: The specified and activation key combination was not found in our database.");
+    }
   }
   
   
