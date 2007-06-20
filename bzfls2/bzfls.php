@@ -147,7 +147,7 @@
       $input['groups'] = smart_strip_slashes($_REQUEST['groups']);
     
     // callsign (LIST, GETTOKEN, REGISTER) - Callsign of player
-    if (array_key_exists('', $_REQUEST) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN' || $input['action'] == 'REGISTER'))
+    if (array_key_exists('callsign', $_REQUEST) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN' || $input['action'] == 'REGISTER'))
       $input['callsign'] = smart_strip_slashes($_REQUEST['callsign']);
     
     // email (REGISTER, CONFIRM) - Email for registration
@@ -336,7 +336,52 @@
   //////////////////////////////////////////
   // VALIDATION FUNCTIONS
   //////////////////////////////////////////
+  
+  // This function validates a callsign
+  // Here are the rules for callsigns:
+  // - Must be between 2 and 25 characters long
+  // - Cannot have leading or trailing whitespace
+  // - Can only have the following characters: 0 to 9, a to z, A to Z, spaces, 
+  //     or any of "-_."
+  function validate_callsign($callsign)
+  {
+    // Check the length
+    if (strlen($callsign) < 2 || strlen($callsign) > 25)
+      return false;
+       
+    // Check for leading or trailing whitespace
+    if (strcmp($callsign, trim($callsign)) !== 0)
+      return false;
+    
+    // Check for invalid characters
+    for ($i = 0; $i < strlen($callsign); $i++)
+    {
+      // Convert the character to an ASCII value
+      // NOTE: This prevents UTF-8 support, so keep in mind for later
+      $char = ord(substr($callsign, $i, 1));
+      
+      // Useful ASCII values
+      // space = 32
+      // - = 45
+      // . = 46
+      // _ = 95
+      // 0 = 48  (to)  9 = 57
+      // A = 65  (to)  Z = 90
+      // a = 97  (to)  z = 122
+      
+      if (!(
+            ($char >= 65 && $char <= 90) || ($char >= 97 && $char <= 122) ||
+            ($char >= 48 && $char <= 57) || $char == 45 || $char == 46 ||
+            $char == 95 || $char == 32
+      ))
+        return false;
+    }
+  
+    return true;
+  }
 
+  // This function validates an IP address for proper form.
+  // NOTE: Does not support IPv6 at this point, since neither does BZFlag.
   function validate_IP_Address($ipaddress)
   {
     // Might be an IPv4 address, but could be a domain too. Run more checks.
