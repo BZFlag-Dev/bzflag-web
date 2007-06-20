@@ -146,21 +146,26 @@
     if (array_key_exists('groups', $_REQUEST) && ($input['action'] == 'ADD' || $input['action'] == 'CHECKTOKENS'))
       $input['groups'] = smart_strip_slashes($_REQUEST['groups']);
     
-    // callsign (LIST, GETTOKEN, REGISTER) - Callsign of player
-    if (array_key_exists('callsign', $_REQUEST) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN' || $input['action'] == 'REGISTER'))
+    // callsign (LIST, GETTOKEN, REGISTER, CONFIRM) - Callsign of player
+    if (array_key_exists('callsign', $_REQUEST) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN' || $input['action'] == 'REGISTER' || $input['action'] == 'CONFIRM'))
       $input['callsign'] = smart_strip_slashes($_REQUEST['callsign']);
     
-    // email (REGISTER, CONFIRM) - Email for registration
-    if (array_key_exists('email', $_REQUEST) && ($input['action'] == 'REGISTER' || $input['action'] == 'CONFIRM'))
+    // email (REGISTER) - Email for registration
+    if (array_key_exists('email', $_REQUEST) && ($input['action'] == 'REGISTER'))
       $input['email'] = smart_strip_slashes($_REQUEST['email']);
     
-    // password (LIST, GETTOKEN, REGISTER, CONFIRM) - User's password
-    if (array_key_exists('password', $_REQUEST) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN' || $input['action'] == 'REGISTER' || $input['action'] == 'CONFIRM'))
+    // password (LIST, GETTOKEN, REGISTER) - User's password
+    if (array_key_exists('password', $_REQUEST) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN' || $input['action'] == 'REGISTER'))
       $input['password'] = smart_strip_slashes($_REQUEST['password']);
     
     // advertgroups (ADD) - Specific groups to advertise the server to
     if (array_key_exists('advertgroups', $_REQUEST) && ($input['action'] == 'ADD'))
       $input['advertgroups'] = smart_strip_slashes($_REQUEST['advertgroups']);
+    
+    // activationkey (CONFIRM) - Randomly generated activation code sent via
+    // email to the user.
+    if (array_key_exists('activationkey', $_REQUEST) && ($input['action'] == 'CONFIRM'))
+      $input['activationkey'] = smart_strip_slashes($_REQUEST['activationkey']);
   } // if (array_key_exists('action', $_REQUEST))
   
   // No action specified
