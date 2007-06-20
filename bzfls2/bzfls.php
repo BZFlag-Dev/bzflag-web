@@ -246,7 +246,7 @@
     $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
     
     // Server already exists, update it
-    if ($dl->Server_Fetch_ByIPAddressPort($values) !== false)
+    if ($dl->Server_Exists_ByIPAddressPort($values) !== false)
     {
       $dl->Server_Update_ByIPAddressPort($values);
     }
@@ -352,31 +352,61 @@
     
     $values = Array();
     $values['username'] = $input['callsign'];
-    $values['email'] = '';
-    $values['password'] = '';
     
-    $values['created'] = $values['lastaccess'] = mktime();
-    $values['createdipaddress'] = $values['lastaccessipaddress'] = $_SERVER['REMOTE_ADDR'];
-    
-    // When the account is activated, these will be moved to 'password' and
-    // 'email', respectively.
-    $values['newpassword'] = md5($input['password']);
-    $values['newemail'] = $input['email'];
-    $values['activationkey'] = generate_random_string();
-    $values['activated'] = 0;
-    $values['token'] = '';
-    $values['tokendate'] = 0;
-    
-    // TODO: Check if the player already exists
-    $data['insertid'] = $dl->Player_Insert($values);
-    
-    if ($data['insertid'] !== false)
+    // Check if the user already exists before going further
+    if ($dl->Player_Exists_ByUsername($values))
     {
-      // TODO: Send email with confirmation link
+      die("ERROR: The username '".$values['username']."' already exists. Please choose another username.");
     }
     else
     {
-      die("ERROR: There was a problem during registration. Please contact an administrator.\n");
+      // Leave the 'email' and 'password' blank. These will be filled after
+      // the user activates their account
+      $values['email'] = '';
+      $values['password'] = '';
+      
+      $values['created'] = $values['lastaccess'] = mktime();
+      $values['createdipaddress'] = $values['lastaccessipaddress'] = $_SERVER['REMOTE_ADDR'];
+      
+      // When the account is activated, these will be moved to 'password' and
+      // 'email', respectively.
+      $values['newpassword'] = md5($input['password']);
+      $values['newemail'] = $input['email'];
+      $values['activationkey'] = generate_random_string();
+      $values['activated'] = 0;
+      $values['token'] = '';
+      $values['tokendate'] = 0;
+      
+      // Insert the player into the database
+      $data['insertid'] = $dl->Player_Insert($values);
+      
+      if ($data['insertid'] !== false)
+      {
+        // Generate the nice welcome email for the user.
+        $email = 
+'Welcome to the BZFlag community! Your new account has been created.
+Please keep this email for your records. Your account information is as follows:
+
+Username: '.$values['username'].'
+Password: '.$input['password'].'
+
+Before you begin, you need to activate your account. Please follow the link below:
+<a href="http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?action=CONFIRM&callsign='.urlencode($values['callsign']).'&activationkey='.urlencode($values['activationkey']).'">http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?action=CONFIRM&callsign='.urlencode($values['callsign']).'&activationkey='.urlencode($values['activationkey']).'</a>
+
+If the above link does not work, copy and paste the following URL into your address bar:
+http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?action=CONFIRM&callsign='.urlencode($values['callsign']).'&activationkey='.urlencode($values['activationkey']).'
+
+
+Thank you for registering.';
+
+        // TODO: Actually send the email. For now, we just echo it out.
+        echo $email;
+
+      }
+      else
+      {
+        die("ERROR: There was a problem during registration. Please contact an administrator.\n");
+      }
     }
   }
   else if ($input['action'] == 'CONFIRM')

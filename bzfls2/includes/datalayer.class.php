@@ -55,6 +55,33 @@ class DataLayer
     else return false;
   }
   
+  function Player_Fetch_ByUsername($values)
+  {
+    $sql = "SELECT * FROM ".TBL_PLAYERS." WHERE ";
+    $sql .= "username = '".mysql_real_escape_string($values['username'], $this->link)."' ";
+    $sql .= "LIMIT 1";
+    
+    $result = mysql_query($sql);
+    
+    if ($result && mysql_num_rows($result) == 1)
+    {
+      return mysql_fetch_assoc($result);
+    }
+    else return false;
+  }
+  
+  function Player_Exists_ByUsername($values)
+  {
+    $sql = "SELECT * FROM ".TBL_PLAYERS." WHERE ";
+    $sql .= "username = '".mysql_real_escape_string($values['username'], $this->link)."' ";
+    $sql .= "LIMIT 1";
+    
+    $result = mysql_query($sql);
+    
+    if ($result && mysql_num_rows($result) == 1) return true;
+    else return false;
+  }
+  
   //////////////////////////////////////////
   // Table 'servers'
   //////////////////////////////////////////
@@ -126,6 +153,19 @@ class DataLayer
     {
       return mysql_fetch_assoc($result);
     }
+    else return false;
+  }
+  
+  function Server_Exists_ByIPAddressPort($values)
+  {
+    $sql = "SELECT * FROM ".TBL_SERVERS." WHERE ";
+    $sql .= "ipaddress = '".mysql_real_escape_string($values['ipaddress'], $this->link)."' AND ";
+    $sql .= "port = '".mysql_real_escape_string($values['port'], $this->link)."' ";
+    $sql .= "LIMIT 1";
+    
+    $result = mysql_query($sql);
+    
+    if ($result && mysql_num_rows($result) == 1) return true;
     else return false;
   }
   
