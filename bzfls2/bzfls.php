@@ -197,7 +197,7 @@
     // Make sure it's not already a valid IP address
     if (isset($values['name'])) {
       // First, check if this already IS an IP address
-      if (validate_IP_Address($values['name']))
+      if (valid_IP_Address($values['name']))
       {
         $values['ipaddress'] = $values['name'];
       }
@@ -325,7 +325,23 @@
   }
   else if ($input['action'] == 'REGISTER')
   {
-  
+    if (!isset($input['callsign']) || !valid_callsign($input['callsign']))
+    {
+      die("ERROR: A valid callsign was not specified. Callsigns must use only ".
+          "alphanumeric characters, hyphens, underscores, or periods. Must be ".
+          "2 to 25 characters long.");
+    }
+
+    // TODO: Allow banning of email addresses with wildcard support
+    if (!isset($input['email']) || !valid_email($input['email']))
+    {
+      die("ERROR: A valid email was not specified.");
+    }
+    
+    if (!isset($input['password']) || !valid_password($input['password']))
+    {
+      die("ERROR: Password must be between 4 and 30 characters long");
+    }
   }
   else if ($input['action'] == 'CONFIRM')
   {
@@ -343,7 +359,7 @@
   // - Cannot have leading or trailing whitespace
   // - Can only have the following characters: 0 to 9, a to z, A to Z, spaces, 
   //     or any of "-_."
-  function validate_callsign($callsign)
+  function valid_callsign($callsign)
   {
     // Check the length
     if (strlen($callsign) < 2 || strlen($callsign) > 25)
@@ -379,10 +395,31 @@
   
     return true;
   }
+  
+  // This function validates an email address
+  function valid_email($email)
+  {
+    // SOURCE: http://www.zend.com/zend/spotlight/ev12apr.php
+    if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email))
+      return false;
+  
+    return true;
+  }
+  
+  // This function validates a password.
+  // A password must be between 4 and 30 characters long
+  function valid_password($password)
+  {
+    // Check the length
+    if (strlen($password) < 4 || strlen($password) > 30)
+      return false;
+    
+    return true;
+  }
 
   // This function validates an IP address for proper form.
   // NOTE: Does not support IPv6 at this point, since neither does BZFlag.
-  function validate_IP_Address($ipaddress)
+  function valid_IP_Address($ipaddress)
   {
     // Might be an IPv4 address, but could be a domain too. Run more checks.
     if (strpos($ipaddress, '.') !== FALSE)
