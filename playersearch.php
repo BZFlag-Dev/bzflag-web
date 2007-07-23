@@ -1,4 +1,8 @@
-<? include('header.inc'); ?>
+<?
+
+include ('handycode.inc');
+
+include('header.inc'); ?>
 
 <form method="get" action="<?=$_SERVER['PHP_SELF']?>">
 <p>Callsign</p>

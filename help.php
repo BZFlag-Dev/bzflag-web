@@ -1,4 +1,8 @@
-<? include('header.inc') ?>
+<?
+
+include('handycode.inc');
+
+include('header.inc') ?>
 
 <p>I'm still writing the help page. If you think there should be
 something here that isn't, <a

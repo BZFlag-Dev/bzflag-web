@@ -8,7 +8,7 @@ use DBI();
 use Data::Dumper;
 use Time::HiRes qw(gettimeofday);
 
-my $PASSFILE = "/etc/bzflag/.mysqlconnect";
+my $PASSFILE = "/usr/www/.mysqlconnect";
 
 my $debug = 0;
 if ($#ARGV >= 0) {

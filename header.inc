@@ -1,4 +1,4 @@
-<? include ('handycode.inc');
+<?
 
 if (isset($viewsource)) { $title = "View Source"; }
 

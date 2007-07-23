@@ -226,4 +226,18 @@ if ($row = mysql_fetch_array($lastrefreshed, MYSQL_ASSOC)) {
 	$refreshed_date = "never";
 }
 
+
+  function smart_strip_slashes($value) {
+    // There are some PHP configs that strings slashes aren't added to input strings.
+    // These will be accounted for here, to prevent doing a strip_slashes on a string
+    // when you don't need to
+
+    if (get_magic_quotes_gpc() == 1) {
+      $value = stripslashes($value);
+    }
+
+    return $value;
+  }
+				  
+
 ?>

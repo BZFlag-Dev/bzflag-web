@@ -1,5 +1,7 @@
 <?
 
+include('handycode.inc');
+
 include('header.inc');
 
 if ($submitted == "yes") {

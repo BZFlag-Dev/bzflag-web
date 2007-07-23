@@ -1,4 +1,8 @@
-<? include ('header.inc') ?>
+<?
+
+include ('handycode.inc');
+
+include ('header.inc') ?>
 
 <h2>Information sampled every 5 minutes</h2>
 
