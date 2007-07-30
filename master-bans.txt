@@ -130,4 +130,7 @@ reason: (CRW) multiple incidents of public server cheating and abuse (keep)
 end: 0
 banner: blast007
 reason: (gswish, peecko516, gjet) phishing site
-
+66.189.4.29
+end: 0
+banner: blast007
+reason: (Axl Rose) web service abuse
