@@ -138,7 +138,7 @@ reason: (Axl Rose) web service abuse
 end: 0
 banner: blast007
 reason: (Axl Rose) web service abuse
-68.112.242.82
+68.118.242.11
 end: 0
 banner: blast007
 reason: (Axl Rose) foul language on multiple servers, web service abuse
