@@ -31,9 +31,7 @@
   header('Cache-Control: no-cache');
   header('Pragma: no-cache');
   header("Connection: close");
-  // TODO: Should also send proper content-type (text/html or text/plain)
-  // depending on if we're showing the bzfls web form or not
-  header('Content-Type: text/plain');
+  
   
   //////////////////////////////////////////
   
@@ -56,29 +54,32 @@
   // TODO: Validate the input using validation functions
   // TODO: Make some validation functions
   
-  // Determine which action we will be performing
-  if (array_key_exists('action', $_REQUEST))
+  // List of valid actions:
+  // ADD - Request from bzfs to add a public server
+  // REMOVE - Request from bzfs to remove a public server
+  // LIST - Request from client to obtain a list of servers
+  // GETTOKEN - Request from client to obtain an authentication token
+  // CHECKTOKENS - Request from server to validate an authentication token
+  // REGISTER - Request from client to register a callsign
+  // CONFIRM - Request from browser(?) to confirm a callsign registration
+  // NOTE: REGISTER and CONFIRM might be altered from the original
+  //   implementation. Should not be a problem, since they aren't used anyway.
+  
+  // First check if we will be displaying the HTML form
+  if (!array_key_exists('action', $_REQUEST) || !in_array($_REQUEST['action'], Array('ADD', 'REMOVE', 'LIST', 'GETTOKEN', 'CHECKTOKENS', 'REGISTER', 'CONFIRM')))
   {
+    // We are displaying HTML, so send out the right content type
+    header('Content-Type: text/html');
+    die("<strong>ERROR:</strong> Invalid action specified. Insert magic HTML form here.");
+  }
+  else
+  {
+    // We won't be showing the HTML form, so this will be text
+    header('Content-Type: text/plain');
+    
+    // Store the action.  After this, grab any other input we may need
     $input['action'] = strtoupper(smart_strip_slashes($_REQUEST['action']));
     
-    // List of valid actions:
-    // ADD - Request from bzfs to add a public server
-    // REMOVE - Request from bzfs to remove a public server
-    // LIST - Request from client to obtain a list of servers
-    // GETTOKEN - Request from client to obtain an authentication token
-    // CHECKTOKENS - Request from server to validate an authentication token
-    // REGISTER - Request from client to register a callsign
-    // CONFIRM - Request from browser(?) to confirm a callsign registration
-    // NOTE: REGISTER and CONFIRM might be altered from the original
-    //   implementation. Should not be a problem, since they aren't used anyway.
-    
-    if (!in_array($input['action'], Array('ADD', 'REMOVE', 'LIST', 'GETTOKEN', 'CHECKTOKENS', 'REGISTER', 'CONFIRM')))
-    {
-      die("ERROR: Invalid action specified. Insert magic HTML form here.\n");
-    }
-    
-    
-    // Now that we have the action, determine what other input we will need
     
     // nameport (ADD, REMOVE) - Public hostname/IP and port, in the form of
     //   name:port or name
@@ -190,13 +191,6 @@
     if (array_key_exists('activationkey', $_REQUEST) && ($input['action'] == 'CONFIRM'))
       $input['activationkey'] = smart_strip_slashes($_REQUEST['activationkey']);
   } // if (array_key_exists('action', $_REQUEST))
-  
-  // No action specified
-  // TODO: Print HTML form thingy
-  else
-  {
-    die("ERROR: No action specified. Insert magic HTML form here.\n");
-  }
   
   
   //////////////////////////////////////////
