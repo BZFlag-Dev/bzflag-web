@@ -21,8 +21,8 @@
   
   include('config.php'); if (!defined('CONFIGURATION')) die("ERROR: Unable to load configuration.\n");
   
-  include('functions.utility.php');
-  include('functions.validation.php');
+  include('includes/functions.utility.php');
+  include('includes/functions.validation.php');
 
   // Use the same time throughout the whole duration of the script
   define('NOW', mktime());
@@ -92,6 +92,7 @@
       // Also populate the 'name' and 'port'
       
       // If there is not a colon, use port 5154
+      // NOTE: This would not be IPv6 friendly.
       if (strpos($input['nameport'], ':') === FALSE)
       {
         // No port was specified, so the whole 'nameport' is our name
@@ -105,7 +106,7 @@
         list($input['name'], $input['port']) = explode(':', $input['nameport']);
       }
       
-      // We don't need no nameport!
+      // Discard 'nameport', since internally we use 'name' and 'port'
       unset($input['nameport']);
     }
     // If we didn't use 'nameport', see if we used 'name' and/or 'port'
@@ -205,13 +206,20 @@
     // First off, check for some required input
   
     // We need to have a protocol version. If we do not, abort.
-    if (!isset($input['version']) || empty($input['version']))
+    if (!valid_version($input['version']))
       die("ERROR: Protocol version not specified.\n");
       
     // We need to have the game info. If we do not, abort.
     if (!isset($input['gameinfo']) || empty($input['gameinfo']))
       die("ERROR: Game info not specified.\n");
-      
+       
+    // Verify we have a valid port
+    if (!is_numeric($input['port']) || $input['port'] < 1 || $input['port'] > 65535)
+      die("ERROR: Invalid port specified.\n");
+    // If the port is below 1024, they are running bzfs at elevated privledges
+    else if ($input['port'] < 1024)
+      echo "NOTICE: Running bzfs as root/superuser/administrator could be a security risk.\n";
+          
     // Start off by copying all user input into our values to be passed
     $values = $input;
     
@@ -271,12 +279,18 @@
     // Server already exists, update it
     if ($dl->Server_Exists_ByIPAddressPort($values) !== false)
     {
-      $dl->Server_Update_ByIPAddressPort($values);
+      if ($dl->Server_Update_ByIPAddressPort($values))
+        echo "NOTICE: Server record updated successfully!\n";
+      else
+        echo "ERROR: There was an error updating the server record.\n";
     }
     // Server doesn't exist, insert it
     else 
     {
-      $dl->Server_Insert($values);
+      if ($dl->Server_Insert($values))
+        echo "NOTICE: Server record added successfully!\n";
+      else
+        echo "ERROR: There was an error adding the server record.\n";
     }
 
   } // if ($input['action'] == 'ADD')
