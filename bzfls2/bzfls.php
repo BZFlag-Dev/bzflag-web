@@ -178,8 +178,10 @@
   
   
   //////////////////////////////////////////
-  
   // Ready, Camera, ACTION!!
+  
+  
+  
   
   //////////////////////////////////////////
   // ADD
@@ -278,6 +280,10 @@
 
   } // if ($input['action'] == 'ADD')
   
+  
+  //////////////////////////////////////////
+  // REMOVE
+  //////////////////////////////////////////
   else if ($input['action'] == 'REMOVE')
   {
   
@@ -337,7 +343,10 @@
     $dl->Server_Delete_ByIPAddressPort($values);
   }
   
-  // List servers
+  
+  //////////////////////////////////////////
+  // LIST
+  //////////////////////////////////////////
   else if ($input['action'] == 'LIST')
   {
     // Check some of our input
@@ -380,14 +389,29 @@
     }
     
   }
+  
+  
+  //////////////////////////////////////////
+  // GETTOKEN
+  //////////////////////////////////////////
   else if ($input['action'] == 'GETTOKEN')
   {
   
   }
+  
+  
+  //////////////////////////////////////////
+  // CHECKTOKENS
+  //////////////////////////////////////////
   else if ($input['action'] == 'CHECKTOKENS')
   {
   
   }
+  
+  
+  //////////////////////////////////////////
+  // REGISTER
+  //////////////////////////////////////////
   else if ($input['action'] == 'REGISTER')
   {
     if (!isset($input['callsign']) || !valid_callsign($input['callsign']))
@@ -475,6 +499,11 @@ Thank you for registering.';
       }
     }
   }
+  
+  
+  //////////////////////////////////////////
+  // CONFIRM
+  //////////////////////////////////////////
   else if ($input['action'] == 'CONFIRM')
   {
     // Verify that we have received a valid username
