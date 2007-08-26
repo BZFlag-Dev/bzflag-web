@@ -237,7 +237,7 @@
       else if (!$config['disableIPCheck'] && $values['ipaddress'] != $_SERVER['REMOTE_ADDR'])
       {
         die("ERROR: Specified IP did not match the requesting IP.\n");
-      } 
+      }
     }
     // No name specified, use the request IP for 'name' and 'ipaddress'
     else
@@ -278,29 +278,57 @@
 
   } // if ($input['action'] == 'ADD')
   
-  
-  // NOTE: The REMOVE action does not completely work when disableIPCheck is
-  // enabled.  We do not resolve the name specified, so it might not always
-  // match what is given. Minor, but should be fixed.
   else if ($input['action'] == 'REMOVE')
   {
+  
+    // Start off by copying all user input into our values to be passed
+    $values = $input;
+    
+    // Next, see if we have a 'name' specified
+    // Make sure it's not already a valid IP address
+    if (isset($values['name'])) {
+      // First, check if this already IS an IP address
+      if (valid_IP_Address($values['name']))
+      {
+        $values['ipaddress'] = $values['name'];
+      }
+      // Was not an IP address. Try to resolve it.
+      else
+      {
+        $values['ipaddress'] = gethostbyname($values['name']);
+        
+        // Unable to resolve the name, use the REMOTE_ADDR
+        if ($values['ipaddress'] == $values['name'])
+        {
+          $values['name'] = $values['ipaddress'] = $_SERVER['REMOTE_ADDR'];
+        }
+      }
+      
+      // If the IP address equals 0.0.0.0, set it to the requesting address
+      if ($values['ipaddress'] == '0.0.0.0')
+      {
+        $values['name'] = $values['ipaddress'] = $_SERVER['REMOTE_ADDR'];
+      }
+      
+      // Verify that the IP address they specify is actually the one requesting
+      // the ADD. This prevents a rogue user from altering list entries.
+      else if (!$config['disableIPCheck'] && $values['ipaddress'] != $_SERVER['REMOTE_ADDR'])
+      {
+        die("ERROR: Specified IP did not match the requesting IP.\n");
+      }
+    }
+    // No name specified, use the request IP for 'name' and 'ipaddress'
+    else
+    {
+      $values['name'] = $values['ipaddress'] = $_SERVER['REMOTE_ADDR'];
+    }
+  
     // Load the DataLayer 
     @include_once('includes/datalayer.class.php');
     // Make sure the DataLayer class loaded sucessfully
     if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
     $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
     if ($dl === false) die("ERROR: Unable to connect to database.\n");
-    
-    // Values that will be passed to our DataLayer
-    $values = Array();
-       
-    // We do not need to worry about the hostname. Just use the requesting
-    // address.
-    $values['ipaddress'] = $_SERVER['REMOTE_ADDR'];
-    
-    // Grab the port that was specified from our input
-    $values['port'] = $input['port'];
-    
     
     // Now that we have the IP address, see if this server is already in our
     // database.  If so, just update, otherwise, insert a new record
