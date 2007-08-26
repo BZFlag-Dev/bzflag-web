@@ -11,5 +11,7 @@
   
   $config['disableIPCheck'] = false; // Default is false
   $config['maximumServerAge'] = 1830; // 30.5 minutes
+  
+  $config['activation']['keyLength'] = 32;
 
 ?>
