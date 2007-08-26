@@ -24,7 +24,7 @@ groups.
 $data_config['sql_hostname'] = "localhost";
 $data_config['sql_database'] = "bzgrpmgr_phpbb2";
 $data_config['sql_username'] = "bzgrpmgr";
-$data_config['sql_password'] = "";
+$data_config['sql_password'] = "bzgrpmgr";
 $data_config['phpBB2_users_table'] = "phpbb_users";
 
 // MySQL connection for data layer
@@ -32,10 +32,26 @@ $data_config['phpBB2_users_table'] = "phpbb_users";
 // a better way?
 $data_mysql_connection = mysql_connect( $data_config['sql_hostname'],
 		$data_config['sql_username'],
-		$data_config['sql_password'] )
-				or die( 'Could not connect to DATA MySQL server.' );
+		$data_config['sql_password'] ) or
+			die( 'Could not connect to DATA MySQL server.' );
 mysql_select_db( $data_config['sql_database'] )
 		or die( "Could not select DATA MySQL database." );
+
+// Function to retrieve a list of user id's
+function getUserList() {
+	global $data_mysql_connection, $data_config;
+	$toReturn = array();
+
+	$sql = "SELECT user_id FROM ".$data_config['phpBB2_users_table'];
+	$result = mysql_query( $sql, $data_mysql_connection );
+	if( $result && mysql_num_rows( $result ) > 0 ) {
+		while( $result_array = mysql_fetch_array( $result ) ) {
+			array_push( $toReturn, $result_array['user_id'] );
+		}
+	}
+
+	return $toReturn;
+}
 
 // Function to retrieve callsign/username by id
 function getUsername( $id ) {

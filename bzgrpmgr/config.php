@@ -13,6 +13,6 @@
 $config['sql_hostname'] = "localhost";
 $config['sql_database'] = "bzgrpmgr";
 $config['sql_username'] = "bzgrpmgr";
-$config['sql_password'] = "";
+$config['sql_password'] = "bzgrpmgr";
 
 ?>

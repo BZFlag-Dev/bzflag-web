@@ -17,7 +17,7 @@ require_once( "config.php" );
 require_once( "data_phpbb2.inc" );
 
 // Temporary userdata settings... will incorporate with weblogin later
-$userdata['bzid'] = 9972;
+$userdata['bzid'] = 2;
 $userdata['callsign'] = getUsername( $userdata['bzid'] );
 $userdata['admin'] = true;
 
@@ -37,7 +37,15 @@ $output = "";
 // Action section
 switch( $_GET['action'] ) {
 	default:
-		$output .= "Welcome, ".$userdata['callsign']."!\n";
+		$output .= "Welcome, "./*$userdata['callsign'].*/"!<br><br>\n";
+
+		// Little test to grab list of users
+		$output .= "<b>Users in DB:</b><br>\n";
+		foreach( getUserList() as $var ) {
+			$output .= getusername( $var )." = user_id ".
+					$var."<br>\n";
+		}
+
 		break;
 }
 
