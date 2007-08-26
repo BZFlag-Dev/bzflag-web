@@ -19,11 +19,6 @@
   
   */
   
-  include('config.php'); if (!defined('CONFIGURATION')) die("ERROR: Unable to load configuration.\n");
-  
-  include('includes/functions.utility.php');
-  include('includes/functions.validation.php');
-
   // Use the same time throughout the whole duration of the script
   define('NOW', mktime());
  
@@ -32,7 +27,15 @@
   header('Pragma: no-cache');
   header("Connection: close");
   
+  include('config.php'); if (!defined('CONFIGURATION'))
+  {
+    header('Content-Type: text/plain');
+    die("ERROR: Unable to load configuration.\n");
+  }
   
+  include('includes/functions.utility.php');
+  include('includes/functions.validation.php');
+
   //////////////////////////////////////////
   
   // Read any user input, and determine the course of action to take
@@ -46,14 +49,11 @@
   // $_COOKIE variables. The order of precidence is based on the configuration
   // in php.ini
   // We use array_key_exists to check if they were specified, in case of a null
-  // or empty value
+  // or empty value.
   
   // Keep the global scope clean, and place all input into an array
   $input = Array();
-  
-  // TODO: Validate the input using validation functions
-  // TODO: Make some validation functions
-  
+    
   // List of valid actions:
   // ADD - Request from bzfs to add a public server
   // REMOVE - Request from bzfs to remove a public server
@@ -132,14 +132,7 @@
     //   servers are shown in a LIST, in the form BZFSxxxx, where xxxx is a
     //   number; 2.0.x uses BZFS0026, for example
     if (array_key_exists('version', $_REQUEST) && ($input['action'] == 'ADD' || $input['action'] == 'LIST'))
-    {
       $input['version'] = smart_strip_slashes($_REQUEST['version']);
-      
-      if (!valid_version($input['version']))
-      {
-        die("ERROR: Invalid version specified. Must begin with 'BZFS' and be followed by a four digit, zero-padded number (e.g. BZFS0026)\n");
-      }
-    }
     
     // gameinfo (ADD) - Hex string that defines server configuration and
     //   player counts; Technically could be removed, and have bzfls.php
@@ -163,17 +156,7 @@
     
     // callsign (LIST, GETTOKEN, REGISTER, CONFIRM) - Callsign of player
     if (array_key_exists('callsign', $_REQUEST) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN' || $input['action'] == 'REGISTER' || $input['action'] == 'CONFIRM'))
-    {
       $input['callsign'] = smart_strip_slashes($_REQUEST['callsign']);
-      
-      if (!isset($input['callsign']) || !valid_callsign($input['callsign']))
-      {
-        echo "ERROR: A valid callsign was not specified. Callsigns must use only ".
-            "alphanumeric characters, hyphens, underscores, or periods. Must be ".
-            "2 to 25 characters long.\n";
-        if ($input['action'] !== 'LIST') exit;
-      }
-    }
     
     // email (REGISTER) - Email for registration
     if (array_key_exists('email', $_REQUEST) && ($input['action'] == 'REGISTER'))
@@ -207,7 +190,7 @@
   
     // We need to have a protocol version. If we do not, abort.
     if (!valid_version($input['version']))
-      die("ERROR: Protocol version not specified.\n");
+      die("ERROR: Invalid version specified. Must begin with 'BZFS' and be followed by a four digit, zero-padded number (e.g. BZFS0026)\n");
       
     // We need to have the game info. If we do not, abort.
     if (!isset($input['gameinfo']) || empty($input['gameinfo']))
@@ -329,6 +312,21 @@
   // List servers
   else if ($input['action'] == 'LIST')
   {
+    // Check some of our input
+    
+    if (isset($input['version']) && !valid_version($input['version']))
+      die("ERROR: Invalid version specified. Must begin with 'BZFS' and be followed by a four digit, zero-padded number (e.g. BZFS0026)\n");
+    
+    // If they specified a callsign, make sure it's valid. If not, unset it and
+    // spit out an error message
+    if (isset($input['callsign']) && !valid_callsign($input['callsign']))
+    {
+      echo "ERROR: A valid callsign was not specified. Callsigns must use only ".
+          "alphanumeric characters, hyphens, underscores, or periods. Must be ".
+          "2 to 25 characters long.\n";
+      unset($input['callsign']);
+    }
+  
     // Load the DataLayer 
     @include_once('includes/datalayer.class.php');
     // Make sure the DataLayer class loaded sucessfully
@@ -412,7 +410,7 @@
       // 'email', respectively.
       $values['newpassword'] = md5($input['password']);
       $values['newemail'] = $input['email'];
-      $values['activationkey'] = generate_random_string();
+      $values['activationkey'] = generate_random_string($config['activation']['keyLength']);
       $values['activated'] = 0;
       $values['token'] = '';
       $values['tokendate'] = 0;
@@ -450,7 +448,21 @@ Thank you for registering.';
     }
   }
   else if ($input['action'] == 'CONFIRM')
-  {    
+  {
+    // Verify that we have received a valid username
+    if (!isset($input['callsign']) || !valid_callsign($input['callsign']))
+    {
+      die("ERROR: A valid callsign was not specified. Callsigns must use only ".
+          "alphanumeric characters, hyphens, underscores, or periods. Must be ".
+          "2 to 25 characters long.\n");
+    }
+    
+    // Verify we have an activation key
+    if (!isset($input['activationkey']) || strlen($input['activationkey']) != $config['activation']['keyLength'])
+    {
+      die("ERROR: Invalid activation key specified.\n");
+    }
+  
     // Load the DataLayer 
     @include_once('includes/datalayer.class.php');
     // Make sure the DataLayer class loaded sucessfully
@@ -498,12 +510,12 @@ Thank you for registering.';
       }
       else
       {
-        die("ERROR: The specified and activation key combination was not found in our database.\n");
+        die("ERROR: The specified username and activation key combination was not found in our database.\n");
       }
     }
     else
     {
-      die("ERROR: The specified and activation key combination was not found in our database.\n");
+      die("ERROR: The specified username and activation key combination was not found in our database.\n");
     }
   }
   
