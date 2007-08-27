@@ -60,8 +60,8 @@
   // LIST - Request from client to obtain a list of servers
   // GETTOKEN - Request from client to obtain an authentication token
   // CHECKTOKENS - Request from server to validate an authentication token
-  // REGISTER - Request from client to register a callsign
-  // CONFIRM - Request from browser(?) to confirm a callsign registration
+  // REGISTER - Request from client to register a username
+  // CONFIRM - Request from browser(?) to confirm a username registration
   // NOTE: REGISTER and CONFIRM might be altered from the original
   //   implementation. Should not be a problem, since they aren't used anyway.
   
@@ -85,6 +85,7 @@
     //   name:port or name
     // NOTE: We won't use 'nameport' internally. This is simply used for 
     // compatability reasons with 2.0.x and 1.10.x servers
+    // DEPRECATED: in favor of 'host' and 'port'
     if (array_key_exists('nameport', $_REQUEST) && ($input['action'] == 'ADD' || $input['action'] == 'REMOVE'))
     {
       $input['nameport'] = smart_strip_slashes($_REQUEST['nameport']);
@@ -145,7 +146,7 @@
       $input['title'] = smart_strip_slashes($_REQUEST['title']);
     
     // checktokens (ADD, CHECKTOKENS) - Contains tokens that will be verified;
-    //   These will be in the form callsign0=token or callsign0@ipaddress=token,
+    //   These will be in the form username0=token or username0@ipaddress=token,
     //   and multiple instances of these can be seperated by \n
     if (array_key_exists('checktokens', $_REQUEST) && ($input['action'] == 'ADD' || $input['action'] == 'CHECKTOKENS'))
       $input['checktokens'] = smart_strip_slashes($_REQUEST['checktokens']);
@@ -154,9 +155,15 @@
     if (array_key_exists('groups', $_REQUEST) && ($input['action'] == 'ADD' || $input['action'] == 'CHECKTOKENS'))
       $input['groups'] = smart_strip_slashes($_REQUEST['groups']);
     
-    // callsign (LIST, GETTOKEN, REGISTER, CONFIRM) - Callsign of player
-    if (array_key_exists('callsign', $_REQUEST) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN' || $input['action'] == 'REGISTER' || $input['action'] == 'CONFIRM'))
-      $input['callsign'] = smart_strip_slashes($_REQUEST['callsign']);
+    // callsign (LIST, GETTOKEN) - Callsign of player
+    // DEPRECATED: in favor of 'username'
+    if (array_key_exists('callsign', $_REQUEST) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN'))
+      // Store it as username
+      $input['username'] = smart_strip_slashes($_REQUEST['callsign']);
+      
+    // username (LIST, GETTOKEN, REGISTER, CONFIRM) - Username of player
+    if (array_key_exists('username', $_REQUEST) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN' || $input['action'] == 'REGISTER' || $input['action'] == 'CONFIRM'))
+      $input['username'] = smart_strip_slashes($_REQUEST['username']);
     
     // email (REGISTER) - Email for registration
     if (array_key_exists('email', $_REQUEST) && ($input['action'] == 'REGISTER'))
@@ -369,14 +376,14 @@
     if (isset($input['version']) && !valid_version($input['version']))
       die("ERROR: Invalid version specified. Must begin with 'BZFS' and be followed by a four digit, zero-padded number (e.g. BZFS0026)\n");
     
-    // If they specified a callsign, make sure it's valid. If not, unset it and
+    // If they specified a username, make sure it's valid. If not, unset it and
     // spit out an error message
-    if (isset($input['callsign']) && !valid_callsign($input['callsign']))
+    if (isset($input['username']) && !valid_username($input['username']))
     {
-      echo "ERROR: A valid callsign was not specified. Callsigns must use only ".
+      echo "ERROR: A valid username was not specified. Usernames must use only ".
           "alphanumeric characters, hyphens, underscores, or periods. Must be ".
           "2 to 25 characters long.\n";
-      unset($input['callsign']);
+      unset($input['username']);
     }
     
     if (isset($input['password']) && !valid_password($input['password']))
@@ -386,8 +393,6 @@
     }
     
     $values = $input;
-    if (isset($values['callsign']))
-      $values['username'] = $values['callsign'];
   
     // Load the DataLayer 
     @include_once('includes/datalayer.class.php');
@@ -408,7 +413,7 @@
       // Verify that the user exists and that their password is correct
       if (!$data['player'] || md5($values['password']) != $data['player']['password'])
         // If not, they do not get a token. Inform the client.
-        die("NOTOK: Invalid callsign or password.\n");
+        die("NOTOK: Invalid username or password.\n");
       else
       {
         // We're done with the password, so get rid of it
@@ -448,10 +453,10 @@
   //////////////////////////////////////////
   else if ($input['action'] == 'GETTOKEN')
   {
-    // Verify that the callsign is valid
-    if (!isset($input['callsign']) || !valid_callsign($input['callsign']))
+    // Verify that the username is valid
+    if (!isset($input['username']) || !valid_username($input['username']))
     {
-      die("ERROR: A valid callsign was not specified. Callsigns must use only ".
+      die("ERROR: A valid username was not specified. Usernames must use only ".
           "alphanumeric characters, hyphens, underscores, or periods. Must be ".
           "2 to 25 characters long.\n");
     }
@@ -462,9 +467,7 @@
     }
     
     // Copy the input over
-    $values = Array();
-    $values['username'] = $input['callsign'];
-    $values['password'] = $input['password'];
+    $values = $input;
     
     // Load the DataLayer 
     @include_once('includes/datalayer.class.php');
@@ -480,7 +483,7 @@
     // Verify that the user exists and that their password is correct
     if (!$data['player'] || md5($values['password']) != $data['player']['password'])
       // If not, they do not get a token. Inform the client.
-      die("NOTOK: Invalid callsign or password.\n");
+      die("NOTOK: Invalid username or password.\n");
     else
     {
       // We're done with the password, so get rid of it
@@ -514,9 +517,9 @@
   //////////////////////////////////////////
   else if ($input['action'] == 'REGISTER')
   {
-    if (!isset($input['callsign']) || !valid_callsign($input['callsign']))
+    if (!isset($input['username']) || !valid_username($input['username']))
     {
-      die("ERROR: A valid callsign was not specified. Callsigns must use only ".
+      die("ERROR: A valid username was not specified. Usernames must use only ".
           "alphanumeric characters, hyphens, underscores, or periods. Must be ".
           "2 to 25 characters long.\n");
     }
@@ -540,8 +543,7 @@
     if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
     
-    $values = Array();
-    $values['username'] = $input['callsign'];
+    $values = $input;
     
     // Check if the user already exists before going further
     if ($dl->Player_Exists_ByUsername($values))
@@ -560,8 +562,8 @@
       
       // When the account is activated, these will be moved to 'password' and
       // 'email', respectively.
-      $values['newpassword'] = md5($input['password']);
-      $values['newemail'] = $input['email'];
+      $values['newpassword'] = md5($values['password']);
+      $values['newemail'] = $values['email'];
       $values['activationkey'] = generate_random_string($config['activation']['keyLength']);
       $values['activated'] = 0;
       $values['token'] = '';
@@ -581,10 +583,10 @@ Username: '.$values['username'].'
 Password: '.$input['password'].'
 
 Before you begin, you need to activate your account. Please follow the link below:
-<a href="http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?action=CONFIRM&callsign='.urlencode($values['callsign']).'&activationkey='.urlencode($values['activationkey']).'">http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?action=CONFIRM&callsign='.urlencode($values['callsign']).'&activationkey='.urlencode($values['activationkey']).'</a>
+<a href="http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?action=CONFIRM&username='.urlencode($values['username']).'&activationkey='.urlencode($values['activationkey']).'">http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?action=CONFIRM&username='.urlencode($values['username']).'&activationkey='.urlencode($values['activationkey']).'</a>
 
 If the above link does not work, copy and paste the following URL into your address bar:
-http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?action=CONFIRM&callsign='.urlencode($values['username']).'&activationkey='.urlencode($values['activationkey']).'
+http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?action=CONFIRM&username='.urlencode($values['username']).'&activationkey='.urlencode($values['activationkey']).'
 
 
 Thank you for registering.';
@@ -607,9 +609,9 @@ Thank you for registering.';
   else if ($input['action'] == 'CONFIRM')
   {
     // Verify that we have received a valid username
-    if (!isset($input['callsign']) || !valid_callsign($input['callsign']))
+    if (!isset($input['username']) || !valid_username($input['username']))
     {
-      die("ERROR: A valid callsign was not specified. Callsigns must use only ".
+      die("ERROR: A valid username was not specified. Usernames must use only ".
           "alphanumeric characters, hyphens, underscores, or periods. Must be ".
           "2 to 25 characters long.\n");
     }
@@ -627,8 +629,7 @@ Thank you for registering.';
     $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
     if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
-    $values = Array();
-    $values['username'] = $input['callsign'];
+    $values = $input;
     
     $data['player'] = $dl->Player_Fetch_ByUsername($values);
     

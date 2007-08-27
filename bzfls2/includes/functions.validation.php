@@ -6,33 +6,33 @@
   //  
   //  This file will provide validation functions that will be used for the
   //  web services.  A shared file allows us to have a consistent set of rules
-  //  for values such as callsigns, as well as provide an easy way to validation
+  //  for values such as usernames, as well as provide an easy way to validation
   //  items such as email.
   //  
   
   
-  // This function validates a callsign
-  // Here are the rules for callsigns:
+  // This function validates a username
+  // Here are the rules for usernames:
   // - Must be between 2 and 25 characters long
   // - Cannot have leading or trailing whitespace
   // - Can only have the following characters: 0 to 9, a to z, A to Z, spaces, 
   //     or any of "-_."
-  function valid_callsign($callsign)
+  function valid_username($username)
   {
     // Check the length
-    if (strlen($callsign) < 2 || strlen($callsign) > 25)
+    if (strlen($username) < 2 || strlen($username) > 25)
       return false;
        
     // Check for leading or trailing whitespace
-    if (strcmp($callsign, trim($callsign)) !== 0)
+    if (strcmp($username, trim($username)) !== 0)
       return false;
     
     // Check for invalid characters
-    for ($i = 0; $i < strlen($callsign); $i++)
+    for ($i = 0; $i < strlen($username); $i++)
     {
       // Convert the character to an ASCII value
       // NOTE: This prevents UTF-8 support, so keep in mind for later
-      $char = ord(substr($callsign, $i, 1));
+      $char = ord(substr($username, $i, 1));
       
       // Useful ASCII values
       // space = 32
