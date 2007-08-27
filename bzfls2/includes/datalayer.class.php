@@ -44,7 +44,8 @@ class DataLayer
     $sql .= "'".mysql_real_escape_string($values['activationkey'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['activated'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['token'], $this->link)."', ";
-    $sql .= "FROM_UNIXTIME('".mysql_real_escape_string($values['tokendate'], $this->link)."')";
+    $sql .= "FROM_UNIXTIME('".mysql_real_escape_string($values['tokendate'], $this->link)."'), ";
+    $sql .= "'".mysql_real_escape_string($values['tokenipaddress'], $this->link)."'";
     $sql .= ")";
     
     $result = mysql_query($sql);
@@ -113,7 +114,7 @@ class DataLayer
   
   function Player_Fetch_ByUsername($values)
   {
-    $sql = "SELECT username, password, email, UNIX_TIMESTAMP(created) as created, createdipaddress, UNIX_TIMESTAMP(lastaccess) as lastaccess, lastaccessipaddress, newpassword, newemail, activationkey, activated, token, UNIX_TIMESTAMP(tokendate) as tokendate FROM ".TBL_PLAYERS." WHERE ";
+    $sql = "SELECT username, password, email, UNIX_TIMESTAMP(created) as created, createdipaddress, UNIX_TIMESTAMP(lastaccess) as lastaccess, lastaccessipaddress, newpassword, newemail, activationkey, activated, token, UNIX_TIMESTAMP(tokendate) as tokendate, tokenipaddress FROM ".TBL_PLAYERS." WHERE ";
     $sql .= "username = '".mysql_real_escape_string($values['username'], $this->link)."' ";
     $sql .= "LIMIT 1";
     

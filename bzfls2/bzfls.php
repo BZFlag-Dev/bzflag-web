@@ -420,8 +420,8 @@
         unset($values['password']);
         
         // If there is still enough time left before the token expires, give it
-        // back to them
-        if ($data['player']['tokendate'] + ($config['token']['lifetime']-$config['token']['regenerationGracePeriod']) > NOW)
+        // back to them.  Verify this is a request from the same IP.
+        if ($_SERVER['REMOTE_ADDR'] == $data['player']['tokenipaddress'] && $data['player']['tokendate'] + ($config['token']['lifetime']-$config['token']['regenerationGracePeriod']) > NOW)
         {
           echo "TOKEN: ".$data['player']['token']."\n";
         }
@@ -500,8 +500,8 @@
       unset($values['password']);
       
       // If there is still enough time left before the token expires, give it
-      // back to them
-      if ($data['player']['tokendate'] + ($config['token']['lifetime']-$config['token']['regenerationGracePeriod']) > NOW)
+      // back to them.  Verify this is a request from the same IP.
+      if ($_SERVER['REMOTE_ADDR'] == $data['player']['tokenipaddress'] && $data['player']['tokendate'] + ($config['token']['lifetime']-$config['token']['regenerationGracePeriod']) > NOW)
       {
         echo "TOKEN: ".$data['player']['token']."\n";
       }
