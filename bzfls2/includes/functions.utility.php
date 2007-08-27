@@ -28,6 +28,7 @@
     return $value;
   }
   
+  // 32 characters max. That should be enough for anything...
   function generate_random_string($length=32)
   {
     if ($length > 32) $length = 32;

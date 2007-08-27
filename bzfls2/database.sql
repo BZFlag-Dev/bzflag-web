@@ -17,6 +17,7 @@ CREATE TABLE `players` (
   `activated` tinyint(1) NOT NULL,
   `token` varchar(40) collate latin1_general_ci NOT NULL,
   `tokendate` datetime NOT NULL,
+  `tokenipaddress` varchar(15) collate latin1_general_ci NOT NULL,
   PRIMARY KEY  (`playerid`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;

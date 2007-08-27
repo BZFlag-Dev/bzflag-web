@@ -54,20 +54,54 @@ class DataLayer
   
   function Player_Update_ByUsername($values)
   {
+    // We require the username to be passed in
+    if (!array_key_exists('username', $values))
+      return false;
+  
     $sql = "UPDATE ".TBL_PLAYERS." SET ";
-    $sql .= "username = '".mysql_real_escape_string($values['username'], $this->link)."', ";
-    $sql .= "password = '".mysql_real_escape_string($values['password'], $this->link)."', ";
-    $sql .= "email = '".mysql_real_escape_string($values['email'], $this->link)."', ";
-    $sql .= "created = FROM_UNIXTIME('".mysql_real_escape_string($values['created'], $this->link)."'), ";
-    $sql .= "createdipaddress = '".mysql_real_escape_string($values['createdipaddress'], $this->link)."', ";
-    $sql .= "lastaccess = FROM_UNIXTIME('".mysql_real_escape_string($values['lastaccess'], $this->link)."'), ";
-    $sql .= "lastaccessipaddress = '".mysql_real_escape_string($values['lastaccessipaddress'], $this->link)."', ";
-    $sql .= "newpassword = '".mysql_real_escape_string($values['newpassword'], $this->link)."', ";
-    $sql .= "newemail = '".mysql_real_escape_string($values['newemail'], $this->link)."', ";
-    $sql .= "activationkey = '".mysql_real_escape_string($values['activationkey'], $this->link)."', ";
-    $sql .= "activated = '".mysql_real_escape_string($values['activated'], $this->link)."', ";
-    $sql .= "token = '".mysql_real_escape_string($values['token'], $this->link)."', ";
-    $sql .= "tokendate = FROM_UNIXTIME('".mysql_real_escape_string($values['tokendate'], $this->link)."') ";
+
+    
+    if (array_key_exists('password', $values))
+      $sql .= "password = '".mysql_real_escape_string($values['password'], $this->link)."', ";
+    
+    if (array_key_exists('email', $values))
+      $sql .= "email = '".mysql_real_escape_string($values['email'], $this->link)."', ";
+    
+    if (array_key_exists('created', $values))
+      $sql .= "created = FROM_UNIXTIME('".mysql_real_escape_string($values['created'], $this->link)."'), ";
+    
+    if (array_key_exists('createdipaddress', $values))
+      $sql .= "createdipaddress = '".mysql_real_escape_string($values['createdipaddress'], $this->link)."', ";
+    
+    if (array_key_exists('lastaccess', $values))
+      $sql .= "lastaccess = FROM_UNIXTIME('".mysql_real_escape_string($values['lastaccess'], $this->link)."'), ";
+    
+    if (array_key_exists('lastaccessipaddress', $values))
+      $sql .= "lastaccessipaddress = '".mysql_real_escape_string($values['lastaccessipaddress'], $this->link)."', ";
+    
+    if (array_key_exists('newpassword', $values))
+      $sql .= "newpassword = '".mysql_real_escape_string($values['newpassword'], $this->link)."', ";
+    
+    if (array_key_exists('newemail', $values))
+      $sql .= "newemail = '".mysql_real_escape_string($values['newemail'], $this->link)."', ";
+    
+    if (array_key_exists('activationkey', $values))
+      $sql .= "activationkey = '".mysql_real_escape_string($values['activationkey'], $this->link)."', ";
+    
+    if (array_key_exists('activated', $values))
+      $sql .= "activated = '".mysql_real_escape_string($values['activated'], $this->link)."', ";
+    
+    if (array_key_exists('token', $values))
+      $sql .= "token = '".mysql_real_escape_string($values['token'], $this->link)."', ";
+    
+    if (array_key_exists('tokendate', $values))
+      $sql .= "tokendate = FROM_UNIXTIME('".mysql_real_escape_string($values['tokendate'], $this->link)."'), ";
+      
+    if (array_key_exists('tokenipaddress', $values))
+      $sql .= "tokenipaddress = '".mysql_real_escape_string($values['tokenipaddress'], $this->link)."', ";
+    
+    // We already know we have the username
+    $sql .= "username = '".mysql_real_escape_string($values['username'], $this->link)."' ";
     $sql .= "WHERE username = '".mysql_real_escape_string($values['username'], $this->link)."' ";
     $sql .= "LIMIT 1";
     

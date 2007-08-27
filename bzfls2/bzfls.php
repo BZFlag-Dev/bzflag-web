@@ -378,6 +378,16 @@
           "2 to 25 characters long.\n";
       unset($input['callsign']);
     }
+    
+    if (isset($input['password']) && !valid_password($input['password']))
+    {
+      echo "ERROR: Password must be between 4 and 30 characters long.\n";
+      unset($input['password']);
+    }
+    
+    $values = $input;
+    if (isset($values['callsign']))
+      $values['username'] = $values['callsign'];
   
     // Load the DataLayer 
     @include_once('includes/datalayer.class.php');
@@ -389,9 +399,36 @@
     // Prune out dead servers
     $dl->Servers_Delete_ByAge(NOW-$config['maximumServerAge']);
     
+    // Check if they are requesting a token
+    if (isset($values['username']) && isset($values['password']))
+    {
+      // Pull the player's information from the database
+      $data['player'] = $dl->Player_Fetch_ByUsername($values);
+      
+      // Verify that the user exists and that their password is correct
+      if (!$data['player'] || md5($values['password']) != $data['player']['password'])
+        // If not, they do not get a token. Inform the client.
+        die("NOTOK: Invalid callsign or password.\n");
+      else
+      {
+        // We're done with the password, so get rid of it
+        unset($values['password']);
+        
+        // Generate a token. 10 characters long.
+        $values['token'] = generate_random_string(10); 
+        $values['tokendate'] = NOW;
+        $values['tokenipaddress'] = $_SERVER['REMOTE_ADDR'];
+        
+        if ($dl->Player_Update_ByUsername($values))
+          echo "TOKEN: ".$values['token']."\n";
+        else
+          die("NOTOK: There was an error during token generation.\n");
+      }
+    }
+    
     // Are we filtering just for a specific version?
-    if (isset($input['version']) && !empty($input['version']))
-      $data['servers'] = $dl->Servers_Fetch_ByVersion($input['version']);
+    if (isset($values['version']) && !empty($values['version']))
+      $data['servers'] = $dl->Servers_Fetch_ByVersion($values['version']);
     // Else, show all the servers
     else
       $data['servers'] = $dl->Servers_Fetch_All();
@@ -411,7 +448,55 @@
   //////////////////////////////////////////
   else if ($input['action'] == 'GETTOKEN')
   {
-  
+    // Verify that the callsign is valid
+    if (!isset($input['callsign']) || !valid_callsign($input['callsign']))
+    {
+      die("ERROR: A valid callsign was not specified. Callsigns must use only ".
+          "alphanumeric characters, hyphens, underscores, or periods. Must be ".
+          "2 to 25 characters long.\n");
+    }
+    
+    if (!isset($input['password']) || !valid_password($input['password']))
+    {
+      die("ERROR: Password must be between 4 and 30 characters long.\n");
+    }
+    
+    // Copy the input over
+    $values = Array();
+    $values['username'] = $input['callsign'];
+    $values['password'] = $input['password'];
+    
+    // Load the DataLayer 
+    @include_once('includes/datalayer.class.php');
+    // Make sure the DataLayer class loaded sucessfully
+    if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
+    $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    if ($dl === false) die("ERROR: Unable to connect to database.\n");
+    
+    
+    // Pull the player's information from the database
+    $data['player'] = $dl->Player_Fetch_ByUsername($values);
+    
+    // Verify that the user exists and that their password is correct
+    if (!$data['player'] || md5($values['password']) != $data['player']['password'])
+      // If not, they do not get a token. Inform the client.
+      die("NOTOK: Invalid callsign or password.\n");
+    else
+    {
+      // We're done with the password, so get rid of it
+      unset($values['password']);
+      
+      // Generate a token. 10 characters long.
+      $values['token'] = generate_random_string(10); 
+      $values['tokendate'] = NOW;
+      $values['tokenipaddress'] = $_SERVER['REMOTE_ADDR'];
+      
+      if ($dl->Player_Update_ByUsername($values))
+        echo "TOKEN: ".$values['token']."\n";
+      else
+        die("NOTOK: There was an error during token generation.\n");
+    }
+    
   }
   
   
@@ -569,9 +654,7 @@ Thank you for registering.';
         $values['lastaccess'] = NOW;
         $values['lastaccessipaddress'] = $_SERVER['REMOTE_ADDR'];
         
-        $data['updateplayer'] = $dl->Player_Update_ByUsername($data['player']);
-        
-        if ($data['updateplayer'])
+        if ($dl->Player_Update_ByUsername($data['player']))
         {
           die("NOTICE: Your account has been activated! Welcome to BZFlag!\n");
         }
