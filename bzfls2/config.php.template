@@ -10,8 +10,10 @@
   $config['sql']['database'] = "";
   
   $config['disableIPCheck'] = false; // Default is false
-  $config['maximumServerAge'] = 1830; // 30.5 minutes
+  $config['maximumServerAge'] = 1830; // Default is 1830 (30.5 minutes)
   
-  $config['activation']['keyLength'] = 32;
+  $config['disableConnectBack'] = false; // Default is false;
+  
+  $config['activation']['keyLength'] = 32; // Default is 32
 
 ?>

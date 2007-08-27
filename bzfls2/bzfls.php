@@ -251,6 +251,21 @@
     $values['lastmodified'] = NOW;
     
     
+    if (!$config['disableConnectBack'])
+    {
+      // Verify that we can connect to the server.  If we can't open a socket
+      // in 5 seconds, assume the server is down.
+      // Include an @ before fsockopen and fsockclose to suppress error output
+      $socket = @fsockopen ($values['ipaddress'], $values['port'], $socketerrno, $socketerrstring, 5);
+      if (!$socket)
+      {
+        die("ERROR: Unable to connect back to server. Verify the port specified in your -p and -publicaddr values match, and that your firewall is not blocking our attempt to connect.\n");
+      }
+      // TODO: Query the server with this same socket
+      @fclose($socket);
+    }
+    
+    
     // Now that we have the IP address, see if this server is already in our
     // database.  If so, just update, otherwise, insert a new record
     
