@@ -419,15 +419,25 @@
         // We're done with the password, so get rid of it
         unset($values['password']);
         
-        // Generate a token. 10 characters long.
-        $values['token'] = generate_random_string(10); 
-        $values['tokendate'] = NOW;
-        $values['tokenipaddress'] = $_SERVER['REMOTE_ADDR'];
-        
-        if ($dl->Player_Update_ByUsername($values))
-          echo "TOKEN: ".$values['token']."\n";
+        // If there is still enough time left before the token expires, give it
+        // back to them
+        if ($data['player']['tokendate'] + ($config['token']['lifetime']-$config['token']['regenerationGracePeriod']) > NOW)
+        {
+          echo "TOKEN: ".$data['player']['token']."\n";
+        }
+        // If not, generate a new one for them
         else
-          die("NOTOK: There was an error during token generation.\n");
+        {
+          // Generate a token.
+          $values['token'] = generate_random_string($config['token']['length']); 
+          $values['tokendate'] = NOW;
+          $values['tokenipaddress'] = $_SERVER['REMOTE_ADDR'];
+          
+          if ($dl->Player_Update_ByUsername($values))
+            echo "TOKEN: ".$values['token']."\n";
+          else
+            die("NOTOK: There was an error during token generation.\n");
+        }
       }
     }
     
@@ -489,15 +499,25 @@
       // We're done with the password, so get rid of it
       unset($values['password']);
       
-      // Generate a token. 10 characters long.
-      $values['token'] = generate_random_string(10); 
-      $values['tokendate'] = NOW;
-      $values['tokenipaddress'] = $_SERVER['REMOTE_ADDR'];
-      
-      if ($dl->Player_Update_ByUsername($values))
-        echo "TOKEN: ".$values['token']."\n";
+      // If there is still enough time left before the token expires, give it
+      // back to them
+      if ($data['player']['tokendate'] + ($config['token']['lifetime']-$config['token']['regenerationGracePeriod']) > NOW)
+      {
+        echo "TOKEN: ".$data['player']['token']."\n";
+      }
+      // If not, generate a new one for them
       else
-        die("NOTOK: There was an error during token generation.\n");
+      {
+        // Generate a token.
+        $values['token'] = generate_random_string($config['token']['length']); 
+        $values['tokendate'] = NOW;
+        $values['tokenipaddress'] = $_SERVER['REMOTE_ADDR'];
+        
+        if ($dl->Player_Update_ByUsername($values))
+          echo "TOKEN: ".$values['token']."\n";
+        else
+          die("NOTOK: There was an error during token generation.\n");
+      }
     }
     
   }
