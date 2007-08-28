@@ -4,10 +4,10 @@
   define('CONFIGURATION', true);
 
 
-  $config['sql']['hostname'] = "localhost";
-  $config['sql']['username'] = "";
-  $config['sql']['password'] = "";
-  $config['sql']['database'] = "";
+  $config['datalayer']['hostname'] = "localhost";
+  $config['datalayer']['username'] = "";
+  $config['datalayer']['password'] = "";
+  $config['datalayer']['database'] = "";
   
   // When this is set to true, we will not check if a server's hostname matches
   // the IP of who or what is requesting an ADD or REMOVE action.  ONLY set this

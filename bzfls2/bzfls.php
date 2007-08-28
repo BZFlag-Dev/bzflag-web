@@ -280,7 +280,7 @@
     @include_once('includes/datalayer.class.php');
     // Make sure the DataLayer class loaded sucessfully
     if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
-    $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    $dl = new DataLayer($config['datalayer']);
     if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
     // Server already exists, update it
@@ -355,7 +355,7 @@
     @include_once('includes/datalayer.class.php');
     // Make sure the DataLayer class loaded sucessfully
     if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
-    $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    $dl = new DataLayer($config['datalayer']);
     if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
     // Now that we have the IP address, see if this server is already in our
@@ -398,7 +398,7 @@
     @include_once('includes/datalayer.class.php');
     // Make sure the DataLayer class loaded sucessfully
     if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
-    $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    $dl = new DataLayer($config['datalayer']);
     if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
     // Prune out dead servers
@@ -483,7 +483,7 @@
     @include_once('includes/datalayer.class.php');
     // Make sure the DataLayer class loaded sucessfully
     if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
-    $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    $dl = new DataLayer($config['datalayer']);
     if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
     
@@ -551,9 +551,16 @@
     }
 
     // Make sure we have an array before we iterate through it.  It should have
-    // at least one item if we were passed valid data.
+    // at least one item if we were passed any data.
     if (is_array($values['checktokens']))
     {
+      // Load the DataLayer 
+      @include_once('includes/datalayer.class.php');
+      // Make sure the DataLayer class loaded sucessfully
+      if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
+      $dl = new DataLayer($config['datalayer']);
+      if ($dl === false) die("ERROR: Unable to connect to database.\n");
+      
       // Use the variable $c as our counter
       for ($c = 0; $c < count($values['checktokens']); $c++)
       {
@@ -589,6 +596,10 @@
         }
         // Add the usual line feed
         echo "\n";
+        
+        
+        
+        
       } // for ($c = 0; $c < count($values['checktokens']); $c++)
     } // if (is_array($values['checktokens']))
   } // else if ($input['action'] == 'CHECKTOKENS')
@@ -621,7 +632,7 @@
     @include_once('includes/datalayer.class.php');
     // Make sure the DataLayer class loaded sucessfully
     if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
-    $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    $dl = new DataLayer($config['datalayer']);
     if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
     
@@ -708,7 +719,7 @@ Thank you for registering.';
     @include_once('includes/datalayer.class.php');
     // Make sure the DataLayer class loaded sucessfully
     if (!class_exists('DataLayer')) die("ERROR: Unable to load DataLayer class.\n");
-    $dl = new DataLayer($config['sql']['hostname'], $config['sql']['username'], $config['sql']['password'], $config['sql']['database']);
+    $dl = new DataLayer($config['datalayer']);
     if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
     $values = $input;

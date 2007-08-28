@@ -10,12 +10,12 @@ class DataLayer
 {
   var $link;
 
-  function DataLayer($hostname, $username, $password, $database)
+  function DataLayer($config)
   {
-    $this->link = mysql_connect($hostname, $username, $password);
+    $this->link = mysql_connect($config['hostname'], $config['username'], $config['password']);
     
     // Make sure the link is valid, and then try to select the database
-    if (!$this->link || !mysql_select_db($database, $this->link)) return false;
+    if (!$this->link || !mysql_select_db($config['database'], $this->link)) return false;
     
     // This verifies that the database server is responding, and returns true
     // if it is.
