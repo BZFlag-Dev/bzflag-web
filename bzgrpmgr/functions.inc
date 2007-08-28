@@ -24,6 +24,11 @@ ENCLOSE;
 	<body>
 		<img src="img/header.png"><br><br>
 
+		<a href="?action=listmemberships">My Memberships</a>&nbsp;|&nbsp;
+		<a href="?action=listjoinable">Join A Group</a>&nbsp;|&nbsp;
+		<a href="?action=creategroup">Create A Group</a><br><br>
+
+
 ENCLOSE;
 }
 

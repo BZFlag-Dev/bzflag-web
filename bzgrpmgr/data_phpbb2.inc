@@ -46,7 +46,9 @@ function getUserList() {
 	$result = mysql_query( $sql, $data_mysql_connection );
 	if( $result && mysql_num_rows( $result ) > 0 ) {
 		while( $result_array = mysql_fetch_array( $result ) ) {
-			array_push( $toReturn, $result_array['user_id'] );
+			if( $result_array['user_id'] > 0 )
+				array_push( $toReturn,
+						$result_array['user_id'] );
 		}
 	}
 
@@ -57,7 +59,7 @@ function getUserList() {
 function getUsername( $id ) {
 	global $data_mysql_connection, $data_config;
 	$sql = "SELECT username FROM ".$data_config['phpBB2_users_table'].
-			" WHERE user_id = ".$id;
+			" WHERE user_id=".$id;
 	$result = mysql_query( $sql, $data_mysql_connection );
 	if( $result && $toReturn = mysql_result( $result, 0) )
 		return $toReturn;
@@ -67,7 +69,21 @@ function getUsername( $id ) {
 
 // Function to retrieve member group id's by user id
 function getGroups( $id ) {
-	return 1;
+	global $data_mysql_connection, $data_config;
+	$toReturn = array();
+
+	$sql = "SELECT groupid FROM group_members WHERE playerid=".
+			$id;
+
+	$result = mysql_query( $sql, $data_mysql_connection );
+	if( $result && mysql_num_rows( $result ) > 0 ) {
+		while( $result_array = mysql_fetch_array( $result ) ) {
+			array_push( $toReturn, $result_array['groupid'] );
+echo "pushing ".$result_array['groupid'];
+		}
+	}
+
+	return toReturn;
 }
 
 // Function to retrieve group name by group id

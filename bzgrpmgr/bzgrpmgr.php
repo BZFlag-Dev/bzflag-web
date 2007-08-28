@@ -36,8 +36,18 @@ $output = "";
 
 // Action section
 switch( $_GET['action'] ) {
+	case "listmemberships":
+		$output .= "\t\t<table border=1 cellpadding=2>\n";
+		foreach( getGroups( $userdata['bzid'] ) as $groupid ) {
+			$output .= "\t\t\t<tr><td>".
+					getGroupname( $groupid ).
+					"</td></tr>\n";
+		}
+		$output .= "\t\t</table>\n";
+
+		break;
 	default:
-		$output .= "Welcome, "./*$userdata['callsign'].*/"!<br><br>\n";
+		$output .= "Welcome, ".$userdata['callsign']."!<br><br>\n";
 
 		// Little test to grab list of users
 		$output .= "<b>Users in DB:</b><br>\n";
