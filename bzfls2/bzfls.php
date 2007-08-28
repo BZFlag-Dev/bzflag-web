@@ -535,31 +535,63 @@
 
     
     $values = Array();
-    $values['checktokens'] = $input['checktokens'];
     
-    $values['lines'] = explode("\r\n", $values['checktokens']);
-
-    if (is_array($values['lines']) && count($values['lines']))
+    // We can check multiple tokens at once. Each callsign/ip/token is seperated
+    // by a CR/LF (%0D%0A)
+    $values['checktokens'] = explode("\r\n", $input['checktokens']);
+    
+    // Initialize groups to any empty array
+    $values['groups'] = Array();
+    
+    // We can check multiple groups at once as well. Each group is seperated
+    // by a CR/LF (%0D%0A)
+    if (!empty($input['groups']))
     {
-      foreach($values['lines'] as $values['line'])
+      $values['groups'] = explode("\r\n", $input['groups']);
+    }
+
+    // Make sure we have an array before we iterate through it.  It should have
+    // at least one item if we were passed valid data.
+    if (is_array($values['checktokens']))
+    {
+      // Use the variable $c as our counter
+      for ($c = 0; $c < count($values['checktokens']); $c++)
       {
+        // Focus on one item at a time
         $item = Array();
-        if (strpos($values['line'], "@") !== FALSE)
+        
+        // If the line has an @, that means an IP address was specified.  This
+        // will be checked with the token IP to prevent a token from being used
+        // be another user
+        if (strpos($values['checktokens'][$c], "@") !== FALSE)
         {
-          list($item['callsign'], $item['rest']) = explode('@', $values['line']);
+          // First explode by the @ symbol, to pull the callsign off
+          list($item['callsign'], $item['rest']) = explode('@', $values['checktokens'][$c]);
+          // Next, explode the rest by = to seperate the ip address and token
           list($item['ipaddress'], $item['token']) = explode('=', $item['rest']);
+          // We are done with this variable
+          unset($item['rest']);
         }
+        // Else, no IP address was specified
         else
         {
+          // Explode by = to seperate the callsign and token
           list($item['callsign'], $item['token']) = explode('=', $values['line']);
         }
         
-        echo "MSG: checktoken callsign=".$item['callsign'].", ip=".$item['ipaddress'].", token=".$item['token']."";
-        // group=$group
+        // Start the response to the server
+        echo "MSG: checktoken callsign=".$item['callsign'].", ip=".$item['ipaddress'].", token=".$item['token'];
+        
+        // Loop through the groups that we were checking for and display them
+        for ($g = 0; $g < count($values['groups']); $g++)
+        {
+          echo " group=".$values['groups'][$g];
+        }
+        // Add the usual line feed
         echo "\n";
-      }
-    }
-  }
+      } // for ($c = 0; $c < count($values['checktokens']); $c++)
+    } // if (is_array($values['checktokens']))
+  } // else if ($input['action'] == 'CHECKTOKENS')
   
   
   //////////////////////////////////////////
