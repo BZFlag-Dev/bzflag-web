@@ -30,7 +30,7 @@ class DataLayer
   function Player_Insert($values)
   {
     $sql = "INSERT INTO ".TBL_PLAYERS." ";
-    $sql .= "(username, password, email, created, createdipaddress, lastaccess, lastaccessipaddress, newpassword, newemail, activationkey, activated, token, tokendate) ";
+    $sql .= "(username, password, email, created, createdipaddress, lastaccess, lastaccessipaddress, newpassword, newemail, activationkey, activated, token, tokendate, tokenipaddress) ";
     $sql .= "VALUES (";
     $sql .= "'".mysql_real_escape_string($values['username'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['password'], $this->link)."', ";
