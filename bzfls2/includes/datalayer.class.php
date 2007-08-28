@@ -53,7 +53,7 @@ class DataLayer
     else return false;
   }
   
-  function Player_Update_ByUsername($values)
+  function Player_Update_ByUsername($username, $values)
   {
     // We require the username to be passed in
     if (!array_key_exists('username', $values))
@@ -103,7 +103,7 @@ class DataLayer
     
     // We already know we have the username
     $sql .= "username = '".mysql_real_escape_string($values['username'], $this->link)."' ";
-    $sql .= "WHERE username = '".mysql_real_escape_string($values['username'], $this->link)."' ";
+    $sql .= "WHERE username = '".mysql_real_escape_string($username, $this->link)."' ";
     $sql .= "LIMIT 1";
     
     $result = mysql_query($sql);
@@ -112,10 +112,10 @@ class DataLayer
     else return false;
   }
   
-  function Player_Fetch_ByUsername($values)
+  function Player_Fetch_ByUsername($username)
   {
     $sql = "SELECT username, password, email, UNIX_TIMESTAMP(created) as created, createdipaddress, UNIX_TIMESTAMP(lastaccess) as lastaccess, lastaccessipaddress, newpassword, newemail, activationkey, activated, token, UNIX_TIMESTAMP(tokendate) as tokendate, tokenipaddress FROM ".TBL_PLAYERS." WHERE ";
-    $sql .= "username = '".mysql_real_escape_string($values['username'], $this->link)."' ";
+    $sql .= "username = '".mysql_real_escape_string($username, $this->link)."' ";
     $sql .= "LIMIT 1";
     
     $result = mysql_query($sql);
@@ -127,10 +127,10 @@ class DataLayer
     else return false;
   }
   
-  function Player_Exists_ByUsername($values)
+  function Player_Exists_ByUsername($username)
   {
     $sql = "SELECT playerid FROM ".TBL_PLAYERS." WHERE ";
-    $sql .= "username = '".mysql_real_escape_string($values['username'], $this->link)."' ";
+    $sql .= "username = '".mysql_real_escape_string($username, $this->link)."' ";
     $sql .= "LIMIT 1";
     
     $result = mysql_query($sql);

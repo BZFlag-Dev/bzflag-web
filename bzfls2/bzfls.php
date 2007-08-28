@@ -408,7 +408,7 @@
     if (isset($values['username']) && isset($values['password']))
     {
       // Pull the player's information from the database
-      $data['player'] = $dl->Player_Fetch_ByUsername($values);
+      $data['player'] = $dl->Player_Fetch_ByUsername($values['username']);
       
       // Verify that the user exists and that their password is correct
       if (!$data['player'] || md5($values['password']) != $data['player']['password'])
@@ -433,7 +433,7 @@
           $values['tokendate'] = NOW;
           $values['tokenipaddress'] = $_SERVER['REMOTE_ADDR'];
           
-          if ($dl->Player_Update_ByUsername($values))
+          if ($dl->Player_Update_ByUsername($values['username']))
             echo "TOKEN: ".$values['token']."\n";
           else
             die("NOTOK: There was an error during token generation.\n");
@@ -488,7 +488,7 @@
     
     
     // Pull the player's information from the database
-    $data['player'] = $dl->Player_Fetch_ByUsername($values);
+    $data['player'] = $dl->Player_Fetch_ByUsername($values['username']);
     
     // Verify that the user exists and that their password is correct
     if (!$data['player'] || md5($values['password']) != $data['player']['password'])
@@ -513,7 +513,7 @@
         $values['tokendate'] = NOW;
         $values['tokenipaddress'] = $_SERVER['REMOTE_ADDR'];
         
-        if ($dl->Player_Update_ByUsername($values))
+        if ($dl->Player_Update_ByUsername($values['username']))
           echo "TOKEN: ".$values['token']."\n";
         else
           die("NOTOK: There was an error during token generation.\n");
@@ -572,8 +572,8 @@
         // be another user
         if (strpos($values['checktokens'][$c], "@") !== FALSE)
         {
-          // First explode by the @ symbol, to pull the callsign off
-          list($item['callsign'], $item['rest']) = explode('@', $values['checktokens'][$c]);
+          // First explode by the @ symbol, to pull the username off
+          list($item['username'], $item['rest']) = explode('@', $values['checktokens'][$c]);
           // Next, explode the rest by = to seperate the ip address and token
           list($item['ipaddress'], $item['token']) = explode('=', $item['rest']);
           // We are done with this variable
@@ -582,12 +582,12 @@
         // Else, no IP address was specified
         else
         {
-          // Explode by = to seperate the callsign and token
-          list($item['callsign'], $item['token']) = explode('=', $values['line']);
+          // Explode by = to seperate the username and token
+          list($item['username'], $item['token']) = explode('=', $values['line']);
         }
         
         // Start the response to the server
-        echo "MSG: checktoken callsign=".$item['callsign'].", ip=".$item['ipaddress'].", token=".$item['token'];
+        echo "MSG: checktoken callsign=".$item['username'].", ip=".$item['ipaddress'].", token=".$item['token'];
         
         // Loop through the groups that we were checking for and display them
         for ($g = 0; $g < count($values['groups']); $g++)
@@ -596,6 +596,36 @@
         }
         // Add the usual line feed
         echo "\n";
+        
+        $data['player'] = $dl->Player_Fetch_ByUsername($item['username']);
+        
+        
+        // We will respond with a TOKBAD if any of the following are met:
+        // 1) If the user does not exist
+        // 2) The user does not have a token
+        // 3) If the token doesn't match
+        // 4) The user's token has expired
+        // 5) If the IP was specified, and the IP doesn't match 
+        if (
+            // Condition 1
+            $data['player'] === false ||
+            // Condition 2
+            empty($data['player']['token']) ||
+            // Condition 3
+            $item['token'] != $data['player']['token'] ||
+            // Condition 4
+            $data['player']['tokendate'] + $config['token']['lifetime'] < NOW ||
+            // Condition 5
+            (isset($item['ipaddress']) && $item['ipaddress'] != $data['player']['tokenipaddress'])
+        )
+        {
+          echo "TOKBAD: ".$item['username']."\n";
+        }
+        // Else, their token is good. Send back a TOKGOOD
+        else
+        {
+          echo "TOKGOOD: ".$item['username']."\n";
+        }
         
         
         
@@ -639,7 +669,7 @@
     $values = $input;
     
     // Check if the user already exists before going further
-    if ($dl->Player_Exists_ByUsername($values))
+    if ($dl->Player_Exists_ByUsername($values['username']))
     {
       die("ERROR: The username '".$values['username']."' already exists. Please choose another username.\n");
     }
@@ -724,7 +754,7 @@ Thank you for registering.';
     
     $values = $input;
     
-    $data['player'] = $dl->Player_Fetch_ByUsername($values);
+    $data['player'] = $dl->Player_Fetch_ByUsername($values['username']);
     
     if ($data['player'] !== false)
     {
@@ -748,7 +778,7 @@ Thank you for registering.';
         $values['lastaccess'] = NOW;
         $values['lastaccessipaddress'] = $_SERVER['REMOTE_ADDR'];
         
-        if ($dl->Player_Update_ByUsername($data['player']))
+        if ($dl->Player_Update_ByUsername($data['player']['username'], $data['player']))
         {
           die("NOTICE: Your account has been activated! Welcome to BZFlag!\n");
         }
