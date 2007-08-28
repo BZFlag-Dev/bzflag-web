@@ -528,7 +528,37 @@
   //////////////////////////////////////////
   else if ($input['action'] == 'CHECKTOKENS')
   {
-  
+    if (!isset($input['checktokens']))
+    {
+      die("ERROR: No tokens specified.");
+    }
+
+    
+    $values = Array();
+    $values['checktokens'] = $input['checktokens'];
+    
+    $values['lines'] = explode("\r\n", $values['checktokens']);
+
+    if (is_array($values['lines']) && count($values['lines']))
+    {
+      foreach($values['lines'] as $values['line'])
+      {
+        $item = Array();
+        if (strpos($values['line'], "@") !== FALSE)
+        {
+          list($item['callsign'], $item['rest']) = explode('@', $values['line']);
+          list($item['ipaddress'], $item['token']) = explode('=', $item['rest']);
+        }
+        else
+        {
+          list($item['callsign'], $item['token']) = explode('=', $values['line']);
+        }
+        
+        echo "MSG: checktoken callsign=".$item['callsign'].", ip=".$item['ipaddress'].", token=".$item['token']."";
+        // group=$group
+        echo "\n";
+      }
+    }
   }
   
   
