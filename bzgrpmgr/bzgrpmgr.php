@@ -38,6 +38,17 @@ switch( $_GET['action'] ) {
 		$output .= "\t\t</table>\n";
 
 		break;
+	case "creategroup":
+		$output .= "\t\t<dl><dt>Organizations</dt>\n";
+		$output .= "\t\t<dd>None</dd>\n";
+		$output .= "\t\t</dl><br>\n";
+
+		// This will be an AJAX pop-down thing later on, hopefully
+//		$output .= "\t\t<dl><dt>Groups</dt>\n";
+//		$output .= "\t\t<dd>None</dd>\n";
+//		$output .= "\t\t</dl><br>\n";
+		
+		break;
 	default:
 		$output .= "Welcome, ".$userdata['callsign']."!<br><br>\n";
 
