@@ -624,7 +624,12 @@
         // Else, their token is good. Send back a TOKGOOD
         else
         {
+          // TODO: Enumerate the groups they are a member of (of the ones
+          // requested) in the form:   :Group.Name
+          // Ex: TOKGOOD: SomeUser:Group1.Name:Group2.Name
           echo "TOKGOOD: ".$item['username']."\n";
+          // Write out their BZID as well
+          echo "BZID: ".$data['player']['playerid']." ".$data['player']['username']."\n";
         }
         
         
