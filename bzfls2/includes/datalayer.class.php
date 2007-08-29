@@ -54,13 +54,11 @@ class DataLayer
   }
   
   function Player_Update_ByUsername($username, $values)
-  {
-    // We require the username to be passed in
-    if (!array_key_exists('username', $values))
-      return false;
-  
+  { 
     $sql = "UPDATE ".TBL_PLAYERS." SET ";
 
+    if (array_key_exists('username', $values))
+      $sql .= "username = '".mysql_real_escape_string($values['username'], $this->link)."', ";
     
     if (array_key_exists('password', $values))
       $sql .= "password = '".mysql_real_escape_string($values['password'], $this->link)."', ";
@@ -100,9 +98,16 @@ class DataLayer
       
     if (array_key_exists('tokenipaddress', $values))
       $sql .= "tokenipaddress = '".mysql_real_escape_string($values['tokenipaddress'], $this->link)."', ";
+      
+    // If the last two characters are not ", ", then we have nothing to change.
+    // So bail out.  This should maybe return true, since it didn't technically
+    // fail.
+    if (substr($sql, -2) != ", ")
+      return false;
+      
+    // Cut off the last two characters (which are ", ")
+    $sql = substr($sql, 0, -2);
     
-    // We already know we have the username
-    $sql .= "username = '".mysql_real_escape_string($values['username'], $this->link)."' ";
     $sql .= "WHERE username = '".mysql_real_escape_string($username, $this->link)."' ";
     $sql .= "LIMIT 1";
     

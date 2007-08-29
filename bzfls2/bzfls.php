@@ -299,6 +299,125 @@
       else
         echo "ERROR: There was an error adding the server record.\n";
     }
+    
+    //////////////////////////////////
+    // Check tokens in ADD too
+    //////////////////////////////////
+    
+    if (isset($input['checktokens']))
+    {
+      $values = Array();
+      
+      // We can check multiple tokens at once. Each callsign/ip/token is seperated
+      // by a CR/LF (%0D%0A)
+      $values['checktokens'] = explode("\r\n", $input['checktokens']);
+      
+      // Initialize groups to any empty array
+      $values['groups'] = Array();
+      
+      // We can check multiple groups at once as well. Each group is seperated
+      // by a CR/LF (%0D%0A)
+      if (!empty($input['groups']))
+      {
+        $values['groups'] = explode("\r\n", $input['groups']);
+      }
+  
+      // Make sure we have an array before we iterate through it.  It should have
+      // at least one item if we were passed any data.
+      if (is_array($values['checktokens']))
+      {
+        // Use the variable $c as our counter
+        for ($c = 0; $c < count($values['checktokens']); $c++)
+        {
+          // If this is blank, continue on to the next
+          if (strlen(trim($values['checktokens'][$c])) == 0)
+            continue;
+            
+          // Focus on one item at a time
+          $item = Array();
+          
+          // If the line has an @, that means an IP address was specified.  This
+          // will be checked with the token IP to prevent a token from being used
+          // be another user
+          if (strpos($values['checktokens'][$c], "@") !== FALSE)
+          {
+            // First explode by the @ symbol, to pull the username off
+            list($item['username'], $item['rest']) = explode('@', $values['checktokens'][$c]);
+            // Next, explode the rest by = to seperate the ip address and token
+            list($item['ipaddress'], $item['token']) = explode('=', $item['rest']);
+            // We are done with this variable
+            unset($item['rest']);
+          }
+          // Else, no IP address was specified
+          else
+          {
+            // Explode by = to seperate the username and token
+            list($item['username'], $item['token']) = explode('=', $values['checktokens'][$c]);
+          }
+          
+          // Start the response to the server
+          echo "MSG: checktoken callsign=".$item['username'].", ip=".$item['ipaddress'].", token=".$item['token'];
+          
+          // Loop through the groups that we were checking for and display them
+          for ($g = 0; $g < count($values['groups']); $g++)
+          {
+            // If this is blank, continue on to the next
+            if (strlen(trim($values['groups'][$g])) == 0)
+              continue;
+              
+            echo " group=".$values['groups'][$g];
+          }
+          // Add the usual line feed
+          echo "\n";
+          
+          $data['player'] = $dl->Player_Fetch_ByUsername($item['username']);
+          
+          
+          // We will respond with a TOKBAD if any of the following are met:
+          // 1) If the user does not exist
+          // 2) The user does not have a token
+          // 3) If the token doesn't match
+          // 4) The user's token has expired
+          // 5) If the IP was specified, and the IP doesn't match 
+          if (
+              // Condition 1
+              $data['player'] === false ||
+              // Condition 2
+              empty($data['player']['token']) ||
+              // Condition 3
+              $item['token'] != $data['player']['token'] ||
+              // Condition 4
+              $data['player']['tokendate'] + $config['token']['lifetime'] < NOW ||
+              // Condition 5
+              (!empty($item['ipaddress']) && $item['ipaddress'] != $data['player']['tokenipaddress'])
+          )
+          {
+            echo "TOKBAD: ".$item['username']."\n";
+          }
+          // Else, their token is good. Send back a TOKGOOD
+          else
+          {
+            // We will be using the token. Remove it from their account.
+            if ($dl->Player_Update_ByUsername($data['player']['username'], Array('token' => '')))
+            {
+              // TODO: Enumerate the groups they are a member of (of the ones
+              // requested) in the form:   :Group.Name
+              // Ex: TOKGOOD: SomeUser:Group1.Name:Group2.Name
+              echo "TOKGOOD: ".$item['username']."\n";
+              // Write out their BZID as well
+              echo "BZID: ".$data['player']['playerid']." ".$data['player']['username']."\n";
+            }
+            // Else, we were unable to remove the token. To prevent a security
+            // issue, we won't allow the token to be used.
+            else
+            {
+              echo "TOKBAD: ".$item['username']."\n";
+            }
+          }
+  
+        } // for ($c = 0; $c < count($values['checktokens']); $c++)
+      } // if (is_array($values['checktokens']))
+    } // if (isset($input['checktokens'])
 
   } // if ($input['action'] == 'ADD')
   
@@ -421,7 +540,7 @@
         
         // If there is still enough time left before the token expires, give it
         // back to them.  Verify this is a request from the same IP.
-        if ($_SERVER['REMOTE_ADDR'] == $data['player']['tokenipaddress'] && $data['player']['tokendate'] + ($config['token']['lifetime']-$config['token']['regenerationGracePeriod']) > NOW)
+        if ($_SERVER['REMOTE_ADDR'] == $data['player']['tokenipaddress'] && !empty($data['player']['token']) && $data['player']['tokendate'] + ($config['token']['lifetime']-$config['token']['regenerationGracePeriod']) > NOW)
         {
           echo "TOKEN: ".$data['player']['token']."\n";
         }
@@ -433,7 +552,7 @@
           $values['tokendate'] = NOW;
           $values['tokenipaddress'] = $_SERVER['REMOTE_ADDR'];
           
-          if ($dl->Player_Update_ByUsername($values['username']))
+          if ($dl->Player_Update_ByUsername($values['username'], $values))
             echo "TOKEN: ".$values['token']."\n";
           else
             die("NOTOK: There was an error during token generation.\n");
@@ -535,7 +654,7 @@
 
     
     $values = Array();
-    
+      
     // We can check multiple tokens at once. Each callsign/ip/token is seperated
     // by a CR/LF (%0D%0A)
     $values['checktokens'] = explode("\r\n", $input['checktokens']);
@@ -564,6 +683,10 @@
       // Use the variable $c as our counter
       for ($c = 0; $c < count($values['checktokens']); $c++)
       {
+        // If this is blank, continue on to the next
+        if (strlen(trim($values['checktokens'][$c])) == 0)
+          continue;
+          
         // Focus on one item at a time
         $item = Array();
         
@@ -583,7 +706,7 @@
         else
         {
           // Explode by = to seperate the username and token
-          list($item['username'], $item['token']) = explode('=', $values['line']);
+          list($item['username'], $item['token']) = explode('=', $values['checktokens'][$c]);
         }
         
         // Start the response to the server
@@ -592,6 +715,10 @@
         // Loop through the groups that we were checking for and display them
         for ($g = 0; $g < count($values['groups']); $g++)
         {
+          // If this is blank, continue on to the next
+          if (strlen(trim($values['groups'][$g])) == 0)
+            continue;
+            
           echo " group=".$values['groups'][$g];
         }
         // Add the usual line feed
@@ -616,7 +743,7 @@
             // Condition 4
             $data['player']['tokendate'] + $config['token']['lifetime'] < NOW ||
             // Condition 5
-            (isset($item['ipaddress']) && $item['ipaddress'] != $data['player']['tokenipaddress'])
+            (!empty($item['ipaddress']) && $item['ipaddress'] != $data['player']['tokenipaddress'])
         )
         {
           echo "TOKBAD: ".$item['username']."\n";
@@ -624,17 +751,24 @@
         // Else, their token is good. Send back a TOKGOOD
         else
         {
-          // TODO: Enumerate the groups they are a member of (of the ones
-          // requested) in the form:   :Group.Name
-          // Ex: TOKGOOD: SomeUser:Group1.Name:Group2.Name
-          echo "TOKGOOD: ".$item['username']."\n";
-          // Write out their BZID as well
-          echo "BZID: ".$data['player']['playerid']." ".$data['player']['username']."\n";
+          // We will be using the token. Remove it from their account.
+          if ($dl->Player_Update_ByUsername($data['player']['username'], Array('token' => '')))
+          {
+            // TODO: Enumerate the groups they are a member of (of the ones
+            // requested) in the form:   :Group.Name
+            // Ex: TOKGOOD: SomeUser:Group1.Name:Group2.Name
+            echo "TOKGOOD: ".$item['username']."\n";
+            // Write out their BZID as well
+            echo "BZID: ".$data['player']['playerid']." ".$data['player']['username']."\n";
+          }
+          // Else, we were unable to remove the token. To prevent a security
+          // issue, we won't allow the token to be used.
+          else
+          {
+            echo "TOKBAD: ".$item['username']."\n";
+          }
         }
-        
-        
-        
-        
+
       } // for ($c = 0; $c < count($values['checktokens']); $c++)
     } // if (is_array($values['checktokens']))
   } // else if ($input['action'] == 'CHECKTOKENS')
