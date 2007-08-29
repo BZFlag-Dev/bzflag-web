@@ -12,22 +12,14 @@
 // IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
+require_once( "data_phpbb2.class.php" );
 require_once( "functions.inc" );
 require_once( "config.php" );
-require_once( "data_phpbb2.inc" );
 
 // Temporary userdata settings... will incorporate with weblogin later
 $userdata['bzid'] = 2;
-$userdata['callsign'] = getUsername( $userdata['bzid'] );
+$userdata['callsign'] = $data->getUsername( $userdata['bzid'] );
 $userdata['admin'] = true;
-
-// Connect to MySQL server
-$mysql_connection = mysql_connect( $config['sql_hostname'],
-		$config['sql_username'],
-		$config['sql_password'], true ) or
-				die( "Could not connect to MySQL database." );
-mysql_select_db( $config['sql_database'], $mysql_connection ) or
-		die( "Could not select MySQL database." );
 
 // Begin main logic
 $output = "";
@@ -38,9 +30,9 @@ $output = "";
 switch( $_GET['action'] ) {
 	case "listmemberships":
 		$output .= "\t\t<table border=1 cellpadding=2>\n";
-		foreach( getGroups( $userdata['bzid'] ) as $groupid ) {
+		foreach( $data->getGroups( $userdata['bzid'] ) as $groupid ) {
 			$output .= "\t\t\t<tr><td>".
-					getGroupname( $groupid ).
+					$data->getGroupname( $groupid ).
 					"</td></tr>\n";
 		}
 		$output .= "\t\t</table>\n";
@@ -51,8 +43,8 @@ switch( $_GET['action'] ) {
 
 		// Little test to grab list of users
 		$output .= "<b>Users in DB:</b><br>\n";
-		foreach( getUserList() as $var ) {
-			$output .= getusername( $var )." = user_id ".
+		foreach( $data->getUserList() as $var ) {
+			$output .= $data->getUsername( $var )." = user_id ".
 					$var."<br>\n";
 		}
 
