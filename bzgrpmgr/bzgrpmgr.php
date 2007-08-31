@@ -28,35 +28,20 @@ $output = "";
 
 // Action section
 switch( $_GET['action'] ) {
-	case "listmemberships":
-		$output .= "\t\t<table border=1 cellpadding=2>\n";
-		foreach( $data->getGroups( $userdata['bzid'] ) as $groupid ) {
-			$output .= "\t\t\t<tr><td>".
-					$data->getGroupname( $groupid ).
-					"</td></tr>\n";
-		}
-		$output .= "\t\t</table>\n";
-
-		break;
-	case "creategroup":
-		$output .= "\t\t<dl><dt>Organizations</dt>\n";
-		$output .= "\t\t<dd>None</dd>\n";
-		$output .= "\t\t</dl><br>\n";
-
-		// This will be an AJAX pop-down thing later on, hopefully
-//		$output .= "\t\t<dl><dt>Groups</dt>\n";
-//		$output .= "\t\t<dd>None</dd>\n";
-//		$output .= "\t\t</dl><br>\n";
-		
-		break;
 	default:
-		$output .= "Welcome, ".$userdata['callsign']."!<br><br>\n";
+		$output .= "\t\t\tMy Memberships:<br>\n";
+		$output .= "\t\t\t<br>\n\n";
 
-		// Little test to grab list of users
-		$output .= "<b>Users in DB:</b><br>\n";
-		foreach( $data->getUserList() as $var ) {
-			$output .= $data->getUsername( $var )." = user_id ".
-					$var."<br>\n";
+		$output .= "\t\t\tAdmin:<br>\n";
+		foreach( $data->getOrgAdminships( $userdata['bzid'] ) as $orgid ) {
+			$output .= "\t\t\t".$data->getOrgName( $orgid )."<br>\n";
+			if( $data->isUserAdmin( $orgid, $userdata['bzid'] ) ) 
+				$output .= " and we're a user admin too<br>\n";
+			if( $data->isGroupAdmin( $orgid, $userdata['bzid'] ) ) 
+				$output .= " and we're a group admin too<br>\n";
+			else echo "no<br>\n";
+			if( $data->isAdmin( $orgid, $userdata['bzid'] ) ) 
+				$output .= " and we're an admin too<br>\n";
 		}
 
 		break;

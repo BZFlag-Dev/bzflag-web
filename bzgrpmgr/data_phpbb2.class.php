@@ -78,7 +78,8 @@ class data_phpbb2 extends data {
 				$this->config['phpBB2_users_table'].
 				" WHERE user_id=".$id;
 		$result = mysql_query( $sql, $this->phpBB2_mysql_connection );
-		if( $result && $toReturn = mysql_result( $result, 0) )
+		if( $result && mysql_num_rows( $result ) > 0 &&
+				$toReturn = mysql_result( $result, 0) )
 			return $toReturn;
 
 		return "";
@@ -88,7 +89,7 @@ class data_phpbb2 extends data {
 	function getGroups( $id ) {
 		$toReturn = array();
 
-		$sql = "SELECT groupid FROM group_members WHERE playerid=".
+		$sql = "SELECT groupid FROM group_members WHERE userid=".
 				$id;
 		$result = mysql_query( $sql, $this->main_mysql_connection );
 		if( $result && mysql_num_rows( $result ) > 0 ) {
@@ -105,7 +106,8 @@ class data_phpbb2 extends data {
 	public function getGroupname( $id ) {
 		$sql = "SELECT groupname FROM groups WHERE groupid=".$id;
 		$result = mysql_query( $sql, $this->main_mysql_connection );
-		if( $result && $toReturn = mysql_result( $result, 0) )
+		if( $result && mysql_num_rows( $result ) > 0 &&
+				$toReturn = mysql_result( $result, 0) )
 			return $toReturn;
 
 		return "";
@@ -113,11 +115,6 @@ class data_phpbb2 extends data {
 
 	// Function to add a user to a group
 	public function addGroupMember( $id ) {
-		return false;
-	}
-
-	// Function to check if a user is an admin of a given group
-	public function isAdmin( $id ) {
 		return false;
 	}
 
@@ -129,9 +126,131 @@ class data_phpbb2 extends data {
 
 	// Function to remove a user from a group
 	// (will fail and return true if the user is the only  admin)
-	function removeGroupAdmin( $id ) {
+	public function removeGroupAdmin( $id ) {
 		return false;
 	}
+
+	// Function to retrieve an organization's name by id
+	public function getOrgName( $id ) {
+		$sql = "SELECT orgname FROM organizations WHERE orgid=".$id;
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 &&
+				$toReturn = mysql_result( $result, 0) )
+			return $toReturn;
+
+		return "";
+	}
+
+	// Function to return a list of organizations a user may admin
+	public function getOrgAdminships( $id ) {
+		$orgs = array();
+
+		$sql = "SELECT groupid FROM group_members WHERE userid=".
+				$id;
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 ) {
+			while( $result_array = mysql_fetch_array( $result ) ) {
+				$sql2 = "SELECT orgid FROM groups WHERE ".
+						"groupid=".$result_array['groupid']." AND (".
+						"adminusers=1 OR admingroups=1 OR admin=1)";
+				$result2 = mysql_query( $sql2, $this->main_mysql_connection );
+				if( $result2 && mysql_num_rows( $result2 ) > 0 ) {
+					while( $result_array2 = mysql_fetch_array( $result2 ) ) {
+						// Have to use array KEYS here, to avoid duplicates
+						if( ! $adminOrgs[$result_array2['orgid']] )
+							$orgs[$result_array2['orgid']] = 1;
+					}
+				}
+			}
+		}
+
+		return array_keys( $orgs );
+	}
+
+	// Function to check whether a given user can admin users in
+	// the specified organization (kind of a reverse of the above)
+	public function isUserAdmin( $orgid, $userid ) {
+		// Get a list of groups
+		$sql = "SELECT groupid FROM group_members WHERE userid=".
+				$userid;
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 ) {
+			while( $result_array = mysql_fetch_array( $result ) ) {
+				// Check the organizations
+				// Full admins can, of course, admin users as well
+				$sql2 = "SELECT groupid FROM groups WHERE ".
+						"groupid = ".$result_array['groupid']." AND ".
+						"orgid = ".$orgid." AND ".
+						"(admin=1 OR adminusers=1)";
+				$result2 = mysql_query( $sql2, $this->main_mysql_connection );
+
+				if( $result2 && mysql_num_rows( $result2 ) > 0 &&
+						$toReturn = mysql_result( $result2, 0) )
+					return $toReturn;
+			}
+		}
+
+		return false;
+	}
+
+	// Function to check whether a given user can admin groups in
+	// the specified organization
+	public function isGroupAdmin( $orgid, $id ) {
+		// Get a list of groups
+		$sql = "SELECT groupid FROM group_members WHERE userid=".
+				$userid;
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 ) {
+			while( $result_array = mysql_fetch_array( $result ) ) {
+				// Check the organizations
+				// Full admins can, of course, admin groups as well
+				$sql2 = "SELECT groupid FROM groups WHERE ".
+						"groupid = ".$result_array['groupid']." AND ".
+						"orgid = ".$orgid." AND ".
+						"(admin=1 OR admingroups=1)";
+				$result2 = mysql_query( $sql2, $this->main_mysql_connection );
+
+				if( $result2 && mysql_num_rows( $result2 ) > 0 &&
+						$toReturn = mysql_result( $result2, 0) )
+					return $toReturn;
+			}
+		}
+
+		return false;
+	}
+
+	// Function to check whether a given user is a super-admin in
+	// the specified organization
+	public function isAdmin( $orgid, $id ) {
+		// Get a list of groups
+		$sql = "SELECT groupid FROM group_members WHERE userid=".
+				$userid;
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 ) {
+			while( $result_array = mysql_fetch_array( $result ) ) {
+				// Check the organizations
+				// Full admins can, of course, admin groups as well
+				$sql2 = "SELECT groupid FROM groups WHERE ".
+						"groupid = ".$result_array['groupid']." AND ".
+						"orgid = ".$orgid." AND ".
+						"admin=1";
+				$result2 = mysql_query( $sql2, $this->main_mysql_connection );
+
+				if( $result2 && mysql_num_rows( $result2 ) > 0 &&
+						$toReturn = mysql_result( $result2, 0) )
+					return $toReturn;
+			}
+		}
+
+		return false;
+	}
+
+	// Function to return a list of groups for a given organization
+	public function getOrgGroups( $id ) { ; }
+
+	// Function to return a list of groups a user may admin
+	public function getGroupAdminships( $id ) { ; }
+
 }
 
 ?>

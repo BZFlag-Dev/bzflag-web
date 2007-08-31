@@ -31,9 +31,6 @@ abstract class data {
 	// Function to add a user to a group
 	abstract protected function addGroupMember( $id );
 
-	// Function to check if a user is an admin of a given group
-	abstract protected function isAdmin( $id );
-
 	// Function to set a user as a group administrator
 	// (also adds the user to the group if necessary)
 	abstract protected function setGroupAdmin( $id );
@@ -41,6 +38,24 @@ abstract class data {
 	// Function to remove a user from a group
 	// (will fail and return true if the user is the only  admin)
 	abstract protected function removeGroupAdmin( $id );
+
+	// Function to retrieve an organization's name by id
+	abstract protected function getOrgName( $id );
+
+	// Function to return a list of organizations a user may admin
+	abstract protected function getOrgAdminships( $id );
+
+	// Functions to check whether a user can admin an ORGANIZATION
+	// in the respective capacity
+	abstract protected function isUserAdmin( $orgid, $id );
+	abstract protected function isGroupAdmin( $orgid, $id );
+	abstract protected function isAdmin( $orgid, $id );
+
+	// Function to return a list of groups for a given organization
+	abstract protected function getOrgGroups( $id );
+
+	// Function to return a list of groups a user may admin
+	abstract protected function getGroupAdminships( $id );
 }
 
 ?>
