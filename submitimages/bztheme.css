@@ -1,0 +1,129 @@
+.formelement {
+  background-color: #E0EFE3;
+  border: 1px solid #000000;
+  color: #303c54;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  margin: 0 0 5px 0;
+  padding: 2px;
+}
+
+.formelementred {
+  background-color: #EFE0E1;
+  border: 1px solid #000000;
+  color: #303c54;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  margin: 0 0 5px 0;
+  padding: 2px;
+}
+
+submit {
+  background-color: #E0EFE3;
+  border: 1px solid #000000;
+  color: #303c54;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  margin: 0 0 5px 0;
+  padding: 2px;
+}
+
+.formcancel {
+	background-color: #EFE0E1;
+	border: 1px solid #000000;
+	color: #303c54;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	margin: 0 0 5px 0;
+	padding: 2px;
+}
+
+.disabled {
+	background-color: #E8E8E8;
+  border: 1px solid #000000;
+  color: #303c54;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  margin: 0 0 5px 0;
+  padding: 2px;
+}
+
+hr {
+	background-color: #D9D9D9;
+	height: 3px;	
+	border: 1px dotted #000000;
+}
+
+option {
+  background-color: #E0EFE3;
+  color: #303c54;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: normal;
+  margin: 1px 0 0 0;
+  padding: 1px 1px 1px 10px;
+}
+optgroup {
+  background-color: #405070;
+  color: #ffffff;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: bold;
+  padding: 3px;
+}
+select {
+  padding: 1px;
+}
+p, td, ol, li {
+	color: #E0EFE3;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+
+}
+
+h5 {
+	color: #D9D9D9;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	padding: 2px;
+}
+
+a {
+	color: #E0EFE3;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	padding: 2px;
+}
+
+a:hover {
+	color: #E0EFE3;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	padding: 2px;
+	text-decoration: none;
+}
+
+.nameform {
+  color: #303c54;
+  border: 1px solid #000000;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
+	padding: 3px 2px 2px 2px;
+	margin: 0px;
+	background: URL(icon_user.gif) no-repeat;
+	background-position: 1px 1px;
+	background-color: #E0EFE3;
+	padding-left: 18px;
+}
+.emailform {
+  color: #303c54;
+  border: 1px solid #000000;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
+	padding: 3px 2px 2px 2px;
+	margin: 0px;
+	background: URL(email.gif) no-repeat;
+	background-position: 1px 1px;
+	background-color: #E0EFE3;
+	padding-left: 22px;
+}
