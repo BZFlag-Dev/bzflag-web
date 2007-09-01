@@ -1,0 +1,9 @@
+<?php
+
+  $config = Array();
+  $config['enablePHPErrors'] = false; // Set to true for debugging
+
+  $mailfromaddress = 'fromaddress@domain.com';
+  $mailtoaddress = 'toaddress@domain.com';
+  
+?>

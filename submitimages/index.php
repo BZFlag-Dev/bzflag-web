@@ -1,19 +1,30 @@
 <?php
+
+// Start a PHP session
 session_start();
+
+// Load the configuration file if it is readable
+if (is_readable('config.php'))
+  require('config.php');
+// If not, kill the script now
+else
+  die("Unable to load configuration file.");
+
+// Show PHP errors if configured
+if ($config['enablePHPErrors'])
+  error_reporting(E_ALL);
+else
+  error_reporting(0);
+
+// Load Smarty
 require('./smarty/Smarty.class.php');
-error_reporting(E_STRICT);
 
-$mailfromaddress = 'From: fromaddress@domain.com';
-$mailtoaddress = 'toaddress@domain.com';
-
-//Set basic SMARTY options
+//Set basic Smarty options
 $smarty = new Smarty();
 $smarty->template_dir = 'templates';
 $smarty->compile_dir = 'templates_c';
-$smarty->cache_dir = 'cache';
-$smarty->config_dir = 'configs';
 
-//Start assigning SMARTY variables
+//Start assigning Smarty variables
 $smarty->assign('title', 'BZFlag Image Submission System');
 
 
@@ -257,7 +268,7 @@ if($_GET['page'] == 'upload'){
 			
 		}
 		$text .= '<p>Now, if your images passed initial inspection, you can sit back and wait while your images are approved by an Administrator. You will recieve an e-mail notice when they have been approved / rejected.</p>';
-		mail($mailtoaddress, 'An image awaits approval', $email_body, $mailfromaddress);
+		mail($mailtoaddress, 'An image awaits approval', $email_body, 'From: '.$mailfromaddress);
 	}
 }
 
@@ -337,7 +348,7 @@ if($_GET['page'] == 'denyimage' and $_SESSION['admin'] == true){
 	$email_body = "{$_SESSION['image_user']} has rejected your image ({$_POST['image']}), {$_POST['author']}.\nReason: ";
 	$email_body .= stripslashes($_POST['reason']);
 	
-	mail($_POST['email'], 'Your image was denied.', $email_body, $mailfromaddress);
+	mail($_POST['email'], 'Your image was denied.', $email_body, 'From: '.$mailfromaddress);
 }
 
 
@@ -398,7 +409,7 @@ if($_GET['page'] == 'approveimage' and $_SESSION['admin'] == true){
 
 		$email_body = 'Congratulations, '.$fname.' '.$lname.', your image, '.$_GET['image'].' is now hosted at http://'.urldecode($_SERVER['HTTP_HOST']).urldecode($path).'/'.$dname.'/'.$_GET['image'];
 		
-		mail($email, 'BZFlag Image Submission System', $email_body, $mailfromaddress);
+		mail($email, 'BZFlag Image Submission System', $email_body, 'From: '.$mailfromaddress);
 		
 		
 		if(unlink('./image_holding/'.$_GET['image']))
