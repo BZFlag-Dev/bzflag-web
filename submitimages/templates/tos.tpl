@@ -1,6 +1,6 @@
 <h1>Purpose of This Service</h1>
 
-<p>This service is <strong>ONLY</strong> to be used by BZFlag map authors. This is <strong>NOT</strong> a general image host. Any images that are not intended for use in a BZFlag map will be denied. We do not allow hotlinking images to other hosts.</p>
+<p>This service is <strong>ONLY</strong> to be used for BZFlag-related purposes. This is <strong>NOT</strong> a general image host. Any images that are not intended for BZFlag-related purposes will be denied.</p>
 
 <h1>Allowable Content</h1>
 
@@ -11,13 +11,12 @@
 <h1>Licensing</h1>
 
 <p>By uploading any files to the BZFlag Image Uploader, you agree to the following terms:</p>
-<ul>
-  <li>If you own all rights to the file, you may upload the file under an OSI-approved license of your choice.</li>
-  <li>If you do not own the file, and there is no posted license, you must obtain written permission from the copyright owner of said file. Do not assume that the file is Public Domain.</li>
-  <li>If you do not own the file, and there is a license posted that does NOT allow you to redistribute the file, you must obtain written permission form the copyright owner of said file.</li>
-  <li>If you do not own the file, and there is an OSI-approved license posted, you must upload the file with the same license with which the file was released.</li>
-</ul>
-<p>In any case, the file must be released or licensed under an OSI-approved license. We will <strong>NOT</strong> host files that are released under a proprietary license.</p>
+<h2>If you own all rights to the file:</h2>
+<p>You may upload the file under an OSI-approved license of your choice.</p>
+<h2>If you do not own the file:</h2>
+<p>If the file is released under an OSI-approved license, you may upload the file under the same license with which the file was released.  If the file was <strong>NOT</strong> released under an OSI-approved license, you must obtain written permission from the copyright holder, and provide that written permission.</p>
+<h2>In any case:</h2>
+<p>The file must be released or licensed under an OSI-approved license. We will <strong>NOT</strong> host files that are released under a proprietary license.</p>
 
 <h1>Removal of Copyrighted Material</h1>
 
