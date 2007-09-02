@@ -1,6 +1,24 @@
 <?php
 
   $config = Array();
+  
+  // This is the URL to the directory that contains our index.php file. This
+  // should also include a trailing slash.
+  $config['paths']['baseURL'] = 'http://YourDomain.com/submitimages/';
+  
+  // This is the local filesystem path to the directory that contains our
+  // index.php file. This should also include a trailing slash.
+  $config['paths']['baseDirectory'] = '/your/path/htdocs/submitimages/';
+  
+  
+  $config['paths']['includes'] = $config['paths']['baseDirectory'].'includes/';
+  $config['paths']['templates'] = $config['paths']['baseDirectory'].'templates/';
+  $config['paths']['templates_c'] = $config['paths']['baseDirectory'].'templates_c/';
+  $config['paths']['tmp'] = $config['paths']['baseDirectory'].'tmp/';
+  $config['paths']['public'] = $config['paths']['baseDirectory'].'../';
+  
+  
+  
   // When this is set to true, errors, warnings, and notices in PHP will
   // be shown and/or logged, depending on the php.ini configuration.
   // Default: false 
@@ -16,5 +34,10 @@
   // Specify the group that will be allowed to view, approve, or deny any
   // pending images using the administration page. Case-sensitive.
   $config['imageAdminGroup'] = 'site.imageauth';
+  
+  // Default: 1048576 (1MB)
+  $config['upload']['maxFileSize'] = 1048576;
+  
+  $config['upload']['maxFiles'] = 8;
   
 ?>

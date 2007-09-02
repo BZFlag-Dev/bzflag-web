@@ -8,7 +8,58 @@ body {
   font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
+#navigation {
+  border: 1px solid black;
+  color: black;
+  background-color: white;
+  padding: 0.5em;
+  margin-bottom: 1em;
+}
 
+#navigation ul {
+  list-style: none;
+  display: inline;
+}
+
+#navigation ul li {
+  list-style: none;
+  display: inline;
+}
+
+#navigation a:link, #navigation a:visited,
+#content a:link, #content a:visited,
+#footer a:link, #footer a:visited {
+  color: black;
+}
+
+#navigation a:hover, #navigation a:active,
+#content a:hover, #content a:active,
+#footer a:hover, #footer a:active {
+  color: gray;
+  text-decoration: none;
+}
+
+#content {
+  border: 1px solid black;
+  color: black;
+  background-color: white;
+  padding: 0.5em;
+}
+
+
+
+
+#footer {
+  border: 1px solid black;
+  color: black;
+  text-align: center;
+  background-color: white;
+  padding: 0.5em;
+  margin-top: 1em;
+}
+
+
+/*
 .formelement {
   background-color: #E0EFE3;
   border: 1px solid #000000;
@@ -114,3 +165,4 @@ a:hover {
 	background-color: #E0EFE3;
 	padding-left: 22px;
 }
+*/
