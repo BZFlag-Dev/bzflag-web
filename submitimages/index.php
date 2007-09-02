@@ -17,7 +17,7 @@ else
   error_reporting(0);
 
 // Load Smarty
-require('./smarty/Smarty.class.php');
+require('./includes/smarty/Smarty.class.php');
 
 //Set basic Smarty options
 $smarty = new Smarty();
@@ -30,19 +30,19 @@ $smarty->assign('title', 'BZFlag Image Submission System');
 
 //Let's validate a login request.
 if($_GET['page'] == 'login' and !isset($_SESSION['image_user'])){
-	include('checktoken.php');
-	$level = validate_token($_GET['token'], urldecode($_GET['callsign']), array('site.imageauth'));
-	if($level == 0) $text = '<p>You didn\'t get logged in. You should not see this error. If you see this, 1) the list server is down, 2) you are trying unsucessfully to hack into a user\'s account, or 3) monkeys ate the program. If the answer is 1 or 2, then you just have to be patient and log in again normally at a later time. If it is number 3, then tell somebody!</p>';
-	else if($level == 1){
-		$_SESSION['image_user'] = $_GET['callsign'];
+	include('./includes/checktoken.php');
+	
+	$results = validate_token($_GET['token'], urldecode($_GET['callsign']), Array($config['imageAdminGroup']), false);
+	
+	if(!isset($results['bzid'])) $text = '<p>You didn\'t get logged in. You should not see this error. If you see this, 1) the list server is down, 2) you are trying unsucessfully to hack into a user\'s account, or 3) monkeys ate the program. If the answer is 1 or 2, then you just have to be patient and log in again normally at a later time. If it is number 3, then tell somebody!</p>';
+	else if(!isset($results['groups']) || !in_array($config['imageAdminGroup'], $results['groups'])){
+		$_SESSION['image_user'] = $results['username'];
 		$_SESSION['admin'] = false;
 	}
-	else if($level == 2){
-		$text = '<p>Welcome back, '.$_GET['callsign'].'. We recognize you as a BZFlag Image Moderator.</p>';
-		$_SESSION['image_user'] = $_GET['callsign'];
+	else {
+		$text = '<p>Welcome back, '.$results['username'].'. We recognize you as a BZFlag Image Moderator.</p>';
+		$_SESSION['image_user'] = $results['username'];
 		$_SESSION['admin'] = true;
-	} else {
-		$text = '<p>There has been an unknown login error.</p>';
 	}
 }
 
@@ -268,7 +268,7 @@ if($_GET['page'] == 'upload'){
 			
 		}
 		$text .= '<p>Now, if your images passed initial inspection, you can sit back and wait while your images are approved by an Administrator. You will recieve an e-mail notice when they have been approved / rejected.</p>';
-		mail($mailtoaddress, 'An image awaits approval', $email_body, 'From: '.$mailfromaddress);
+		mail($config['mail']['notifyaddress'], 'An image awaits approval', $email_body, 'From: '.$config['mail']['fromaddress']);
 	}
 }
 
@@ -348,7 +348,7 @@ if($_GET['page'] == 'denyimage' and $_SESSION['admin'] == true){
 	$email_body = "{$_SESSION['image_user']} has rejected your image ({$_POST['image']}), {$_POST['author']}.\nReason: ";
 	$email_body .= stripslashes($_POST['reason']);
 	
-	mail($_POST['email'], 'Your image was denied.', $email_body, 'From: '.$mailfromaddress);
+	mail($_POST['email'], 'Your image was denied.', $email_body, 'From: '.$config['mail']['fromaddress']);
 }
 
 
@@ -409,7 +409,7 @@ if($_GET['page'] == 'approveimage' and $_SESSION['admin'] == true){
 
 		$email_body = 'Congratulations, '.$fname.' '.$lname.', your image, '.$_GET['image'].' is now hosted at http://'.urldecode($_SERVER['HTTP_HOST']).urldecode($path).'/'.$dname.'/'.$_GET['image'];
 		
-		mail($email, 'BZFlag Image Submission System', $email_body, 'From: '.$mailfromaddress);
+		mail($email, 'BZFlag Image Submission System', $email_body, 'From: '.$config['mail']['fromaddress']);
 		
 		
 		if(unlink('./image_holding/'.$_GET['image']))

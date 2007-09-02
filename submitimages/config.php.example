@@ -1,9 +1,20 @@
 <?php
 
   $config = Array();
-  $config['enablePHPErrors'] = false; // Set to true for debugging
-
-  $mailfromaddress = 'fromaddress@domain.com';
-  $mailtoaddress = 'toaddress@domain.com';
+  // When this is set to true, errors, warnings, and notices in PHP will
+  // be shown and/or logged, depending on the php.ini configuration.
+  // Default: false 
+  $config['enablePHPErrors'] = false;
+  
+  // This email address will be used as the 'From' address of all emails sent
+  // by the image submission system.
+  $config['mail']['fromaddress'] = 'fromaddress@domain.com';
+  
+  // When a new image is posted, the following email will be notified
+  $config['mail']['notifyaddress'] = 'toaddress@domain.com';
+  
+  // Specify the group that will be allowed to view, approve, or deny any
+  // pending images using the administration page. Case-sensitive.
+  $config['imageAdminGroup'] = 'site.imageauth';
   
 ?>
