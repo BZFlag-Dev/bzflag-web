@@ -6,18 +6,18 @@
   
   include($config['paths']['includes'].'checktoken.php');
 	
-	$results = validate_token($_GET['token'], urldecode($_GET['callsign']), Array($config['imageAdminGroup']), false);
+	$results = validate_token($_GET['token'], urldecode($_GET['callsign']), Array($config['imageModeratorGroup']), false);
 	
 	if (isset($results['bzid']))
   {
   	$_SESSION['bzid'] = $user['bzid'] = $results['bzid'];
 		$_SESSION['username'] = $user['username'] = $results['username'];
 
-	  if(!isset($results['groups']) || !in_array($config['imageAdminGroup'], $results['groups'])){
-      $_SESSION['admin'] = $user['admin'] = false;
+	  if(!isset($results['groups']) || !in_array($config['imageModeratorGroup'], $results['groups'])){
+      $_SESSION['moderator'] = $user['moderator'] = false;
     }
     else {
-      $_SESSION['admin'] = $user['admin'] = true;
+      $_SESSION['moderator'] = $user['moderator'] = true;
     }
     
     $tpl->assign('redirect', Array('url' => $config['paths']['baseURL'], 'delay' => 5));

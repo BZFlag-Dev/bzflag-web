@@ -18,7 +18,7 @@
 {else}
     <li><a href="{$config.paths.baseURL}">Home</a></li>
     <li><a href="{$config.paths.baseURL}upload.php">Upload Images</a></li>
-{  if $user.admin}
+{  if $user.moderator}
     <li><a href="{$config.paths.baseURL}queue.php">Moderation Queue</a></li>
 {  /if}
     <li><a href="{$config.paths.baseURL}logout.php">Logout</a></li>

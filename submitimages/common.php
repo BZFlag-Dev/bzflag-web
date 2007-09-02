@@ -24,13 +24,13 @@
   session_start();
   
   // Check if we have the required session data
-  if (isset($_SESSION['bzid'], $_SESSION['username'], $_SESSION['admin']))
+  if (isset($_SESSION['bzid'], $_SESSION['username'], $_SESSION['moderator']))
   {
     // We do, so fill the $user variable.
     $user = Array();
     $user['bzid'] = $_SESSION['bzid'];
     $user['username'] = $_SESSION['username'];
-    $user['admin'] = $_SESSION['admin'];
+    $user['moderator'] = $_SESSION['moderator'];
   }
   // If we don't, just set $user to false.
   else
