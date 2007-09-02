@@ -32,8 +32,8 @@
   $config['mail']['notifyaddress'] = 'toaddress@domain.com';
   
   // Specify the group that will be allowed to view, approve, or deny any
-  // pending images using the administration page. Case-sensitive.
-  $config['imageAdminGroup'] = 'site.imageauth';
+  // pending images using the moderation page. Case-sensitive.
+  $config['imageModeratorGroup'] = 'site.imageauth';
   
   // Default: 1048576 (1MB)
   $config['upload']['maxFileSize'] = 1048576;
