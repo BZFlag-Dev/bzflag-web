@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01//EN' 'http://www.w3.org/TR/html4/strict.dtd'>
 <html>
 <head>
 <title>{$title}</title>
@@ -6,7 +7,7 @@
 {$javascript}
 
 </head>
-<body background="std_ground.jpg">
+<body>
 
 <p align="center">
 	{foreach from=$links item=URL key=title}
