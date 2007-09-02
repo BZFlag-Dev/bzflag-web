@@ -1,8 +1,17 @@
 <?php
+  
+  define('USING_SMARTY', true);
+  define('USING_DATABASE', true);
 
-include('common.php');
+  include('common.php');
+  
 
-
+	
+	
+	// Render the page
+	$tpl->display('header.tpl');
+	$tpl->display('home.tpl');
+	$tpl->display('footer.tpl');
 
 
 /*

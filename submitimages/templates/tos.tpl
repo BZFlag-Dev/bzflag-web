@@ -12,11 +12,12 @@
 
 <p>By uploading any files to the BZFlag Image Uploader, you agree to the following terms:</p>
 <ul>
-  <li>If you own all rights to the file, you may upload the file under a license of your choice.</li>
+  <li>If you own all rights to the file, you may upload the file under an OSI-approved license of your choice.</li>
   <li>If you do not own the file, and there is no posted license, you must obtain written permission from the copyright owner of said file. Do not assume that the file is Public Domain.</li>
   <li>If you do not own the file, and there is a license posted that does NOT allow you to redistribute the file, you must obtain written permission form the copyright owner of said file.</li>
-  <li>If you do not own the file, and there is a license posted that does allow you to redistribute the file, you must upload the file with the same license with which the file was released.
+  <li>If you do not own the file, and there is an OSI-approved license posted, you must upload the file with the same license with which the file was released.</li>
 </ul>
+<p>In any case, the file must be released or licensed under an OSI-approved license. We will <strong>NOT</strong> host files that are released under a proprietary license.</p>
 
 <h1>Removal of Copyrighted Material</h1>
 
