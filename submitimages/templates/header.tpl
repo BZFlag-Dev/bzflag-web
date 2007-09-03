@@ -7,7 +7,12 @@
 <meta http-equiv="refresh" content="{$redirect.delay};URL={$redirect.url}">
 {/if}
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-2">
-{$javascript}
+<script type="text/javascript">
+  var upload_maxFiles = {$config.upload.maxFiles};
+</script>
+{foreach from=$javascripts item=javascript}
+<script type="text/javascript" src="{$javascript}"></script>
+{/foreach}
 
 </head>
 <body>

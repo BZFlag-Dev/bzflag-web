@@ -8,6 +8,7 @@
   // Process user input
 
 	
+	$javascripts = Array('upload.js');
 	
 	// Render the page
 	$tpl->display('header.tpl');

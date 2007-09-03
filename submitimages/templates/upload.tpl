@@ -13,10 +13,11 @@
   <label for="authorname{$smarty.section.uploads.index}">Author Name: </label><input type="text" id="authorname{$smarty.section.uploads.index}" name="authorname[{$smarty.section.uploads.index}]"><br>
   
   <label for="licenseselector{$smarty.section.uploads.index}">Select License: </label>
-  <select id="licenseselector{$smarty.section.uploads.index}" name="licenseselector[{$smarty.section.uploads.index}]">
+  <select id="licenseselector{$smarty.section.uploads.index}" name="licenseselector[{$smarty.section.uploads.index}]" onchange="javascript:handleLicenseSelector(this);">
+    <option value="0" selected="selected">Other OSI-Approved</option>
     <option value="1">LGPL</option>
     <option value="2">Public Domain</option>
-    <option value="0">Other OSI-Approved</option>
+
   </select><br>
   
   <label for="licensename{$smarty.section.uploads.index}">License Name: </label><input type="text" id="licensename{$smarty.section.uploads.index}" name="licensename[{$smarty.section.uploads.index}]"><br>
@@ -33,7 +34,8 @@
   <label>Username: </label><input type="text" disabled="disabled" value="{$user.username|escape:'htmlall'}"><br>
   <label for="uploaderfirstname">First Name: </label><input type="text" id="uploaderfirstname" name="uploaderfirstname"><br>
   <label for="uploaderfirstname">Last Name: </label><input type="text" id="uploaderlastname" name="uploaderlastname"><br>
-  <input type="checkbox" id="agreeall" name="agreeall"><label for="agreeall"> I agree that all of the above images do not violate the Terms Of Service.</label>
+  <input type="checkbox" id="agreeall" name="agreeall"><label for="agreeall"> I agree that all of the above images do not violate the Terms Of Service.</label><br>
+  <input type="submit" value="Upload Images">
 </fieldset>
 
 </form>
