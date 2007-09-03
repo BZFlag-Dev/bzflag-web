@@ -78,6 +78,24 @@ label {
   background: #FF5555;
 }
 
+blockquote {
+  border-width: 1px 1px 1px 0.5em;
+  border-style: solid;
+  border-color: gray;
+  padding-left: 1em;
+}
+
+a.quotesource:link, a.quotesource:visited {
+  border-width: 0 0 1px 1px;
+  border-style: solid;
+  border-color: gray;
+  padding: 0.25em;
+  margin: 0 0 0.25em 0.25em;
+  float: right;
+  text-decoration: none;
+  font-weight: bold;
+}
+
 #header {
   color: black;
   background-color: #DDD;
