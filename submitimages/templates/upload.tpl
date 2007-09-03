@@ -17,13 +17,13 @@
     <option value="0" selected="selected">Other OSI-Approved</option>
     <option value="1">LGPL</option>
     <option value="2">Public Domain</option>
-
   </select><br>
-  
+  <span id="otherlicense{$smarty.section.uploads.index}">
   <label for="licensename{$smarty.section.uploads.index}">License Name: </label><input type="text" id="licensename{$smarty.section.uploads.index}" name="licensename[{$smarty.section.uploads.index}]"><br>
-  
+  <label for="licenseurl{$smarty.section.uploads.index}">License URL: </label><input type="text" id="licenseurl{$smarty.section.uploads.index}" name="licenseurl[{$smarty.section.uploads.index}]"><br>
   <label for="licensetext{$smarty.section.uploads.index}">License: </label><br><textarea style="width: 100%;" cols="74" rows="10" id="licensetext{$smarty.section.uploads.index}" name="licensetext[{$smarty.section.uploads.index}]"></textarea><br>
   <input type="checkbox" id="agree{$smarty.section.uploads.index}" name="agree[{$smarty.section.uploads.index}]"><label for="agree{$smarty.section.uploads.index}"> I agree that this image does not violate the Terms Of Service.</label>
+  </span>
 </fieldset>
 <hr>
 
