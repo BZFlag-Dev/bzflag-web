@@ -1,6 +1,8 @@
-<form enctype="application/x-www-form-urlencoded " action="{$config.paths.baseURL}upload.php" method="post">
+<form enctype="application/x-www-form-urlencoded " action="{$config.paths.baseURL}upload.php" method="post" onsubmit="javascript:return validateForm();">
 
 <p>Currently only PNG files are supported. The maximum filesize per file is {$config.upload.maxFileSize} bytes, and you may upload {$config.upload.maxFiles} files at a time.</p>
+<hr>
+<input type="submit" value="Upload">
 <hr>
 
 {section start=0 loop=$config.upload.maxFiles name=uploads}
@@ -19,7 +21,7 @@
     <option value="{$licenseid}"{if $licenseid == 0} selected="selected"{/if}>{$license.name}</option>
 {/foreach}
   </select><input type="button" value="View" onclick="javascript:showLicense({$smarty.section.uploads.index});"><br>
-  <span id="otherlicense{$smarty.section.uploads.index}">
+  <span id="otherlicense{$smarty.section.uploads.index}" class="hide">
     <label for="otherlicensename{$smarty.section.uploads.index}">License Name: </label><input type="text" id="otherlicensename{$smarty.section.uploads.index}" name="otherlicensename[{$smarty.section.uploads.index}]"><br>
     <label for="otherlicenseurl{$smarty.section.uploads.index}">License URL: </label><input type="text" id="otherlicenseurl{$smarty.section.uploads.index}" name="otherlicenseurl[{$smarty.section.uploads.index}]"><br>
     <label for="otherlicensetext{$smarty.section.uploads.index}">License Text: </label><br><textarea style="width: 100%;" cols="74" rows="10" id="otherlicensetext{$smarty.section.uploads.index}" name="otherlicensetext[{$smarty.section.uploads.index}]"></textarea><br>

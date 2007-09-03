@@ -12,7 +12,7 @@ li {
 
 body {
   padding: 1em;
-  background: green url('std_ground.jpg') repeat;
+  background: green url('std_ground.jpg') repeat fixed;
   color: white;
   
   font: 0.9em/1.3em Verdana, Arial, Helvetica, sans-serif;
@@ -64,6 +64,10 @@ legend {
 
 input, select {
   margin: 1px;
+}
+
+.hide {
+  display: none;
 }
 
 #navigation {
