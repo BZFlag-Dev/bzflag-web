@@ -41,3 +41,11 @@ function showLicense(uploadIndex)
   var licensepopup = window.open(config_licenses[selected][1], 'licensepopup');
   licensepopup.focus();
 }
+
+function showTOS()
+{  
+  var tospopup = window.open(config_paths_baseURL+'tos.php', 'tos');
+  if (!tospopup) return true;
+  tospopup.focus();
+  return false;
+}

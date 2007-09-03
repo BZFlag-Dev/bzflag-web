@@ -8,6 +8,7 @@
 {/if}
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-2">
 <script type="text/javascript">
+  var config_paths_baseURL = '{$config.paths.baseURL}';
   var config_upload_maxFiles = {$config.upload.maxFiles};
   var config_licenses = new Array();
 {foreach from=$config.licenses item=license key=licenseid}
