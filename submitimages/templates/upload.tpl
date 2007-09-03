@@ -25,6 +25,15 @@
   <input type="checkbox" id="agree{$smarty.section.uploads.index}" name="agree[{$smarty.section.uploads.index}]"><label for="agree{$smarty.section.uploads.index}"> I agree that this image does not violate the Terms Of Service.</label>
 </fieldset>
 <hr>
+
 {/section}
+
+<fieldset>
+  <legend>Uploader Information</legend>
+  <label>Username: </label><input type="text" disabled="disabled" value="{$user.username|escape:'htmlall'}"><br>
+  <label for="uploaderfirstname">First Name: </label><input type="text" id="uploaderfirstname" name="uploaderfirstname"><br>
+  <label for="uploaderfirstname">Last Name: </label><input type="text" id="uploaderlastname" name="uploaderlastname"><br>
+  <input type="checkbox" id="agreeall" name="agreeall"><label for="agreeall"> I agree that all of the above images do not violate the Terms Of Service.</label>
+</fieldset>
 
 </form>
