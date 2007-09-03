@@ -43,6 +43,23 @@ ul {
   margin-bottom: 1em;
 }
 
+hr {
+  margin: 0.5em 0;
+  clear: both;
+}
+
+fieldset {
+  border: 1px solid gray;
+  padding: 0.5em 0.5em 0.5em;
+  margin-bottom: 1em;
+}
+
+legend {
+  padding: 0 0.25em;
+  margin-left: 0.5em;
+  border: 1px solid gray;
+}
+
 #navigation {
   border: 1px solid black;
   color: black;
@@ -85,7 +102,20 @@ ul {
   padding: 0.5em;
 }
 
+#content fieldset.left {
+  float: left;
+}
 
+#content fieldset.right {
+  float: left;
+}
+
+#content div.uploadbox {
+  padding: 1em 1em 0 1em;
+  border: 1px solid black;
+  margin: 0 0.5em 0.5em 0;
+  margin: 1em 0;
+}
 
 
 

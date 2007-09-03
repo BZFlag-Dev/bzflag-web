@@ -1,12 +1,22 @@
 <?php
 
-  require('common.php');
+  define('USING_SMARTY', true);
+  define('USING_DATABASE', true);
+
+  include('common.php');
   
-  // Process input
+  // Process user input
+
+	
+	
+	// Render the page
+	$tpl->display('header.tpl');
+	$tpl->display('upload.tpl');
+	$tpl->display('footer.tpl');
 
   
   
-
+/*
 	//Pick how many images to upload.
 	if(!isset($input['quantity']) and !isset($_POST['num_of_images'])){
 		$text = '<form method="get">
@@ -66,7 +76,7 @@
 			}
 		}
 		*/
-		
+/*		
 		$text .= '<tr><td colspan="2" align="center"><hr><h5>Author Information</h5></td></tr>
 		
 		<tr><td align="right">First name</td><td><input type="text" name="fname" class="formelement" onChange="javascript:updateDisplayName()" value="'.$fname.'"></td></tr>
@@ -137,7 +147,7 @@
 		}
 		*/
 		
-		
+/*		
 		for($i = 1; $i <= $_POST['num_of_images']; $i++){
 			if($_POST['haverights_'.$i] != 'checkbox'){
 				$text .= '<p><font color="red">You cannot upload image '.$i.', because you do not have the rights to upload it!</font></p>';
@@ -200,3 +210,5 @@
 		$text .= '<p>Now, if your images passed initial inspection, you can sit back and wait while your images are approved by an Administrator. You will recieve an e-mail notice when they have been approved / rejected.</p>';
 		mail($config['mail']['notifyaddress'], 'An image awaits approval', $email_body, 'From: '.$config['mail']['fromaddress']);
 	}
+*/
+?>
