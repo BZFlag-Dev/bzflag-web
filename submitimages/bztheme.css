@@ -79,6 +79,13 @@ input, select {
   margin-bottom: 1em;
 }
 
+#logo {
+  position:relative;
+  float:right;
+  bottom:0px;
+  right:0px;
+}
+
 #navigation ul {
   list-style: none;
   display: inline;
