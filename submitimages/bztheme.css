@@ -15,7 +15,7 @@ body {
   background: green url('std_ground.jpg') repeat fixed;
   color: white;
   
-  font: 0.9em/1.3em Verdana, Arial, Helvetica, sans-serif;
+  font: 0.9em/1.4em Verdana, Arial, Helvetica, sans-serif;
 }
 
 p {
@@ -66,8 +66,16 @@ input, select {
   margin: 1px;
 }
 
+label {
+  padding: 1px;
+}
+
 .hide {
   display: none;
+}
+
+.invalid {
+  background: #FF5555;
 }
 
 #navigation {

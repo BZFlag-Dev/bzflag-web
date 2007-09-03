@@ -2,7 +2,7 @@
 
 <p>Currently only PNG files are supported. The maximum filesize per file is {$config.upload.maxFileSize} bytes, and you may upload {$config.upload.maxFiles} files at a time.</p>
 <hr>
-<input type="submit" value="Upload">
+<p><input type="submit" value="Upload"></p>
 <hr>
 
 {section start=0 loop=$config.upload.maxFiles name=uploads}
@@ -23,10 +23,11 @@
   </select><input type="button" value="View" onclick="javascript:showLicense({$smarty.section.uploads.index});"><br>
   <span id="otherlicense{$smarty.section.uploads.index}" class="hide">
     <label for="otherlicensename{$smarty.section.uploads.index}">License Name: </label><input type="text" id="otherlicensename{$smarty.section.uploads.index}" name="otherlicensename[{$smarty.section.uploads.index}]"><br>
+    Please specify a URL to the license and/or the license text itself.<br>
     <label for="otherlicenseurl{$smarty.section.uploads.index}">License URL: </label><input type="text" id="otherlicenseurl{$smarty.section.uploads.index}" name="otherlicenseurl[{$smarty.section.uploads.index}]"><br>
     <label for="otherlicensetext{$smarty.section.uploads.index}">License Text: </label><br><textarea style="width: 100%;" cols="74" rows="10" id="otherlicensetext{$smarty.section.uploads.index}" name="otherlicensetext[{$smarty.section.uploads.index}]"></textarea><br>
   </span>
-  <input type="checkbox" id="agree{$smarty.section.uploads.index}" name="agree[{$smarty.section.uploads.index}]"><label for="agree{$smarty.section.uploads.index}"> I agree that this image does not violate the <a href="{$config.baseURL}tos.php" onclick="javascript:return showTOS();">Terms Of Service</a>.</label>
+  <input type="checkbox" id="agree{$smarty.section.uploads.index}" name="agree[{$smarty.section.uploads.index}]"><label id="agreelabel{$smarty.section.uploads.index}" for="agree{$smarty.section.uploads.index}"> I agree that this image does not violate the <a href="{$config.baseURL}tos.php" onclick="javascript:return showTOS();">Terms Of Service</a>.</label>
 </fieldset>
 <hr>
 
