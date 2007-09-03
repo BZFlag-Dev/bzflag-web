@@ -24,7 +24,7 @@
     <label for="otherlicenseurl{$smarty.section.uploads.index}">License URL: </label><input type="text" id="otherlicenseurl{$smarty.section.uploads.index}" name="otherlicenseurl[{$smarty.section.uploads.index}]"><br>
     <label for="otherlicensetext{$smarty.section.uploads.index}">License Text: </label><br><textarea style="width: 100%;" cols="74" rows="10" id="otherlicensetext{$smarty.section.uploads.index}" name="otherlicensetext[{$smarty.section.uploads.index}]"></textarea><br>
   </span>
-  <input type="checkbox" id="agree{$smarty.section.uploads.index}" name="agree[{$smarty.section.uploads.index}]"><label for="agree{$smarty.section.uploads.index}"> I agree that this image does not violate the Terms Of Service.</label>
+  <input type="checkbox" id="agree{$smarty.section.uploads.index}" name="agree[{$smarty.section.uploads.index}]"><label for="agree{$smarty.section.uploads.index}"> I agree that this image does not violate the <a href="{$config.baseURL}tos.php">Terms Of Service</a>.</label>
 </fieldset>
 <hr>
 
@@ -35,7 +35,7 @@
   <label>Username: </label><input type="text" disabled="disabled" value="{$user.username|escape:'htmlall'}"><br>
   <label for="uploaderfirstname">First Name: </label><input type="text" id="uploaderfirstname" name="uploaderfirstname"><br>
   <label for="uploaderfirstname">Last Name: </label><input type="text" id="uploaderlastname" name="uploaderlastname"><br>
-  <input type="checkbox" id="agreeall" name="agreeall"><label for="agreeall"> I agree that none of the above images violate the Terms Of Service.</label><br>
+  <input type="checkbox" id="agreeall" name="agreeall"><label for="agreeall"> I agree that none of the above images violate the <a href="{$config.baseURL}tos.php">Terms Of Service</a>.</label><br>
   <input type="submit" value="Upload Images">
 </fieldset>
 

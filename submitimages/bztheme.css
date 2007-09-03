@@ -62,6 +62,10 @@ legend {
   border: 1px solid gray;
 }
 
+input, select {
+  margin: 1px;
+}
+
 #navigation {
   font-variant: small-caps;
   border: 1px solid black;
