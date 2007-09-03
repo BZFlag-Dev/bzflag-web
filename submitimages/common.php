@@ -38,6 +38,9 @@
     $user = false;
   }
   
+  // Used to trigger messages
+  $messages = Array();
+  
   // Smarty Template System
   if (defined('USING_SMARTY') && USING_SMARTY)
   {
@@ -52,6 +55,7 @@
     
     $tpl->assign_by_ref('config', $config);
     $tpl->assign_by_ref('user', $user);
+    $tpl->assign_by_ref('messages', $messages);
   }
 
 ?>
