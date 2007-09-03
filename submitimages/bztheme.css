@@ -13,6 +13,7 @@ li {
 body {
   padding: 1em;
   background: green url('std_ground.jpg') repeat;
+  color: white;
   
   font: 0.9em/1.3em Verdana, Arial, Helvetica, sans-serif;
 }
@@ -88,12 +89,14 @@ legend {
 #content a:link, #content a:visited,
 #footer a:link, #footer a:visited {
   color: black;
+  background-color: inherit;
 }
 
 #navigation a:hover, #navigation a:active,
 #content a:hover, #content a:active,
 #footer a:hover, #footer a:active {
   color: gray;
+  background-color: inherit;
   text-decoration: none;
 }
 
