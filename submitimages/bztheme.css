@@ -44,7 +44,7 @@ ul {
 }
 
 hr {
-  margin: 0.5em 0;
+  margin: 0.5em -0.5em;
   clear: both;
 }
 
@@ -55,16 +55,18 @@ fieldset {
 }
 
 legend {
+  font-variant: small-caps;
   padding: 0 0.25em;
   margin-left: 0.5em;
   border: 1px solid gray;
 }
 
 #navigation {
+  font-variant: small-caps;
   border: 1px solid black;
   color: black;
   background-color: #DDD;
-  padding: 0.5em;
+  padding: 0.5em 1em;
   margin-bottom: 1em;
 }
 
@@ -99,33 +101,15 @@ legend {
   border: 1px solid black;
   color: black;
   background-color: #DDD;
-  padding: 0.5em;
+  padding: 0.5em 1em;
 }
-
-#content fieldset.left {
-  float: left;
-}
-
-#content fieldset.right {
-  float: left;
-}
-
-#content div.uploadbox {
-  padding: 1em 1em 0 1em;
-  border: 1px solid black;
-  margin: 0 0.5em 0.5em 0;
-  margin: 1em 0;
-}
-
-
-
 
 #footer {
   border: 1px solid black;
   color: black;
   text-align: center;
   background-color: #DDD;
-  padding: 0.5em;
+  padding: 0.5em 1em;
   margin-top: 1em;
 }
 

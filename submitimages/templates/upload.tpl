@@ -3,7 +3,6 @@
 <p>Currently only PNG files are supported. The maximum filesize per file is {$config.upload.maxFileSize} bytes, and you may upload {$config.upload.maxFiles} files at a time.</p>
 <hr>
 {section start=0 loop=$config.upload.maxFiles name=uploads}
-<div class="uploadbox">
 <fieldset>
   <legend>File Information</legend>
   <label for="file{$smarty.section.uploads.index}">Image File: </label><input type="file" accept="image/png" id="file{$smarty.section.uploads.index}" name="file[{$smarty.section.uploads.index}]">
@@ -25,9 +24,7 @@
   <label for="license{$smarty.section.uploads.index}">License: </label><input type="text" id="{$smarty.section.uploads.index}" name="[{$smarty.section.uploads.index}]"><br>
   <input type="checkbox" id="agree{$smarty.section.uploads.index}" name="agree[{$smarty.section.uploads.index}]"><label for="agree{$smarty.section.uploads.index}"> I agree that this image does not violate the Terms Of Service.</label>
 </fieldset>
-</div>
-{/section}
-
 <hr>
+{/section}
 
 </form>
