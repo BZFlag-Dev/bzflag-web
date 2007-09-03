@@ -45,6 +45,6 @@
   $config['licenses'][2] = Array('name' => 'BSD/MIT', 'url' => 'http://opensource.org/licenses/bsd-license.php');
   $config['licenses'][3] = Array('name' => 'Creative Commons Attribution 3.0', 'url' => 'http://creativecommons.org/licenses/by/3.0/');
   $config['licenses'][4] = Array('name' => 'Creative Commons Attribution-ShareAlike 3.0', 'url' => 'http://creativecommons.org/licenses/by-sa/3.0/');
-  $config['licenses'][5] = Array('name' => 'Public Domain', 'url' => '');
+  $config['licenses'][5] = Array('name' => 'Public Domain', 'url' => 'http://creativecommons.org/licenses/publicdomain/');
   
 ?>
