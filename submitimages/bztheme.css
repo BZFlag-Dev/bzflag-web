@@ -78,44 +78,43 @@ label {
   background: #FF5555;
 }
 
-#navigation {
-  font-variant: small-caps;
-  border: 1px solid black;
+#header {
   color: black;
   background-color: #DDD;
-  padding: 0.5em 1em;
+  font-variant: small-caps;
+  border: 1px solid black;
   margin-bottom: 1em;
+  padding-right: 1em;
+  height: 100px;
+  text-align: center;
 }
 
 #logo {
-  position:relative;
-  float:right;
-  bottom:0px;
-  right:0px;
+  float: left;
 }
 
-#navigation ul {
+ul#navigation {
   list-style: none;
   display: inline;
-  margin: 0;
+  margin: auto 1em;
   padding: 0;
 }
 
-#navigation ul li {
+ul#navigation li {
   list-style: none;
   display: inline;
   margin: 0 0 0 1em;
   padding: 0;
 }
 
-#navigation a:link, #navigation a:visited,
+ul#navigation a:link, ul#navigation a:visited,
 #content a:link, #content a:visited,
 #footer a:link, #footer a:visited {
   color: black;
   background-color: inherit;
 }
 
-#navigation a:hover, #navigation a:active,
+ul#navigation a:hover, ul#navigation a:active,
 #content a:hover, #content a:active,
 #footer a:hover, #footer a:active {
   color: gray;
