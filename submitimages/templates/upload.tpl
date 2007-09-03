@@ -2,6 +2,7 @@
 
 <p>Currently only PNG files are supported. The maximum filesize per file is {$config.upload.maxFileSize} bytes, and you may upload {$config.upload.maxFiles} files at a time.</p>
 <hr>
+
 {section start=0 loop=$config.upload.maxFiles name=uploads}
 <fieldset>
   <legend>File Information</legend>
@@ -13,16 +14,15 @@
   <label for="authorname{$smarty.section.uploads.index}">Author Name: </label><input type="text" id="authorname{$smarty.section.uploads.index}" name="authorname[{$smarty.section.uploads.index}]"><br>
   
   <label for="licenseselector{$smarty.section.uploads.index}">Select License: </label>
-  <select id="licenseselector{$smarty.section.uploads.index}" name="licenseselector[{$smarty.section.uploads.index}]" onchange="javascript:handleLicenseSelector(this);">
-    <option value="0" selected="selected">Other OSI-Approved</option>
+  <select id="licenseselector{$smarty.section.uploads.index}" name="licenseselector[{$smarty.section.uploads.index}]" onchange="javascript:handleLicenseSelector({$smarty.section.uploads.index});">
 {foreach from=$config.licenses item=license key=licenseid}
-    <option value="{$licenseid}">{$license.name}</option>
+    <option value="{$licenseid}"{if $licenseid == 0} selected="selected"{/if}>{$license.name}</option>
 {/foreach}
-  </select><br>
+  </select><input type="button" value="View" onclick="javascript:showLicense({$smarty.section.uploads.index});"><br>
   <span id="otherlicense{$smarty.section.uploads.index}">
-    <label for="licensename{$smarty.section.uploads.index}">License Name: </label><input type="text" id="licensename{$smarty.section.uploads.index}" name="licensename[{$smarty.section.uploads.index}]"><br>
-    <label for="licenseurl{$smarty.section.uploads.index}">License URL: </label><input type="text" id="licenseurl{$smarty.section.uploads.index}" name="licenseurl[{$smarty.section.uploads.index}]"><br>
-    <label for="licensetext{$smarty.section.uploads.index}">License: </label><br><textarea style="width: 100%;" cols="74" rows="10" id="licensetext{$smarty.section.uploads.index}" name="licensetext[{$smarty.section.uploads.index}]"></textarea><br>
+    <label for="otherlicensename{$smarty.section.uploads.index}">License Name: </label><input type="text" id="otherlicensename{$smarty.section.uploads.index}" name="otherlicensename[{$smarty.section.uploads.index}]"><br>
+    <label for="otherlicenseurl{$smarty.section.uploads.index}">License URL: </label><input type="text" id="otherlicenseurl{$smarty.section.uploads.index}" name="otherlicenseurl[{$smarty.section.uploads.index}]"><br>
+    <label for="otherlicensetext{$smarty.section.uploads.index}">License Text: </label><br><textarea style="width: 100%;" cols="74" rows="10" id="otherlicensetext{$smarty.section.uploads.index}" name="otherlicensetext[{$smarty.section.uploads.index}]"></textarea><br>
   </span>
   <input type="checkbox" id="agree{$smarty.section.uploads.index}" name="agree[{$smarty.section.uploads.index}]"><label for="agree{$smarty.section.uploads.index}"> I agree that this image does not violate the Terms Of Service.</label>
 </fieldset>

@@ -8,7 +8,11 @@
 {/if}
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-2">
 <script type="text/javascript">
-  var upload_maxFiles = {$config.upload.maxFiles};
+  var config_upload_maxFiles = {$config.upload.maxFiles};
+  var config_licenses = new Array();
+{foreach from=$config.licenses item=license key=licenseid}
+  config_licenses[{$licenseid}] = ['{$license.name}', '{$license.url}'];
+{/foreach}
 </script>
 {foreach from=$javascripts item=javascript}
 <script type="text/javascript" src="{$javascript}"></script>

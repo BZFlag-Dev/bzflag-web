@@ -11,24 +11,33 @@ function $(id) {
 }
 
 
-function handleLicenseSelector(obj)
+function handleLicenseSelector(uploadIndex)
 {
-  // licenseselector = 15 characters
-  var num = obj.id.substring('licenseselector'.length);
+  var selected = $('licenseselector'+uploadIndex).value;
   
   // If they did not choose "Other OSI-Approved", just show them the license
-  if (obj.value != 0)
+  if (selected != 0)
   {
-    $('otherlicense'+num).style.display = 'none';
-    $('licensename'+num).disabled = true;
-    $('licenseurl'+num).disabled = true;
-    $('licensetext'+num).disabled = true;
+    $('otherlicense'+uploadIndex).style.display = 'none';
+    $('otherlicensename'+uploadIndex).disabled = true;
+    $('otherlicenseurl'+uploadIndex).disabled = true;
+    $('otherlicensetext'+uploadIndex).disabled = true;
   }
   else
   {
-    $('licensename'+num).disabled = false;
-    $('licenseurl'+num).disabled = false;
-    $('licensetext'+num).disabled = false;
-    $('otherlicense'+num).style.display = '';
+    $('otherlicensename'+uploadIndex).disabled = false;
+    $('otherlicenseurl'+uploadIndex).disabled = false;
+    $('otherlicensetext'+uploadIndex).disabled = false;
+    $('otherlicense'+uploadIndex).style.display = '';
   }
+}
+
+function showLicense(uploadIndex)
+{
+  var selected = $('licenseselector'+uploadIndex).value;
+  
+  if (!config_licenses || !config_licenses[selected]) return;
+  
+  var licensepopup = window.open(config_licenses[selected][1], 'licensepopup');
+  licensepopup.focus();
 }
