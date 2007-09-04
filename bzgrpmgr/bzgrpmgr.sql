@@ -40,6 +40,7 @@ CREATE TABLE `groups` (
   `adminusers` tinyint(1) NOT NULL default '0',
   `admingroups` tinyint(1) NOT NULL default '0',
   `admin` tinyint(1) NOT NULL default '0',
+  `desc` varchar(128) default NULL,
   PRIMARY KEY  (`groupid`),
   UNIQUE KEY `groupname` (`groupname`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
@@ -66,4 +67,4 @@ CREATE TABLE `organizations` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-08-31  8:05:48
+-- Dump completed on 2007-09-04  8:54:26

@@ -101,6 +101,22 @@ class data_phpbb2 extends data {
 
 		return $toReturn;
 	}
+	// Function to get group id's by org id
+	public function getOrgGroups( $id ) {
+		$toReturn = array();
+
+		$sql = "SELECT groupid FROM groups WHERE orgid=".
+				$id;
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 ) {
+			while( $result_array = mysql_fetch_array( $result ) ) {
+				array_push( $toReturn,
+						$result_array['groupid'] );
+			}
+		}
+
+		return $toReturn;
+	}
 
 	// Function to retrieve group name by group id
 	public function getGroupname( $id ) {
@@ -130,6 +146,17 @@ class data_phpbb2 extends data {
 		return false;
 	}
 
+	// Function to retrieve the orgid for a given groupid
+	public function getOrg( $id ) {
+		$sql = "SELECT orgid FROM groups WHERE groupid=".$id;
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 &&
+				$toReturn = mysql_result( $result, 0) )
+			return $toReturn;
+
+		return "";
+	}
+
 	// Function to retrieve an organization's name by id
 	public function getOrgName( $id ) {
 		$sql = "SELECT orgname FROM organizations WHERE orgid=".$id;
@@ -142,7 +169,8 @@ class data_phpbb2 extends data {
 	}
 
 	// Function to return a list of organizations a user may admin
-	public function getOrgAdminships( $id ) {
+	// This is dead... going to use other methods for this now
+/*	public function getOrgAdminships( $id ) {
 		$orgs = array();
 
 		$sql = "SELECT groupid FROM group_members WHERE userid=".
@@ -165,7 +193,7 @@ class data_phpbb2 extends data {
 		}
 
 		return array_keys( $orgs );
-	}
+	} */
 
 	// Function to check whether a given user can admin users in
 	// the specified organization (kind of a reverse of the above)
@@ -195,7 +223,7 @@ class data_phpbb2 extends data {
 
 	// Function to check whether a given user can admin groups in
 	// the specified organization
-	public function isGroupAdmin( $orgid, $id ) {
+	public function isGroupAdmin( $orgid, $userid ) {
 		// Get a list of groups
 		$sql = "SELECT groupid FROM group_members WHERE userid=".
 				$userid;
@@ -221,7 +249,7 @@ class data_phpbb2 extends data {
 
 	// Function to check whether a given user is a super-admin in
 	// the specified organization
-	public function isAdmin( $orgid, $id ) {
+	public function isAdmin( $orgid, $userid ) {
 		// Get a list of groups
 		$sql = "SELECT groupid FROM group_members WHERE userid=".
 				$userid;
@@ -244,12 +272,6 @@ class data_phpbb2 extends data {
 
 		return false;
 	}
-
-	// Function to return a list of groups for a given organization
-	public function getOrgGroups( $id ) { ; }
-
-	// Function to return a list of groups a user may admin
-	public function getGroupAdminships( $id ) { ; }
 
 }
 

@@ -29,20 +29,52 @@ $output = "";
 // Action section
 switch( $_GET['action'] ) {
 	default:
-		$output .= "\t\t\tMy Memberships:<br>\n";
-		$output .= "\t\t\t<br>\n\n";
+		$output .= "\t\t<b>Groups:</b>\n";
 
-		$output .= "\t\t\tAdmin:<br>\n";
-		foreach( $data->getOrgAdminships( $userdata['bzid'] ) as $orgid ) {
-			$output .= "\t\t\t".$data->getOrgName( $orgid )."<br>\n";
-			if( $data->isUserAdmin( $orgid, $userdata['bzid'] ) ) 
-				$output .= " and we're a user admin too<br>\n";
-			if( $data->isGroupAdmin( $orgid, $userdata['bzid'] ) ) 
-				$output .= " and we're a group admin too<br>\n";
-			else echo "no<br>\n";
-			if( $data->isAdmin( $orgid, $userdata['bzid'] ) ) 
-				$output .= " and we're an admin too<br>\n";
+		$orgs = array();
+		foreach( $data->getGroups( $userdata['bzid'] ) as $groupid ) {
+			// Generate array of orgid's->groupid's
+			$orgid = $data->getOrg( $groupid );
+			$orgs[$orgid] = array();
+
+			foreach( $data->getOrgGroups( $orgid ) as $groupid )
+				array_push( $orgs[$orgid], $groupid );
 		}
+
+		// Output orgs, groups, and associated links
+		$output .= "\t\t<table>\n";
+		foreach( $orgs as $orgid => $group_array ) {
+
+			// Org name & admin link (if applicable)
+			$output .= "\t\t\t<tr><td colspan=\"4\">";
+			if( $data->isGroupAdmin( $orgid, $userdata['bzid'] ) )
+				$output .= "<a href=\"?action=orgadmin&id=".$orgid."\">".
+						$data->getOrgName( $orgid )."</a>";
+			else
+				$output .= $data->getOrgName( $orgid );
+			$output .= "</td></tr>\n";
+
+			// Group name and links (if applicable)
+			foreach( $group_array as $groupid ) {
+				$output .= "\t\t\t<tr><td>&nbsp;</td>";
+				$output .= "<td>".$data->getGroupName( $groupid )."</td>";
+				$output .= ( $data->isGroupAdmin( $orgid, $userdata['bzid'] ) ?
+						"<td><a href=\"?action=groupadmin&id=".$groupid."\">".
+								"Settings</a></td>".
+						"<td><a href=\"?action=groupdelete&id=".$groupid."\">".
+								"Delete</a></td>" :
+						"<td colspan=\"2\">&nbsp;</td>" ).
+						"</tr>\n";
+			}
+
+			// Final row for creating a new group
+			if( $data->isGroupAdmin( $orgid, $userdata['bzid'] ) )
+				$output .= "\t\t\t<tr><td>&nbsp;</td><td colspan=\"2\"><a href=\"?creategroup&id=".
+						$orgid."\"><i>New Group</i></a></td></tr>\n";
+		}
+		// Final row for creating a new organization
+		$output .= "\t\t\t<tr><td colspan=\"3\"><a href=\"?createorg\"><i>New Organization</i></a></td></tr>\n";
+		$output .= "\t\t</table>\n";
 
 		break;
 }

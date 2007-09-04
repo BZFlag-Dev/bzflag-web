@@ -25,6 +25,9 @@ abstract class data {
 	// Function to retrieve member group id's by user id
 	abstract protected function getGroups( $id );
 
+	// Function to retrieve group id's by org id
+	abstract protected function getOrgGroups( $id );
+
 	// Function to retrieve group name by group id
 	abstract protected function getGroupname( $id );
 
@@ -36,26 +39,20 @@ abstract class data {
 	abstract protected function setGroupAdmin( $id );
 
 	// Function to remove a user from a group
-	// (will fail and return true if the user is the only  admin)
+	// (will fail and return true if the user is the only admin)
 	abstract protected function removeGroupAdmin( $id );
+
+	// Function to retrieve the orgid for a given groupid
+	abstract protected function getOrg( $id );
 
 	// Function to retrieve an organization's name by id
 	abstract protected function getOrgName( $id );
-
-	// Function to return a list of organizations a user may admin
-	abstract protected function getOrgAdminships( $id );
 
 	// Functions to check whether a user can admin an ORGANIZATION
 	// in the respective capacity
 	abstract protected function isUserAdmin( $orgid, $id );
 	abstract protected function isGroupAdmin( $orgid, $id );
 	abstract protected function isAdmin( $orgid, $id );
-
-	// Function to return a list of groups for a given organization
-	abstract protected function getOrgGroups( $id );
-
-	// Function to return a list of groups a user may admin
-	abstract protected function getGroupAdminships( $id );
 }
 
 ?>
