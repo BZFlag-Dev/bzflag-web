@@ -1,8 +1,6 @@
 <form enctype="application/x-www-form-urlencoded " action="{$config.paths.baseURL}upload.php" method="post" onsubmit="javascript:return validateForm();">
 
 <p>Currently only PNG files are supported. The maximum filesize per file is {$config.upload.maxFileSize} bytes, and you may upload {$config.upload.maxFiles} files at a time.</p>
-<p><input type="submit" value="Upload"></p>
-<fieldset id="erroroutput" style="display: none;"><legend>&nbsp;</legend></fieldset>
 <hr>
 
 {section start=0 loop=$config.upload.maxFiles name=uploads}
@@ -40,8 +38,10 @@
   <label>Username: </label><input type="text" disabled="disabled" value="{$user.username|escape:'htmlall'}"><br>
   <label for="uploaderfirstname">First Name: </label><input type="text" id="uploaderfirstname" name="uploaderfirstname"><br>
   <label for="uploaderfirstname">Last Name: </label><input type="text" id="uploaderlastname" name="uploaderlastname"><br>
-  <input type="checkbox" id="agreeall" name="agreeall"><label for="agreeall"> I agree that none of the above images violate the <a href="{$config.baseURL}tos.php" onclick="javascript:return showTOS();">Terms Of Service</a>.</label><br>
+  <input type="checkbox" id="agreetos" name="agreetos"><label id="agreetoslabel" for="agreetos"> I agree that none of the above images violate the <a href="{$config.baseURL}tos.php" onclick="javascript:return showTOS();">Terms Of Service</a>.</label><br>
+  <input type="checkbox" id="agreeaccurate" name="agreeaccurate"><label id="agreeaccuratelabel" for="agreeaccurate"> I agree that all the information on this form is accurate.</label><br>
   <input type="submit" value="Upload Images">
 </fieldset>
-
+<hr id="errorhr" style="display: none;">
+<fieldset id="erroroutput" style="display: none;"><legend>&nbsp;</legend></fieldset>
 </form>

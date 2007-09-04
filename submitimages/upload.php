@@ -6,6 +6,12 @@
   include('common.php');
   
   // Process user input
+  if (sizeof($_POST) > 0)
+  {
+    // Temporary sleep to simulate an upload
+    sleep(10);
+    die("TODO: Make this actually do something...");
+  }
 
 	
 	$javascripts = Array('upload.js');

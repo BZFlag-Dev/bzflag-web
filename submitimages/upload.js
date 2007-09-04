@@ -149,7 +149,7 @@ function validateForm()
       if (!agree.checked)
       {
         isError = true;
-        output += "<li>File "+(i+1)+": You did not agree to the <a href=\""+config_paths_baseURL+"tos.php\"  onclick=\"javascript:return showTOS();\">Terms Of Service</a></li>";
+        output += "<li>File "+(i+1)+": You did not agree to the <a href=\""+config_paths_baseURL+"tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a></li>";
         $('agreelabel'+i).className = 'invalid';
       }
       else $('agreelabel'+i).className = '';
@@ -165,19 +165,53 @@ function validateForm()
   } 
   
   // Check uploader portion
+  var uploaderfirstname = $('uploaderfirstname');
+  var uploaderlastname = $('uploaderlastname');
+  var agreetos = $('agreetos');
+  var agreeaccurate = $('agreeaccurate');
+  
+  // Check uploader first name
+  if (uploaderfirstname.value.length == 0)
+  {
+    isError = true;
+    output += "<li>Uploader information: No first name specified.</li>";
+    uploaderfirstname.className = 'invalid';
+  }
+  else uploaderfirstname.className = '';
+  
+  // Check uploader last name
+  if (uploaderlastname.value.length == 0)
+  {
+    isError = true;
+    output += "<li>Uploader information: No last name specified.</li>";
+    uploaderlastname.className = 'invalid';
+  }
+  else uploaderlastname.className = '';
+  
+  // Check overall TOS agreement
+  if (!agreetos.checked)
+  {
+    isError = true;
+    output += "<li>Uploader information: You did not agree to the <a href=\""+config_paths_baseURL+"tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a></li>";
+    $('agreetoslabel').className = 'invalid';
+  }
+  else $('agreetoslabel').className = '';
+  
+  // Check agreement to accuracy
+  if (!agreeaccurate.checked)
+  {
+    isError = true;
+    output += "<li>Uploader information: You did not agree to the accuracy of the information on this form.</li>";
+    $('agreeaccuratelabel').className = 'invalid';
+  }
+  else $('agreeaccuratelabel').className = '';
   
   var erroroutput = $('erroroutput');
+  if (isError) erroroutput.innerHTML = "<legend>Errors</legend><p>The following errors were detected. Please correct them and try again.<ul>"+output+"</ul></p>";
+  else erroroutput.innerHTML = '<legend>Please Wait...</legend><p>We are currently uploading your images. This can take some time depending on the speed your Internet.</p>';
   
-  if (isError) {
-    //alert("One or more errors were detected. Please correct them and try again.");
-    erroroutput.innerHTML = "<legend><a name=\"errors\">Errors</a></legend><p>The following errors were detected:<ul>"+output+"</ul></p>";
-    erroroutput.style.display = '';
-  }
-  else
-  {
-    erroroutput.innerHTML = '<legend>&nbsp;</legend>';
-    erroroutput.style.display = 'none';
-  }
-    
+  erroroutput.style.display = '';
+  $('errorhr').style.display = '';
+  
   return !isError;
 }
