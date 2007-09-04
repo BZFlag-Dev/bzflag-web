@@ -1,4 +1,4 @@
-<form enctype="application/x-www-form-urlencoded " action="{$config.paths.baseURL}upload.php" method="post" onsubmit="javascript:return validateForm();">
+<form enctype="multipart/form-data" action="{$config.paths.baseURL}upload.php" method="post" onsubmit="javascript:return validateForm();">
 
 <p>Currently only PNG files are supported. The maximum filesize per file is {$config.upload.maxFileSize} bytes, and you may upload {$config.upload.maxFiles} files at a time.</p>
 <hr>
@@ -7,7 +7,7 @@
 <h2>File {$smarty.section.uploads.index_next}</h2>
 <fieldset>
   <legend>File Information</legend>
-  <label for="file{$smarty.section.uploads.index}">Image File: </label><input type="file" accept="image/png" id="file{$smarty.section.uploads.index}" name="file[{$smarty.section.uploads.index}]">
+  <label for="file{$smarty.section.uploads.index}">Image File: </label><input type="file" id="file{$smarty.section.uploads.index}" name="file[{$smarty.section.uploads.index}]">
 </fieldset>
 <fieldset>
   <legend>Author Information</legend>
