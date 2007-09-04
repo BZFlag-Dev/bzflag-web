@@ -52,6 +52,9 @@ function showTOS()
 
 function validateForm()
 {
+  // Error output
+  var output = "";
+  
   // If there was an error, this will be set to true. We won't bail out of the
   // script until everything was validated so that we can highlight every error
   var isError = false;
@@ -79,6 +82,7 @@ function validateForm()
       // Length is 0, they didn't fill in a value
       if (authorname.value.length == 0) {
         isError = true;
+        output += "File "+(i+1)+": No author specified.<br>";
         authorname.className = 'invalid';
       }
       else authorname.className = '';
@@ -90,7 +94,9 @@ function validateForm()
       if (licenseselector.value == 0)
       {
         isError = true;
+        output += "File "+(i+1)+": Invalid license selected.<br>";
         licenseselector.className = 'invalid';
+        
         // Open a popup, but only once per validation
         if (!shownPermissionPage) {
           var istolethis = window.open(config_paths_baseURL+'permission.php', 'istolethis');
@@ -114,26 +120,18 @@ function validateForm()
         if (otherlicensename.value.length == 0)
         {
           isError = true;
+          output += "File "+(i+1)+": Other OSI-Approved license selected, but no license name entered.<br>";
           licenseselector.className = 'invalid';
           otherlicensename.className = 'invalid';
         }
         else otherlicensename.className = '';
-        
-        // If there is no license name, mark the selector and the name invalid
-        if (otherlicensename.value.length == 0)
-        {
-          isError = true;
-          licenseselector.className = 'invalid';
-          otherlicensename.className = 'invalid';
-        }
-        else otherlicensename.className = '';
-        
         
         // If there is no license url or text, mark the selector and the url and
         // text fields invalid
         if (otherlicenseurl.value.length == 0 && otherlicensetext.value.length == 0)
         {
           isError = true;
+          output += "File "+(i+1)+": Other OSI-Approved license selected, but no license URL or license text entered.<br>";
           licenseselector.className = 'invalid';
           otherlicenseurl.className = 'invalid';
           otherlicensetext.className = 'invalid';
@@ -151,6 +149,7 @@ function validateForm()
       if (!agree.checked)
       {
         isError = true;
+        output += "File "+(i+1)+": You did not agree to the <a href=\""+config_paths_baseURL+"tos.php\"  onclick=\"javascript:return showTOS();\">Terms Of Service</a><br>";
         $('agreelabel'+i).className = 'invalid';
       }
       else $('agreelabel'+i).className = '';
@@ -161,14 +160,24 @@ function validateForm()
   // If the user didn't fill in any of the upload boxes, we have nothing to do
   if (imageUploads == 0)
   {
-    alert("Error: You did not choose to upload any files.");
+    output += "No files were specified for upload.<br>";
     isError = true;
   } 
   
   // Check uploader portion
   
+  var erroroutput = $('erroroutput');
   
-  if (isError) alert("One or more errors were detected. Please correct them and try again.");
-
+  if (isError) {
+    //alert("One or more errors were detected. Please correct them and try again.");
+    erroroutput.innerHTML = "<legend><a name=\"errors\">Errors</a</legend><p>"+output+"</p>";
+    erroroutput.style.display = '';
+  }
+  else
+  {
+    erroroutput.innerHTML = '';
+    erroroutput.style.display = 'none';
+  }
+    
   return !isError;
 }

@@ -47,6 +47,8 @@ ul {
 hr {
   margin: 0.5em -0.5em;
   clear: both;
+  background: green url('std_ground.jpg') repeat fixed;
+  height: 10px;
 }
 
 fieldset {
@@ -145,6 +147,12 @@ ul#navigation a:hover, ul#navigation a:active,
   color: black;
   background-color: #DDD;
   padding: 0.5em 1em;
+}
+
+#erroroutput {
+  border: 1px solid gray;
+  padding: 0.5em 0.5em 0.5em;
+  margin-bottom: 1em;
 }
 
 #footer {
