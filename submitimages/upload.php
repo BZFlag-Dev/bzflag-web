@@ -8,9 +8,76 @@
   // Process user input
   if (sizeof($_POST) > 0)
   {
-    // Temporary sleep to simulate an upload
-    sleep(10);
-    die("TODO: Make this actually do something...");
+  
+    // Temporary sleep to simulate a larger upload
+    sleep(2);
+  
+    $uploadErrors = Array();
+  
+    // Read any input from our form
+    for ($i = 0; $i < $config['upload']['maxFiles']; $i++)
+    {
+      // If they specified something in the upload box, continue checking this
+      // file.
+      if(empty($_FILES['file']['name'][$i])) { echo "No file found for $i<br>"; continue; }
+      
+      $input['files'][$i]['file'] = Array();
+      $input['files'][$i]['file']['filename'] = $_FILES['file']['name'][$i];
+      $input['files'][$i]['file']['type'] = $_FILES['file']['type'][$i];
+      $input['files'][$i]['file']['tmpfilename'] = $_FILES['file']['tmp_name'][$i];
+      $input['files'][$i]['file']['error'] = $_FILES['file']['error'][$i];
+      $input['files'][$i]['file']['filesize'] = $_FILES['file']['size'][$i];
+
+      if (isset($_POST['authorname'][$i]))
+        $input['files'][$i]['authorname'] = $_POST['authorname'][$i];
+      
+      if (isset($_POST['licenseselector'][$i]))
+        $input['files'][$i]['licenseselector'] = $_POST['licenseselector'][$i];
+      
+      if (isset($_POST['otherlicensename'][$i]))
+        $input['files'][$i]['otherlicensename'] = $_POST['otherlicensename'][$i];
+        
+      if (isset($_POST['otherlicenseurl'][$i]))
+        $input['files'][$i]['otherlicenseurl'] = $_POST['otherlicenseurl'][$i];
+      
+      if (isset($_POST['otherlicensetext'][$i]))
+        $input['files'][$i]['otherlicensetext'] = $_POST['otherlicensetext'][$i];
+      
+      if (isset($_POST['confirm'][$i]))
+        $input['files'][$i]['confirm'] = $_POST['confirm'][$i];
+    }
+    
+    if (isset($_POST['uploaderfirstname']))
+      $input['uploaderfirstname'] = $_POST['uploaderfirstname'];
+    
+    if (isset($_POST['uploaderlastname']))
+      $input['uploaderlastname'] = $_POST['uploaderlastname'];
+    
+    if (isset($_POST['confirmtos']))
+      $input['confirmtos'] = $_POST['confirmtos'];
+    
+    if (isset($_POST['confirmaccurate']))
+      $input['confirmaccurate'] = $_POST['confirmaccurate'];
+  }
+  
+  // Process input and generate any errors
+  
+  if (sizeof($_POST) > 0)
+  {
+    // Start validating input
+    
+    // Temporary debug output
+    if (true) {
+      echo "<pre>";
+      echo "\n\nInput:\n\n";
+      print_r($input);
+      echo "\n\nuploadErrors:\n\n";
+      print_r($uploadErrors);
+      echo "\n\nFiles:\n\n";
+      print_r($_FILES);
+      echo "</pre>";
+      exit;
+    }
   }
 
 	$page['title'] = 'Upload Images';

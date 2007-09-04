@@ -38,6 +38,9 @@
     $user = false;
   }
   
+  // Input
+  $input = Array();
+  
   // Used to trigger messages
   $messages = Array();
     
@@ -58,6 +61,7 @@
     
     $tpl->assign_by_ref('config', $config);
     $tpl->assign_by_ref('user', $user);
+    $tpl->assign_by_ref('input', $input);
     $tpl->assign_by_ref('messages', $messages);
     $tpl->assign_by_ref('page', $page);
   }

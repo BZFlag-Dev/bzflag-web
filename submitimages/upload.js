@@ -144,15 +144,15 @@ function validateForm()
       } // else if (licenseselector.value == 255)
       else licenseselector.className = '';
       
-      // They must also a agree to the TOS
-      var agree = $('agree'+i);
-      if (!agree.checked)
+      // They must also a confirm their image follows the TOS
+      var confirm = $('confirm'+i);
+      if (!confirm.checked)
       {
         isError = true;
-        output += "<li>File "+(i+1)+": You did not agree to the <a href=\""+config_paths_baseURL+"tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a></li>";
-        $('agreelabel'+i).className = 'invalid';
+        output += "<li>File "+(i+1)+": You did not confirm that your images follows the <a href=\""+config_paths_baseURL+"tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a></li>";
+        $('confirmlabel'+i).className = 'invalid';
       }
-      else $('agreelabel'+i).className = '';
+      else $('confirmlabel'+i).className = '';
         
     } // if (file.value.length > 0)
   }
@@ -167,8 +167,8 @@ function validateForm()
   // Check uploader portion
   var uploaderfirstname = $('uploaderfirstname');
   var uploaderlastname = $('uploaderlastname');
-  var agreetos = $('agreetos');
-  var agreeaccurate = $('agreeaccurate');
+  var confirmtos = $('confirmtos');
+  var confirmaccurate = $('confirmaccurate');
   
   // Check uploader first name
   if (uploaderfirstname.value.length == 0)
@@ -188,23 +188,23 @@ function validateForm()
   }
   else uploaderlastname.className = '';
   
-  // Check overall TOS agreement
-  if (!agreetos.checked)
+  // Check overall TOS confirmation
+  if (!confirmtos.checked)
   {
     isError = true;
-    output += "<li>Uploader information: You did not agree to the <a href=\""+config_paths_baseURL+"tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a></li>";
-    $('agreetoslabel').className = 'invalid';
+    output += "<li>Uploader information: You did not confirm that your images follows the <a href=\""+config_paths_baseURL+"tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a></li>";
+    $('confirmtoslabel').className = 'invalid';
   }
-  else $('agreetoslabel').className = '';
+  else $('confirmtoslabel').className = '';
   
-  // Check agreement to accuracy
-  if (!agreeaccurate.checked)
+  // Check confirmation to accuracy
+  if (!confirmaccurate.checked)
   {
     isError = true;
-    output += "<li>Uploader information: You did not agree to the accuracy of the information on this form.</li>";
-    $('agreeaccuratelabel').className = 'invalid';
+    output += "<li>Uploader information: You did not confirm the accuracy of the information on this form.</li>";
+    $('confirmaccuratelabel').className = 'invalid';
   }
-  else $('agreeaccuratelabel').className = '';
+  else $('confirmaccuratelabel').className = '';
   
   var erroroutput = $('erroroutput');
   if (isError) erroroutput.innerHTML = "<legend>Errors</legend><p>The following errors were detected. Please correct them and try again.<ul>"+output+"</ul></p>";
