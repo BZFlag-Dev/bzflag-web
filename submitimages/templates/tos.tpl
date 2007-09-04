@@ -6,11 +6,11 @@
 
 <p>We do not allow unlawful, harassing, libelous, privacy invading, abusive, threatening, harmful, vulgar, obscene, indecent, tortious, or otherwise objectionable content, or content that infringes or may infringe the intellectual property or other rights of another.</p>
 
-<p>The moderators and administrators of the BZFlag Image Uploader service reserve the right to deny or remove any uploaded files and any reference to such files at any time without notice or warning.</p>
+<p>The moderators and administrators of the {$config.site.title} service reserve the right to deny or remove any uploaded files and any reference to such files at any time without notice or warning.</p>
 
 <h1>Licensing</h1>
 
-<p>By uploading any files to the BZFlag Image Uploader, you agree to the following terms:</p>
+<p>By uploading any files to the {$config.site.title}, you agree to the following terms:</p>
 <h2>If you own all rights to the file:</h2>
 <p>You may upload the file under an OSI-approved license of your choice.</p>
 <h2>If you do not own the file:</h2>

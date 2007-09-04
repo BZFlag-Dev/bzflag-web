@@ -18,6 +18,7 @@
   $config['paths']['public'] = $config['paths']['baseDirectory'].'../';
   
   
+  $config['site']['title'] = "BZFlag Image Uploader";
   
   // When this is set to true, errors, warnings, and notices in PHP will
   // be shown and/or logged, depending on the php.ini configuration.

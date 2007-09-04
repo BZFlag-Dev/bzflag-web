@@ -13,8 +13,8 @@
     die("TODO: Make this actually do something...");
   }
 
-	
-	$javascripts = Array('upload.js');
+	$page['title'] = 'Upload Images';
+	$page['javascripts'] = Array('upload.js');
 	
 	// Render the page
 	$tpl->display('header.tpl');

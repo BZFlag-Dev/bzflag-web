@@ -3,8 +3,9 @@
   define('USING_SMARTY', true);
 
   include('common.php');
-  
   include($config['paths']['includes'].'checktoken.php');
+  
+  $page['title'] = 'Login';
 	
 	$results = validate_token($_GET['token'], urldecode($_GET['callsign']), Array($config['imageModeratorGroup']), false);
 	

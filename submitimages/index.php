@@ -5,7 +5,7 @@
 
   include('common.php');
   
-
+	$page['title'] = false;
 	
 	
 	// Render the page

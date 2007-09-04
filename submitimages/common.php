@@ -40,9 +40,9 @@
   
   // Used to trigger messages
   $messages = Array();
-  
-  // Used to include JavaScript source files for specific pages
-  $javascripts = Array();
+    
+  // Per-page information
+  $page = Array();
   
   // Smarty Template System
   if (defined('USING_SMARTY') && USING_SMARTY)
@@ -59,7 +59,7 @@
     $tpl->assign_by_ref('config', $config);
     $tpl->assign_by_ref('user', $user);
     $tpl->assign_by_ref('messages', $messages);
-    $tpl->assign_by_ref('javascripts', $javascripts);
+    $tpl->assign_by_ref('page', $page);
   }
 
 ?>

@@ -1,4 +1,4 @@
-<h1>Permission to use material</h1>
+<h1>Permission to Use Content</h1>
 
 <p>Some users have misconceptions about copyright and permission to use other peoples' content. This page is here to help correct a few of these misconceptions.</p>
 

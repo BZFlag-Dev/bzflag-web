@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01//EN' 'http://www.w3.org/TR/html4/strict.dtd'>
 <html>
 <head>
-<title>{$title}</title>
+<title>{$config.site.title}{if $page.title} :: {$page.title}{/if}</title>
 <link rel="stylesheet" type="text/css" href="bztheme.css">
 {if $redirect}
 <meta http-equiv="refresh" content="{$redirect.delay};URL={$redirect.url}">
@@ -22,7 +22,7 @@
 </head>
 <body>
 
-  <div id="header"><a href="{$config.paths.baseURL}"><img id="logo" src="logo.png" alt="BZFlag Image Uploader"></a> 
+  <div id="header"><a href="{$config.paths.baseURL}"><img id="logo" src="logo.png" alt="{$config.site.title}"></a> 
     <ul id="navigation">
 {if !$user}
     <li><a href="http://my.bzflag.org/weblogin.php?action=weblogin&amp;url={$config.paths.baseURL|escape:'url'}login.php%3Ftoken%3D%25TOKEN%25%26callsign%3D%25USERNAME%25">Log In</a></li>
@@ -34,6 +34,7 @@
 {  /if}
     <li><a href="{$config.paths.baseURL}logout.php">Logout</a></li>
 {/if}
+    <li><a href="{$config.paths.baseURL}tos.php">Terms Of Service</a></li>
     </ul>
   </div>
 

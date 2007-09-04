@@ -4,6 +4,8 @@
 
   include('common.php');
   
+  $page['title'] = 'Logout';
+  
   // Clear away the session values
   unset($_SESSION);
   
