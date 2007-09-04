@@ -2,7 +2,7 @@
 
 <p>Currently only PNG files are supported. The maximum filesize per file is {$config.upload.maxFileSize} bytes, and you may upload {$config.upload.maxFiles} files at a time.</p>
 <p><input type="submit" value="Upload"></p>
-<fieldset id="erroroutput" style="display: none;"></fieldset>
+<fieldset id="erroroutput" style="display: none;"><legend>&nbsp;</legend></fieldset>
 <hr>
 
 {section start=0 loop=$config.upload.maxFiles name=uploads}

@@ -82,7 +82,7 @@ function validateForm()
       // Length is 0, they didn't fill in a value
       if (authorname.value.length == 0) {
         isError = true;
-        output += "File "+(i+1)+": No author specified.<br>";
+        output += "<li>File "+(i+1)+": No author specified.</li>";
         authorname.className = 'invalid';
       }
       else authorname.className = '';
@@ -94,7 +94,7 @@ function validateForm()
       if (licenseselector.value == 0)
       {
         isError = true;
-        output += "File "+(i+1)+": Invalid license selected.<br>";
+        output += "<li>File "+(i+1)+": Invalid license selected.</li>";
         licenseselector.className = 'invalid';
         
         // Open a popup, but only once per validation
@@ -120,7 +120,7 @@ function validateForm()
         if (otherlicensename.value.length == 0)
         {
           isError = true;
-          output += "File "+(i+1)+": Other OSI-Approved license selected, but no license name entered.<br>";
+          output += "<li>File "+(i+1)+": Other OSI-Approved license selected, but no license name entered.</li>";
           licenseselector.className = 'invalid';
           otherlicensename.className = 'invalid';
         }
@@ -131,7 +131,7 @@ function validateForm()
         if (otherlicenseurl.value.length == 0 && otherlicensetext.value.length == 0)
         {
           isError = true;
-          output += "File "+(i+1)+": Other OSI-Approved license selected, but no license URL or license text entered.<br>";
+          output += "<li>File "+(i+1)+": Other OSI-Approved license selected, but no license URL or license text entered.</li>";
           licenseselector.className = 'invalid';
           otherlicenseurl.className = 'invalid';
           otherlicensetext.className = 'invalid';
@@ -149,7 +149,7 @@ function validateForm()
       if (!agree.checked)
       {
         isError = true;
-        output += "File "+(i+1)+": You did not agree to the <a href=\""+config_paths_baseURL+"tos.php\"  onclick=\"javascript:return showTOS();\">Terms Of Service</a><br>";
+        output += "<li>File "+(i+1)+": You did not agree to the <a href=\""+config_paths_baseURL+"tos.php\"  onclick=\"javascript:return showTOS();\">Terms Of Service</a></li>";
         $('agreelabel'+i).className = 'invalid';
       }
       else $('agreelabel'+i).className = '';
@@ -160,7 +160,7 @@ function validateForm()
   // If the user didn't fill in any of the upload boxes, we have nothing to do
   if (imageUploads == 0)
   {
-    output += "No files were specified for upload.<br>";
+    output += "<li>No files were specified for upload.</li>";
     isError = true;
   } 
   
@@ -170,12 +170,12 @@ function validateForm()
   
   if (isError) {
     //alert("One or more errors were detected. Please correct them and try again.");
-    erroroutput.innerHTML = "<legend><a name=\"errors\">Errors</a</legend><p>"+output+"</p>";
+    erroroutput.innerHTML = "<legend><a name=\"errors\">Errors</a></legend><p>The following errors were detected:<ul>"+output+"</ul></p>";
     erroroutput.style.display = '';
   }
   else
   {
-    erroroutput.innerHTML = '';
+    erroroutput.innerHTML = '<legend>&nbsp;</legend>';
     erroroutput.style.display = 'none';
   }
     
