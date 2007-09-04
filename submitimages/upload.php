@@ -21,6 +21,7 @@
       // file.
       if(empty($_FILES['file']['name'][$i])) { echo "No file found for $i<br>"; continue; }
       
+      // Pull the information from the $_FILES array and place it into our input
       $input['files'][$i]['file'] = Array();
       $input['files'][$i]['file']['filename'] = $_FILES['file']['name'][$i];
       $input['files'][$i]['file']['type'] = $_FILES['file']['type'][$i];
@@ -28,34 +29,46 @@
       $input['files'][$i]['file']['error'] = $_FILES['file']['error'][$i];
       $input['files'][$i]['file']['filesize'] = $_FILES['file']['size'][$i];
 
+      // Author name of this file (REQUIRED)
       if (isset($_POST['authorname'][$i]))
         $input['files'][$i]['authorname'] = $_POST['authorname'][$i];
       
+      // Selected license (REQUIRED)
+      // 0 == "I stole this"
+      // 255 == "Other OSI-Approved"
       if (isset($_POST['licenseselector'][$i]))
         $input['files'][$i]['licenseselector'] = $_POST['licenseselector'][$i];
       
+      // If licenseselector is 255, we need this
       if (isset($_POST['otherlicensename'][$i]))
         $input['files'][$i]['otherlicensename'] = $_POST['otherlicensename'][$i];
-        
+      
+      // If licenseselector is 255, we need this and/or otherlicensetext
       if (isset($_POST['otherlicenseurl'][$i]))
         $input['files'][$i]['otherlicenseurl'] = $_POST['otherlicenseurl'][$i];
       
+      // If licenseselector is 255, we need this and/or otherlicenseurl
       if (isset($_POST['otherlicensetext'][$i]))
         $input['files'][$i]['otherlicensetext'] = $_POST['otherlicensetext'][$i];
       
+      // This is the confirmation that this image does not violate the TOS (REQUIRED)
       if (isset($_POST['confirm'][$i]))
         $input['files'][$i]['confirm'] = $_POST['confirm'][$i];
-    }
+    } // for ($i = 0; $i < $config['upload']['maxFiles']; $i++)
     
+    // Uploader first name (REQUIRED)
     if (isset($_POST['uploaderfirstname']))
       $input['uploaderfirstname'] = $_POST['uploaderfirstname'];
     
+    // Uploader last name (REQUIRED)
     if (isset($_POST['uploaderlastname']))
       $input['uploaderlastname'] = $_POST['uploaderlastname'];
     
+    // Confirmation that none of the images violate the TOS (REQUIRED)
     if (isset($_POST['confirmtos']))
       $input['confirmtos'] = $_POST['confirmtos'];
     
+    // Confirmation that all of the form information is accurate
     if (isset($_POST['confirmaccurate']))
       $input['confirmaccurate'] = $_POST['confirmaccurate'];
   }
