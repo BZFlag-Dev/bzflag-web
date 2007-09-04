@@ -70,26 +70,68 @@
       // If no file specified, go to the next
       if(!isset($input['files'][$i]['file'])) continue;
       
-      // If the file error code is not UPLOAD_ERR_OK, there was an error
-      // during the upload.
-      if ($input['files'][$i]['file']['error'] !== UPLOAD_ERR_OK)
-      {
-        switch($input['files'][$i]['file']['error'])
-        {
+      // Various error codes for file uploads
+      // UPLOAD_ERR_OK
+      //     Value: 0; There is no error, the file uploaded with success.
+      // UPLOAD_ERR_INI_SIZE
+      //     Value: 1; The uploaded file exceeds the upload_max_filesize directive in php.ini.
+      // UPLOAD_ERR_FORM_SIZE
+      //     Value: 2; The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.
+      // UPLOAD_ERR_PARTIAL
+      //     Value: 3; The uploaded file was only partially uploaded.
+      // UPLOAD_ERR_NO_FILE
+      //     Value: 4; No file was uploaded.
+      // UPLOAD_ERR_NO_TMP_DIR
+      //     Value: 6; Missing a temporary folder. Introduced in PHP 4.3.10 and PHP 5.0.3.
+      // UPLOAD_ERR_CANT_WRITE
+      //     Value: 7; Failed to write file to disk. Introduced in PHP 5.1.0.
+      // UPLOAD_ERR_EXTENSION
+      //     Value: 8; File upload stopped by extension. Introduced in PHP 5.2.0.
+      
+      
+      // First check if the file was too large, either for PHP or for our config
+      if (
           // File exceeded maximum upload size defined in php.ini (reliable)
-          case UPLOAD_ERR_INI_SIZE:
+          $input['files'][$i]['file']['error'] == UPLOAD_ERR_INI_SIZE ||
           // File exceeded MAX_FILE_SIZE value from form (unreliable)
-          case UPLOAD_ERR_FORM_SIZE:
-            $uploadErrors['files'][$i][] = "The file exceeded the maximum allowed file size.";
-            break;
-          // Other errors the user doesn't need to know details about
-          default:
-            $uploadErrors['files'][$i][] = "An error has occured during file upload. Please try again. If problem persists, please contact an administrator.";
-            break;
-        }
+          $input['files'][$i]['file']['error'] == UPLOAD_ERR_FORM_SIZE ||
+          // File exceeded configuration setting (reliable)
+          $input['files'][$i]['file']['filesize'] > $config['upload']['maxFileSize']
+         )
+      {
+        $uploadErrors['files'][$i][] = "The file exceeded the maximum allowed file size.";
+        
+        // If the temporary name is set, and it is found to be an uploaded file,
+        // delete it
+        if (!empty($input['files'][$i]['file']['tmpfilename']) && is_uploaded_file($input['files'][$i]['file']['tmpfilename']))
+          unlink($input['files'][$i]['file']['tmpfilename']);
       }
-      else if ($input['files'][$i]['file']['filesize'] > $config['upload']['maxFileSize'])
-          $uploadErrors['files'][$i][] = "The file exceeded the maximum allowed file size.";
+      
+      // If the file error code is not UPLOAD_ERR_OK, there was an error
+      // during the upload. We already caught errors for files that are too
+      // large, so this is other errors.
+      else if ($input['files'][$i]['file']['error'] !== UPLOAD_ERR_OK)
+      {
+        // Other errors the user doesn't need to know about
+        $uploadErrors['files'][$i][] = "An error has occured during file upload. Please try again. If problem persists, please contact an administrator.";
+        
+        // If the temporary name is set, and it is found to be an uploaded file,
+        // delete it
+        if (!empty($input['files'][$i]['file']['tmpfilename']) && is_uploaded_file($input['files'][$i]['file']['tmpfilename']))
+          unlink($input['files'][$i]['file']['tmpfilename']);
+      }
+      
+      // Technically this shouldn't get this far, but just to be safe. Verify
+      // that the file is indeed an uploaded file. This helps prevent a
+      // malicious user from gaining access to system files by exploiting the
+      // upload form.
+      else if (!is_uploaded_file($input['files'][$i]['file']['tmpfilename']))
+      {
+        $uploadErrors['files'][$i][] = "An error has occured during file upload. Please try again. If problem persists, please contact an administrator.";
+        
+        // Don't unlink() the file because it wasn't something the user actually
+        // uploaded. For instance, it could be a system file.
+      }
     }
     
     // Temporary debug output
