@@ -64,7 +64,33 @@
   
   if (sizeof($_POST) > 0)
   {
-    // Start validating input
+    // Validate each file and it's associated information
+    for ($i = 0; $i < $config['upload']['maxFiles']; $i++)
+    {
+      // If no file specified, go to the next
+      if(!isset($input['files'][$i]['file'])) continue;
+      
+      // If the file error code is not UPLOAD_ERR_OK, there was an error
+      // during the upload.
+      if ($input['files'][$i]['file']['error'] !== UPLOAD_ERR_OK)
+      {
+        switch($input['files'][$i]['file']['error'])
+        {
+          // File exceeded maximum upload size defined in php.ini (reliable)
+          case UPLOAD_ERR_INI_SIZE:
+          // File exceeded MAX_FILE_SIZE value from form (unreliable)
+          case UPLOAD_ERR_FORM_SIZE:
+            $uploadErrors['files'][$i][] = "The file exceeded the maximum allowed file size.";
+            break;
+          // Other errors the user doesn't need to know details about
+          default:
+            $uploadErrors['files'][$i][] = "An error has occured during file upload. Please try again. If problem persists, please contact an administrator.";
+            break;
+        }
+      }
+      else if ($input['files'][$i]['file']['filesize'] > $config['upload']['maxFileSize'])
+          $uploadErrors['files'][$i][] = "The file exceeded the maximum allowed file size.";
+    }
     
     // Temporary debug output
     if (true) {
