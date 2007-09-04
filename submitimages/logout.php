@@ -15,6 +15,9 @@
 	// Set $user to false
 	$user = false;
 	
+	// Redirect back to the home page after 5 seconds
+	$tpl->assign('redirect', Array('url' => $config['paths']['baseURL'], 'delay' => 5));
+	
 	
 	// Render the page
 	$tpl->display('header.tpl');
