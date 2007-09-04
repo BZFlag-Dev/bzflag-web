@@ -15,7 +15,7 @@
   config_licenses[{$licenseid}] = ['{$license.name}', '{$license.url}'];
 {/foreach}
 </script>
-{foreach from=$javascripts item=javascript}
+{foreach from=$page.javascripts item=javascript}
 <script type="text/javascript" src="{$javascript}"></script>
 {/foreach}
 
