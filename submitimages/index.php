@@ -1,10 +1,10 @@
 <?php
   
+  // Include common.php w/ Smarty
   define('USING_SMARTY', true);
-  define('USING_DATABASE', true);
-
   include('common.php');
   
+  // Set the page title
 	$page['title'] = false;
 	
 	

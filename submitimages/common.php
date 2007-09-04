@@ -6,15 +6,15 @@
   // If not, kill the script now
   else
     die("Unable to load configuration file.");
-    
-  // Start a PHP session
   
+  // Configure which errors to display and/or log
+  error_reporting(E_ALL);
   
   // Show PHP errors if configured
   if ($config['enablePHPErrors'])
-    error_reporting(E_ALL);
+    ini_set('display_errors', true);
   else
-    error_reporting(0);
+    ini_set('display_errors', false);
   
   
     
@@ -53,13 +53,20 @@
     // Load Smarty
     require('./includes/smarty/Smarty.class.php');
     
-    //Set basic Smarty options
+    // Create a new Smarty object
     $tpl = new Smarty();
+    // This is where uncompiled template files are located
     $tpl->template_dir = 'templates';
+    // This is where compiled templates are stored
     $tpl->compile_dir = 'templates_c';
-    
-    
-    $tpl->assign_by_ref('config', $config);
+
+    // Assign the configuration to Smarty
+    // TODO: Once we have DB support, remove those from the config array
+    // before assigning this to Smarty.
+    $tpl->assign('config', $config);
+        
+    // Assign several variables by reference, since they may/will change during
+    // script execution
     $tpl->assign_by_ref('user', $user);
     $tpl->assign_by_ref('input', $input);
     $tpl->assign_by_ref('messages', $messages);

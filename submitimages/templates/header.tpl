@@ -26,7 +26,7 @@
     <ul id="navigation">
     <li><a href="{$config.paths.baseURL}">Home</a></li>
 {if !$user}
-    <li><a href="http://my.bzflag.org/weblogin.php?action=weblogin&amp;url={$config.paths.baseURL|escape:'url'}login.php%3Ftoken%3D%25TOKEN%25%26callsign%3D%25USERNAME%25">Log In</a></li>
+    <li><a href="http://my.bzflag.org/weblogin.php?action=weblogin&amp;url={$config.paths.baseURL|escape:'url'}login.php%3Ftoken%3D%25TOKEN%25%26username%3D%25USERNAME%25">Log In</a></li>
 {else}
     <li><a href="{$config.paths.baseURL}upload.php">Upload Images</a></li>
 {  if $user.moderator}

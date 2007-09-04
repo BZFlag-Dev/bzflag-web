@@ -1,9 +1,10 @@
 <?php
 
+  // Include common.php w/ Smarty
   define('USING_SMARTY', true);
-
   include('common.php');
   
+  // Set the page title
   $page['title'] = 'Logout';
   
   // Clear away the session values
@@ -17,7 +18,6 @@
 	
 	// Redirect back to the home page after 5 seconds
 	$tpl->assign('redirect', Array('url' => $config['paths']['baseURL'], 'delay' => 5));
-	
 	
 	// Render the page
 	$tpl->display('header.tpl');
