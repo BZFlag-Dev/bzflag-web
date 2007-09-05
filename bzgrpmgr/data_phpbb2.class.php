@@ -18,6 +18,9 @@ phpBB-style MySQL database for users and a custom MySQL for
 groups.
 */
 
+// FIXME this file is now officialy out-of-date with data.class.php
+// FIXME make the return value of a function consistent
+
 require_once( "data.class.php" );
 
 class data_phpbb2 extends data {
@@ -85,8 +88,32 @@ class data_phpbb2 extends data {
 		return "";
 	}
 
+	// Function to create a new group in the specified organizations
+	public function creategroup( $groupname, $desc, $orgid ) {
+		$sql = "SELECT groupid FROM groups WHERE ".
+				"groupname=\"".$groupname."\" AND ".
+				"orgid=".$orgid;
+
+		if( $result && mysql_num_rows( $result ) > 0 )
+			return false;
+
+		$sql = "INSERT INTO groups (groupname,desc,orgid) ".
+				"VALUES (\"".$groupname."\",\"".$desc."\",".$orgid.")";
+echo $sql."<br>\n";
+/*		mysql_query( $sql, $this->main_mysql_connection );
+
+		$sql = "SELECT orgid FROM organizations WHERE ".
+				"orgname=\"".$name."\"";
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 &&
+				$toReturn = mysql_result( $result, 0) )
+			return $toReturn;
+
+		return 0;*/
+	}
+
 	// Function to retrieve member group id's by user id
-	function getGroups( $id ) {
+	public function getGroups( $id ) {
 		$toReturn = array();
 
 		$sql = "SELECT groupid FROM group_members WHERE userid=".
@@ -146,6 +173,26 @@ class data_phpbb2 extends data {
 		return false;
 	}
 
+	// Function to create an organization by name
+	public function createOrg( $name, $userid ) {
+		// Don't create duplicate groups
+		if( $this->orgExists( $name ) )
+			return true;
+
+		$sql = "INSERT INTO organizations (orgname,contact) ".
+				"VALUES (\"".$name."\",".$userid.")";
+		mysql_query( $sql, $this->main_mysql_connection );
+
+		$sql = "SELECT orgid FROM organizations WHERE ".
+				"orgname=\"".$name."\"";
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 &&
+				$toReturn = mysql_result( $result, 0) )
+			return $toReturn;
+
+		return 0;
+	}
+
 	// Function to retrieve the orgid for a given groupid
 	public function getOrg( $id ) {
 		$sql = "SELECT orgid FROM groups WHERE groupid=".$id;
@@ -155,6 +202,17 @@ class data_phpbb2 extends data {
 			return $toReturn;
 
 		return "";
+	}
+
+	// Function to check if a given organization exists
+	public function orgExists( $name ) {
+		$sql = "SELECT orgid FROM organizations WHERE ".
+				"orgname=\"".$name."\"";
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 )
+			return true;
+
+		return false;
 	}
 
 	// Function to retrieve an organization's name by id

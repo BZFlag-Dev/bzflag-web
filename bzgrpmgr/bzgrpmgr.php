@@ -27,8 +27,43 @@ $output = "";
 // Auth section
 
 // Action section
-switch( $_GET['action'] ) {
+switch( $_REQUEST['action'] ) {
+	case "createorg":
+		// User has clicked the "new organization" link
+		$output .= <<<ENCLOSE
+		<form method="POST" action="bzgrpmgr.php">
+		<input type="hidden" name="action" value="submitcreateorg">
+		<table>
+			<tr>
+				<td>Organization name:</td>
+				<td><input type="text" name="orgname" value="" size="20"></td>
+			</tr>
+			<tr><td>&nbsp;</td><td><input type="submit" name="submit" value="Create"></td></tr>
+		</table>
+		</form>
+
+		<i>Note: The organization name must not be the username of an existing user.</i>
+
+ENCLOSE;
+		break;
+	case "submitcreateorg":
+		// FIXME validate data entry
+		// FIXME check against user data
+		// FIXME block against reserved group names
+
+		// check for existing group name
+		// FIXME create clean sitewide die method?
+		if( $data->orgExists( $_POST['orgname'] ) ) {
+			$output .= "The given organization name already exists.<br>\n";		
+			exit;
+		}
+
+		// Create the organization
+		echo $data->createOrg( $_POST['orgname'], $userdata['bzid'] );
+
+		break;
 	default:
+$data->createGroup( "testgroup", "owners group", 1 );
 		$output .= "\t\t<b>Groups:</b>\n";
 
 		$orgs = array();
@@ -73,7 +108,8 @@ switch( $_GET['action'] ) {
 						$orgid."\"><i>New Group</i></a></td></tr>\n";
 		}
 		// Final row for creating a new organization
-		$output .= "\t\t\t<tr><td colspan=\"3\"><a href=\"?createorg\"><i>New Organization</i></a></td></tr>\n";
+		$output .= "\t\t\t<tr><td colspan=\"3\"><a href=\"?action=createorg\"><i>New Organization".
+				"</i></a></td></tr>\n";
 		$output .= "\t\t</table>\n";
 
 		break;
