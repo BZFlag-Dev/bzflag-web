@@ -97,7 +97,7 @@ class data_phpbb2 extends data {
 		if( $result && mysql_num_rows( $result ) > 0 )
 			return false;
 
-		$sql = "INSERT INTO groups (groupname,desc,orgid) ".
+		$sql = "INSERT INTO groups (groupname,description,orgid) ".
 				"VALUES (\"".$groupname."\",\"".$desc."\",".$orgid.")";
 echo $sql."<br>\n";
 /*		mysql_query( $sql, $this->main_mysql_connection );

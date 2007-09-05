@@ -40,10 +40,10 @@ CREATE TABLE `groups` (
   `adminusers` tinyint(1) NOT NULL default '0',
   `admingroups` tinyint(1) NOT NULL default '0',
   `admin` tinyint(1) NOT NULL default '0',
-  `desc` varchar(128) default NULL,
+  `description` varchar(128) default NULL,
   PRIMARY KEY  (`groupid`),
   UNIQUE KEY `groupname` (`groupname`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `organizations`
@@ -55,8 +55,9 @@ CREATE TABLE `organizations` (
   `orgname` varchar(25) NOT NULL,
   `contact` int(2) NOT NULL,
   PRIMARY KEY  (`orgid`),
-  UNIQUE KEY `orgname` (`orgname`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  UNIQUE KEY `orgname` (`orgname`),
+  UNIQUE KEY `orgname_2` (`orgname`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -67,4 +68,4 @@ CREATE TABLE `organizations` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-09-04  8:54:26
+-- Dump completed on 2007-09-05  5:47:07
