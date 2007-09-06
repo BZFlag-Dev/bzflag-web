@@ -89,27 +89,29 @@ class data_phpbb2 extends data {
 	}
 
 	// Function to create a new group in the specified organizations
-	public function creategroup( $groupname, $desc, $orgid ) {
+	public function createGroup( $groupname, $desc, $orgid ) {
 		$sql = "SELECT groupid FROM groups WHERE ".
 				"groupname=\"".$groupname."\" AND ".
 				"orgid=".$orgid;
+		$result = mysql_query( $sql, $this->main_mysql_connection );
 
 		if( $result && mysql_num_rows( $result ) > 0 )
 			return false;
 
 		$sql = "INSERT INTO groups (groupname,description,orgid) ".
 				"VALUES (\"".$groupname."\",\"".$desc."\",".$orgid.")";
-echo $sql."<br>\n";
-/*		mysql_query( $sql, $this->main_mysql_connection );
 
-		$sql = "SELECT orgid FROM organizations WHERE ".
-				"orgname=\"".$name."\"";
+		mysql_query( $sql, $this->main_mysql_connection );
+
+		$sql = "SELECT groupid FROM groups WHERE ".
+				"orgid=".$orgid." AND ".
+				"groupname=\"".$groupname."\"";
 		$result = mysql_query( $sql, $this->main_mysql_connection );
 		if( $result && mysql_num_rows( $result ) > 0 &&
-				$toReturn = mysql_result( $result, 0) )
+				$toReturn = mysql_result( $result, 0 ) )
 			return $toReturn;
 
-		return 0;*/
+		return 0;
 	}
 
 	// Function to retrieve member group id's by user id
@@ -157,13 +159,13 @@ echo $sql."<br>\n";
 	}
 
 	// Function to add a user to a group
-	public function addGroupMember( $id ) {
-		return false;
-	}
+	public function addGroupMember( $userid, $groupid ) {
+		if( ! $userid || ! $groupid ) { echo "give me args!<br>\n"; return true; }
 
-	// Function to set a user as a group administrator
-	// (also adds the user to the group if necessary)
-	public function setGroupAdmin( $id ) {
+		$sql = "INSERT INTO group_members (userid,groupid) VALUES (".
+				$userid.",".$groupid.")";
+		mysql_query( $sql, $this->main_mysql_connection );
+
 		return false;
 	}
 
@@ -179,6 +181,7 @@ echo $sql."<br>\n";
 		if( $this->orgExists( $name ) )
 			return true;
 
+		// Create the organization
 		$sql = "INSERT INTO organizations (orgname,contact) ".
 				"VALUES (\"".$name."\",".$userid.")";
 		mysql_query( $sql, $this->main_mysql_connection );
@@ -186,11 +189,20 @@ echo $sql."<br>\n";
 		$sql = "SELECT orgid FROM organizations WHERE ".
 				"orgname=\"".$name."\"";
 		$result = mysql_query( $sql, $this->main_mysql_connection );
-		if( $result && mysql_num_rows( $result ) > 0 &&
-				$toReturn = mysql_result( $result, 0) )
-			return $toReturn;
+		if( $result && mysql_num_rows( $result ) > 0 )
+			$myOrgid = mysql_result( $result, 0);
 
-		return 0;
+		// Create the owner group
+		$ownerGroup = $this->createGroup( "owner", "Owner group for the ".
+				$this->getOrgName( $myOrgid )." organization.", $myOrgid );
+
+		// Add the registrant to the owner group
+		$this->addGroupMember( $userid, $ownerGroup );
+
+		// Make the group an organization admin group
+		$this->setAdmin( $myOrgid, $ownerGroup, true );
+
+		return $myOrgid;
 	}
 
 	// Function to retrieve the orgid for a given groupid
@@ -331,6 +343,32 @@ echo $sql."<br>\n";
 		return false;
 	}
 
+	public function setUserAdmin( $orgid, $groupid, $value ) {
+		if( $value != true && $value != false )
+			return true;
+
+		$sql = "UPDATE groups SET adminusers=".$value." WHERE ".
+				"orgid=".$orgid." AND groupid=".$groupid;
+		mysql_query( $sql, $this->main_mysql_connection );
+	}
+
+	public function setGroupAdmin( $orgid, $groupid, $value ) {
+		if( $value != true && $value != false )
+			return true;
+
+		$sql = "UPDATE groups SET admingroups=".$value." WHERE ".
+				"orgid=".$orgid." AND groupid=".$groupid;
+		mysql_query( $sql, $this->main_mysql_connection );
+	}
+
+	public function setAdmin( $orgid, $groupid, $value ) {
+		if( $value != true && $value != false )
+			return true;
+
+		$sql = "UPDATE groups SET admin=".$value." WHERE ".
+				"orgid=".$orgid." AND groupid=".$groupid;
+		mysql_query( $sql, $this->main_mysql_connection );
+	}
 }
 
 ?>

@@ -55,15 +55,18 @@ ENCLOSE;
 		// FIXME create clean sitewide die method?
 		if( $data->orgExists( $_POST['orgname'] ) ) {
 			$output .= "The given organization name already exists.<br>\n";		
+			
+			print_header( "" );
+			echo $output;
+			print_footer();
 			exit;
 		}
 
 		// Create the organization
-		echo $data->createOrg( $_POST['orgname'], $userdata['bzid'] );
-
+		$data->createOrg( $_POST['orgname'], $userdata['bzid'] );
+		header( "Location: http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'] );
 		break;
 	default:
-$data->createGroup( "testgroup", "owners group", 1 );
 		$output .= "\t\t<b>Groups:</b>\n";
 
 		$orgs = array();
@@ -92,7 +95,9 @@ $data->createGroup( "testgroup", "owners group", 1 );
 			// Group name and links (if applicable)
 			foreach( $group_array as $groupid ) {
 				$output .= "\t\t\t<tr><td>&nbsp;</td>";
-				$output .= "<td>".$data->getGroupName( $groupid )."</td>";
+				$output .= "<td>";
+				$output .= $data->getGroupName( $groupid );
+				$output .= "</td>";
 				$output .= ( $data->isGroupAdmin( $orgid, $userdata['bzid'] ) ?
 						"<td><a href=\"?action=groupadmin&id=".$groupid."\">".
 								"Settings</a></td>".

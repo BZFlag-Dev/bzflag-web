@@ -32,11 +32,11 @@ abstract class data {
 	abstract protected function getGroupname( $id );
 
 	// Function to add a user to a group
-	abstract protected function addGroupMember( $id );
+	abstract protected function addGroupMember( $userid, $groupid );
 
 	// Function to set a user as a group administrator
 	// (also adds the user to the group if necessary)
-	abstract protected function setGroupAdmin( $id );
+//	abstract protected function setGroupAdmin( $id );
 
 	// Function to remove a user from a group
 	// (will fail and return true if the user is the only admin)
