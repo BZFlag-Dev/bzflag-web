@@ -64,8 +64,8 @@
   $config['upload']['maxFileSize'] = 1048576;
   
   // This is the maximum number of files that a user can upload at one time.
-  // Default: 8
-  $config['upload']['maxFiles'] = 8;
+  // Default: 6
+  $config['upload']['maxFiles'] = 6;
   
   // These are the various licenses that we have by default. These can all
   // contain a 'name' and 'url' index.
