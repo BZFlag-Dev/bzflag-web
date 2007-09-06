@@ -11,19 +11,40 @@
   $config['paths']['baseDirectory'] = '/your/path/htdocs/submitimages/';
   
   
+  // Directory that contains various libraries and included files. Does not need
+  // to be accessible from the web.
   $config['paths']['includes'] = $config['paths']['baseDirectory'].'includes/';
+  
+  // This directory contains uncompiled template files, and possibly any
+  // associated style sheets, javascript, or images. If it contains any of those
+  // types of files, it will need to be accessible from the web.
   $config['paths']['templates'] = $config['paths']['baseDirectory'].'templates/';
+  
+  // Compiled templates.  This directory needs to be writable by the web server
+  // or the user that PHP operates under.  This does not need to be accessible
+  // from the web.
   $config['paths']['templates_c'] = $config['paths']['baseDirectory'].'templates_c/';
+  
+  // Temporary directory that images are store while they are in the queue. This
+  // directory needs to be writable by the web server or the user that PHP
+  // operates under. This does not need to be accessible from the web.
   $config['paths']['tmp'] = $config['paths']['baseDirectory'].'tmp/';
+  
+  // This is the directory that the approved images will end up.  They will be
+  // stored in a directory that is associated with the uploader's real name.
+  // This needs to be writable by the web server or the user that PHP operates
+  // under.
   $config['paths']['public'] = $config['paths']['baseDirectory'].'../';
   
   
+  // This is the main title of the application that will appear in various
+  // locations of the site.
   $config['site']['title'] = "BZFlag Image Uploader";
   
   // When this is set to true, errors, warnings, and notices in PHP will
   // be shown and/or logged, depending on the php.ini configuration.
   // Default: false 
-  $config['enablePHPErrors'] = false;
+  $config['enablePHPErrors'] = true;
   
   // This email address will be used as the 'From' address of all emails sent
   // by the image submission system.
@@ -36,19 +57,34 @@
   // pending images using the moderation page. Case-sensitive.
   $config['imageModeratorGroup'] = 'site.imageauth';
   
+  // This is the maximum file size that is allowed per image upload. The PHP
+  // configuration may have stricter limits that prevent this value from being
+  // reached, or from being reached for 'maxFiles' files.
   // Default: 1048576 (1MB)
   $config['upload']['maxFileSize'] = 1048576;
   
+  // This is the maximum number of files that a user can upload at one time.
+  // Default: 8
   $config['upload']['maxFiles'] = 8;
   
+  // These are the various licenses that we have by default. These can all
+  // contain a 'name' and 'url' index.
   $config['licenses'] = Array();
+  // Th "I stole this" is always at 0. It is the default, and it triggers
+  // loading the "Permisson to Use Content" page.
   $config['licenses'][0] = Array('name' => 'I stole this', 'url' => $config['paths']['baseURL'].'permission.php');
+  
+  // Any license we want to build into the system will be here, ranging from an
+  // array index of 1 to 254.
   $config['licenses'][1] = Array('name' => 'GNU LGPL', 'url' => 'http://www.gnu.org/licenses/lgpl.html');
   $config['licenses'][2] = Array('name' => 'BSD/MIT', 'url' => 'http://opensource.org/licenses/bsd-license.php');
   $config['licenses'][3] = Array('name' => 'Creative Commons Attribution 3.0', 'url' => 'http://creativecommons.org/licenses/by/3.0/');
   $config['licenses'][4] = Array('name' => 'Creative Commons Attribution-ShareAlike 3.0', 'url' => 'http://creativecommons.org/licenses/by-sa/3.0/');
   $config['licenses'][5] = Array('name' => 'Public Domain', 'url' => 'http://creativecommons.org/licenses/publicdomain/');
   
+  // This one will always be at index 255.  It is used for when the user selects
+  // "Other OSI-Approved" and then defines a license name, and either a URL or
+  // a full text version of the license.
   $config['licenses'][255] = Array('name' => 'Other OSI-Approved', 'url' => 'http://www.opensource.org/licenses/');
   
 ?>
