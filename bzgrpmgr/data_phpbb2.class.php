@@ -148,8 +148,19 @@ class data_phpbb2 extends data {
 	}
 
 	// Function to retrieve group name by group id
-	public function getGroupname( $id ) {
-		$sql = "SELECT groupname FROM groups WHERE groupid=".$id;
+	public function getGroupName( $groupid ) {
+		$sql = "SELECT groupname FROM groups WHERE groupid=".$groupid;
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 &&
+				$toReturn = mysql_result( $result, 0) )
+			return $toReturn;
+
+		return "";
+	}
+
+	// Function to retrieve group name by group id
+	public function getGroupDescription( $groupid ) {
+		$sql = "SELECT description FROM groups WHERE groupid=".$groupid;
 		$result = mysql_query( $sql, $this->main_mysql_connection );
 		if( $result && mysql_num_rows( $result ) > 0 &&
 				$toReturn = mysql_result( $result, 0) )
@@ -200,7 +211,7 @@ class data_phpbb2 extends data {
 		$this->addGroupMember( $userid, $ownerGroup );
 
 		// Make the group an organization admin group
-		$this->setAdmin( $myOrgid, $ownerGroup, true );
+		$this->setAdminGroup( $ownerGroup, true );
 
 		return $myOrgid;
 	}
@@ -343,30 +354,62 @@ class data_phpbb2 extends data {
 		return false;
 	}
 
-	public function setUserAdmin( $orgid, $groupid, $value ) {
+	public function isUserAdminGroup( $groupid ) {
+		$sql = "SELECT groupid FROM groups WHERE groupid=".$groupid.
+				" AND adminusers=1";
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 )
+			return true;
+
+		return false;
+	}
+
+	public function isGroupAdminGroup( $groupid ) {
+		$sql = "SELECT groupid FROM groups WHERE groupid=".$groupid.
+				" AND admingroups=1";
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 )
+			return true;
+
+		return false;
+		;
+	}
+
+	public function isAdminGroup( $groupid ) {
+		$sql = "SELECT groupid FROM groups WHERE groupid=".$groupid.
+				" AND admin=1";
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 )
+			return true;
+
+		return false;
+		;
+	}
+
+	public function setUserAdminGroup( $groupid, $value ) {
 		if( $value != true && $value != false )
 			return true;
 
 		$sql = "UPDATE groups SET adminusers=".$value." WHERE ".
-				"orgid=".$orgid." AND groupid=".$groupid;
+				"groupid=".$groupid;
 		mysql_query( $sql, $this->main_mysql_connection );
 	}
 
-	public function setGroupAdmin( $orgid, $groupid, $value ) {
+	public function setGroupAdminGroup( $groupid, $value ) {
 		if( $value != true && $value != false )
 			return true;
 
 		$sql = "UPDATE groups SET admingroups=".$value." WHERE ".
-				"orgid=".$orgid." AND groupid=".$groupid;
+				"groupid=".$groupid;
 		mysql_query( $sql, $this->main_mysql_connection );
 	}
 
-	public function setAdmin( $orgid, $groupid, $value ) {
+	public function setAdminGroup( $groupid, $value ) {
 		if( $value != true && $value != false )
 			return true;
 
 		$sql = "UPDATE groups SET admin=".$value." WHERE ".
-				"orgid=".$orgid." AND groupid=".$groupid;
+				"groupid=".$groupid;
 		mysql_query( $sql, $this->main_mysql_connection );
 	}
 }
