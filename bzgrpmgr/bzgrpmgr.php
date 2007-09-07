@@ -100,10 +100,10 @@ ENCLOSE;
 				$output .= "</td>";
 				$output .= ( $data->isGroupAdmin( $orgid, $userdata['bzid'] ) ?
 						"<td><a href=\"?action=groupadmin&id=".$groupid."\">".
-								"Settings</a></td>".
-						"<td><a href=\"?action=groupdelete&id=".$groupid."\">".
-								"Delete</a></td>" :
-						"<td colspan=\"2\">&nbsp;</td>" ).
+								"Settings</a></td>" :
+//						"<td><a href=\"?action=groupdelete&id=".$groupid."\">".
+//								"Delete</a></td>"
+						"<td colspan=\"3\">&nbsp;</td>" ).
 						"</tr>\n";
 			}
 
