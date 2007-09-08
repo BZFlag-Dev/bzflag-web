@@ -160,7 +160,7 @@ ENCLOSE;
 		// FIXME check against user data
 		// check for existing group name
 
-foreach( $_POST as $key => $value ) $output .= $key." => ".$value."<br>\n";
+// foreach( $_POST as $key => $value ) $output .= $key." => ".$value."<br>\n";
 
 		// If new group, make sure the group name doesn't already exist in the organization
 		$existingGroupNames = array();
@@ -179,6 +179,11 @@ foreach( $_POST as $key => $value ) $output .= $key." => ".$value."<br>\n";
 		// FIXME parse the post data for validity
 		if( $_POST['groupid'] ) {
 			// Update the group
+			$data->updateGroup( $_POST['groupid'], $_POST['groupname'],
+					$_POST['description'], $_POST['orgid'] );
+
+			// Redirect to home 
+			header( "Location: http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'] );
 		} else {
 			// Create the group
 			$myGroupid = $data->createGroup( $_POST['groupname'], $_POST['description'], $_POST['orgid'] );

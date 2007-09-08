@@ -114,6 +114,25 @@ class data_phpbb2 extends data {
 		return 0;
 	}
 
+	public function updateGroup( $groupid, $groupname, $description, $orgid ) {
+		$sql = "SELECT groupid FROM groups WHERE ".
+				"groupid=".$groupid;
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( ! $result || mysql_num_rows( $result ) < 1 )
+			return false;
+
+		$sql = "UPDATE groups SET".
+				( $groupname ? " groupname=\"".$groupname."\"," : "" ).
+				( $description ? " description=\"".$description."\"," : "" ).
+				( $orgid ? " orgid=".$orgid."," : "" ).
+				// yeah, laziness to get rid of the last comma
+				" groupid=".$groupid." ".
+				"WHERE groupid=".$groupid;
+		mysql_query( $sql, $this->main_mysql_connection );
+
+		return 0;
+	}
+
 	// Function to retrieve member group id's by user id
 	public function getGroups( $id ) {
 		$toReturn = array();
