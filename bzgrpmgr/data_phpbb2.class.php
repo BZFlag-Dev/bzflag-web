@@ -133,6 +133,23 @@ class data_phpbb2 extends data {
 		return 0;
 	}
 
+	// Function to retrieve member id's by group id
+	public function getMembers( $groupid ) {
+		$toReturn = array();
+
+		$sql = "SELECT userid FROM group_members WHERE groupid=".
+				$groupid;
+		$result = mysql_query( $sql, $this->main_mysql_connection );
+		if( $result && mysql_num_rows( $result ) > 0 ) {
+			while( $result_array = mysql_fetch_array( $result ) ) {
+				array_push( $toReturn,
+						$result_array['userid'] );
+			}
+		}
+
+		return $toReturn;
+	}
+
 	// Function to retrieve member group id's by user id
 	public function getGroups( $id ) {
 		$toReturn = array();

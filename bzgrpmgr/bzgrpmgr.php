@@ -28,6 +28,28 @@ $output = "";
 
 // Action section
 switch( $_REQUEST['action'] ) {
+	case "showmembers":
+		if( ! $_GET['id'] ) die( "Missing parameter.\n" );
+
+		$output .= "\t\t<b>Members:</b><br><br>\n\n";
+		$output .= "\t\tGroup Name: <i>".
+				$data->getOrgName( $data->getOrg( $_GET['id'] ) ).".".
+				$data->getGroupName( $_GET['id'] ).
+				"</i><br><br>\n\n";
+
+		// FIXME: check data input
+		$members = false;
+		foreach( $data->getMembers( $_GET['id'] ) as $memberid ) {
+			$members = true;
+			$output .= $data->getUsername( $memberid )."<br>\n";
+		}
+		if( ! $members ) {
+			$output .= "\t\t<i>No members.</i>\n";
+		}
+
+		$output .= "\t\t<br><br>\n\n";
+
+		break;
 	case "createorg":
 		// User has clicked the "new organization" link
 		$output .= <<<ENCLOSE
@@ -225,9 +247,9 @@ ENCLOSE;
 			// Group name and links (if applicable)
 			foreach( $group_array as $groupid ) {
 				$output .= "\t\t\t<tr><td>&nbsp;</td>";
-				$output .= "<td>";
+				$output .= "<td><a href=\"?action=showmembers&id=".$groupid."\">";
 				$output .= $data->getGroupName( $groupid );
-				$output .= "</td>";
+				$output .= "</a></td>";
 				$output .= ( $data->isGroupAdmin( $orgid, $userdata['bzid'] ) ?
 						"<td><a href=\"?action=editgroup&groupid=".$groupid."\">".
 								"Settings</a></td>" :
