@@ -9,7 +9,7 @@
      * L4m3r thinks the list server should have an "owner" field for all listed servers
      This would also tie in with requiring a valid username/password for running public servers
      So, to summarize, it would be the following:
-     - Username/password specified to run public servsers
+     - Username/password specified to run public servers
      - Use this user's ID as the Owner ID of the server
      - Allow groups to have a non-sharable bit set, where the group can only be used if the owner of the group
         and owner of the server match     
@@ -48,8 +48,7 @@
   // The $_REQUEST variable contins the combination of the $_POST, $_GET, and
   // $_COOKIE variables. The order of precidence is based on the configuration
   // in php.ini
-  // We use array_key_exists to check if they were specified, in case of a null
-  // or empty value.
+  // We use isset to check if they were specified
   
   // Keep the global scope clean, and place all input into an array
   $input = Array();
@@ -66,11 +65,22 @@
   //   implementation. Should not be a problem, since they aren't used anyway.
   
   // First check if we will be displaying the HTML form
-  if (!array_key_exists('action', $_REQUEST) || !in_array($_REQUEST['action'], Array('ADD', 'REMOVE', 'LIST', 'GETTOKEN', 'CHECKTOKENS', 'REGISTER', 'CONFIRM')))
+  if (!isset($_REQUEST['action']) || !in_array($_REQUEST['action'], Array('ADD', 'REMOVE', 'LIST', 'GETTOKEN', 'CHECKTOKENS', 'REGISTER', 'CONFIRM')))
   {
     // We are displaying HTML, so send out the right content type
     header('Content-Type: text/html');
-    die("<strong>ERROR:</strong> Invalid action specified. Insert magic HTML form here.");
+    echo
+"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">
+<html>
+<head>
+<title>BZFlag Listserver</title>
+</head>
+<body>
+<h1>BZFlag Listserver</h1>
+<p>Insert form thingy here.</p>
+</body>
+</html>";
+    exit;
   }
   else
   {
@@ -83,17 +93,17 @@
     
     // nameport (ADD, REMOVE) - Public hostname/IP and port, in the form of
     //   name:port or name
-    // NOTE: We won't use 'nameport' internally. This is simply used for 
-    // compatability reasons with 2.0.x and 1.10.x servers
-    // DEPRECATED: in favor of 'host' and 'port'
-    if (array_key_exists('nameport', $_REQUEST) && ($input['action'] == 'ADD' || $input['action'] == 'REMOVE'))
+    // NOTE: We won't use 'nameport' internally. We'll split apart the host/ip
+    // and the port here, so we don't have to process it in multiple locations
+    if (isset($_REQUEST['nameport']) && ($input['action'] == 'ADD' || $input['action'] == 'REMOVE'))
     {
       $input['nameport'] = smart_strip_slashes($_REQUEST['nameport']);
       
       // Also populate the 'name' and 'port'
       
       // If there is not a colon, use port 5154
-      // NOTE: This would not be IPv6 friendly.
+      // TODO: Handle IPv6 addresses as well, according to RFC2732
+      //   (http://gbiv.com/protocols/uri/rfc/rfc2732.txt)
       if (strpos($input['nameport'], ':') === FALSE)
       {
         // No port was specified, so the whole 'nameport' is our name
@@ -110,76 +120,62 @@
       // Discard 'nameport', since internally we use 'name' and 'port'
       unset($input['nameport']);
     }
-    // If we didn't use 'nameport', see if we used 'name' and/or 'port'
-    else
-    {
-      // name (ADD, REMOVE) - Public hostname/IP
-      if (array_key_exists('name', $_REQUEST) && $input['action'] == 'ADD' || $input['action'] == 'REMOVE')
-        $input['name'] = smart_strip_slashes($_REQUEST['name']);
-      
-      // port (ADD, REMOVE) - Public port
-      if (array_key_exists('port', $_REQUEST) && ($input['action'] == 'ADD' || $input['action'] == 'REMOVE'))
-        $input['port'] = smart_strip_slashes($_REQUEST['port']);
-      // If no port was specified, and we're doing an ADD or REMOVE, use 5154
-      else if ($input['action'] == 'ADD' || $input['action'] == 'REMOVE')
-        $input['port'] = 5154;
-    }
 
     // build (ADD) - Build string of server; Could also be used for clients
-    if (array_key_exists('build', $_REQUEST) && ($input['action'] == 'ADD'))
+    if (isset($_REQUEST['build']) && ($input['action'] == 'ADD'))
       $input['build'] = smart_strip_slashes($_REQUEST['build']);
     
     // version (ADD, LIST) - Protocol string, specified to filter which
     //   servers are shown in a LIST, in the form BZFSxxxx, where xxxx is a
     //   number; 2.0.x uses BZFS0026, for example
-    if (array_key_exists('version', $_REQUEST) && ($input['action'] == 'ADD' || $input['action'] == 'LIST'))
+    if (isset($_REQUEST['version']) && ($input['action'] == 'ADD' || $input['action'] == 'LIST'))
       $input['version'] = smart_strip_slashes($_REQUEST['version']);
     
     // gameinfo (ADD) - Hex string that defines server configuration and
     //   player counts; Technically could be removed, and have bzfls.php
     //   query the server to obtain this information
-    if (array_key_exists('gameinfo', $_REQUEST) && ($input['action'] == 'ADD'))
+    if (isset($_REQUEST['gameinfo']) && ($input['action'] == 'ADD'))
       $input['gameinfo'] = smart_strip_slashes($_REQUEST['gameinfo']);
     
     // title (ADD) - Public title/description of a server
-    if (array_key_exists('title', $_REQUEST) && ($input['action'] == 'ADD'))
+    if (isset($_REQUEST['title']) && ($input['action'] == 'ADD'))
       $input['title'] = smart_strip_slashes($_REQUEST['title']);
     
     // checktokens (ADD, CHECKTOKENS) - Contains tokens that will be verified;
     //   These will be in the form username0=token or username0@ipaddress=token,
     //   and multiple instances of these can be seperated by \n
-    if (array_key_exists('checktokens', $_REQUEST) && ($input['action'] == 'ADD' || $input['action'] == 'CHECKTOKENS'))
+    if (isset($_REQUEST['checktokens']) && ($input['action'] == 'ADD' || $input['action'] == 'CHECKTOKENS'))
       $input['checktokens'] = smart_strip_slashes($_REQUEST['checktokens']);
     
     // groups (ADD, CHECKTOKENS) - List of groups to check for membership
-    if (array_key_exists('groups', $_REQUEST) && ($input['action'] == 'ADD' || $input['action'] == 'CHECKTOKENS'))
+    if (isset($_REQUEST['groups']) && ($input['action'] == 'ADD' || $input['action'] == 'CHECKTOKENS'))
       $input['groups'] = smart_strip_slashes($_REQUEST['groups']);
     
     // callsign (LIST, GETTOKEN) - Callsign of player
     // DEPRECATED: in favor of 'username'
-    if (array_key_exists('callsign', $_REQUEST) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN'))
+    if (isset($_REQUEST['callsign']) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN'))
       // Store it as username
       $input['username'] = smart_strip_slashes($_REQUEST['callsign']);
       
     // username (LIST, GETTOKEN, REGISTER, CONFIRM) - Username of player
-    if (array_key_exists('username', $_REQUEST) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN' || $input['action'] == 'REGISTER' || $input['action'] == 'CONFIRM'))
+    if (isset($_REQUEST['username']) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN' || $input['action'] == 'REGISTER' || $input['action'] == 'CONFIRM'))
       $input['username'] = smart_strip_slashes($_REQUEST['username']);
     
     // email (REGISTER) - Email for registration
-    if (array_key_exists('email', $_REQUEST) && ($input['action'] == 'REGISTER'))
+    if (isset($_REQUEST['email']) && ($input['action'] == 'REGISTER'))
       $input['email'] = smart_strip_slashes($_REQUEST['email']);
     
     // password (LIST, GETTOKEN, REGISTER) - User's password
-    if (array_key_exists('password', $_REQUEST) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN' || $input['action'] == 'REGISTER'))
+    if (isset($_REQUEST['password']) && ($input['action'] == 'LIST' || $input['action'] == 'GETTOKEN' || $input['action'] == 'REGISTER'))
       $input['password'] = smart_strip_slashes($_REQUEST['password']);
     
     // advertgroups (ADD) - Specific groups to advertise the server to
-    if (array_key_exists('advertgroups', $_REQUEST) && ($input['action'] == 'ADD'))
+    if (isset($_REQUEST['advertgroups']) && ($input['action'] == 'ADD'))
       $input['advertgroups'] = smart_strip_slashes($_REQUEST['advertgroups']);
     
     // activationkey (CONFIRM) - Randomly generated activation code sent via
     // email to the user.
-    if (array_key_exists('activationkey', $_REQUEST) && ($input['action'] == 'CONFIRM'))
+    if (isset($_REQUEST['activationkey']) && ($input['action'] == 'CONFIRM'))
       $input['activationkey'] = smart_strip_slashes($_REQUEST['activationkey']);
   } // if (array_key_exists('action', $_REQUEST))
   
@@ -195,6 +191,8 @@
   //////////////////////////////////////////
   if ($input['action'] == 'ADD')
   {
+    echo "MSG: ADD $nameport $version $gameinfo " . stripslashes($slashtitle) . "\n";
+    
     // First off, check for some required input
   
     // We need to have a protocol version. If we do not, abort.
