@@ -51,14 +51,14 @@ print <<< end
 										<a href="/help/" class="navbar">help</a><br>
 										<a href="http://my.bzflag.org/w/BZFlag_Source" class="navbar">developers</a><br>
 										<a href="/screenshots/" class="navbar">screenshots</a><br>
-										<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/COPYING?rev=HEAD&amp;content-type=text/vnd.viewcvs-markup" class="navbar">license</a><br>
+										<a href="http://bzflag.svn.sourceforge.net/viewvc/*checkout*/bzflag/trunk/bzflag/COPYING" class="navbar">license</a><br>
 										<a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
 										<a href="http://my.bzflag.org/w/Other_Links" class="navbar">links</a><br>
 										<a href="http://my.bzflag.org/w/Main_Page" class="navbar">wiki</a><br>
 										<a href="http://my.BZFlag.org/" class="navbar">stats</a><br>
 										<a href="http://my.BZFlag.org/bb/" class="navbar">forums</a><br>
 										<a href="http://my.BZFlag.org/league/" class="navbar">CTF&nbsp;league</a><br>
-										<a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/bzflag/bzflag/TODO?rev=HEAD" class="navbar">TODO</a><br>
+										<a href="http://bzflag.svn.sourceforge.net/viewvc/*checkout*/bzflag/trunk/bzflag/TODO" class="navbar">TODO</a><br>
 										<br>
 										<a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
 										&nbsp;<a href="http://bzflag.svn.sourceforge.net/viewvc/bzflag/" class="navbar">browse&nbsp;Subversion</a><br>
