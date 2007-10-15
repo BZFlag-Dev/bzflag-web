@@ -15,6 +15,13 @@
     ini_set('display_errors', true);
   else
     ini_set('display_errors', false);
+    
+  
+  if (defined('USING_DATALAYER') && USING_DATALAYER)
+  {
+    require($config['paths']['includes'].'datalayer.class.php');
+    $dl = new DataLayer($config['datalayer']);
+  }
   
   
     

@@ -2,6 +2,11 @@
 
   $config = Array();
   
+  $config['datalayer']['hostname'] = '';
+  $config['datalayer']['username'] = '';
+  $config['datalayer']['password'] = '';
+  $config['datalayer']['database'] = '';
+  
   // This is the URL to the directory that contains our index.php file. This
   // should also include a trailing slash.
   $config['paths']['baseURL'] = 'http://YourDomain.com/submitimages/';

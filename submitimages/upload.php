@@ -1,9 +1,11 @@
 <?php
 
   define('USING_SMARTY', true);
-  define('USING_DATABASE', true);
+  define('USING_DATALAYER', true);
 
   include('common.php');
+  include($config['paths']['includes'].'validation.php');
+  include($config['paths']['includes'].'functions.php');
   
   // If they submit the form, let's process that
   if (sizeof($_POST) > 0)
@@ -78,12 +80,48 @@
     //////////////////////////////////////////
     // Process input and generate any errors
     //////////////////////////////////////////
+    
+    // Validate the uploader information
+    
+    // Assume it is valid until proven otherwise
+    $input['invalid'] = false;
+    
+    // Uploader first name
+    if (strlen($input['uploaderfirstname']) == 0)
+    {
+      $input['invalid'] = true;
+      $uploadErrors['uploader'][] = "The uploader first name was not valid.";
+    }
+    
+    // Uploader last name
+    if (strlen($input['uploaderlastname']) == 0)
+    {
+      $input['invalid'] = true;
+      $uploadErrors['uploader'][] = "The uploader last name was not valid.";
+    }
+    
+    // Confirm the Terms of Service
+    if (!$input['confirmtos'])
+    {
+      $input['invalid'] = true;
+      $uploadErrors['uploader'][] = "You did not confirm that your images follows the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>";
+    }
+    
+    // Confirm the accuracy of the form data
+    if (!$input['confirmaccurate'])
+    {
+      $input['invalid'] = true;
+      $uploadErrors['uploader'][] = "You did not confirm the accuracy of the information on this form.";
+    }
 
     // Validate each file and it's associated information
     for ($i = 0; $i < $config['upload']['maxFiles']; $i++)
     {
       // If no file specified, go to the next
       if(!isset($input['files'][$i]['file'])) continue;
+      
+      // Assume the file is valid until proven otherwise
+      $input['files'][$i]['invalid'] = false;
       
       // Various error codes for file uploads
       // UPLOAD_ERR_OK
@@ -204,6 +242,40 @@
         $uploadErrors['files'][$i][] = "You did not confirm that your images follows the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>";
         unset($input['files'][$i]['confirm']);
       }
+    }
+    
+    // If the form was valid, and we had valid files, add them to the queue
+    if (!$input['invalid'])
+    {
+      for ($i = 0; $i < $config['upload']['maxFiles']; $i++)
+      {
+        // If no file specified, go to the next
+        if(!isset($input['files'][$i]['file'])) continue;
+        
+        // If invalid, go to the next
+        if ($input['files'][$i]['invalid']) continue;
+        
+        if (move_uploaded_file($input['files'][$i]['file']['tmpfilename'], $config['paths']['tmp'].$user['bzid'].'_'.$input['files'][$i]['file']['filename']))
+        {
+          // Insert into queue
+          $data['queue'] = Array();
+          $data['queue']['bzid'] = $user['bzid'];
+          $data['queue']['username'] = $user['username'];
+          $data['queue']['ipaddress'] = ip2hex($_SERVER['REMOTE_ADDR']);
+          $data['queue']['uploaderfirstname'] = $input['uploaderfirstname'];
+          $data['queue']['uploaderlastname'] = $input['uploaderlastname'];
+          $data['queue']['filename'] = $input['files'][$i]['file']['filename'];
+          $data['queue']['authorname'] = $input['files'][$i]['authorname'];
+          $data['queue']['licenseid'] = $input['files'][$i]['licenseselector'];
+          $data['queue']['licensename'] = $input['files'][$i]['licensename'];
+          $data['queue']['licenseurl'] = $input['files'][$i]['licenseurl'];
+          $data['queue']['licensebody'] = $input['files'][$i]['licensebody'];
+          if (!$dl->Queue_Insert($data['queue']))
+            die("Unable to insert image into queue database.");
+        }
+        
+      }
+    
     }
     
     // Temporary debug output
