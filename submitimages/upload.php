@@ -5,10 +5,13 @@
 
   include('common.php');
   
-  // Process user input
+  // If they submit the form, let's process that
   if (sizeof($_POST) > 0)
   {
-  
+    //////////////////////////////////////////
+    // Read user input
+    //////////////////////////////////////////
+    
     // Temporary sleep to simulate a larger upload
     sleep(2);
   
@@ -71,12 +74,11 @@
     // Confirmation that all of the form information is accurate
     if (isset($_POST['confirmaccurate']))
       $input['confirmaccurate'] = $_POST['confirmaccurate'];
-  }
   
-  // Process input and generate any errors
-  
-  if (sizeof($_POST) > 0)
-  {
+    //////////////////////////////////////////
+    // Process input and generate any errors
+    //////////////////////////////////////////
+
     // Validate each file and it's associated information
     for ($i = 0; $i < $config['upload']['maxFiles']; $i++)
     {
@@ -145,6 +147,63 @@
         // Don't unlink() the file because it wasn't something the user actually
         // uploaded. For instance, it could be a system file.
       }
+      
+      // Validate the other file author information
+      
+      // Author name of this file (REQUIRED)
+      if (!valid_authorname($input['files'][$i]['authorname']))
+      {
+        $input['files'][$i]['invalid'] = true;
+        $uploadErrors['files'][$i][] = "The author name was invalid.";
+        unset($input['files'][$i]['authorname']);
+      }
+      
+      // Selected license (REQUIRED)
+      // 0 == "I stole this"
+      // 255 == "Other OSI-Approved"
+      if (!isset($input['files'][$i]['licenseselector']) || !is_numeric($input['files'][$i]['licenseselector']))
+      {
+        $input['files'][$i]['invalid'] = true;
+        $uploadErrors['files'][$i][] = "The license was not specified or the specified license was invalid.";
+        unset($input['files'][$i]['licenseselector']);
+      }
+      // If they picked "I stole this", invalidate their upload request
+      else if ($input['files'][$i]['licenseselector'] == 0)
+      {
+        $input['files'][$i]['invalid'] = true;
+        $uploadErrors['files'][$i][] = "The license specified was not valid.";
+        unset($input['files'][$i]['licenseselector']);
+      }
+      // If they picked "Other OSI-Approved", then make sure they filled in the
+      // license name, and the URL and/or text of that license
+      else if ($input['files'][$i]['licenseselector'] == 255)
+      {
+        
+        // If licenseselector is 255, we need this
+        if (empty($input['files'][$i]['otherlicensename']))
+        {
+          $input['files'][$i]['invalid'] = true;
+          $uploadErrors['files'][$i][] = "You must specify a license name.";
+          unset($input['files'][$i]['otherlicensename']);
+        }
+        
+        // If licenseselector is 255, we need otherlicenseurl and/or otherlicensetext
+        if (empty($input['files'][$i]['otherlicenseurl']) && empty($input['files'][$i]['otherlicensetext']))
+        {
+          $input['files'][$i]['invalid'] = true;
+          $uploadErrors['files'][$i][] = "You must specify a license URL or the license text.";
+          unset($input['files'][$i]['otherlicenseurl'], $input['files'][$i]['otherlicensetext']);
+        }
+        // TODO: Add some checks to make sure the URL is valid if it was specified
+      }
+      
+      // This is the confirmation that this image does not violate the TOS (REQUIRED)
+      if (!isset($input['files'][$i]['confirm']))
+      {
+        $input['files'][$i]['invalid'] = true;
+        $uploadErrors['files'][$i][] = "You did not confirm that your images follows the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>";
+        unset($input['files'][$i]['confirm']);
+      }
     }
     
     // Temporary debug output
@@ -159,7 +218,7 @@
       echo "</pre>";
       exit;
     }
-  }
+  } // if (size($_POST) > 0)
 
 	$page['title'] = 'Upload Images';
 	$page['javascripts'] = Array('upload.js');
