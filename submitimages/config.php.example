@@ -92,4 +92,12 @@
   // a full text version of the license.
   $config['licenses'][255] = Array('name' => 'Other OSI-Approved', 'url' => 'http://www.opensource.org/licenses/');
   
+  // Maximum thumbnail width for the queue list
+  // Default: 128
+  $config['thumbnail']['maxWidth'] = 128;
+  
+  // Maximum thumbnail height for the queue list
+  // Default: 128
+  $config['thumbnail']['maxHeight'] = 128;
+  
 ?>

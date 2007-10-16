@@ -21,6 +21,7 @@
   {
     require($config['paths']['includes'].'datalayer.class.php');
     $dl = new DataLayer($config['datalayer']);
+    $data = Array();
   }
   
   
@@ -78,6 +79,9 @@
     $tpl->assign_by_ref('input', $input);
     $tpl->assign_by_ref('messages', $messages);
     $tpl->assign_by_ref('page', $page);
+    
+    if (defined('USING_DATALAYER') && USING_DATALAYER)
+      $tpl->assign_by_ref('data', $data);
   }
 
 ?>

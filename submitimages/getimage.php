@@ -1,18 +1,29 @@
 <?php
-// This file makes thumbnails of images to see.
 
-//Provide some security from people poking around the server
-$_GET['image'] = stripslashes($_GET['image']);
-$_GET['image'] = str_replace('../', '', $_GET['image']);
-$_GET['image'] = addslashes($_GET['image']);
+  include('common.php');
+  
+  // This area is only for moderators. Everyone else, bye bye!
+  if (!isset($user) || !$user || !$user['moderator'])
+    exit;
 
-if(file_exists('./image_holding/'.$_GET['image'])){
-	// Header
-	header("Content-type: image/png");
+  // This file makes thumbnails of images to see.
 
-	// Image
-	readfile('./image_holding/'.$_GET['image']);
-}else{
-	echo 'No image with specified filename was found. It may have already been approved / rejected.';
-}
+  // Provide some security from people poking around the server
+  $input['filename'] = basename($_GET['filename']);
+  
+  if (file_exists($config['paths']['tmp'].$input['filename']))
+  {
+  	// Send off the proper Content-Type HTTP header
+  	header("Content-Type: image/png");
+  
+    // We don't want any warnings, notices, etc to show up during image generation
+    error_reporting(0);
+    
+    readfile($config['paths']['tmp'].$input['filename']);
+  }
+  else
+  {
+    echo "The following file was not found, and may have already been approved or rejected: ".$input['filename'];
+  }
+
 ?>

@@ -1,5 +1,23 @@
 <?php
 
+  define('USING_SMARTY', true);
+  define('USING_DATALAYER', true);
+
+  include('common.php');
+  
+  // Process input
+  
+  
+  // Handle data
+  $data['queue'] = $dl->Queue_Fetch_All();
+  
+  
+  
+  // Render the page
+	$tpl->display('header.tpl');
+	$tpl->display('queue.tpl');
+	$tpl->display('footer.tpl');
+
 // Temporary holding place for the old code
 
 
