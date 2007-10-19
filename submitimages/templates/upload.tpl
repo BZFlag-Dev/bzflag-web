@@ -1,7 +1,7 @@
 <form enctype="multipart/form-data" action="{$config.paths.baseURL}upload.php" method="post" onsubmit="javascript:return validateForm();">
 <input type="hidden" name="MAX_FILE_SIZE" value="{$config.upload.maxFileSize}">
 
-<p>Currently only PNG files are supported. The maximum filesize per file is {$config.upload.maxFileSize} bytes, and you may upload {$config.upload.maxFiles} files at a time.</p>
+<p>Currently only PNG files are supported. There is a limit of {$config.upload.maxFileSize/1024}KB per file, and you may upload {$config.upload.maxFiles} files at a time.</p>
 <hr>
 
 {section start=0 loop=$config.upload.maxFiles name=uploads}

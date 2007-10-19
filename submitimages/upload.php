@@ -192,6 +192,52 @@
         // Don't unlink() the file because it wasn't something the user actually
         // uploaded. For instance, it could be a system file.
       }
+      else if (strtolower(end(explode('.', $input['files'][$i]['file']['filename']))) != 'png')
+      {
+        $input['files'][$i]['invalid'] = true;
+        $uploadErrors['files'][$i][] = "The file uploaded was not in PNG format.";
+        
+        // Delete the temporary file
+        if (!empty($input['files'][$i]['file']['tmpfilename']))
+          unlink($input['files'][$i]['file']['tmpfilename']);
+      }
+      // Verify that this file is indeed a PNG file. Could also use the output
+      // from getimagesize to constrain images to a specific size. For now, we
+      // just make sure that width and height at at least 1.
+      else {
+        $img = getimagesize($input['files'][$i]['file']['tmpfilename']);
+        
+        if (!$img)
+        {
+          $input['files'][$i]['invalid'] = true;
+          $uploadErrors['files'][$i][] = "The file uploaded was not a valid image. Only PNG files are supported at this time.";
+          
+          // Delete the temporary file
+          if (!empty($input['files'][$i]['file']['tmpfilename']))
+            unlink($input['files'][$i]['file']['tmpfilename']);
+        }
+        // Verify that it has a width and height greater than 0
+        else if ($img[0] == 0 || $img[1] == 0)
+        {
+          $input['files'][$i]['invalid'] = true;
+          $uploadErrors['files'][$i][] = "The file uploaded did not contain valid PNG data.";
+          
+          // Delete the temporary file
+          if (!empty($input['files'][$i]['file']['tmpfilename']))
+            unlink($input['files'][$i]['file']['tmpfilename']);
+        }
+        // Verify it's a PNG
+        else if ($img[2] != IMAGETYPE_PNG)
+        {
+          $input['files'][$i]['invalid'] = true;
+          $uploadErrors['files'][$i][] = "The file uploaded was not in PNG format.";
+          
+          // Delete the temporary file
+          if (!empty($input['files'][$i]['file']['tmpfilename']))
+            unlink($input['files'][$i]['file']['tmpfilename']);
+        }
+      }
+          
       
       // Validate the other file author information
       
