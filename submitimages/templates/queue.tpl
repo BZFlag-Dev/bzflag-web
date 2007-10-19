@@ -15,9 +15,13 @@
 <strong>Uploader Real Name:</strong> {$item.uploaderfirstname} {$item.uploaderlastname}<br>
 <strong>Uploader Username:</strong> {$item.username}<br>
 <form action="{$config.paths.baseURL}queue.php" method="POST">
+<fieldset><legend>Approve/Reject</legend>
 <input type="hidden" name="queueid" value="{$item.queueid}">
+<strong>Message to user:</strong><br>
+<textarea name="message" style="width: 100%;" cols="24" rows="5"></textarea><br>
 <input type="submit" style="background-color: green;" name="action" value="Accept">
 <input type="submit" style="background-color: red;" name="action" value="Reject">
+</fieldset>
 </form>
 </div>
 
