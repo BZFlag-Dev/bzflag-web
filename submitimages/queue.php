@@ -5,6 +5,19 @@
 
   include('common.php');
   
+  // Must be logged in to access the queue
+  if (!$user)
+  {
+    header('Location: '.$config['paths']['baseURL']);
+    exit;
+  }
+  // Must be a moderator to access the queue
+  else if (!$user['moderator'])
+  {
+    header('Location: '.$config['paths']['baseURL']);
+    exit;
+  }
+  
   // Process input
   
   

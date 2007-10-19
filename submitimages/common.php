@@ -32,7 +32,8 @@
   session_start();
   
   // Check if we have the required session data
-  if (isset($_SESSION['bzid'], $_SESSION['username'], $_SESSION['moderator']))
+  // TODO: Add a timeout
+  if (isset($_SESSION['bzid'], $_SESSION['username'], $_SESSION['moderator']) && $_SESSION['bzid'] > 0 && strlen($_SESSION['username']) > 0)
   {
     // We do, so fill the $user variable.
     $user = Array();

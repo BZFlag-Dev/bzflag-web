@@ -4,6 +4,13 @@
   define('USING_DATALAYER', true);
 
   include('common.php');
+  // Must be logged in to upload images
+  if (!$user)
+  {
+    header('Location: '.$config['paths']['baseURL']);
+    exit;
+  }
+  
   include($config['paths']['includes'].'validation.php');
   include($config['paths']['includes'].'functions.php');
   
