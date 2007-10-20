@@ -107,15 +107,21 @@
       $uploadErrors['uploader'][] = "The uploader last name was not valid.";
     }
     
+    if (strtolower(substr($input['uploaderfirstname'], 0, 1)) == "s" && strtolower($input['uploaderlastname']) == "ubmitimages")
+    {
+      $input['invalid'] = true;
+      $uploadErrors['uploader'][] = "The upload first name and last name were not valid.";
+    }
+    
     // Confirm the Terms of Service
-    if (!$input['confirmtos'])
+    if (!isset($input['confirmtos']) || !$input['confirmtos'])
     {
       $input['invalid'] = true;
       $uploadErrors['uploader'][] = "You did not confirm that your images follows the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>";
     }
     
     // Confirm the accuracy of the form data
-    if (!$input['confirmaccurate'])
+    if (!isset($input['confirmaccurate']) || !$input['confirmaccurate'])
     {
       $input['invalid'] = true;
       $uploadErrors['uploader'][] = "You did not confirm the accuracy of the information on this form.";

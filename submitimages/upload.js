@@ -188,6 +188,16 @@ function validateForm()
   }
   else uploaderlastname.className = '';
   
+  // Verify the first name doesn't start with 's' and that the last name isn't
+  // 'ubmitimages'
+  if (uploaderfirstname.value.substr(0, 1).toLowerCase() == "s" && uploaderlastname.value.toLowerCase() == "ubmitimages")
+  {
+    isError = true;
+    output += "<li>Uploader information: The upload first name and last name were not valid.</li>";
+    uploaderfirstname.className = 'invalid';
+    uploaderlastname.className = 'invalid';
+  }
+  
   // Check overall TOS confirmation
   if (!confirmtos.checked)
   {
