@@ -352,7 +352,7 @@
   } // if (size($_POST) > 0)
 
 	$page['title'] = 'Upload Images';
-	$page['javascripts'] = Array('upload.js');
+	$page['javascripts'] = Array('util.js', 'upload.js');
 	
 	// Render the page
 	$tpl->display('header.tpl');

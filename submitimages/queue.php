@@ -18,12 +18,79 @@
     exit;
   }
   
-  // Process input
+  // If they submit the form, let's process that
+  if (sizeof($_POST) > 0)
+  {
+    //////////////////////////////////////////
+    // Read user input
+    //////////////////////////////////////////
+    
+    // Queue table primary key value
+    if (isset($_POST['queueid']))
+      $input['queueid'] = $_POST['queueid'];
+      
+    // Message to the user
+    if (isset($_POST['message']))
+      $input['message'] = $_POST['message'];
+      
+    // Action to complete (Accept or Reject)
+    if (isset($_POST['action']))
+      $input['action'] = $_POST['action'];
+      
+    //////////////////////////////////////////
+    // Process input and generate any errors
+    //////////////////////////////////////////
+    
+    $data['queueitem'] = $dl->Queue_Fetch_ByID($input['queueid']);
+
+    header('Content-Type: text/plain');
+    
+    if ($data['queueitem'])
+    {
+      echo "Database entry exists for this item. Contents:\n";
+      print_r($data['queueitem']);
+    
+      if (strtolower($input['action']) == 'accept')
+      {
+        echo "Action selected was 'accept'.\n";
+        if (file_exists($config['paths']['tmp'].$data['queueitem']['bzid'].'_'.$data['queueitem']['filename']))
+        {
+          $subdir = strtolower(substr($data['queueitem']['uploaderfirstname'], 0, 1).$data['queueitem']['uploaderlastname']);
+          echo "Subdirectory name for this uploader will be '$subdir'\n";
+          echo "Final location for file will be: ".$config['paths']['publicDirectory'].$subdir.'/'.$data['queueitem']['filename'];
+          echo "\n";
+          echo "Final URL for file will be: ".$config['paths']['publicURL'].$subdir.'/'.$data['queueitem']['filename'];
+          echo "\n";
+        }
+        else
+        {
+          echo "Error... The temporary file did not exist.\n";
+        }
+      }
+      else
+      {
+        echo "Action selected was 'reject'.\n";
+      }
+    }
+    
+    
+    exit;
+    
+    
+    
+    
+    
+  }
+  // We'll just be listing the queue
+  else
+  {
+    // Handle data
+    $data['queue'] = $dl->Queue_Fetch_All();
+  }
   
   
-  // Handle data
-  $data['queue'] = $dl->Queue_Fetch_All();
-  
+  $page['title'] = 'Moderation Queue';
+	$page['javascripts'] = Array('util.js', 'queue.js');
   
   
   // Render the page

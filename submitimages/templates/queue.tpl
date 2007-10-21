@@ -21,12 +21,13 @@
       <strong>Uploader Username:</strong> {$item.username}
     </td>
     <td>
-      <form action="{$config.paths.baseURL}queue.php" method="POST"><div>
+      <form action="{$config.paths.baseURL}queue.php" method="post" onsubmit="javascript:return validateForm({$smarty.foreach.queue.index});"><div>
       <input type="hidden" name="queueid" value="{$item.queueid}">
       <strong>Message to user:</strong><br>
-      <textarea name="message" cols="20" rows="4"></textarea><br>
-      <input type="submit" style="background-color: green;" name="action" value="Accept">
-      <input type="submit" style="background-color: red;" name="action" value="Reject">
+      <textarea name="message" id="message{$smarty.foreach.queue.index}" cols="20" rows="4"></textarea><br>
+      <span style="background-color: green;"><input type="radio" name="action" id="accept{$smarty.foreach.queue.index}" value="accept"><label for="accept{$smarty.foreach.queue.index}">Accept</label></span>
+      <span style="background-color: red;"><input type="radio" name="action" id="reject{$smarty.foreach.queue.index}" value="reject"><label for="reject{$smarty.foreach.queue.index}">Reject</label></span>
+      <input type="submit" value="Go">
       </div></form>
     </td>
   </tr>
