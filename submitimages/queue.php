@@ -70,6 +70,22 @@
       else
       {
         echo "Action selected was 'reject'.\n";
+        if (!isset($input['message']) || strlen(trim($input['message'])) == 0)
+        {
+          echo "When rejecting an image, a message to the user must be specified.\n";
+        }
+        else
+        {
+          echo "Rejecting image with the following message to the user:\n".$input['message']."\n\n";
+          
+          // Try to delete the database entry
+          if (!$dl->Queue_Delete_ByID($data['queueitem']['queueid']))
+            echo "There was an error removing the database entry for this item.\n";
+          
+          // Try to delete the temporary file
+          if (!unlink($config['paths']['tmp'].$data['queueitem']['bzid'].'_'.$data['queueitem']['filename']))
+            echo "There was an error removing the temporary file for this item.\n";
+        }
       }
     }
     

@@ -119,6 +119,21 @@ CREATE TABLE `img_queue` (
     }
     else return false;
   }
+  
+  function Queue_Delete_ByID($queueid)
+  {
+    $sql = "DELETE FROM ".TBL_QUEUE." WHERE ";
+    $sql .= "queueid = '".mysql_real_escape_string($queueid, $this->link)."' ";
+    $sql .= "LIMIT 1";
+    
+    $result = mysql_query($sql);
+    
+    if ($result && mysql_affected_rows($this->link) == 1)
+    {
+      return true;
+    }
+    else return false;
+  }
 
 } // class DataLayer
 
