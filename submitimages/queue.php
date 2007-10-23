@@ -61,6 +61,24 @@
           echo "\n";
           echo "Final URL for file will be: ".$config['paths']['publicURL'].$subdir.'/'.$data['queueitem']['filename'];
           echo "\n";
+          
+          // First, make sure our destination directory exists. If not, try to create it
+          if (is_dir($config['paths']['publicDirectory'].$subdir.'/') || mkdir($config['paths']['publicDirectory'].$subdir.'/')) {
+            // Attempt to rename the file into this directory
+            if (rename($config['paths']['tmp'].$data['queueitem']['bzid'].'_'.$data['queueitem']['filename'], $config['paths']['publicDirectory'].$subdir.'/'.$data['queueitem']['filename']))
+            {
+              echo "This item was successfully moved into the public directory";
+              
+              if (!$dl->Queue_Delete_ByID($data['queueitem']['queueid']))
+                echo "There was an error removing the database entry for this item.\n";
+            }
+            else
+              echo "We were unable to rename the file to the destination location.\n";
+          }
+          else
+          {
+            echo "We were unable to create create the destination directory for this image.\n";
+          }
         }
         else
         {
