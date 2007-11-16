@@ -377,14 +377,13 @@ function action_list() {
 // menotume hack 2006/14/18 - speed fix ??
     $result = sqlQuery ("
       SELECT g.group_id FROM phpbb_user_group ug, phpbb_groups g
-      WHERE g.group_id=ug.group_id AND ug.user_pending=0 AND (ug.user_id = $playerid AND g.group_name<>'')");
-
-
+      WHERE g.group_id=ug.group_id AND ug.user_pending=0 AND ((ug.user_id = $playerid AND g.group_name<>'') OR (g.group_name='VERIFIED'))");
 
     while ($row = mysql_fetch_row($result))
       $advertList .= ",$row[0]";
     sqlQuery ("USE $dbname");
   }
+  //print "NOTICE: $advertList\n";
 
   if ($version)
     $qryv = "AND version='$version'";
