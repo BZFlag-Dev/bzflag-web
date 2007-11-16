@@ -17,7 +17,7 @@ $debugFile	= 'bzfls.log';
 
 // define dbhost/dbuname/dbpass/dbname here
 // NOTE it's .php so folks can't read the source
-include('serversettings.php');
+include('/etc/bzflag/serversettings.php');
 
 # for banning.  provide key => value pairs where the key is an
 # ip address. value is not used at present.
@@ -25,6 +25,8 @@ include('serversettings.php');
 $banlist = array(
   '68.109.43.46' => 'knightmare.kicks-ass.net',
 #  '127.0.0.1' => 'localhost'
+  '66.189.4.29' => 'axl rose',
+  '134.241.194.13' => 'axl rose',
   '255.255.255.255' => 'globalbroadcast'
 );
 

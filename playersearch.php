@@ -1,8 +1,4 @@
-<?
-
-include ('handycode.inc');
-
-include('header.inc'); ?>
+<? include('header.inc'); ?>
 
 <form method="get" action="<?=$_SERVER['PHP_SELF']?>">
 <p>Callsign</p>
@@ -16,15 +12,22 @@ include('header.inc'); ?>
 
 	$page = (isset($page) ? $page : '1');
 
-	$query = "SELECT callsign, lastserver FROM `playerinfo` where `callsign` LIKE '%$safecallsign%' ORDER BY `callsign`";
-	$numrows = num_rows($query);
+//  following query WAY too long (changed by menotume 6/8/2007)
+//	$query = "SELECT callsign, lastserver FROM `playerinfo` where `callsign` LIKE '%$safecallsign%' ORDER BY `callsign` ";
+	$safecallsign = str_replace ('%', '', $callsign);
+	if (!empty($safecallsign)) {
+		$query = "SELECT callsign, lastserver FROM `playerinfo` where `callsign` LIKE '$safecallsign%' ORDER BY `callsign` ";
+		$numrows = num_rows($query);
+	} else {
+		$numrows = -1;
+	}
 
 	if ($numrows > 0) {
-		if ($player = mysql_query ("$query LIMIT ".(($page-1)*30).",30")) {
+		if ($player = mysql_query ("$query LIMIT ".(($page-1)*100).",100")) {
 ?>
 <p class="pages">Go to: <?=(($page<2)?$i18n[Previous]:"<a href=\"$PHP_SELF?callsign=".urlencode($callsign)."&amp;page=".($page-1)."\">$i18n[Previous]</a>")?> <?
 
-			$numpages = ceil($numrows/30);
+			$numpages = ceil($numrows/100);
 			for ($i = 1; $i <= $numpages; $i++) {
 				echo (($i == $page) ? "$i " : "<a href=\"$PHP_SELF?callsign=$callsign&amp;page=$i\">$i</a>\n");
 			}
@@ -49,15 +52,19 @@ include('header.inc'); ?>
 
 <p class="pages">Go to: <?=(($page<2)?$i18n[Previous]:"<a href=\"$PHP_SELF?callsign=".urlencode($callsign)."&amp;page=".($page-1)."\">$i18n[Previous]</a>")?> <?
 
-			$numpages = ceil($numrows/30);
+			$numpages = ceil($numrows/100);
 			for ($i = 1; $i <= $numpages; $i++) {
 				echo (($i == $page) ? "$i " : "<a href=\"$PHP_SELF?callsign=$callsign&amp;page=$i\">$i</a>\n");
 			}
 ?><?=(($page>=$numpages)?$i18n[Next]:"<a href=\"$PHP_SELF?callsign=".urlencode($callsign)."&amp;page=".($page+1)."\">$i18n[Next]</a>")?></p><?
 		}
+	} else if ($numrows < 0) {
+?>
+<p><b style="color:#f00;">Please enter a callsign!</b></p>
+<?
 	} else {
 ?>
-<p>No player by the name '<?=htmlentities($callsign)?>'</p>
+<p><b>No player by the name '<?=htmlentities($callsign)?>'</b></p>
 <?
 	}
 }

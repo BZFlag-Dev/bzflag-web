@@ -1,8 +1,4 @@
-<?
-
-include('handycode.inc');
-
-include ('header.inc'); ?>
+<? include ('header.inc'); ?>
 
 <p>The content and code of this website is protected by
 copyright. However, you may use it under certain restrictions as set

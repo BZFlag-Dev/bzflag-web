@@ -1,8 +1,4 @@
-<?
-
-include('handycode.inc');
-
-include('header.inc');
+<? include('header.inc');
 
 function yn_img ($yn = 'N') {
   if ($yn == 'Y') {

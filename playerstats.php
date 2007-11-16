@@ -1,8 +1,4 @@
-<?
-
-include('handycode.inc');
-
-include('header.inc') ?>
+<? include('header.inc') ?>
 
 <ul>
 <li><a href="#halloffame">Hall of Fame</a>

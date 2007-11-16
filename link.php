@@ -1,8 +1,4 @@
-<?
-
-include ('handycode.inc');
-
-include ('header.inc'); ?>
+<? include ('header.inc'); ?>
 
 <p>Download any one of these images and place it in your webspace:</p>
 <p>

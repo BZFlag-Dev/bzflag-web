@@ -1,4 +1,4 @@
-<?
+<? include ('handycode.inc');
 
 if (isset($viewsource)) { $title = "View Source"; }
 
@@ -106,8 +106,9 @@ Other Links
 <li><a href="/bb/">Forums</a></li>
 <li><a href="/irc/irc.cgi">IRC Chat</a></li>
 <li><a href="/league/">CTF League</a></li>
-<li><a href="http://bzflag.org/wiki/Download">Download</a></li>
-<li><a href="http://bzflag.org/wiki/OtherLinks">OtherLinks</a></li>
+<li><a href="http://my.bzflag.org/w">BZFlag Wiki</a></li>
+<li><a href="http://my.bzflag.org/w/Download">Download</a></li>
+<li><a href="http://my.bzflag.org/w/Other_Links">Other Links</a></li>
 <li><em><a href="link.php">Link to us!</a></em></li>
 </ul>
 </div>

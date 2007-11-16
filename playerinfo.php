@@ -1,23 +1,15 @@
-<?
+<? include('header.inc') ?>
 
-include('handycode.inc');
-
-// Read user input
-if (isset($_GET['callsign'])) $input['callsign'] = smart_strip_slashes($_GET['callsign']);
-
-// Run queries
-$result['player'] = mysql_query ("SELECT * FROM `playerinfo` where `callsign` = '".mysql_real_escape_string($input['callsign'])."'");
-
-
-include('header.inc') ?>
-
-<h2>Stats for player <?=htmlentities($input['callsign'])?></h2>
+<h2>Stats for player <?=htmlentities($callsign)?></h2>
 
 <?
 
-$data['player'] = mysql_fetch_array($result['player'], MYSQL_ASSOC);
+#$safecallsign = mysql_escape_string($callsign);
+$safecallsign = $callsign;
 
-if ($data['player']) {
+$player = mysql_query ("SELECT * FROM `playerinfo` where `callsign` = '$safecallsign'");
+
+if ($row = mysql_fetch_array($player, MYSQL_ASSOC)) {
 ?>
 <table>
 <caption>Player Info</caption>

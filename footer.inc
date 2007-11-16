@@ -6,7 +6,7 @@
 
 <div id="copyright">
 <a href="copyright.php">
-copyright &copy;</a> 2003 <a href="http://www.noodleroni.com/contact.php">Tucker McLean</a>
+copyright &copy;</a> 2003 Tucker McLean
 </div>
 
 <div id="footer">

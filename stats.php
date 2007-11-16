@@ -1,14 +1,15 @@
-<?
-
-include ('handycode.inc');
-  
-include ('header.inc'); ?>
+<? include ('header.inc'); ?>
 
 <h2>News:</h2>
 
-<p><strong>1/19/2004:</strong> Check out the <a href="http://files.noodleroni.com/pub/bzflag/nightlies/">nightly RPM builds</a> of the BZFlag code in CVS.</p>
+<p><strong>3/29/2007:</strong> The BZFlag developers have changed the source control system from the project, from the previous CVS to Subversion (SVN). Check out the details on <a href="http://my.bzflag.org/w/BZFlag_SVN"> the wiki</a>.</p><!--donny_baker-->
 
-<p><strong>1/16/2004:</strong> I've finally put up the backend script that is used to refresh the database. Download it <a href="http://files.noodleroni.com/pub/bzflag/bzupdate.pl">here</a>.</p>
+<p><strong>3/26/2007:</strong> We are happy to announce the arrival of a new and improved wiki system, located at <a href="http://my.bzflag.org/w">http://my.bzflag.org/w</a>. This new wiki is full of information about the game, created by the developers and users alike. Please feel free to expand and enhance it for all.</p><!--donny_baker-->
+
+<!--<p><strong>1/19/2004:</strong> Check out the nightly RPM builds of the BZFlag code in CVS.</p>-->
+
+<!--<p><strong>1/16/2004:</strong> I've finally put up the backend script that is used to refresh the database.</p>-->
+
 
 <p><strong>1/11/2004:</strong> A happy new layout for the happy New Year!</p>
 
@@ -36,19 +37,14 @@ href="http://search.cpan.org/">CPAN</a>!</p>
 retrieving information about servers and players into a Perl module
 called <a
 href="http://search.cpan.org/~tuckerm/BZFlag-Info/Info.pm">BZFlag::Info</a>,
-which you can download from <a
-href="http://files.noodleroni.com/pub/bzflag/BZFlag-Info-1.7.1.tar.gz">this
-server</a> or soon from <a
-href="http://search.cpan.org/">CPAN</a>!</p>
+which you can download from href="http://search.cpan.org/">CPAN</a>!</p>
 
-<p><strong>11/01/2003:</strong> Due to popular demand (well, just one
+<!--<p><strong>11/01/2003:</strong> Due to popular demand (well, just one
 request, for now :-) ) the <a href="maps/">maps</a> are again
-available for download.</p>
+available for download.</p>-->
 
-<p><strong>10/31/2003:</strong> <? echo $_SERVER['SERVER_NAME']; ?> is back! It has been
-completely redesigned, and should now work much smoother and look more
-consistent. <a href="http://www.noodleroni.com/contact.php">Drop me a
-line</a>, and give me some feedback.</p>
+<p><strong>10/31/2003:</strong> <? echo $_SERVER['SERVER_NAME']; ?> is back! It has been completely redesigned, and should now work much smoother and look more
+consistent. Drop me a line</a>, and give me some feedback.</p>
 
 <?=$separator?>
 
@@ -126,7 +122,7 @@ if ($row = mysql_fetch_array($currentplayers, MYSQL_ASSOC)) {
 
 ?></td></tr>
 
-
+<!--
 <tr class="oddrow"><td>Player that is the rabbit on <?=serverlink('dragon.org:5255')?></td><td><?
 $currentplayers = mysql_query ("SELECT callsign,score FROM `currentplayers` WHERE team = 'H' ORDER BY `score` DESC LIMIT 1");
 
@@ -149,6 +145,7 @@ if ($row = mysql_fetch_array($currentplayers, MYSQL_ASSOC)) {
 }
 
 ?></td></tr>
+-->
 
 <!--<tr class="oddrow"><td>Team on <?=serverlink('xmission.bzflag.org:5154')?> that is doing the same</td><td><?
 $currentplayers = mysql_query ("SELECT server,team,score FROM `teaminfo` WHERE `server` = 'xmission.bzflag.org:5154' ORDER BY score DESC");
