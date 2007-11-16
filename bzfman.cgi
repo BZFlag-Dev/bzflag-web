@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # use local man page, or pull from remote
-USE_LOCAL=1
+USE_LOCAL=0
 
 echo 'Content-type: text/html'
 echo ''
@@ -13,12 +13,14 @@ case "$QUERY_STRING" in
 	    command="`echo $QUERY_STRING | /usr/bin/sed 's/\.[56]\.in$//'`"
 	    content="`/usr/bin/man $command`"
 	else
-	    content="`/usr/local/bin/wget -O - http://cvs.sourceforge.net/viewcvs.py/bzflag/bzflag/man/$QUERY_STRING?rev=HEAD`"
-	fi
+	    #content="`/usr/local/bin/wget -O - http://cvs.sourceforge.net/viewcvs.py/bzflag/bzflag/man/$QUERY_STRING?rev=HEAD`"
+#http://bzflag.svn.sourceforge.net/viewvc/*checkout*/bzflag/branches/v2_0branch/bzflag/man/bzfs.6.in
+	    content="`/usr/local/bin/wget -O - http://bzflag.svn.sourceforge.net/viewvc/*checkout*/bzflag/branches/v2_0branch/bzflag/man/$QUERY_STRING|/usr/bin/groff -man -T ascii 2>&1`"
 	echo "$content" \
 	    | /usr/local/bin/man2html \
 	    | /usr/bin/sed -e "s~^using the manual pages.<BR>$~using the manual pages from http://cvs.sourceforge.net/viewcvs.py/bzflag/bzflag/man/$QUERY_STRING<BR>~" \
 	    | /usr/bin/sed -e "s~<A HREF=\"bzfman.cgi\">Return to Main Contents</A><HR>~<a href=\"$SCRIPT_NAME\">Top</a><HR>~"
+	    fi
 	;;
     *)
 	echo '<html>'

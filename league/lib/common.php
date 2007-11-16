@@ -1,87 +1,107 @@
-<?php
+<?php // $Id$ vim:sts=2:et:sw=2
 
-define("DATEFORMAT_FULL", "Y-m-d H:i:s");
 
-function smileys($input) {
-  $res = mysql_query("select * from l_smiley");
-  while($row = mysql_fetch_object($res)) {
-	$input = str_replace(htmlspecialchars($row->code), '<img border=0 src="images/'.$row->image.'">', $input);
+// 'global' defines ...
+define (DELETED_PLAYER, 1);
+
+define (ADMIN_PERMISSION, 1);
+define (GUEST_PERMISSION, 4);
+define (NEW_USER_PERMISSION, 3);
+    
+
+
+// Functions to help with permissions
+
+function isGuest() {
+  return $_SESSION['role_id'] == GUEST_PERMISSION;
+}
+
+function isAuthenticated() {
+  return !isGuest();
+}
+
+function isAdmin() {
+  return $_SESSION['role_id'] == ADMIN_PERMISSION;
+}
+
+function isFuncAllowed ($funcID){
+  if( $_SESSION['role_id'] == ADMIN_PERMISSION ) return true;	
+  $funcID = getAbsPermission($funcID);
+  return isset($_SESSION['permissions'][$funcID]);
+}
+
+function getRolesWithPermission($name) {
+  $roles = array(ADMIN_PERMISSION); // Admin always got access
+  $name = getAbsPermission($name);
+
+  $res = mysql_query("SELECT role_id FROM bzl_permissions WHERE name = '$name'") or die(mysql_error());
+  while($row = mysql_fetch_array($res)) {
+    $roles[] = $row[0];
   }
-  return $input;
+
+  return $roles;
 }
 
-function displayRating($id) {
-	$res = mysql_query("select * from l_team where id = '$id'");
-	$row = mysql_fetch_array($res);
-	$rating = $row[score];
-	$text = "<img src=\"images/blocks/";
-	if($rating < 1000) {
-		$text .= "gray";
-	} else if($rating >= 1000 && $rating < 1100) {
-		$text .= "green";
-	} else if($rating >= 1100 && $rating < 1200) {
-		$text .= "blue";
-	} else if($rating >= 1200 && $rating < 1300) {
-		$text .= "purple";
-	} else if($rating >= 1300 && $rating < 1400) {
-		$text .= "orange";
-	} else if($rating >= 1400) {
-		$text .= "red";
-	}
-	$text .= ".gif\">&nbsp;".$rating;
-	return $text;
+function getAbsPermission($name) {
+	if( strpos($name,'::') === false ) 
+		$name = $GLOBALS['MODULE_NAME'] . '::' . $name;
+  return $name;
 }
 
-/* sendMessage:
-				Send a message to somebody
-*/
-function sendMessage($fromid, $toid, $subject, $msg, $toteam = 'no') {
-				$now = gmdate("Y-m-d H:i:s");
-				mysql_query("insert into l_message values(0, $toid, $fromid, '$now',
-					\"".(strip_tags(addslashes($subject)))."\",
-					\"".(addslashes($msg))."\", 'new', '$toteam')");
+function smileys ($input) {
+  static $smiley;
+
+  if( $smiley === null ) {
+    $smiley = array();
+    
+    $res = mysql_query("select * from l_smiley") or die(mysql_error());
+    while($row = mysql_fetch_object($res)) {
+      $smiley[htmlspecialchars($row->code)] = 
+        '<img border=0 src="' . THEME_DIR . 'smilies/' .$row->image. '">';
+    }
+  }
+
+  return strtr($input,$smiley);
 }
 
-/* sendTeamMessage:
-				Send a message to a team
-*/
-function sendTeamMessage($fromid, $toteamid, $subject, $msg) {
-		$res = mysql_query("select id from l_player where team=$toteamid");
-		while($obj = mysql_fetch_object($res)) {
-				sendMessage($fromid, $obj->id, $subject, $msg, 'yes');
-		}
+
+
+// exponential moving average of # of games played per day
+// if $id is null, an array of all team's activity rankings will be returned.
+// TODO: What if team was 'born' less than $nDays ago ?!?!?!?
+// Returns:  array ( [teamid] => activity  )
+function teamActivity ($id, $nDays){
+  if ($id > 0)
+    $w = "AND (team1=$id OR team2=$id)";
+
+  $set = sqlQuery ("select team1, team2, UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(tsactual)  as age FROM bzl_match
+    WHERE tsactual > DATE_SUB(NOW(), INTERVAL $nDays day) $w
+    ORDER BY tsactual desc");
+
+  $k = (2 / (1 + $nDays)) / $nDays;
+  $spd = (24*60*60);
+  $accum = array();
+  while ($row = mysql_fetch_array  ($set)){
+    $weight = $k * ($nDays - ($row[2] / $spd));
+    $accum[$row[0]] += $weight; 
+    $accum[$row[1]] += $weight; 
+  }
+  if ($id > 0)
+    return $accum [$id];
+  return $accum;
 }
 
-/* updateRating:
-				Updates two teams' ratings after a match
-*/
-function updateRating($score, $teama, $teamb) {
-	// score meanings:
-	//		1: team A won
-	//		0: draw
-	// -1: team B won
-	$res = mysql_query("select score from l_team where id = '$teama'");
-	$obj = mysql_fetch_object($res);
-	$oldA = $obj->score;
-	$res = mysql_query("select score from l_team where id = '$teamb'");
-	$obj = mysql_fetch_object($res);
-	$oldB = $obj->score;
-	$factor = 50.0;
-	$S = 1.0 / (1 + pow(10.0, ($oldB - $oldA) / 400.0));
-	$Sc = ($score + 1) / 2.0;
-	$diff = abs($factor * ($Sc - $S));
-	if($diff < 1)
-					$diff = 1;
-	$d = floor($diff + 0.5);
-	if($Sc - $S < 0)
-					$d = -$d;
-	if($Sc - $S == 0) {
-			$d = 0;
-	}
-	$newA = $oldA + $d;
-	$newB = $oldB - $d;
-	mysql_query("update l_team set score = '$newA' where id = '$teama'");
-	mysql_query("update l_team set score = '$newB' where id = '$teamb'");
+
+function displayRating ($id) {
+  $res = mysql_query('select * from '. TBL_TEAM ." where id='$id'");
+  $row = mysql_fetch_array($res);
+  $rating = $row[score];
+  $badge = $rating;
+  if ($badge < 800) $badge = 800;
+  if ($badge > 1899) $badge = 1899;
+  $imgname = sprintf ("%04d.gif", $badge - $badge%100);
+  return "<img width=19 height=17 src=\"" . THEME_DIR . "$imgname\">&nbsp;$rating";;
 }
+
 
 ?>
