@@ -12,9 +12,9 @@
 // IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-define (MYSQL_PERSISTENT, false);  // user persistent connection ?
-define (MD5_PASSWORD, true);       // encrypt password in log file
 
+define (MYSQL_PERSISTENT, false);
+define (MD5_PASSWORD, true);
 
 # where to send debug printing (might override below)
 $debugLevel= 2;      // set to >2 to see all sql queries (>1 to see GET/POST input args)
@@ -24,7 +24,7 @@ $debugNoIpCheck = 0;  // for testing ONLY !!!
 
 // define dbhost/dbuname/dbpass/dbname here
 // NOTE it's .php so folks can't read the source
-include('serversettings.php');
+include('/etc/bzflag/serversettings.php');
 // $dbhost  = 'localhost';
 // $dbname  = 'bzflag';
 // $bbdbname = 'bzbb';
@@ -40,6 +40,11 @@ $banlist = array(
   '84.121.235.192' => 'josago.homelinux.com',
   'josago.homelinux.com' => 'josago.homelinux.com',
 #  '127.0.0.1' => 'localhost'
+  '69.119.237.214' => '',
+  '68.118.242.11' => 'axl rose',
+  '134.241.194.13' => 'axl rose from school',
+//  '82.17.105.69' => 'PETER',
+  '190.161.128.59' => 'Felipes CHEATING SERVER, god mode is not allowed',
   '255.255.255.255' => 'globalbroadcast'
 );
 
@@ -51,18 +56,18 @@ register_shutdown_function ('allDone');
 $debugMessage = null;
 
 function allDone (){
-  global $debugMessage, $debugFilename;
-  if ($debugMessage != null){
-    if ( ($fdDebug = fopen ($debugFilename, 'a')) == null)
-      print("Unable to write to to log file [$debugFilename]");
-    else {
-      fwrite($fdDebug, date('D M j G:i:s T Y') . ' ' . str_pad($_SERVER['REMOTE_ADDR'],15)
-          . ' ' . str_replace ("\n", "\n  ", $debugMessage));
-      if ($debugMessage{strlen($debugMessage)-1} != "\n");
-        fputs ($fdDebug, "\n");
-      fclose($fdDebug);
-    }
-  }
+//  global $debugMessage, $debugFilename;
+//  if ($debugMessage != null){
+//    if ( ($fdDebug = fopen ($debugFilename, 'a')) == null)
+//      print("Unable to write to to log file [$debugFilename]");
+//   else {
+//      fwrite($fdDebug, date('D M j G:i:s T Y') . ' ' . str_pad($_SERVER['REMOTE_ADDR'],15)
+//          . ' ' . str_replace ("\n", "\n  ", $debugMessage));
+//      if ($debugMessage{strlen($debugMessage)-1} != "\n");
+//        fputs ($fdDebug, "\n");
+//      fclose($fdDebug);
+//    }
+//  }
 }
 
 function debug ($message, $level=1) {
@@ -83,11 +88,13 @@ function debugArray ($a){
   return str_replace (array ("\r", "\n"), array ('<\r>', '<\n>'), $msg);
 }
 
-// temp debug (menotume 2006-03-10)
-//if (strncasecmp ($_REQUEST['callsign'], "craxy", 5) == 0){
-//  debug ("\n***** GLOBALS[_SERVER]:\n");
-//  debug (  print_r ($GLOBALS['_SERVER'], true), 1 );
+
+// temp debug (menotume 2006-05-22)
+//if (strncasecmp ($_REQUEST['callsign'], "dutch", 5) == 0){
+//  debug ("\n***** GLOBALS:\n");
+//  debug (  print_r ($GLOBALS, true), 1 );
 //}
+
 
 if ($debugLevel > 1){
   if (count ($GLOBALS['_POST']))
@@ -230,8 +237,8 @@ function testform($message) {
 <body>
   <h1>BZFlag db server</h1>
   ' . $message . '
-  <p>This is the development interface to the <a href="http://BZFlag.org/">BZFlag</a> list server.</p>
-  <form action="" method="GET">
+  <p>This is the development interface to the <a href="http://BZFlag.org/">BZFlag</a> list server AT BZ.</p>
+  <form action="" method="POST">
     action:<select name="action">
 	<option value="LIST" selected>LIST - list servers</option>
 	<option value="DEBUG">DEBUG - developer interface</option>
@@ -276,10 +283,10 @@ Group1</textarea>
     $bbdbname = 'HIDDEN';
     $dbuname = 'HIDDEN';
     $dbpass  = 'HIDDEN';
-    print("<PRE>\n");
-    var_dump($GLOBALS);
-    print("</PRE>\n");
-    phpinfo();
+//    print("<PRE>\n");
+//    var_dump($GLOBALS);
+//    print("</PRE>\n");
+//    phpinfo();
   }
   print('</body>
 </html>');
@@ -363,9 +370,17 @@ function action_list() {
     // get list of groups player belongs to ...
     debug ("FETCHING GROUPS", 3);
 
+//    $result = sqlQuery ("
+//      SELECT g.group_id FROM phpbb_user_group ug, phpbb_groups g
+//      WHERE g.group_id=ug.group_id AND (ug.user_id = $playerid AND g.group_name<>'') OR g.group_name='VERIFIED'");
+
+// menotume hack 2006/14/18 - speed fix ??
     $result = sqlQuery ("
       SELECT g.group_id FROM phpbb_user_group ug, phpbb_groups g
-      WHERE g.group_id=ug.group_id AND (ug.user_id = $playerid AND g.group_name<>'')");
+      WHERE g.group_id=ug.group_id AND ug.user_pending=0 AND (ug.user_id = $playerid AND g.group_name<>'')");
+
+
+
     while ($row = mysql_fetch_row($result))
       $advertList .= ",$row[0]";
     sqlQuery ("USE $dbname");
@@ -484,6 +499,7 @@ function checktoken($callsign, $ip, $token, $garray) {
       $query = "SELECT phpbb_groups.group_name FROM phpbb_groups, phpbb_user_group "
 	. "WHERE phpbb_user_group.user_id='$playerid' "
 	. "AND phpbb_user_group.group_id=phpbb_groups.group_id "
+	. "AND phpbb_user_group.user_pending=0 "
 	. "and (phpbb_groups.group_name='"
 	. implode("' or phpbb_groups.group_name='", $garray) . "' )";
       $result = mysql_query("$query")
@@ -763,28 +779,30 @@ debug('Connecting to the database', 3);
 
 # Connect to the server database persistently.
 if (MYSQL_PERSISTENT === true){
-  $link = mysql_pconnect($dbhost, $dbuname, $dbpass)  or die('Could not connect: ' . mysql_error());
+  $link = mysql_pconnect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
 }else{
-  $link = mysql_connect($dbhost, $dbuname, $dbpass)  or die('Could not connect: ' . mysql_error());
+  $link = mysql_connect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
 }
 if (!mysql_select_db($dbname)) {
   debug("Database $dbname did not exist", 1);
   die('Could not open db: ' . mysql_error());
 }
 
-if (rand(1, 100) == 50){     // reduce queries
-  # remove all inactive registered players from the table
-  $timeout = 31536000; # timeout in seconds, 365 days
-  $staletime = time() - $timeout;
-  mysql_query("DELETE FROM players WHERE lastmod < $staletime", $link)
-    or die ('Could not remove inactive players' . mysql_error());
 
-  # remove all players who have not confirmed registration
-  $timeout = 259200;  # timeout in seconds, 72h
-  $staletime = time() - $timeout;
-  mysql_query("DELETE FROM players WHERE lastmod < $staletime AND randtext != NULL", $link)
-    or die ('Could not remove inactive players' . mysql_error());
+if (rand(1, 100) == 50){     // menotume 2006-04-30 : reduce queries
+# remove all inactive registered players from the table
+$timeout = 31536000; # timeout in seconds, 365 days
+$staletime = time() - $timeout;
+mysql_query("DELETE FROM players WHERE lastmod < $staletime", $link)
+  or die ('Could not remove inactive players' . mysql_error());
+
+# remove all players who have not confirmed registration
+# FIXME this should not happen on every request
+$staletime = time() - $timeout;
+mysql_query("DELETE FROM players WHERE lastmod < $staletime AND randtext != NULL", $link)
+  or die ('Could not remove inactive players' . mysql_error());
 }
+
 
 # tell the proxies not to cache
 header('Cache-Control: no-cache');
