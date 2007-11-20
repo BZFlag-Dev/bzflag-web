@@ -42,7 +42,7 @@ end;
  echo "<input type=\"text\" size=40 maxlength=64 name=\"pubDate\" value=\"" . gmdate('D, d M Y H:i:s T') . "\"></td></tr>\n";
 
 print <<< end
-  <tr><td align="right">Version:</td><td align="left"><input type="text" size=40 maxlength=64 name="version" value="1.12"></td></tr>
+  <tr><td align="right"><a href="motdversion.html" target="_blank">Version</a>:</td><td align="left"><input type="text" size=40 maxlength=64 name="version" value="2.0"></td></tr>
   <tr><td align="right">Title:</td><td align="left"><input type="text" size=80 maxlength=80 name="title"></td></tr>
   <tr><td align="right">Message:</td><td align="left"><textarea rows=8 cols=40 name="description"></textarea></td></tr>
   <tr><td align="right"><input type="submit" value="Set MOTD"></td><td align="left">&nbsp;</tr>
