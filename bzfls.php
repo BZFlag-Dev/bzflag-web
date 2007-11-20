@@ -56,18 +56,23 @@ register_shutdown_function ('allDone');
 $debugMessage = null;
 
 function allDone (){
-//  global $debugMessage, $debugFilename;
-//  if ($debugMessage != null){
-//    if ( ($fdDebug = fopen ($debugFilename, 'a')) == null)
-//      print("Unable to write to to log file [$debugFilename]");
-//   else {
-//      fwrite($fdDebug, date('D M j G:i:s T Y') . ' ' . str_pad($_SERVER['REMOTE_ADDR'],15)
-//          . ' ' . str_replace ("\n", "\n  ", $debugMessage));
-//      if ($debugMessage{strlen($debugMessage)-1} != "\n");
-//        fputs ($fdDebug, "\n");
-//      fclose($fdDebug);
-//    }
-//  }
+
+  global $debugMessage, $debugFilename;
+  if ($debugMessage != null){
+    $fdDebug = @fopen ($debugFilename, 'a');
+
+   if ($fdDebug != null) {
+      fwrite($fdDebug, date('D M j G:i:s T Y') . ' ' . str_pad($_SERVER['REMOTE_ADDR'],15)
+          . ' ' . str_replace ("\n", "\n  ", $debugMessage));
+      if ($debugMessage{strlen($debugMessage)-1} != "\n");
+        fputs ($fdDebug, "\n");
+      fclose($fdDebug);
+    }
+    else {
+      //print("Unable to write to to log file [$debugFilename]");
+    }
+  }
+
 }
 
 function debug ($message, $level=1) {
