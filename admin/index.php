@@ -27,6 +27,7 @@ print <<< end
 <br>
 <b>MOTD:</b><br>
 <a href="/admin/setMOTD.php">Set MOTD</a><br>
+<a href="/admin/editMOTD.php">Edit existing MOTDs</a><br>
 end;
     }
     if($substr[2] >= 3) {

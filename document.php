@@ -21,7 +21,7 @@ print <<< end
 	<table border="0" cellpadding="0" cellspacing="0" width="85%">
 		<tr>
 			<td align="center">
-				<img src="/images/title.png">
+				<a href="http://bzflag.org/"><img src="/images/title.png" border=0></a>
 			</td>
 		</tr>
 		<tr>
@@ -46,6 +46,7 @@ print <<< end
 								<table class="sidebar_border" bgcolor="#FFFFFF" border="0" cellpadding="0">
 									<tr><td>
 										<a href="/" class="navbar">home</a><br>
+										<a href="http://my.bzflag.org/bb/profile.php?mode=register" class="navbar" style="color: red;">register</a><br>
 										<a href="http://my.bzflag.org/w/Getting Help" class="navbar">getting&nbsp;help</a><br>
 										<a href="http://my.bzflag.org/w/Download" class="navbar">download</a><br>
 										<a href="/help/" class="navbar">help</a><br>
@@ -58,7 +59,7 @@ print <<< end
 										<a href="http://my.BZFlag.org/" class="navbar">stats</a><br>
 										<a href="http://my.BZFlag.org/bb/" class="navbar">forums</a><br>
 										<a href="http://my.BZFlag.org/league/" class="navbar">CTF&nbsp;league</a><br>
-										<a href="http://bzflag.svn.sourceforge.net/viewvc/*checkout*/bzflag/trunk/bzflag/TODO" class="navbar">TODO</a><br>
+										<a href="http://bzflag.svn.sourceforge.net/viewvc/*checkout*/bzflag/trunk/bzflag/TODO class="navbar">TODO</a><br>
 										<br>
 										<a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
 										&nbsp;<a href="http://bzflag.svn.sourceforge.net/viewvc/bzflag/" class="navbar">browse&nbsp;Subversion</a><br>
@@ -104,6 +105,15 @@ print <<< end
 									<div class="content">
 end;
   }
+
+function accessDenied()
+{
+$this->begin('access denied', 1);
+print <<< end
+Access Denied.
+end;
+$this->end();
+}
 
 	function end(){
 print <<< end
