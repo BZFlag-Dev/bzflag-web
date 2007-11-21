@@ -332,9 +332,9 @@
           $data['queue']['filename'] = $input['files'][$i]['file']['filename'];
           $data['queue']['authorname'] = $input['files'][$i]['authorname'];
           $data['queue']['licenseid'] = $input['files'][$i]['licenseselector'];
-          $data['queue']['licensename'] = $input['files'][$i]['licensename'];
-          $data['queue']['licenseurl'] = $input['files'][$i]['licenseurl'];
-          $data['queue']['licensebody'] = $input['files'][$i]['licensebody'];
+          $data['queue']['licensename'] = @$input['files'][$i]['licensename'];
+          $data['queue']['licenseurl'] = @$input['files'][$i]['licenseurl'];
+          $data['queue']['licensebody'] = @$input['files'][$i]['licensebody'];
           if (!$dl->Queue_Insert($data['queue']))
             die("Unable to insert image into queue database.");
         }
