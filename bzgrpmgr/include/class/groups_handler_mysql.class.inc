@@ -1,26 +1,16 @@
 <?php
 
-// Copyright (c) 1993 - 2007 Tim Riker
-//
-// This package is free software;  you can redistribute it and/or
-// modify it under the terms of the license found in the file
-// named COPYING that should have accompanied this file.
-//
-// THIS PACKAGE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
-// IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
-// WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+require_once( "groups_handler.class.inc" );
 
-/*
-This file contains the user/group data access layer for bzgrpmgr.
-It can be adapted to a different database type if/when the global
-login database type changes. Presently it is adapted to use a
-phpBB-style MySQL database for users and a custom MySQL for
-groups.
-*/
+// Template class for group data handling
+
+class groups_handler_mysql extends groups_handler {
+}
 
 // FIXME this file is now officialy out-of-date with data.class.php
 // FIXME make the return value of a function consistent
 
+/*
 require_once( "data.class.php" );
 
 class data_phpbb2 extends data {
@@ -287,7 +277,7 @@ class data_phpbb2 extends data {
 
 	// Function to return a list of organizations a user may admin
 	// This is dead... going to use other methods for this now
-/*	public function getOrgAdminships( $id ) {
+	public function getOrgAdminships( $id ) {
 		$orgs = array();
 
 		$sql = "SELECT groupid FROM group_members WHERE userid=".
@@ -310,7 +300,7 @@ class data_phpbb2 extends data {
 		}
 
 		return array_keys( $orgs );
-	} */
+	}
 
 	// Function to check whether a given user can admin users in
 	// the specified organization (kind of a reverse of the above)
@@ -451,3 +441,4 @@ class data_phpbb2 extends data {
 }
 
 ?>
+*/

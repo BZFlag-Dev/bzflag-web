@@ -1,17 +1,33 @@
 <?php
 
-// NOTE: RUN HTML VALIDATION!
+// Includes
+require_once( 'include/global.inc' );
 
-// Copyright (c) 1993 - 2004 Tim Riker
-//
-// This package is free software;  you can redistribute it and/or
-// modify it under the terms of the license found in the file
-// named COPYING that should have accompanied this file.
-//
-// THIS PACKAGE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
-// IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
-// WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+// Page content
+require_once( 'template/header.inc' );
 
+?>
+
+<p><i>Please note: this system is currently a work-in-progress. Some features may not work well or at all. The development for this system follows the guidelines located at the BZFlag Wiki <a href="http://my.bzflag.org/w/Group_Management_System" target="blank">here</a>. To contribute to this project, please visit the #bzflag channel on the Freenode IRC network to discuss current development.</i></p>
+
+<p>Welcome to the BZFlag Global Group Management system. BZFlag is a free online multiplayer cross-platform open source 3D tank battle game. Global groups enable server owners to grant permissions to users based on their membership in these groups. Groups are organized into organizations. To use this management system, you must first log in with your BZFlag global username and password. To register, please visit <a href="http://my.bzflag.org/bb">http://my.bzflag.org/bb</a>.</p>
+
+<p>Once you are logged in, additional options will be available to you. To register an organization, please click the "Create an Organization" link. An organization may contain any number of groups. Once groups are created, users may be added as members. To view your current group memberships, please click the "My Memberships" link. To manage groups or add members, click the "My Groups" link.</p>
+
+<p>For more information on BZFlag or to download the game, please visit <a href="http://www.bzflag.org">http://www.bzflag.org</a>.</p>
+
+<?php
+
+require_once( 'template/footer.inc' );
+
+
+
+
+
+
+
+
+/*
 require_once( "data_phpbb2.class.php" );
 require_once( "functions.inc" );
 require_once( "config.php" );
@@ -278,5 +294,5 @@ ENCLOSE;
 print_header( "" );
 echo $output;
 print_footer();
-
+*/
 ?>

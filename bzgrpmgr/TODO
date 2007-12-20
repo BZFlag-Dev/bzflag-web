@@ -1,0 +1,31 @@
+When finished, run HTML validation.
+
+Home page features:
+	Intro
+	Login Link
+
+Links Bar/Pane:
+	Everyone:
+	Home
+	Search Groups
+	Help
+	FAQ
+	Login
+
+	Logged in Users:
+	My Memberships
+	Group Management
+	Create an Organization
+	Report an Issue
+	Logout
+
+	Admins:
+	Ban Control
+	History & Logs
+	System Stats
+
+Ban control should have:
+	by IP/Hostmask
+	by BZID (input by callsign)
+	Organization names (with wildcards)
+	Group names (with wildcards)

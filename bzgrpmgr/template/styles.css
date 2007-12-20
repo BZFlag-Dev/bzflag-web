@@ -1,0 +1,35 @@
+body {
+	background: url("img/background.png");
+	padding-top: 25px;
+}
+
+table.mainframe {
+	width: 90%;
+	margin-right: auto;
+	margin-left: auto;
+	border-spacing: 15px;
+}
+
+table.mainframe td {
+	background: #efefef;
+	padding: 5px;
+	border:2px solid #5a5f82;
+	font-family: Verdana, Georgia;
+	font-size: 11pt;
+	color: #000000;
+}
+
+table.mainframe td.banner {
+	font-size: 10pt;
+	text-align: center;
+}
+
+a,a:visited {
+	color: #000000;
+}
+
+a:hover {
+	color: #591700;
+	text-decoration: none;
+}
+
