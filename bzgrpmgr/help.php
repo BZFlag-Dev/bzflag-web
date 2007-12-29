@@ -6,42 +6,20 @@ require_once( 'include/global.inc' );
 // Page content
 require_once( 'template/header.inc' );
 
-// ==================== General Info ====================
 ?>
 
-<p>
-	<span class="large">
-		Welcome<?php if( $auth->isLoggedIn() ) echo ", ".$auth->getUsername(); ?>!<br>
-	</span>
+<p><i>Please note: this system is currently a work-in-progress. Some features may not work well or at all. The development for this system follows the guidelines located at the BZFlag Wiki <a href="http://my.bzflag.org/w/Group_Management_System" target="blank">here</a>. To contribute to this project, please visit the #bzflag channel on the Freenode IRC network to discuss current development.</i></p>
 
-<?php if( $auth->isLoggedIn() ) {
-	?>
+<p>Welcome to the BZFlag Global Group Management system. BZFlag is a free online multiplayer cross-platform open source 3D tank battle game. Global groups enable server owners to grant permissions to users based on their membership in these groups. Groups are organized into organizations. To use this management system, you must first log in with your BZFlag global username and password. To register, please visit <a href="http://my.bzflag.org/bb">http://my.bzflag.org/bb</a>.</p>
 
-		You are logged in.
+<p>Once you are logged in, additional options will be available to you. To register an organization, please click the "Create an Organization" link. An organization may contain any number of groups. Once groups are created, users may be added as members. To view your current group memberships, please click the "My Memberships" link. To manage groups or add members, click the "My Groups" link.</p>
 
-<?php
-} else {
-?>
-Please log in to manage your groups.
-<?php
-} ?>
-
-</p>
-
-<?php
-// ==================== Site Information ====================
-?>
-
-<p>
-<span class="large">Site Information</span><br>
-Total Organizations: <?php echo $data->getNumOrgs(); ?><br>
-Total Groups: <?php echo $data->getNumGroups(); ?><br>
-</span>
-</p>
+<p>For more information on BZFlag or to download the game, please visit <a href="http://www.bzflag.org">http://www.bzflag.org</a>.</p>
 
 <?php
 
 require_once( 'template/footer.inc' );
+
 
 
 

@@ -1,21 +1,22 @@
 When finished, run HTML validation.
 
 Home page features:
-	Intro
-	Login Link
+	Welcome so-and-so
+
+	View my groups w/links to administer/members
+	Add a group (within organization)
+	Add an organization
+
+	Site stats
 
 Links Bar/Pane:
 	Everyone:
 	Home
 	Search Groups
 	Help
-	FAQ
 	Login
 
 	Logged in Users:
-	My Memberships
-	Group Management
-	Create an Organization
 	Report an Issue
 	Logout
 

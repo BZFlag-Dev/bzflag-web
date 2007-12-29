@@ -1,6 +1,6 @@
 <a href=".">Home</a>&nbsp;<img src="template/img/diamond.gif">&nbsp;
-<a href="">View Groups</a>&nbsp;<img src="template/img/diamond.gif">&nbsp;
-<a href="">FAQ</a>&nbsp;<img src="template/img/diamond.gif">&nbsp;
+<a href="">My Groups</a>&nbsp;<img src="template/img/diamond.gif">&nbsp;
+<a href="help.php">Help</a>&nbsp;<img src="template/img/diamond.gif">&nbsp;
 <?php
 	if( $auth->isLoggedIn() ) {
 		?>
