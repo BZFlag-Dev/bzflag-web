@@ -1,17 +1,19 @@
 <?php
 
 // Visitor authorization management class
-// Presently uses globals for $users and $groups, which may not be the
+// Presently uses globals for $data, which may not be the
 // best solution
 
-class auth_handler {
+class auth {
 	private $userid, $username;
 
 	public function logUserIn( $username, $password ) {
-		global $users, $groups;
+		global $data;
 
-		$userid = $users->getUserID( $username );
-		if( $users->getEncryptedPass( $userid ) == md5( $password ) ) {
+		$userid = $data->getUserID( $username );
+		if( ! $userid )
+			return false;
+		if( $data->getEncryptedPass( $userid ) == md5( $password ) ) {
 			$this->userid = $userid;
 			$this->username = $username;
 			return true;
@@ -25,10 +27,10 @@ class auth_handler {
 	}
 
 	public function getUserID() {
-		;
+		return;
 	}
 	public function getUsername() {
-		;
+		return $this->username;
 	}
 
 	public function isLoggedIn() {
