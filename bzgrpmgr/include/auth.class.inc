@@ -5,16 +5,16 @@
 // best solution
 
 class auth {
-	private $userid, $username;
+	private $userID, $username;
 
 	public function logUserIn( $username, $password ) {
 		global $data;
 
-		$userid = $data->getUserID( $username );
-		if( ! $userid )
+		$userID = $data->getUserID( $username );
+		if( ! $userID )
 			return false;
-		if( $data->getEncryptedPass( $userid ) == md5( $password ) ) {
-			$this->userid = $userid;
+		if( $data->getEncryptedPass( $userID ) == md5( $password ) ) {
+			$this->userID = $userID;
 			$this->username = $username;
 			return true;
 		}
@@ -22,19 +22,19 @@ class auth {
 		return false;
 	}
 	public function logUserOut() {
-		unset( $this->userid );
+		unset( $this->userID );
 		unset( $this->username );
 	}
 
 	public function getUserID() {
-		return;
+		return $this->userID;
 	}
 	public function getUsername() {
 		return $this->username;
 	}
 
 	public function isLoggedIn() {
-		if( $this->userid )
+		if( $this->userID )
 			return true;
 		else
 			return false;

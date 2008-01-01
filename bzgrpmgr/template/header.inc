@@ -14,7 +14,7 @@
 			<img src="template/img/title.png">
 		</p>
 
-		<table class="mainframe">
+		<table style="width: 90%; margin-right: auto; margin-left: auto; border-spacing: 15px;">
 			<tr>
 				<td class="banner"><?php include( "links.inc" ); ?></td>
 			</tr>
@@ -24,4 +24,4 @@
 			</tr>
 			<?php } ?>
 			<tr>
-				<td>
+				<td class="mainframe">
