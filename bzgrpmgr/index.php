@@ -52,7 +52,10 @@ else {
 	asort( $group_array );
 
 	foreach( $group_array as $groupname => $groupid )
-		echo "<tr><td>".$groupname."</td><td>".count( $data->getGroupMembers( $groupid ) )."</td></tr>\n";
+		echo "<tr><td>".
+				"<a href=\"groups.php?action=members&id=".$groupid."\">".
+				$groupname."</td><td>".count( $data->getGroupMembers( $groupid ) ).
+				"</a></td></tr>\n";
 
 	echo "</table>\n";
 }
@@ -72,13 +75,6 @@ if( $auth->isLoggedIn() ) {
 <span class="large">My Groups</span><br>
 
 <?php
-
-/*
-++ Organization Name<info/admin link> ++
-++++ Group Name<members link> ++++ <admin> ++++ <delete> ++++ (adminlevel) ++++
-++++ Add a group ++++
-++ Add an organization ++
-*/
 
 // Generate array of orgid's[groupid's]
 $orgs = array();
@@ -121,7 +117,8 @@ else {
 		// Org info
 		echo "<tr class=\"org\"><td colspan=\"3\">".$data->getOrgName( $orgid )."</td>".
 				"<td>".( $data->isOrgAdmin( $auth->getUserID(), $orgid ) ?
-						"<img src=\"img/wrench.png\">" : "&nbsp;" )."</td>".
+						"<a href=\"orgs.php?action=detail&id=".$orgid."\">".
+						"<img src=\"img/wrench.png\">" : "&nbsp;" )."</a></td>".
 				"<td colspan=\"2\">&nbsp;</td></tr>\n";
 
 		// Group name and links (if applicable)
@@ -132,10 +129,15 @@ else {
 							( $data->isSpecialAdminGroup( $groupid ) ?
 									"<img src=\"img/key_low.png\">" : "&nbsp;" ) )."</td>".
 					"<td>&nbsp;</td>".
-					"<td>".$data->getGroupName( $groupid )."</td>".
+					"<td><a href=\"groups.php?action=members&id=".$groupid."\">".
+					$data->getGroupName( $groupid ).
+					"</a></td>".
 					( $data->isGroupAdmin( $auth->getUserID(), $groupid ) ?
-							"<td style=\"padding: 0\"><img src=\"img/wrench.png\"></td>".
-							"<td><img src=\"img/delete.png\"></td>" :
+							"<td style=\"padding: 0\">".
+							"<a href=\"groups.php?action=detail&id=".$groupid."\">".
+							"<img src=\"img/wrench.png\"></a></td>".
+							"<td><a href=\"groups.php?action=delete&id=".$groupid."\">".
+							"<img src=\"img/delete.png\"></td>" :
 							"<td>&nbsp;</td><td>&nbsp;</td>" ).
 					"</tr>\n";
 
@@ -153,7 +155,7 @@ else {
 
 ?>
 
-<br><a href="">Click here to register a new organization.</a>
+<br><a href="orgs.php?action=detail">Click here to register a new organization.</a>
 
 </p>
 
@@ -176,227 +178,4 @@ Users Today:
 
 require_once( 'template/footer.inc' );
 
-
-
-
-
-
-
-/*
-require_once( "data_phpbb2.class.php" );
-require_once( "functions.inc" );
-require_once( "config.php" );
-
-// Temporary userdata settings... will incorporate with weblogin later
-$userdata['bzid'] = 2;
-$userdata['callsign'] = $data->getUsername( $userdata['bzid'] );
-$userdata['admin'] = true;
-
-// Begin main logic
-$output = "";
-
-// Auth section
-
-// Action section
-switch( $_REQUEST['action'] ) {
-	case "showmembers":
-		if( ! $_GET['id'] ) die( "Missing parameter.\n" );
-
-		$output .= "\t\t<b>Members:</b><br><br>\n\n";
-		$output .= "\t\tGroup Name: <i>".
-				$data->getOrgName( $data->getOrg( $_GET['id'] ) ).".".
-				$data->getGroupName( $_GET['id'] ).
-				"</i><br><br>\n\n";
-
-		// FIXME: check data input
-		$members = false;
-		foreach( $data->getMembers( $_GET['id'] ) as $memberid ) {
-			$members = true;
-			$output .= $data->getUsername( $memberid )."<br>\n";
-		}
-		if( ! $members ) {
-			$output .= "\t\t<i>No members.</i>\n";
-		}
-
-		$output .= "\t\t<br><br>\n\n";
-
-		break;
-	case "createorg":
-		// User has clicked the "new organization" link
-		$output .= <<<ENCLOSE
-		<form method="POST" action="bzgrpmgr.php">
-		<input type="hidden" name="action" value="submitcreateorg">
-		<table>
-			<tr>
-				<td>Organization name:</td>
-				<td><input type="text" name="orgname" value="" size="20"></td>
-			</tr>
-			<tr><td>&nbsp;</td><td><input type="submit" name="submit" value="Create"></td></tr>
-		</table>
-		</form>
-
-		<i>Note: The organization name must not be the username of an existing user.</i>
-
-ENCLOSE;
-		break;
-	case "submitcreateorg":
-		// FIXME validate data entry
-		// FIXME check against user data
-		// FIXME block against reserved group names
-
-		// check for existing group name
-		// FIXME create clean sitewide die method?
-		if( $data->orgExists( $_POST['orgname'] ) ) {
-			$output .= "The given organization name already exists.<br>\n";		
-			
-			print_header( "" );
-			echo $output;
-			print_footer();
-			exit;
-		}
-
-		// Create the organization
-		$data->createOrg( $_POST['orgname'], $userdata['bzid'] );
-		header( "Location: http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'] );
-		break;
-	case "editgroup":
-		// FIXME check for group validity, etc.
-		// FIXME add support for group state
-
-		// User is editing the settings of a group or has clicked the "new group" link
-		if( $_GET['groupid'] )
-			// We're editing
-			$output .= "\t\tEditing settings for group <b>".
-					$data->getOrgName( $data->getOrg( $_GET['groupid'] ) ).".".
-					$data->getGroupName( $_GET['groupid'] )."</b>.<br><br>\n\n";
-		else
-			// We're creating a new group
-			$output .= "\t\tCreate a group for the</i> <b>".
-					$data->getOrgName($_GET['orgid'])."</b> organization.<br><br>\n\n";
-
-
-		// create values array
-		$values = array(
-				'groupname' => $data->getGroupName( $_GET['groupid'] ),
-				'description' => $data->getGroupDescription( $_GET['groupid'] ),
-				'adminusers' => $data->isUserAdminGroup( $_GET['groupid'] ),
-				'admingroups' => $data->isGroupAdminGroup( $_GET['groupid'] ),
-				'admin' => $data->isAdminGroup( $_GET['groupid'] )
-				);
-
-		// output form
-		$output .= <<<ENCLOSE
-		<form method="POST" action="bzgrpmgr.php">
-		<input type="hidden" name="action" value="submiteditgroup">
-		<input type="hidden" name="orgid" value="
-ENCLOSE;
-		$output .= $_GET['orgid'];
-		$output .= <<<ENCLOSE
-">
-		<input type="hidden" name="groupid" value="
-ENCLOSE;
-		$output .= ( $_GET['groupid'] ? $_GET['groupid'] : "0" );
-		$output .= <<<ENCLOSE
-">
-		<table>
-			<tr>
-				<td>Group name:</td>
-				<td><input type="text" name="groupname" value="
-ENCLOSE;
-		$output .= $values['groupname'];
-		$output .= <<<ENCLOSE
-" size="20"></td>
-			</tr>
-			<tr>
-				<td>Group description:</td>
-				<td><input type="text" name="description" value="
-ENCLOSE;
-		$output .= $values['description'];
-		$output .= <<<ENCLOSE
-" size="40"></td>
-			</tr>
-			<tr>
-				<td>Members are full organization admins?</td>
-				<td><input type="checkbox" name="admingroups"
-ENCLOSE;
-		if( $values['admin'] ) $output .= " checked";
-		$output .= <<<ENCLOSE
-></td>
-			</tr>
-			<tr>
-				<td>Members may manage users for the organization?</td>
-				<td><input type="checkbox" name="admingroups"
-ENCLOSE;
-		if( $values['admingroups'] ) $output .= " checked";
-		$output .= <<<ENCLOSE
-></td>
-			</tr>
-				<td>Members may manage groups for the organization?</td>
-				<td><input type="checkbox" name="admingroups"
-ENCLOSE;
-		if( $values['adminusers'] ) $output .= " checked";
-		$output .= <<<ENCLOSE
-></td>
-			</tr>
-			<tr><td>&nbsp;</td><td><input type="submit" name="submit" value="
-ENCLOSE;
-		$output .= ( $_GET['groupid'] ? "Update" : "Create" );
-		$output .= <<<ENCLOSE
-"></td></tr>
-		</table>
-		</form>
-
-ENCLOSE;
-		break;
-	case "submiteditgroup":
-		// FIXME validate data entry
-		// FIXME check against user data
-		// check for existing group name
-
-// foreach( $_POST as $key => $value ) $output .= $key." => ".$value."<br>\n";
-
-		// If new group, make sure the group name doesn't already exist in the organization
-		$existingGroupNames = array();
-		foreach( $data->getOrgGroups( $_POST['orgid'] ) as $groupid ) {
-			$existingGroupNames[$data->getGroupName( $groupid )] = 1;
-		}
-		if( $existingGroupNames[$_POST['groupname']] ) {
-			$output .= "The given organization name already exists.<br>\n";
-
-			print_header( "" );
-			echo $output;
-			print_footer();
-			exit;
-		}
-
-		// FIXME parse the post data for validity
-		if( $_POST['groupid'] ) {
-			// Update the group
-			$data->updateGroup( $_POST['groupid'], $_POST['groupname'],
-					$_POST['description'], $_POST['orgid'] );
-
-			// Redirect to home 
-			header( "Location: http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'] );
-		} else {
-			// Create the group
-			$myGroupid = $data->createGroup( $_POST['groupname'], $_POST['description'], $_POST['orgid'] );
-			$data->setUserAdminGroup( $_POST['groupid'], $_POST['adminusers'] );
-			$data->setGroupAdminGroup( $_POST['groupid'], $_POST['admingroups'] );
-			$data->setAdminGroup( $_POST['groupid'], $_POST['admin'] );
-
-			// Redirect to home 
-			header( "Location: http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'] );
-		}
-
-		break;
-	default:
-		break;
-}
-
-
-// Dump output
-print_header( "" );
-echo $output;
-print_footer();
-*/
 ?>

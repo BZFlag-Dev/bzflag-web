@@ -218,7 +218,7 @@ class data {
 	// Manipulation functions
 	public function createOrg( $name, $userid ) {
 		// Don't create duplicate groups
-		if( getOrgID( $name ) )
+		if( $this->getOrgID( $name ) )
 			return false;
 
 		// Create the organization
@@ -242,12 +242,18 @@ class data {
 			return false;
 
 		// Set the owner group to have admin perms
-		setOrgAdminGroup( $adminGroup, $orgid );
+		$this->setOrgAdminGroup( $ownerGroup, $orgid );
 
 		// Add the registrant to the owner group
 		$this->addMember( $userid, $ownerGroup );
 
 		return $myOrgID;
+	}
+	public function setOrgName( $orgid, $orgname ) {
+		$sql = "UPDATE ".$this->tbl_prf."orgs SET ORGNAME = \"".
+				$orgname."\" WHERE orgid = ".$orgid;
+
+		mysql_query( $sql );
 	}
 
 	// ============================================================
@@ -323,19 +329,19 @@ class data {
 	// Manipulation functions
 	public function createGroup( $groupname, $desc, $orgid ) {
 		// Don't create duplicate groups
-		$sql = "SELECT groupid FROM groups WHERE ".
+		$sql = "SELECT groupid FROM ".$this->tbl_prf."groups WHERE ".
 				"groupname=\"".$groupname."\" AND ".
 				"orgid=".$orgid;
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 )
 			return false;
 
-		$sql = "INSERT INTO groups (groupname, description, orgid) ".
+		$sql = "INSERT INTO ".$this->tbl_prf."groups (groupname, description, orgid) ".
 				"VALUES (\"".$groupname."\", \"".$desc.
 				"\", ".$orgid.")";
 		mysql_query( $sql, $this->conn );
 
-		$sql = "SELECT groupid FROM groups WHERE ".
+		$sql = "SELECT groupid FROM ".$this->tbl_prf."groups WHERE ".
 				"orgid=".$orgid." AND ".
 				"groupname=\"".$groupname."\"";
 		$result = mysql_query( $sql, $this->conn );
@@ -345,7 +351,7 @@ class data {
 		return false;
 	}
 	public function updateGroup( $groupid, $groupname, $desc, $orgid ) {
-		$sql = "SELECT groupid FROM groups WHERE ".
+		$sql = "SELECT groupid FROM ".$this->tbl_prf."groups WHERE ".
 				"groupid=".$groupid;
 		$result = mysql_query( $sql, $this->conn );
 		if( ! $result || mysql_num_rows( $result ) < 1 )
@@ -361,7 +367,7 @@ class data {
 
 		return true;
 	}
-	public function addMember( $groupid, $userid ) {
+	public function addMember( $userid, $groupid ) {
 		$sql = "INSERT INTO ".$this->tbl_prf."memberships ".
 				"(userid, groupid) VALUES ".
 				"(".$userid.", ".$groupid.")";
