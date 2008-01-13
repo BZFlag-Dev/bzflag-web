@@ -125,7 +125,7 @@ if( $auth->isLoggedIn() ) {
 										$auth->getUserID(), $orgid ) ?
 										"<a href=\"orgs.php?action=detail&id=".
 										$orgid."\">".
-										"<img src=\"img/wrench.png\">" :
+										"<img src=\"template/img/wrench.png\">" :
 										"&nbsp;" )."</a></td>".
 										"<td colspan=\"2\">&nbsp;</td></tr>\n";
 
@@ -134,9 +134,9 @@ if( $auth->isLoggedIn() ) {
 						foreach( array_keys( $group_array ) as $groupid )
 							echo "<tr><td>".
 									( $data->isOrgAdminGroup( $groupid, $orgid ) ?
-											"<img src=\"img/key_high.png\">" :
+											"<img src=\"template/img/key_high.png\">" :
 									( $data->isSpecialAdminGroup( $groupid ) ?
-											"<img src=\"img/key_low.png\">" :
+											"<img src=\"template/img/key_low.png\">" :
 											"&nbsp;" ) )."</td>".
 									"<td>&nbsp;</td>".
 									"<td><a href=\"groups.php?action=members&id=".
@@ -146,10 +146,10 @@ if( $auth->isLoggedIn() ) {
 											"<td style=\"padding: 0\">".
 											"<a href=\"groups.php?action=detail&id=".
 											$groupid."\">".
-											"<img src=\"img/wrench.png\"></a></td>".
+											"<img src=\"template/img/wrench.png\"></a></td>".
 											"<td><a href=\"groups.php?action=delete&id=".
 											$groupid."\">".
-											"<img src=\"img/delete.png\"></td>" :
+											"<img src=\"template/img/delete.png\"></td>" :
 											"<td>&nbsp;</td><td>&nbsp;</td>" ).
 											"</tr>\n";
 
@@ -159,7 +159,7 @@ if( $auth->isLoggedIn() ) {
 									"<td>&nbsp;</td><td>&nbsp;</td>".
 									"<td>New Group</td>".
 									"<td><a href=\"groups.php?action=detail\">".
-									"<img src=\"img/new.png\"></a></td>".
+									"<img src=\"template/img/new.png\"></a></td>".
 									"<td>&nbsp;</td></tr>\n";
 					}
 				}				
