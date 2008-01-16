@@ -1,9 +1,10 @@
 <?php
 
 // Defines
-define( 'ADMINLVL_USERS', 1 );	// members can manage org users
-define( 'ADMINLVL_GROUPS', 2 );	// members can manage org groups
-define( 'ADMINLVL_SUPER', 3 );	// members can manage the org
+define( 'GRPSTATE_OPEN', 1 );
+define( 'GRPSTATE_CLOSED', 2 );
+define( 'GRPSTATE_HIDDEN', 3 );
+define( 'GRPSTATE_INACTIVE', 4 );
 
 // Load the site config
 require_once( "config.inc" );

@@ -297,6 +297,16 @@ class data {
 
 		return false;
 	}
+	public function getGroupState( $groupid ) {
+		$sql = "SELECT state FROM ".$this->tbl_prf.
+				"groups WHERE groupid=".$groupid;
+		$result = mysql_query( $sql, $this->conn );
+		if( $result && mysql_num_rows( $result ) > 0 )
+			return mysql_result( $result, 0);
+
+		return false;
+	}
+
 	public function getGroupMembers( $groupid ) {
 		$members = array();
 
@@ -308,6 +318,19 @@ class data {
 				array_push( $members, $result_array['userid'] );
 		return $members;
 	}
+	public function isGroupMember( $userid, $groupid ) {
+		$members = array();
+
+		$sql = "SELECT userid FROM ".$this->tbl_prf.
+				"memberships WHERE userid = ".$userid.
+				" AND groupid = ".$groupid;
+		$result = mysql_query( $sql, $this->conn );
+		if( $result && mysql_num_rows( $result ) > 0 )
+			return true;
+
+		return false;
+	}
+
 	public function getGroupsByUser( $userid ) {
 		if( ! $userid )
 			return false;
