@@ -162,9 +162,10 @@ if( $auth->isLoggedIn() ) {
 									"<img src=\"template/img/new.png\"></a></td>".
 									"<td>&nbsp;</td></tr>\n";
 					}
+
+					echo "</table>\n";
 				}				
 
-				echo "</table>\n";
 
 
 				?>
