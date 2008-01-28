@@ -234,7 +234,7 @@ class data {
 			return false;
 
 		// Create the owner group
-		$ownerGroup = $this->createGroup( "moderator",
+		$ownerGroup = $this->createGroup( "moderators",
 				"Owner group for the ".
 				$this->getOrgName( $myOrgID ).
 						" organization.", $myOrgID );
