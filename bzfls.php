@@ -31,22 +31,31 @@ include('/etc/bzflag/serversettings.php');
 // $dbuname = 'bzflag';
 // $dbpass  = 'bzflag';
 
+debug('Connecting to the database', 3);
+
+# Connect to the server database persistently.
+if (MYSQL_PERSISTENT === true){
+  $link = mysql_pconnect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
+}else{
+  $link = mysql_connect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
+}
+if (!mysql_select_db($dbname)) {
+  debug("Database $dbname did not exist", 1);
+  die('Could not open db: ' . mysql_error());
+}
+
 # for banning.  provide key => value pairs where the key is an
-# ip address. value is not used at present.
-# FIXME this should be in an sql table with a remote admin interface
-$banlist = array(
-  '68.109.43.46' => 'knightmare.kicks-ass.net',
-  '172.216.38.191' => 'Mr_Molez',
-  '84.121.235.192' => 'josago.homelinux.com',
-  'josago.homelinux.com' => 'josago.homelinux.com',
-#  '127.0.0.1' => 'localhost'
-  '69.119.237.214' => '',
-  '68.118.242.11' => 'axl rose',
-  '134.241.194.13' => 'axl rose from school',
-//  '82.17.105.69' => 'PETER',
-  '190.161.128.59' => 'Felipes CHEATING SERVER, god mode is not allowed',
-  '255.255.255.255' => 'globalbroadcast'
-);
+# ip address. value is not used at present. these are pulled
+# from the serverbans table.
+$banlist = array();
+$result = sqlQuery ('SELECT address, owner, reason FROM serverbans '
+	. 'WHERE active = 1');
+for ($i = 0; $i < mysql_num_rows ($result); ++$i) {
+	$banlist[mysql_result ($result, $i, 'address')] =
+    			mysql_result ($result, $i, 'owner').
+					(mysql_result ($result, $i, 'reason') != '' ?
+			  		': '.mysql_result ($result, $i, 'reason') : '' );
+}
 
 // $alternateServers = array('http://my.BZFlag.org/db/','');
 $alternateServers = array('');
@@ -778,20 +787,6 @@ if ($banlist[$_SERVER['REMOTE_ADDR']] != "") {
   debug("Connection rejected from $remote_addr", 1);
   die('Connection attempt rejected.  See #bzflag on irc.freenode.net');
 }
-
-debug('Connecting to the database', 3);
-
-# Connect to the server database persistently.
-if (MYSQL_PERSISTENT === true){
-  $link = mysql_pconnect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
-}else{
-  $link = mysql_connect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
-}
-if (!mysql_select_db($dbname)) {
-  debug("Database $dbname did not exist", 1);
-  die('Could not open db: ' . mysql_error());
-}
-
 
 if (rand(1, 100) == 50){     // menotume 2006-04-30 : reduce queries
 # remove all inactive registered players from the table
