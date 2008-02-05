@@ -54,7 +54,7 @@ case 'LOGIN':
 
 	// check that this user is a list server admin
 	$sql = 'SELECT group_id FROM phpbb_user_group WHERE user_id = '.$_SESSION['bzid'].' AND group_id = '.
-			'(SELECT group_id FROM phpbb_groups WHERE group_name = "developers")';
+			'(SELECT group_id FROM phpbb_groups WHERE group_name = "bzfls.admin")';
 	$result = mysql_query ($sql);
 	if (! $result) {
 		dumpPageHeader();
