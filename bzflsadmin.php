@@ -246,6 +246,9 @@ This page is the admin interface for the BZFlag list server located at my.bzflag
 </form>
 
 <?php
+		dumpPageFooter();
+
+		return;
 	}
 
 	// user is logged in... print main admin page, starting with welcome
