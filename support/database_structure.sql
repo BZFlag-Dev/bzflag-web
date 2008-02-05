@@ -78,7 +78,12 @@ CREATE TABLE `playerinfo` (
   `lastseen` int(11) NOT NULL default '0',
   `lastserver` varchar(128) NOT NULL default '',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `callsign` (`callsign`)
+  UNIQUE KEY `callsign` (`callsign`),
+  KEY `highscore` (`highscore`,`lowscore`,`highstrengthindex`,`lowstrengthindex`),
+  KEY `lowstrengthindex` (`lowstrengthindex`),
+  KEY `highstrengthindex` (`highstrengthindex`),
+  KEY `lowscore` (`lowscore`),
+  KEY `callsign_2` (`callsign`,`lastserver`)
 ) TYPE=MyISAM;
 
 --
@@ -109,6 +114,20 @@ CREATE TABLE `server_advert_groups` (
   `group_id` int(11) default NULL,
   KEY `group_id` (`group_id`),
   KEY `server_id` (`server_id`)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `serverbans`
+--
+
+CREATE TABLE `serverbans` (
+  `banid` int(2) NOT NULL auto_increment,
+  `address` varchar(32) NOT NULL,
+  `owner` varchar(32) default NULL,
+  `reason` varchar(32) default NULL,
+  `lastby` int(2) NOT NULL,
+  `active` tinyint(1) NOT NULL default '1',
+  PRIMARY KEY  (`banid`)
 ) TYPE=MyISAM;
 
 --
