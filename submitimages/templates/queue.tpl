@@ -1,7 +1,8 @@
+{if $data.queue}
 {foreach from=$data.queue item=item name=queue}
 {if $smarty.foreach.queue.first}<div>The following items are pending approval. Please keep in mind the <a href="{$config.paths.baseURL}tos.php">Terms Of Service</a> when approving images.</div>
 <table border="1">
-  <tr><th>Thumbnail</th><th>Author Information</th><th>Uploader Information</th><th>Approve/Reject</th></tr>
+  <tr><th>Thumbnail</th><th>Author Information</th><th>Uploader Information</th><th>Accept/Reject</th></tr>
 {/if}
 
   <tr>
@@ -33,7 +34,7 @@
   </tr>
 
 {if $smarty.foreach.queue.last}</table>{/if}
-
-{foreachelse}
-  <div>There are currently no images pending approval.</div>
 {/foreach}
+{else}
+<div>There are currently no images pending approval.</div>
+{/if}

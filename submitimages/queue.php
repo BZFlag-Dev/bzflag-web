@@ -69,8 +69,12 @@
             {
               echo "This item was successfully moved into the public directory";
               
-              if (!$dl->Queue_Delete_ByID($data['queueitem']['queueid']))
-                echo "There was an error removing the database entry for this item.\n";
+              $data['update'] = Array();
+              $data['update']['moderationstatus'] = STATUS_APPROVED;
+              $data['update']['moderationmessage'] = $input['message'];
+              $data['update']['moderator'] = $user['username'];
+              if (!$dl->Queue_Update_ByID($data['queueitem']['queueid'], $data['update']))
+                echo "There was an error updating the database entry for this item.\n";
             }
             else
               echo "We were unable to rename the file to the destination location.\n";
@@ -97,7 +101,11 @@
           echo "Rejecting image with the following message to the user:\n".$input['message']."\n\n";
           
           // Try to delete the database entry
-          if (!$dl->Queue_Delete_ByID($data['queueitem']['queueid']))
+          $data['update'] = Array();
+          $data['update']['moderationstatus'] = STATUS_REJECTED;
+          $data['update']['moderationmessage'] = $input['message'];
+          $data['update']['moderator'] = $user['username'];
+          if (!$dl->Queue_Update_ByID($data['queueitem']['queueid'], $data['update']))
             echo "There was an error removing the database entry for this item.\n";
           
           // Try to delete the temporary file
