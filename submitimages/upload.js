@@ -1,3 +1,9 @@
+function init()
+{
+  for (var i = 1; i <= config_upload_maxFiles; i++)
+    handleLicenseSelector(i);
+}
+window.onload=init;
 
 function handleLicenseSelector(uploadIndex)
 {
@@ -55,7 +61,7 @@ function validateForm()
   var imageUploads = 0;
   
   // Check each upload
-  for (var i = 0; i < config_upload_maxFiles; i++)
+  for (var i = 1; i <= config_upload_maxFiles; i++)
   {
     var file = $('file'+i);
     if (file.value.length > 0)
@@ -70,7 +76,7 @@ function validateForm()
       // Length is 0, they didn't fill in a value
       if (authorname.value.length == 0) {
         isError = true;
-        output += "<li>File "+(i+1)+": No author specified.</li>";
+        output += "<li>File "+i+": No author specified.</li>";
         authorname.className = 'invalid';
       }
       else authorname.className = '';
@@ -82,7 +88,7 @@ function validateForm()
       if (licenseselector.value == 0)
       {
         isError = true;
-        output += "<li>File "+(i+1)+": Invalid license selected.</li>";
+        output += "<li>File "+i+": Invalid license selected.</li>";
         licenseselector.className = 'invalid';
         
         // Open a popup, but only once per validation
@@ -108,7 +114,7 @@ function validateForm()
         if (otherlicensename.value.length == 0)
         {
           isError = true;
-          output += "<li>File "+(i+1)+": Other OSI-Approved license selected, but no license name entered.</li>";
+          output += "<li>File "+i+": Other OSI-Approved license selected, but no license name entered.</li>";
           licenseselector.className = 'invalid';
           otherlicensename.className = 'invalid';
         }
@@ -119,7 +125,7 @@ function validateForm()
         if (otherlicenseurl.value.length == 0 && otherlicensetext.value.length == 0)
         {
           isError = true;
-          output += "<li>File "+(i+1)+": Other OSI-Approved license selected, but no license URL or license text entered.</li>";
+          output += "<li>File "+i+": Other OSI-Approved license selected, but no license URL or license text entered.</li>";
           licenseselector.className = 'invalid';
           otherlicenseurl.className = 'invalid';
           otherlicensetext.className = 'invalid';
@@ -137,7 +143,7 @@ function validateForm()
       if (!confirm.checked)
       {
         isError = true;
-        output += "<li>File "+(i+1)+": You did not confirm that your images follows the <a href=\""+config_paths_baseURL+"tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a></li>";
+        output += "<li>File "+i+": You did not confirm that your images follows the <a href=\""+config_paths_baseURL+"tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a></li>";
         $('confirmlabel'+i).className = 'invalid';
       }
       else $('confirmlabel'+i).className = '';

@@ -9,3 +9,5 @@ TODO List
 - Copy in author details for the images, and display the data when browsing the
   image directories.  Make a nice display system as well, possibly with
   thumbnail previews.
+
+- Actually send out email...
