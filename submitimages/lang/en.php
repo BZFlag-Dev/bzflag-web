@@ -2,6 +2,8 @@
   // English language file
   // Created by blast007
   $lang = Array();
+  
+  $lang['successfulUpload'] = "The following files were successfully uploaded and are now awaiting moderation: ";
 
   $lang['errors']['uploaderfirstnameInvalid'] = "The uploader first name was not valid.";
   $lang['errors']['uploaderlastnameInvalid'] = "The uploader last name was not valid.";

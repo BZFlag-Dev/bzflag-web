@@ -55,6 +55,9 @@
   
   // Used to contain messages
   $messages = Array();
+  
+  // Used to trigger invalid color highlights
+  $invalid = Array();
     
   // Per-page information
   $page = Array();
@@ -82,6 +85,7 @@
     $tpl->assign_by_ref('user', $user);
     $tpl->assign_by_ref('input', $input);
     $tpl->assign_by_ref('messages', $messages);
+    $tpl->assign_by_ref('invalid', $invalid);
     $tpl->assign_by_ref('page', $page);
     
     if (defined('USING_DATALAYER') && USING_DATALAYER)

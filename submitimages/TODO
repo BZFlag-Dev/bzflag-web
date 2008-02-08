@@ -3,11 +3,24 @@ TODO List
 - The file MD5 was just added to the database. Next thing to do with this is
   to run a check in the moderation queue to identify previously rejected images
 
-- Make the moderation queue and the upload form submission pages have a proper
-  HTML feedback page instead of the debug text.
+- Make the moderation queue page have a proper HTML feedback page instead of the
+  debug text.
 
 - Copy in author details for the images, and display the data when browsing the
   image directories.  Make a nice display system as well, possibly with
   thumbnail previews.
 
 - Actually send out email...
+
+- Allow users to view their own pending images.
+
+- Language file for the JavaScript code. This could just be a PHP script that
+  reads the language file and spits out a JavaScript array.
+
+- Move the rest of the website's text into the language file.
+
+- Add a warning to the user if they don't re-enter the file to upload after a
+  server-side error is detected.
+
+- Clear the TOS and accuracy checkboxes under Uploader Information if all files
+  were uploaded sucessfully.

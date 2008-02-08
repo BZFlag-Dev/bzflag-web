@@ -26,6 +26,7 @@
     sleep(2);
   
     $messages['errors'] = Array();
+    $messages['top'] = Array();
   
     // Read any input from our form
     for ($i = 1; $i <= $config['upload']['maxFiles']; $i++)
@@ -291,7 +292,7 @@
       {
         $input['files'][$i]['invalid'] = true;
         $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['licenseselectorInvalid']);
-        $invalid['files'][$i]['file'] = true;
+        $invalid['files'][$i]['licenseselector'] = true;
         unset($input['files'][$i]['licenseselector']);
       }
       // If they picked "Other OSI-Approved", then make sure they filled in the
@@ -330,6 +331,8 @@
       }
     }
     
+    $validFileNames = Array();
+    
     // If the form was valid, and we had valid files, add them to the queue
     if (!$input['invalid'])
     {
@@ -360,9 +363,17 @@
           $data['queue']['moderationstatus'] = STATUS_PENDING;
           if (!$dl->Queue_Insert($data['queue']))
             die("Unable to insert image into queue database.");
+          else {
+            $validFileNames[] = $data['queue']['filename'];
+            // If it was uploaded successfully, there is no need to redisplay it
+            // on the page, so just unset it. 
+            unset($input['files'][$i]);
+          }
         }
         
       }
+      
+      $messages['top'][] = $lang['successfulUpload'].implode(',', $validFileNames);
     
     }
     
@@ -379,7 +390,6 @@
       exit;
     }
     
-    $tpl->assign('invalid', $invalid);
   } // if (size($_POST) > 0)
 
   $page['title'] = 'Upload Images';
