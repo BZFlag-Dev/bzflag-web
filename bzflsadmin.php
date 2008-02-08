@@ -76,6 +76,12 @@ case 'LOGIN':
 	header ("Location: http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
 
 	break;
+case 'LOGOUT':
+	unset ($_SESSION['bzid']);
+
+	header ("Location: http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
+
+	break;
 case 'ACTIVATE':
 case 'DEACTIVATE':
 	// check auth
@@ -262,7 +268,8 @@ This page is the admin interface for the BZFlag list server located at my.bzflag
 
 		return;
 	} else if (mysql_num_rows ($result) > 0) {
-		echo '<i>Wassup, '.mysql_result ($result, 0, "username")."?</i><br><br>\n\n";
+		echo '<i>Wassup, '.mysql_result ($result, 0, "username").'?</i>&nbsp;'.
+				'<a href="'.$_SERVER['PHP_SELF'].'?action=LOGOUT">(Log Out)</a><br><br>'."\n\n";
 	}
 
 	// current bans list
@@ -312,8 +319,8 @@ This page is the admin interface for the BZFlag list server located at my.bzflag
 
 		// output the row
 		foreach ($bans as $ban) {
-			echo '<tr>'.
-					'<td>'. ($ban['active'] ? 'Yes' : 'No').'</td>'.
+			echo '<tr'.($ban['active'] ? ' class="highlight"' : '').'>'.
+					'<td>'.($ban['active'] ? 'Yes' : 'No').'</td>'.
 					'<td>'.$ban['address'].'</td>'.
 					'<td>'.$ban['owner'].'</td>'.
 					'<td>'.$ban['reason'].'</td>'.
@@ -375,6 +382,9 @@ function dumpPageHeader () {
 			}
 			tr.dark td {
 				background-color: #808080;
+			}
+			tr.highlight td {
+				background-color: #FFA0A0;
 			}
 		</style>
 	</head>
