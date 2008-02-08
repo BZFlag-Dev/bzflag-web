@@ -30,6 +30,11 @@
   // from the web.
   $config['paths']['templates_c'] = $config['paths']['baseDirectory'].'templates_c/';
   
+  // This directory will contain language files that can be used to translate
+  // the site into another language.  This will be configurable, and the setting
+  // the user picks will be stored in a cookie.
+  $config['paths']['language'] = $config['paths']['baseDirectory'].'lang/';
+  
   // Temporary directory that images are store while they are in the queue. This
   // directory needs to be writable by the web server or the user that PHP
   // operates under. This does not need to be accessible from the web.

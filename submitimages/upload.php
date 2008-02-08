@@ -22,12 +22,13 @@
     //////////////////////////////////////////
     
     // Temporary sleep to simulate a larger upload
+    // TODO: Remove this before putting the system into production
     sleep(2);
   
     $messages['errors'] = Array();
   
     // Read any input from our form
-    for ($i = 0; $i < $config['upload']['maxFiles']; $i++)
+    for ($i = 1; $i <= $config['upload']['maxFiles']; $i++)
     {
       // If they specified something in the upload box, continue checking this
       // file.
@@ -66,7 +67,7 @@
       // This is the confirmation that this image does not violate the TOS (REQUIRED)
       if (isset($_POST['confirm'][$i]))
         $input['files'][$i]['confirm'] = $_POST['confirm'][$i];
-    } // for ($i = 0; $i < $config['upload']['maxFiles']; $i++)
+    } // for ($i = 1; $i <= $config['upload']['maxFiles']; $i++)
     
     // Uploader first name (REQUIRED)
     if (isset($_POST['uploaderfirstname']))
@@ -95,45 +96,51 @@
     
     // TODO: Count how many errors there were. For now, we just force this to
     // one to make it display the error messages server side
-    $messages['errors']['count'] = 1;
+    //$messages['errors']['count'] = 1;
     
     // Uploader first name
     if (strlen($input['uploaderfirstname']) == 0)
     {
       $input['invalid'] = true;
-      $messages['errors']['uploaderfirstnameInvalid'] = true;
+      $messages['errors'][] = $lang['errors']['uploaderfirstnameInvalid'];
+      $invalid['uploaderfirstname'] = true;
     }
     
     // Uploader last name
     if (strlen($input['uploaderlastname']) == 0)
     {
       $input['invalid'] = true;
-      $messages['errors']['uploaderlastnameInvalid'] = true;
+      $messages['errors'][] = $lang['errors']['uploaderlastnameInvalid'];
+      $invalid['uploaderlastname'] = true;
     }
     
     if (strtolower(substr($input['uploaderfirstname'], 0, 1)) == "s" && strtolower($input['uploaderlastname']) == "ubmitimages")
     {
       $input['invalid'] = true;
-      $messages['errors']['uploaderfirstnameInvalid'] = true;
-      $messages['errors']['uploaderlastnameInvalid'] = true;
+      $messages['errors'][] = $lang['errors']['uploaderfirstnameInvalid'];
+      $invalid['uploaderfirstname'] = true;
+      $messages['errors'][] = $lang['errors']['uploaderlastnameInvalid'];
+      $invalid['uploaderlastname'] = true;
     }
     
     // Confirm the Terms of Service
     if (!isset($input['confirmtos']) || !$input['confirmtos'])
     {
       $input['invalid'] = true;
-      $messages['errors']['confirmtosInvalid'] = true;
+      $messages['errors'][] = $lang['errors']['confirmtosInvalid'];
+      $invalid['confirmtos'] = true;
     }
     
     // Confirm the accuracy of the form data
     if (!isset($input['confirmaccurate']) || !$input['confirmaccurate'])
     {
       $input['invalid'] = true;
-      $messages['errors']['confirmaccurateInvalid'] = true;
+      $messages['errors'][] = $lang['errors']['confirmaccurateInvalid'];
+      $invalid['confirmaccurate'] = true;
     }
 
     // Validate each file and it's associated information
-    for ($i = 0; $i < $config['upload']['maxFiles']; $i++)
+    for ($i = 1; $i <= $config['upload']['maxFiles']; $i++)
     {
       // If no file specified, go to the next
       if(!isset($input['files'][$i]['file'])) continue;
@@ -170,7 +177,9 @@
           $input['files'][$i]['file']['filesize'] > $config['upload']['maxFileSize']
          )
       {
-        $messages['errors']['files'][$i]['maximumFileSizeExceeded'] = true;
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['maximumFileSizeExceeded']);
+        $invalid['files'][$i]['file'] = true;
+        
         
         // If the temporary name is set, and it is found to be an uploaded file,
         // delete it
@@ -184,7 +193,8 @@
       else if ($input['files'][$i]['file']['error'] !== UPLOAD_ERR_OK)
       {
         // Other errors the user doesn't need to know about
-        $messages['errors']['files'][$i]['miscUploadError'] = true;
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['miscUploadError']);
+        $invalid['files'][$i]['file'] = true;
         
         // If the temporary name is set, and it is found to be an uploaded file,
         // delete it
@@ -198,7 +208,8 @@
       // upload form.
       else if (!is_uploaded_file($input['files'][$i]['file']['tmpfilename']))
       {
-        $messages['errors']['files'][$i]['miscUploadError'] = true;
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['miscUploadError']);
+        $invalid['files'][$i]['file'] = true;
         
         // Don't unlink() the file because it wasn't something the user actually
         // uploaded. For instance, it could be a system file.
@@ -206,7 +217,8 @@
       else if (strtolower(end(explode('.', $input['files'][$i]['file']['filename']))) != 'png')
       {
         $input['files'][$i]['invalid'] = true;
-        $messages['errors']['files'][$i]['invalidFileFormat'] = true;
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['invalidFileFormat']);
+        $invalid['files'][$i]['file'] = true;
         
         // Delete the temporary file
         if (!empty($input['files'][$i]['file']['tmpfilename']))
@@ -221,7 +233,8 @@
         if (!$img)
         {
           $input['files'][$i]['invalid'] = true;
-          $messages['errors']['files'][$i]['invalidFileFormat'] = true;
+          $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['invalidFileFormat']);
+          $invalid['files'][$i]['file'] = true;
           
           // Delete the temporary file
           if (!empty($input['files'][$i]['file']['tmpfilename']))
@@ -231,7 +244,8 @@
         else if ($img[0] == 0 || $img[1] == 0)
         {
           $input['files'][$i]['invalid'] = true;
-          $messages['errors']['files'][$i]['invalidFileFormat'] = true;
+          $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['invalidFileFormat']);
+          $invalid['files'][$i]['file'] = true;
           
           // Delete the temporary file
           if (!empty($input['files'][$i]['file']['tmpfilename']))
@@ -241,7 +255,8 @@
         else if ($img[2] != IMAGETYPE_PNG)
         {
           $input['files'][$i]['invalid'] = true;
-          $messages['errors']['files'][$i]['invalidFileFormat'] = true;
+          $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['invalidFileFormat']);
+          $invalid['files'][$i]['file'] = true;
           
           // Delete the temporary file
           if (!empty($input['files'][$i]['file']['tmpfilename']))
@@ -256,7 +271,8 @@
       if (!valid_authorname($input['files'][$i]['authorname']))
       {
         $input['files'][$i]['invalid'] = true;
-        $messages['errors']['files'][$i]['authornameInvalid'] = true;
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['authornameInvalid']);
+        $invalid['files'][$i]['authorname'] = true;
         unset($input['files'][$i]['authorname']);
       }
       
@@ -266,14 +282,16 @@
       if (!isset($input['files'][$i]['licenseselector']) || !is_numeric($input['files'][$i]['licenseselector']))
       {
         $input['files'][$i]['invalid'] = true;
-        $messages['errors']['files'][$i]['licenseselectorInvalid'] = true;
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['licenseselectorInvalid']);
+        $invalid['files'][$i]['licenseselector'] = true;
         unset($input['files'][$i]['licenseselector']);
       }
       // If they picked "I stole this", invalidate their upload request
       else if ($input['files'][$i]['licenseselector'] == 0)
       {
         $input['files'][$i]['invalid'] = true;
-        $messages['errors']['files'][$i]['licenseselectorInvalid'] = true;
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['licenseselectorInvalid']);
+        $invalid['files'][$i]['file'] = true;
         unset($input['files'][$i]['licenseselector']);
       }
       // If they picked "Other OSI-Approved", then make sure they filled in the
@@ -285,7 +303,8 @@
         if (empty($input['files'][$i]['otherlicensename']))
         {
           $input['files'][$i]['invalid'] = true;
-          $messages['errors']['files'][$i]['otherlicensenameInvalid'] = true;
+          $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['otherlicensenameInvalid']);
+          $invalid['files'][$i]['otherlicensename'] = true;
           unset($input['files'][$i]['otherlicensename']);
         }
         
@@ -293,8 +312,9 @@
         if (empty($input['files'][$i]['otherlicenseurl']) && empty($input['files'][$i]['otherlicensetext']))
         {
           $input['files'][$i]['invalid'] = true;
-          $messages['errors']['files'][$i]['otherlicenseurlInvalid'] = true;
-          $messages['errors']['files'][$i]['otherlicensetextInvalid'] = true;
+          $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['otherlicenseurlandtextInvalid']);
+          $invalid['files'][$i]['otherlicenseurl'] = true;
+          $invalid['files'][$i]['otherlicensetext'] = true;
           unset($input['files'][$i]['otherlicenseurl'], $input['files'][$i]['otherlicensetext']);
         }
         // TODO: Add some checks to make sure the URL is valid if it was specified
@@ -304,7 +324,8 @@
       if (!isset($input['files'][$i]['confirm']))
       {
         $input['files'][$i]['invalid'] = true;
-        $messages['errors']['files'][$i]['confirmInvalid'] = true;
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['confirmInvalid']);
+        $invalid['files'][$i]['confirm'] = true;
         unset($input['files'][$i]['confirm']);
       }
     }
@@ -312,7 +333,7 @@
     // If the form was valid, and we had valid files, add them to the queue
     if (!$input['invalid'])
     {
-      for ($i = 0; $i < $config['upload']['maxFiles']; $i++)
+      for ($i = 1; $i <= $config['upload']['maxFiles']; $i++)
       {
         // If no file specified, go to the next
         if(!isset($input['files'][$i]['file'])) continue;
@@ -357,10 +378,12 @@
       echo "</pre>";
       exit;
     }
+    
+    $tpl->assign('invalid', $invalid);
   } // if (size($_POST) > 0)
 
   $page['title'] = 'Upload Images';
-  $page['javascripts'] = Array('util.js', 'upload.js');
+  //$page['javascripts'] = Array('util.js', 'upload.js');
 	
   // Render the page
   $tpl->display('header.tpl');

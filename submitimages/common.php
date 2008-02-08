@@ -47,10 +47,13 @@
     $user = false;
   }
   
+  // Load language file
+  include($config['paths']['language'].'en.php');
+  
   // Input
   $input = Array();
   
-  // Used to trigger messages
+  // Used to contain messages
   $messages = Array();
     
   // Per-page information
@@ -60,14 +63,14 @@
   if (defined('USING_SMARTY') && USING_SMARTY)
   {
     // Load Smarty
-    require('./includes/smarty/Smarty.class.php');
+    require($config['paths']['includes'].'smarty/Smarty.class.php');
     
     // Create a new Smarty object
     $tpl = new Smarty();
     // This is where uncompiled template files are located
-    $tpl->template_dir = 'templates';
+    $tpl->template_dir = $config['paths']['templates'];
     // This is where compiled templates are stored
-    $tpl->compile_dir = 'templates_c';
+    $tpl->compile_dir = $config['paths']['templates_c'];
 
     // Assign the configuration to Smarty
     // TODO: Once we have DB support, remove those from the config array
