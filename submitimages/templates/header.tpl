@@ -24,17 +24,17 @@
 
   <div id="header"><a href="{$config.paths.baseURL}"><img id="logo" src="logo.png" alt="{$config.site.title}"></a> 
     <ul id="navigation">
-    <li><a href="{$config.paths.baseURL}">Home</a></li>
+    <li><a href="{$config.paths.baseURL}">{$lang.home}</a></li>
 {if !$user}
-    <li><a href="http://my.bzflag.org/weblogin.php?action=weblogin&amp;url={$config.paths.baseURL|escape:'url'}login.php%3Ftoken%3D%25TOKEN%25%26username%3D%25USERNAME%25">Log In</a></li>
+    <li><a href="http://my.bzflag.org/weblogin.php?action=weblogin&amp;url={$config.paths.baseURL|escape:'url'}login.php%3Ftoken%3D%25TOKEN%25%26username%3D%25USERNAME%25">{$lang.login}</a></li>
 {else}
-    <li><a href="{$config.paths.baseURL}upload.php">Upload Images</a></li>
+    <li><a href="{$config.paths.baseURL}upload.php">{$lang.uploadimages}</a></li>
 {  if $user.moderator}
-    <li><a href="{$config.paths.baseURL}queue.php">Moderation Queue</a></li>
+    <li><a href="{$config.paths.baseURL}queue.php">{$lang.moderationqueue}</a></li>
 {  /if}
-    <li><a href="{$config.paths.baseURL}logout.php">Logout</a></li>
+    <li><a href="{$config.paths.baseURL}logout.php">{$lang.logout}</a></li>
 {/if}
-    <li><a href="{$config.paths.baseURL}tos.php">Terms Of Service</a></li>
+    <li><a href="{$config.paths.baseURL}tos.php">{$lang.termsofservice}</a></li>
     </ul>
   </div>
 
