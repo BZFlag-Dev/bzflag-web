@@ -87,6 +87,8 @@
     $tpl->assign_by_ref('messages', $messages);
     $tpl->assign_by_ref('invalid', $invalid);
     $tpl->assign_by_ref('page', $page);
+
+    $tpl->assign('lang', $lang);
     
     if (defined('USING_DATALAYER') && USING_DATALAYER)
       $tpl->assign_by_ref('data', $data);
