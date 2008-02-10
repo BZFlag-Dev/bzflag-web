@@ -63,7 +63,7 @@
 {foreach from=$messages.errors item=error name=errors}
 {  if $smarty.foreach.errors.first}
 <hr id="errorhr">
-<fieldset id="erroroutput"><legend>Errors</legend>
+<fieldset id="erroroutput"><legend>{$lang.errors}</legend>
 <ul>
 {  /if}
 <li>{$error}</li>
@@ -73,7 +73,7 @@
 {  /if}
 {foreachelse}
 <hr id="errorhr" style="display: none;">
-<fieldset id="erroroutput" style="display: none;"><legend>Errors</legend>
+<fieldset id="erroroutput" style="display: none;"><legend>{$lang.errors}</legend>
 </fieldset>
 {/foreach}
 </form>

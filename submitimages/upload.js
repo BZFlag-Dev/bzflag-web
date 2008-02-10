@@ -76,7 +76,7 @@ function validateForm()
       // Length is 0, they didn't fill in a value
       if (authorname.value.length == 0) {
         isError = true;
-        output += "<li>File "+i+": No author specified.</li>";
+        output += "<li>"+lang['errorAuthornameInvalid'].replace("%ID%", i)+"</li>";
         authorname.className = 'invalid';
       }
       else authorname.className = '';
@@ -88,7 +88,7 @@ function validateForm()
       if (licenseselector.value == 0)
       {
         isError = true;
-        output += "<li>File "+i+": Invalid license selected.</li>";
+        output += "<li>"+lang['errorLicenseselectorInvalid'].replace("%ID%", i)+"</li>";
         licenseselector.className = 'invalid';
         
         // Open a popup, but only once per validation
@@ -114,7 +114,7 @@ function validateForm()
         if (otherlicensename.value.length == 0)
         {
           isError = true;
-          output += "<li>File "+i+": Other OSI-Approved license selected, but no license name entered.</li>";
+          output += "<li>"+lang['errorOtherlicensenameInvalid'].replace("%ID%", i)+"</li>";
           licenseselector.className = 'invalid';
           otherlicensename.className = 'invalid';
         }
@@ -125,7 +125,7 @@ function validateForm()
         if (otherlicenseurl.value.length == 0 && otherlicensetext.value.length == 0)
         {
           isError = true;
-          output += "<li>File "+i+": Other OSI-Approved license selected, but no license URL or license text entered.</li>";
+          output += "<li>"+lang['errorOtherlicenseurlandtextInvalid'].replace("%ID%", i)+"</li>";
           licenseselector.className = 'invalid';
           otherlicenseurl.className = 'invalid';
           otherlicensetext.className = 'invalid';
@@ -143,7 +143,7 @@ function validateForm()
       if (!confirm.checked)
       {
         isError = true;
-        output += "<li>File "+i+": You did not confirm that your images follows the <a href=\""+config_paths_baseURL+"tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a></li>";
+        output += "<li>"+lang['errorConfirmInvalid'].replace("%ID%", i)+"</li>";
         $('confirmlabel'+i).className = 'invalid';
       }
       else $('confirmlabel'+i).className = '';
@@ -154,7 +154,7 @@ function validateForm()
   // If the user didn't fill in any of the upload boxes, we have nothing to do
   if (imageUploads == 0)
   {
-    output += "<li>No files were specified for upload.</li>";
+    output += "<li>"+lang['errorNoFilesSpecified']+"</li>";
     isError = true;
   } 
   
@@ -168,7 +168,7 @@ function validateForm()
   if (uploaderfirstname.value.length == 0)
   {
     isError = true;
-    output += "<li>Uploader information: No first name specified.</li>";
+    output += "<li>"+lang['errorUploaderfirstnameInvalid']+"</li>";
     uploaderfirstname.className = 'invalid';
   }
   else uploaderfirstname.className = '';
@@ -177,7 +177,7 @@ function validateForm()
   if (uploaderlastname.value.length == 0)
   {
     isError = true;
-    output += "<li>Uploader information: No last name specified.</li>";
+    output += "<li>"+lang['errorUploaderlastnameInvalid']+"</li>";
     uploaderlastname.className = 'invalid';
   }
   else uploaderlastname.className = '';
@@ -187,7 +187,8 @@ function validateForm()
   if (uploaderfirstname.value.substr(0, 1).toLowerCase() == "s" && uploaderlastname.value.toLowerCase() == "ubmitimages")
   {
     isError = true;
-    output += "<li>Uploader information: The upload first name and last name were not valid.</li>";
+    output += "<li>"+lang['errorUploaderfirstnameInvalid']+"</li>";
+    output += "<li>"+lang['errorUploaderlastnameInvalid']+"</li>";
     uploaderfirstname.className = 'invalid';
     uploaderlastname.className = 'invalid';
   }
@@ -196,7 +197,7 @@ function validateForm()
   if (!confirmtos.checked)
   {
     isError = true;
-    output += "<li>Uploader information: You did not confirm that your images follows the <a href=\""+config_paths_baseURL+"tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a></li>";
+    output += "<li>"+lang['errorConfirmtosInvalid']+"</li>";
     $('confirmtoslabel').className = 'invalid';
   }
   else $('confirmtoslabel').className = '';
@@ -205,7 +206,7 @@ function validateForm()
   if (!confirmaccurate.checked)
   {
     isError = true;
-    output += "<li>Uploader information: You did not confirm the accuracy of the information on this form.</li>";
+    output += "<li>"+lang['errorConfirmaccurateInvalid']+"</li>";
     $('confirmaccuratelabel').className = 'invalid';
   }
   else $('confirmaccuratelabel').className = '';

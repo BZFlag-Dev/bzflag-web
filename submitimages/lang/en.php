@@ -11,7 +11,9 @@
   $lang['termsofservice'] = "Terms Of Service";
 
   $lang['uploadsupport'] = "Currently only PNG files are supported. There is a limit of ".($config['upload']['maxFileSize']/1024)."KB per file, and you may upload ".$config['upload']['maxFiles']." files at a time.";
+  
   $lang['success'] = "Success";
+  $lang['successfulUpload'] = "The following files were successfully uploaded and are now awaiting moderation: ";
 
   $lang['fileinformation'] = "File Information";
   $lang['filenamewas'] = "Filename of this file was";
@@ -35,25 +37,24 @@
   $lang['allimagetos'] = "I confirm that none of the above images violate the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>.";
   $lang['confirmaccurate'] = "I confirm that all the information on this form is accurate.";
   $lang['uploadimages'] = "Upload Images";
-
   
-  $lang['successfulUpload'] = "The following files were successfully uploaded and are now awaiting moderation: ";
+  $lang['errors'] = "Errors";
 
 
-  $lang['errors']['uploaderfirstnameInvalid'] = "The uploader first name was not valid.";
-  $lang['errors']['uploaderlastnameInvalid'] = "The uploader last name was not valid.";
-  $lang['errors']['confirmtosInvalid'] = "You did not confirm that your images follows the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>";
-  $lang['errors']['confirmaccurateInvalid'] = "You did not confirm the accuracy of the information on this form.";
-
-  $lang['errors']['maximumFileSizeExceeded'] = "File %ID%: The file exceeded the maximum allowed file size.";
-  $lang['errors']['miscUploadError'] = "File %ID%: An error has occured during file upload. Please try again. If problem persists, please contact an administrator.";
-  $lang['errors']['invalidFileFormat'] = "File %ID%: The file is not in PNG format.";
-  $lang['errors']['authornameInvalid'] = "File %ID%: The author name was invalid.";
-  $lang['errors']['licenseselectorInvalid'] = "File %ID%: The license was not specified or the specified license was invalid.";
-  $lang['errors']['otherlicensenameInvalid'] = "File %ID%: You must specify a valid license name.";
-  $lang['errors']['otherlicenseurlandtextInvalid'] = "File %ID%: You must specify a valid license URL or the license text.";
-  $lang['errors']['otherlicenseurlInvalid'] = "File %ID%: You must specify a valid license URL.";
-  $lang['errors']['otherlicensetextInvalid'] = "File %ID%: You must specify valid license text.";
-  $lang['errors']['confirmInvalid'] = "File %ID%: You did not confirm that your images follow the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>";
+  $lang['errorUploaderfirstnameInvalid'] = "The uploader first name was not valid.";
+  $lang['errorUploaderlastnameInvalid'] = "The uploader last name was not valid.";
+  $lang['errorConfirmtosInvalid'] = "You did not confirm that your images follows the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>.";
+  $lang['errorConfirmaccurateInvalid'] = "You did not confirm the accuracy of the information on this form.";
+  $lang['errorMaximumFileSizeExceeded'] = "File %ID%: The file exceeded the maximum allowed file size.";
+  $lang['errorMiscUploadError'] = "File %ID%: An error has occured during file upload. Please try again. If problem persists, please contact an administrator.";
+  $lang['errorInvalidFileFormat'] = "File %ID%: The file is not in PNG format.";
+  $lang['errorAuthornameInvalid'] = "File %ID%: The author name was invalid.";
+  $lang['errorLicenseselectorInvalid'] = "File %ID%: The license was not specified or the specified license was invalid.";
+  $lang['errorOtherlicensenameInvalid'] = "File %ID%: When using an Other OSI-approved license, you must specify a valid license name.";
+  $lang['errorOtherlicenseurlandtextInvalid'] = "File %ID%: When using an Other OSI-approved license, you must specify a valid license URL and/or the license text.";
+  $lang['errorOtherlicenseurlInvalid'] = "File %ID%: When using an Other OSI-approved license, you must specify a valid license URL.";
+  $lang['errorOtherlicensetextInvalid'] = "File %ID%: When using an Other OSI-approved license, you must specify valid license text.";
+  $lang['errorConfirmInvalid'] = "File %ID%: You did not confirm that your image follows the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>.";
+  $lang['errorNoFilesSpecified'] = "No files were specified for upload.";
 
 ?>
