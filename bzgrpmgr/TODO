@@ -2,10 +2,11 @@ The PRECIOUS PHP line:
 	header( "Location: http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'] );
 
 Make us die elegantly when config.inc isn't found.
-
+Make the deleteUser() function on an admin group fail and return true if the user is the only admin of the organization.
 When finished, run HTML validation.
 MySQL queries need to be checked for mysql_error() before running mysql_num_rows()
 All data class functions (especially updating/manipulation functions) should check for errors and return as such
+Figure out some way to "return false" from the data class constructor
 
 Home page features:
 	Welcome so-and-so

@@ -3,12 +3,8 @@
 // Data layer class. This class provides the site with an interface for
 // accessing all data.
 
-// (will fail and return true if the user is the only  admin)
-
 class data {
-	private $conn;
-	private $tbl_prf;
-	private $users_table;
+	private $conn, $tbl_prf, $dbname, $bbdbname;
 
 	// ============================================================
 	// ====================== Initialization ======================
@@ -19,13 +15,20 @@ class data {
 		$this->conn = mysql_connect( $config['host'], $config['user'],
 				$config['pass'] );
 		if( ! $this->conn )
-			return false;
+			unset( $this );
+
+		// Try to select each database to make sure they exist
+		if( ! mysql_select_db( $config['bbdbname'], $this->conn ) )
+		      unset( $this );
+		else
+			$this->bbdbname = $config['bbdbname'];
 		if( ! mysql_select_db( $config['dbname'], $this->conn ) )
-			return false;
+			unset( $this );
+		else
+			$this->dbname = $config['dbname'];
 
 		$this->tbl_prf = $config['prefix'];
-		$this->users_table = $config['users_table'];
-	}		
+	}
 
 	// ============================================================
 	// ================== Permissions interface ===================
@@ -38,6 +41,7 @@ class data {
 					"permissions WHERE ".
 					"groupid=".$groupid." AND ".
 					"orgadmin = 1";
+			mysql_select_db( $this->dbname );
 			$result = mysql_query( $sql, $this->conn );
 			if( $result && mysql_num_rows( $result ) > 0 )
 				return true;
@@ -52,12 +56,14 @@ class data {
 		$sql = "INSERT INTO ".$this->tbl_prf."permissions ".
 				"(groupid, orgadmin) VALUES ".
 				"(".$groupid.", 1)";
+		mysql_select_db( $this->dbname );
 		mysql_query( $sql, $this->conn );
 	}
 	public function unsetOrgAdminGroup( $groupid, $orgid ) {
 		$sql = "DELETE FROM ".$this->tbl_prf."permissions WHERE ".
 				"groupid = ".$groupid." AND ".
 				"orgadmin = 1";
+		mysql_select_db( $this->dbname );
 		mysql_query( $sql, $this->conn );
 	}
 
@@ -70,6 +76,7 @@ class data {
 				"groupid=".$groupid." AND ".
 				( $targetid ? "grouptarget = ".$targetid." AND " : "").
 				"orgadmin = 0 AND groupadmin = 1";
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 )
 			return true;
@@ -83,12 +90,14 @@ class data {
 		$sql = "INSERT INTO ".$this->tbl_prf."permissions ".
 				"(groupid, group_target) VALUES ".
 				"(".$groupid.", ".$targetid.")";
+		mysql_select_db( $this->dbname );
 		mysql_query( $sql, $this->conn );
 	}
 	public function unsetSpecialAdminGroup( $groupid, $targetid ) {
 		$sql = "DELETE FROM ".$this->tbl_prf."permissions WHERE ".
 				"groupid = ".$groupid." AND ".
 				"grouptarget = ".$targetid;
+		mysql_select_db( $this->dbname );
 		mysql_query( $sql, $this->conn );
 	}
 
@@ -127,8 +136,9 @@ class data {
 
 	public function getUserID( $username ) {
 		$sql = "SELECT user_id FROM ".
-				$this->users_table." WHERE username = \"".
+				"phpbb_users WHERE username = \"".
 				$username."\"";
+		mysql_select_db( $this->bbdbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( ! $result )
 			return false;
@@ -139,8 +149,9 @@ class data {
 		return false;
 	}
 	public function getUsername( $userid ) {
-		$sql = "SELECT username FROM ".$this->users_table.
-				" WHERE user_id = ".$userid;
+		$sql = "SELECT username FROM phpbb_users ".
+				"WHERE user_id = ".$userid;
+		mysql_select_db( $this->bbdbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( ! $result )
 			return false;
@@ -151,8 +162,9 @@ class data {
 		return false;
 	}
 	public function getEncryptedPass( $userid ) {
-		$sql = "SELECT user_password FROM ".$this->users_table.
-				" WHERE user_id = ".$userid;
+		$sql = "SELECT user_password FROM phpbb_users ".
+				"WHERE user_id = ".$userid;
+		mysql_select_db( $this->bbdbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( ! $result )
 			return false;
@@ -169,6 +181,7 @@ class data {
 
 	public function getNumOrgs() {
 		$sql = "SELECT orgid FROM ".$this->tbl_prf."orgs WHERE 1";
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result )
 			return mysql_num_rows( $result );
@@ -180,6 +193,7 @@ class data {
 		// organizations by name
 		$sql = "SELECT orgid FROM ".$this->tbl_prf."orgs WHERE ".
 				"orgname = \"".$orgname."\"";
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 )
 			return true;
@@ -190,6 +204,7 @@ class data {
 	public function getOrgName( $orgid ) {
 		$sql = "SELECT orgname FROM ".$this->tbl_prf."orgs WHERE ".
 				"orgid = ".$orgid;
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 ) 
 			return mysql_result( $result, 0);
@@ -200,6 +215,7 @@ class data {
 		$groups = array();
 
 		$sql = "SELECT groupid FROM ".$this->tbl_prf."groups WHERE orgid = ".$orgid;
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 )
 			while( $result_array = mysql_fetch_array( $result ) )
@@ -208,6 +224,7 @@ class data {
 	}
 	public function getOrg( $groupid ) {
 		$sql = "SELECT orgid FROM ".$this->tbl_prf."groups WHERE groupid = ".$groupid;
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 ) 
 			return mysql_result( $result, 0);
@@ -224,6 +241,7 @@ class data {
 		// Create the organization
 		$sql = "INSERT INTO ".$this->tbl_prf."orgs (orgname,contact) ".
 				"VALUES (\"".$name."\",".$userid.")";
+		mysql_select_db( $this->dbname );
 		mysql_query( $sql, $this->conn );
 
 		$sql = "SELECT MAX(orgid) FROM ".$this->tbl_prf."orgs";
@@ -253,6 +271,7 @@ class data {
 		$sql = "UPDATE ".$this->tbl_prf."orgs SET ORGNAME = \"".
 				$orgname."\" WHERE orgid = ".$orgid;
 
+		mysql_select_db( $this->dbname );
 		mysql_query( $sql );
 	}
 
@@ -263,6 +282,7 @@ class data {
 	// Info functions
 	public function getNumGroups() {
 		$sql = "SELECT groupid FROM ".$this->tbl_prf."groups WHERE 1";
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result )
 			return mysql_num_rows( $result );
@@ -273,6 +293,7 @@ class data {
 	public function getGroupName( $groupid ) {
 		$sql = "SELECT groupname FROM ".$this->tbl_prf."groups WHERE ".
 				"groupid = ".$groupid;
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 ) 
 			return mysql_result( $result, 0);
@@ -282,6 +303,7 @@ class data {
 	public function getGroupDesc( $groupid ) {
 		$sql = "SELECT description FROM ".$this->tbl_prf.
 				"groups WHERE "."groupid = ".$groupid;
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 ) 
 			return mysql_result( $result, 0);
@@ -291,6 +313,7 @@ class data {
 	public function getGroupOrg( $groupid ) {
 		$sql = "SELECT orgid FROM ".$this->tbl_prf.
 				"groups WHERE groupid=".$groupid;
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 )
 			return mysql_result( $result, 0);
@@ -300,6 +323,7 @@ class data {
 	public function getGroupState( $groupid ) {
 		$sql = "SELECT state FROM ".$this->tbl_prf.
 				"groups WHERE groupid=".$groupid;
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 )
 			return mysql_result( $result, 0);
@@ -312,6 +336,7 @@ class data {
 
 		$sql = "SELECT userid FROM ".$this->tbl_prf.
 				"memberships WHERE groupid=".$groupid;
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 )
 			while( $result_array = mysql_fetch_array( $result ) )
@@ -324,6 +349,7 @@ class data {
 		$sql = "SELECT userid FROM ".$this->tbl_prf.
 				"memberships WHERE userid = ".$userid.
 				" AND groupid = ".$groupid;
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 )
 			return true;
@@ -337,7 +363,7 @@ class data {
 
 		$toReturn = array();
 		$sql = "SELECT groupid FROM ".$this->tbl_prf."memberships WHERE userid=".$userid;
-
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 ) {
 			while( $result_array = mysql_fetch_array( $result ) ) {
@@ -355,6 +381,7 @@ class data {
 		$sql = "SELECT groupid FROM ".$this->tbl_prf."groups WHERE ".
 				"groupname=\"".$groupname."\" AND ".
 				"orgid=".$orgid;
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 )
 			return false;
@@ -376,6 +403,7 @@ class data {
 	public function updateGroup( $groupid, $groupname, $desc, $orgid ) {
 		$sql = "SELECT groupid FROM ".$this->tbl_prf."groups WHERE ".
 				"groupid=".$groupid;
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( ! $result || mysql_num_rows( $result ) < 1 )
 			return false;
@@ -397,6 +425,7 @@ class data {
 		mysql_query( $sql, $this->conn );
 
 		$sql = "SELECT MAX(id) FROM ".$this->tbl_prf."memberships";
+		mysql_select_db( $this->dbname );
 		$result = mysql_query( $sql, $this->conn );
 		if( $result && mysql_num_rows( $result ) > 0 )
 			return mysql_result( $result, 0 );
@@ -409,6 +438,7 @@ class data {
 
 		$sql = "DELETE FROM ".$this->tbl_prf."memberships ".
 			"WHERE userid = ".$userid." AND groupid = ".$groupid;
+		mysql_select_db( $this->dbname );
 		mysql_query( $sql, $this->conn );
 	}
 }

@@ -11,7 +11,7 @@ $config = array(
 		'pass' => "",
 		// The table prefix for the site to use
 		'prefix' => "groups_",
-		// The table name of the phpBB users table
-		'users_table' => "phpbb2_users"
+		// The MySQL database for phpBB
+		'bbdbname' => ""
 	);
 ?>
