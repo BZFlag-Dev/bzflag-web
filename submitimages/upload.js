@@ -1,8 +1,12 @@
 function init()
 {
+  // The Other OSI-Approved form fields will show up by default, in case
+  // someone has JavaScript disabled. So, instead, we hide them with JavaScript
+  // initially.
   for (var i = 1; i <= config_upload_maxFiles; i++)
     handleLicenseSelector(i);
 }
+// Run our init() function on page load
 window.onload=init;
 
 function handleLicenseSelector(uploadIndex)
@@ -10,6 +14,7 @@ function handleLicenseSelector(uploadIndex)
   var selected = $('licenseselector'+uploadIndex).value;
   
   // If they did not choose "Other OSI-Approved", just show them the license
+  // selector
   if (selected != 255)
   {
     $('otherlicense'+uploadIndex).className = 'hide';
@@ -26,13 +31,17 @@ function handleLicenseSelector(uploadIndex)
   }
 }
 
+// Used to pop up a link to the currently selected license
 function showLicense(uploadIndex)
 {
   var selected = $('licenseselector'+uploadIndex).value;
   
+  // Make sure we have the current license
   if (!config_licenses || !config_licenses[selected]) return;
   
+  // Open the popup
   var licensepopup = window.open(config_licenses[selected][1], 'licensepopup');
+  // Focus on the popup
   licensepopup.focus();
 }
 
@@ -47,7 +56,7 @@ function showTOS()
 function validateForm()
 {
   // Error output
-  var output = "";
+  var output = Array();
   
   // If there was an error, this will be set to true. We won't bail out of the
   // script until everything was validated so that we can highlight every error
@@ -76,7 +85,7 @@ function validateForm()
       // Length is 0, they didn't fill in a value
       if (authorname.value.length == 0) {
         isError = true;
-        output += "<li>"+lang['errorAuthornameInvalid'].replace("%ID%", i)+"</li>";
+        output.push(lang['errorAuthornameInvalid'].replace("%ID%", i));
         authorname.className = 'invalid';
       }
       else authorname.className = '';
@@ -88,7 +97,7 @@ function validateForm()
       if (licenseselector.value == 0)
       {
         isError = true;
-        output += "<li>"+lang['errorLicenseselectorInvalid'].replace("%ID%", i)+"</li>";
+        output.push(lang['errorLicenseselectorInvalid'].replace("%ID%", i));
         licenseselector.className = 'invalid';
         
         // Open a popup, but only once per validation
@@ -114,7 +123,7 @@ function validateForm()
         if (otherlicensename.value.length == 0)
         {
           isError = true;
-          output += "<li>"+lang['errorOtherlicensenameInvalid'].replace("%ID%", i)+"</li>";
+          output.push(lang['errorOtherlicensenameInvalid'].replace("%ID%", i));
           licenseselector.className = 'invalid';
           otherlicensename.className = 'invalid';
         }
@@ -125,7 +134,7 @@ function validateForm()
         if (otherlicenseurl.value.length == 0 && otherlicensetext.value.length == 0)
         {
           isError = true;
-          output += "<li>"+lang['errorOtherlicenseurlandtextInvalid'].replace("%ID%", i)+"</li>";
+          output.push(lang['errorOtherlicenseurlandtextInvalid'].replace("%ID%", i));
           licenseselector.className = 'invalid';
           otherlicenseurl.className = 'invalid';
           otherlicensetext.className = 'invalid';
@@ -143,7 +152,7 @@ function validateForm()
       if (!confirm.checked)
       {
         isError = true;
-        output += "<li>"+lang['errorConfirmInvalid'].replace("%ID%", i)+"</li>";
+        output.push(lang['errorConfirmInvalid'].replace("%ID%", i));
         $('confirmlabel'+i).className = 'invalid';
       }
       else $('confirmlabel'+i).className = '';
@@ -154,7 +163,7 @@ function validateForm()
   // If the user didn't fill in any of the upload boxes, we have nothing to do
   if (imageUploads == 0)
   {
-    output += "<li>"+lang['errorNoFilesSpecified']+"</li>";
+    output.push(lang['errorNoFilesSpecified']);
     isError = true;
   } 
   
@@ -168,7 +177,7 @@ function validateForm()
   if (uploaderfirstname.value.length == 0)
   {
     isError = true;
-    output += "<li>"+lang['errorUploaderfirstnameInvalid']+"</li>";
+    output.push(lang['errorUploaderfirstnameInvalid']);
     uploaderfirstname.className = 'invalid';
   }
   else uploaderfirstname.className = '';
@@ -177,7 +186,7 @@ function validateForm()
   if (uploaderlastname.value.length == 0)
   {
     isError = true;
-    output += "<li>"+lang['errorUploaderlastnameInvalid']+"</li>";
+    output.push(lang['errorUploaderlastnameInvalid']);
     uploaderlastname.className = 'invalid';
   }
   else uploaderlastname.className = '';
@@ -187,8 +196,8 @@ function validateForm()
   if (uploaderfirstname.value.substr(0, 1).toLowerCase() == "s" && uploaderlastname.value.toLowerCase() == "ubmitimages")
   {
     isError = true;
-    output += "<li>"+lang['errorUploaderfirstnameInvalid']+"</li>";
-    output += "<li>"+lang['errorUploaderlastnameInvalid']+"</li>";
+    output.push(lang['errorUploaderfirstnameInvalid']);
+    output.push(lang['errorUploaderlastnameInvalid']);
     uploaderfirstname.className = 'invalid';
     uploaderlastname.className = 'invalid';
   }
@@ -197,7 +206,7 @@ function validateForm()
   if (!confirmtos.checked)
   {
     isError = true;
-    output += "<li>"+lang['errorConfirmtosInvalid']+"</li>";
+    output.push(lang['errorConfirmtosInvalid']);
     $('confirmtoslabel').className = 'invalid';
   }
   else $('confirmtoslabel').className = '';
@@ -206,15 +215,48 @@ function validateForm()
   if (!confirmaccurate.checked)
   {
     isError = true;
-    output += "<li>"+lang['errorConfirmaccurateInvalid']+"</li>";
+    output.push(lang['errorConfirmaccurateInvalid']);
     $('confirmaccuratelabel').className = 'invalid';
   }
   else $('confirmaccuratelabel').className = '';
   
   var erroroutput = $('erroroutput');
-  if (isError) erroroutput.innerHTML = "<legend>Errors</legend><p>The following errors were detected. Please correct them and try again.<ul>"+output+"</ul></p>";
-  else erroroutput.innerHTML = '<legend>Please Wait...</legend><p>We are currently uploading your images. This can take some time depending on the speed your Internet.</p>';
+  for (var a = 0; a < erroroutput.childNodes.length; a++)
+  {
+    if (erroroutput.childNodes[a].nodeName == "LEGEND")
+      erroroutput.childNodes[a].textContent = (isError)?lang['errors']:lang['pleasewait'];
+    else if (erroroutput.childNodes[a].nodeName == "UL")
+    {
+      // We'll be using this item a few times here, so store it in a short name
+      var list = erroroutput.childNodes[a];
+      // First step, remove all the child elements from our UL.
+      for (var b = 0; b < list.childNodes.length; x++)
+        list.removeChild(list.childNodes[b]);
+
+      if (isError)
+      {
+        // Add the error output to the unordered list
+        for (var x = 0; x < output.length; x++)
+        {
+          var item = document.createElement("LI");
+          // Since we may include HTML in our messages, use innerHTML instead of
+          // using textContent.
+          item.innerHTML = output[x];
+          list.appendChild(item);
+        }
+      }
+      else
+      {
+        var item = document.createElement("LI");
+        // Since we may include HTML in our messages, use innerHTML instead of
+        // using textContent.
+        item.innerHTML = lang['pleasewaituploading'];
+        list.appendChild(item);
+      }
+    }
+  }
   
+  // Show the error output fieldset and the horizontal-rule above it
   erroroutput.style.display = '';
   $('errorhr').style.display = '';
   

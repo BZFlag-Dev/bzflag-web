@@ -74,6 +74,9 @@
 {foreachelse}
 <hr id="errorhr" style="display: none;">
 <fieldset id="erroroutput" style="display: none;"><legend>{$lang.errors}</legend>
+<ul>
+  <li>{$lang.currentlynoerrors}</li>
+</ul>
 </fieldset>
 {/foreach}
 </form>
