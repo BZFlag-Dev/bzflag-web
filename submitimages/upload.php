@@ -45,7 +45,7 @@
 
       // Author name of this file (REQUIRED)
       if (isset($_POST['authorname'][$i]))
-        $input['files'][$i]['authorname'] = $_POST['authorname'][$i];
+        $input['files'][$i]['authorname'] = processInput($_POST['authorname'][$i]);
       
       // Selected license (REQUIRED)
       // 0 == "I stole this"
@@ -55,15 +55,17 @@
       
       // If licenseselector is 255, we need this
       if (isset($_POST['otherlicensename'][$i]))
-        $input['files'][$i]['otherlicensename'] = $_POST['otherlicensename'][$i];
+        $input['files'][$i]['otherlicensename'] = processInput($_POST['otherlicensename'][$i]);
       
       // If licenseselector is 255, we need this and/or otherlicensetext
       if (isset($_POST['otherlicenseurl'][$i]))
-        $input['files'][$i]['otherlicenseurl'] = $_POST['otherlicenseurl'][$i];
+        $input['files'][$i]['otherlicenseurl'] = processInput($_POST['otherlicenseurl'][$i]);
       
       // If licenseselector is 255, we need this and/or otherlicenseurl
       if (isset($_POST['otherlicensetext'][$i]))
-        $input['files'][$i]['otherlicensetext'] = $_POST['otherlicensetext'][$i];
+        // Passing a false into processInput so we don't strip whitespace. Some
+        // licenses may use that to show proper formatting.
+        $input['files'][$i]['otherlicensetext'] = processInput($_POST['otherlicensetext'][$i], false);
       
       // This is the confirmation that this image does not violate the TOS (REQUIRED)
       if (isset($_POST['confirm'][$i]))
@@ -72,11 +74,11 @@
     
     // Uploader first name (REQUIRED)
     if (isset($_POST['uploaderfirstname']))
-      $input['uploaderfirstname'] = $_POST['uploaderfirstname'];
+      $input['uploaderfirstname'] = processInput($_POST['uploaderfirstname']);
     
     // Uploader last name (REQUIRED)
     if (isset($_POST['uploaderlastname']))
-      $input['uploaderlastname'] = $_POST['uploaderlastname'];
+      $input['uploaderlastname'] = processInput($_POST['uploaderlastname']);
     
     // Confirmation that none of the images violate the TOS (REQUIRED)
     if (isset($_POST['confirmtos']))
