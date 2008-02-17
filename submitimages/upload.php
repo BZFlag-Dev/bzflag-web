@@ -79,6 +79,10 @@
     // Uploader last name (REQUIRED)
     if (isset($_POST['uploaderlastname']))
       $input['uploaderlastname'] = processInput($_POST['uploaderlastname']);
+
+    // Uploader email address (REQUIRED)
+    if (isset($_POST['uploaderemail']))
+      $input['uploaderemail'] = processInput($_POST['uploaderemail']);
     
     // Confirmation that none of the images violate the TOS (REQUIRED)
     if (isset($_POST['confirmtos']))
@@ -125,6 +129,14 @@
       $messages['errors'][] = $lang['errors']['uploaderlastnameInvalid'];
       $invalid['uploaderlastname'] = true;
     }
+
+    // Uploader email address
+     if (strlen($input['uploaderemail']) == 0 || ereg("^([A-Za-z0-9_\-\.])+@([A-Za-z0-9\-\.])+\.([A-Za-z]{2,4})$", $input['uploaderemail']) === false)
+     {
+       $input['invalid'] = true;
+       $messages['errors'][] = $lang['errorUploaderemailInvalid'];
+       $invalid['uploaderemail'] = true;
+     }
     
     // Confirm the Terms of Service
     if (!isset($input['confirmtos']) || !$input['confirmtos'])
@@ -355,6 +367,7 @@
           $data['queue']['ipaddress'] = ip2hex($_SERVER['REMOTE_ADDR']);
           $data['queue']['uploaderfirstname'] = $input['uploaderfirstname'];
           $data['queue']['uploaderlastname'] = $input['uploaderlastname'];
+          $data['queue']['uploaderemail'] = $input['uploaderemail'];
           $data['queue']['filename'] = $input['files'][$i]['file']['filename'];
           $data['queue']['filemd5'] = md5_file($config['paths']['tmp'].$user['bzid'].'_'.$input['files'][$i]['file']['filename']);
           $data['queue']['authorname'] = $input['files'][$i]['authorname'];

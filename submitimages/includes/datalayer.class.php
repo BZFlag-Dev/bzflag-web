@@ -36,6 +36,7 @@ CREATE TABLE `img_queue` (
   `ipaddress` VARCHAR( 8 ) NOT NULL,
   `uploaderfirstname` VARCHAR( 255 ) NOT NULL,
   `uploaderlastname` VARCHAR( 255 ) NOT NULL,
+  `uploaderemail` VARCHAR( 255 ) NOT NULL,
   `filename` VARCHAR( 255 ) NOT NULL,
   `filemd5` VARCHAR( 32 ) NOT NULL,
   `authorname` VARCHAR( 255 ) NOT NULL,
@@ -53,13 +54,14 @@ CREATE TABLE `img_queue` (
   function Queue_Insert($values)
   {
     $sql = "INSERT INTO ".TBL_QUEUE." ";
-    $sql .= "(queueid, bzid, username, ipaddress, uploaderfirstname, uploaderlastname, filename, filemd5, authorname, licenseid, licensename, licenseurl, licensebody, moderationstatus) ";
+    $sql .= "(queueid, bzid, username, ipaddress, uploaderfirstname, uploaderlastname, uploaderemail, filename, filemd5, authorname, licenseid, licensename, licenseurl, licensebody, moderationstatus) ";
     $sql .= "VALUES (0, ";
     $sql .= "'".mysql_real_escape_string($values['bzid'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['username'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['ipaddress'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['uploaderfirstname'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['uploaderlastname'], $this->link)."', ";
+    $sql .= "'".mysql_real_escape_string($values['uploaderemail'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['filename'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['filemd5'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['authorname'], $this->link)."', ";

@@ -19,7 +19,8 @@
     </td>
     <td>
       <strong>Uploader Real Name:</strong> {$item.uploaderfirstname} {$item.uploaderlastname}<br>
-      <strong>Uploader Username:</strong> {$item.username}
+      <strong>Uploader Username:</strong> {$item.username}<br>
+      <strong>Uploader Email:</strong> <a href="mailto:{$item.uploaderemail}">{$item.uploaderemail}</a>
     </td>
     <td>
       <form action="{$config.paths.baseURL}queue.php" method="post" onsubmit="javascript:return validateForm({$smarty.foreach.queue.index});"><div>

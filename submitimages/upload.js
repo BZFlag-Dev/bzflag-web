@@ -170,6 +170,7 @@ function validateForm()
   // Check uploader portion
   var uploaderfirstname = $('uploaderfirstname');
   var uploaderlastname = $('uploaderlastname');
+  var uploaderemail = $('uploaderemail');
   var confirmtos = $('confirmtos');
   var confirmaccurate = $('confirmaccurate');
   
@@ -201,6 +202,17 @@ function validateForm()
     uploaderfirstname.className = 'invalid';
     uploaderlastname.className = 'invalid';
   }
+
+  // Check uploader email address
+  var emailreg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9\-\.])+\.([A-Za-z]{2,4})$/;
+  
+  if (uploaderemail.value.length == 0 || emailreg.test(uploaderemail.value) == false)
+  {
+    isError = true;
+    output.push(lang['errorUploaderemailInvalid']);
+    uploaderemail.className = 'invalid';
+  }
+  else uploaderemail.className = '';
   
   // Check overall TOS confirmation
   if (!confirmtos.checked)

@@ -34,6 +34,7 @@
   $lang['uploaderinformation'] = "Uploader Information";
   $lang['firstname'] = "First Name";
   $lang['lastname'] = "Last Name";
+  $lang['emailaddress'] = "Email Address";
   $lang['allimagetos'] = "I confirm that none of the above images violate the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>.";
   $lang['confirmaccurate'] = "I confirm that all the information on this form is accurate.";
   $lang['uploadimages'] = "Upload Images";
@@ -47,6 +48,7 @@
 
   $lang['errorUploaderfirstnameInvalid'] = "The uploader first name was not valid.";
   $lang['errorUploaderlastnameInvalid'] = "The uploader last name was not valid.";
+  $lang['errorUploaderemailInvalid'] = "The uploader email address was not valid.";
   $lang['errorConfirmtosInvalid'] = "You did not confirm that your images follows the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>.";
   $lang['errorConfirmaccurateInvalid'] = "You did not confirm the accuracy of the information on this form.";
   $lang['errorMaximumFileSizeExceeded'] = "File %ID%: The file exceeded the maximum allowed file size.";

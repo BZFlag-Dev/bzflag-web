@@ -56,6 +56,7 @@
   <label>Username: </label><input type="text" disabled="disabled" value="{$user.username|escape:'htmlall'}"><br>
   <label for="uploaderfirstname">{$lang.firstname}: </label><input{if $invalid.uploaderfirstname} class="invalid" {/if} type="text" id="uploaderfirstname" name="uploaderfirstname"{if $input.uploaderfirstname} value="{$input.uploaderfirstname|escape:'htmlall'}"{/if}><br>
   <label for="uploaderlastname">{$lang.lastname}: </label><input{if $invalid.uploaderlastname} class="invalid" {/if} type="text" id="uploaderlastname" name="uploaderlastname"{if $input.uploaderlastname} value="{$input.uploaderlastname|escape:'htmlall'}"{/if}><br>
+  <label for="uploaderemail">{$lang.emailaddress}: </label><input{if $invalid.uploaderemail} class="invalid" {/if} type="text" id="uploaderemail" name="uploaderemail"{if $input.uploaderemail} value="{$input.uploaderemail|escape:'htmlall'}"{/if}><br>
   <input type="checkbox" id="confirmtos" name="confirmtos"{if $input.confirmtos} checked="checked"{/if}><label{if $invalid.confirmtos} class="invalid" {/if} id="confirmtoslabel" for="confirmtos"> {$lang.allimagetos}</label><br>
   <input type="checkbox" id="confirmaccurate" name="confirmaccurate"{if $input.confirmaccurate} checked="checked"{/if}><label{if $invalid.confirmaccurate} class="invalid" {/if} id="confirmaccuratelabel" for="confirmaccurate"> {$lang.confirmaccurate}</label><br>
   <input type="submit" value="{$lang.uploadimages}">

@@ -6,6 +6,7 @@ CREATE TABLE `img_queue` (
   `ipaddress` VARCHAR( 8 ) NOT NULL,
   `uploaderfirstname` VARCHAR( 255 ) NOT NULL,
   `uploaderlastname` VARCHAR( 255 ) NOT NULL,
+  `uploaderemail` VARCHAR( 255 ) NOT NULL,
   `filename` VARCHAR( 255 ) NOT NULL,
   `filemd5` VARCHAR( 32 ) NOT NULL,
   `authorname` VARCHAR( 255 ) NOT NULL,
