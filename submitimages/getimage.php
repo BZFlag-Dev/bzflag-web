@@ -4,7 +4,10 @@
   
   // This area is only for moderators. Everyone else, bye bye!
   if (!isset($user) || !$user || !$user['moderator'])
+  {
+    echo "You are not logged in as a moderator. This page is restricted.";
     exit;
+  }
 
   // This file makes thumbnails of images to see.
 

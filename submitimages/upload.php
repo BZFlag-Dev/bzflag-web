@@ -109,7 +109,7 @@
     if (strlen($input['uploaderfirstname']) == 0)
     {
       $input['invalid'] = true;
-      $messages['errors'][] = $lang['errors']['uploaderfirstnameInvalid'];
+      $messages['errors'][] = $lang['errorUploaderfirstnameInvalid'];
       $invalid['uploaderfirstname'] = true;
     }
     
@@ -117,16 +117,16 @@
     if (strlen($input['uploaderlastname']) == 0)
     {
       $input['invalid'] = true;
-      $messages['errors'][] = $lang['errors']['uploaderlastnameInvalid'];
+      $messages['errors'][] = $lang['errorUploaderlastnameInvalid'];
       $invalid['uploaderlastname'] = true;
     }
     
     if (strtolower(substr($input['uploaderfirstname'], 0, 1)) == "s" && strtolower($input['uploaderlastname']) == "ubmitimages")
     {
       $input['invalid'] = true;
-      $messages['errors'][] = $lang['errors']['uploaderfirstnameInvalid'];
+      $messages['errors'][] = $lang['errorUploaderfirstnameInvalid'];
       $invalid['uploaderfirstname'] = true;
-      $messages['errors'][] = $lang['errors']['uploaderlastnameInvalid'];
+      $messages['errors'][] = $lang['errorUploaderlastnameInvalid'];
       $invalid['uploaderlastname'] = true;
     }
 
@@ -142,7 +142,7 @@
     if (!isset($input['confirmtos']) || !$input['confirmtos'])
     {
       $input['invalid'] = true;
-      $messages['errors'][] = $lang['errors']['confirmtosInvalid'];
+      $messages['errors'][] = $lang['errorConfirmtosInvalid'];
       $invalid['confirmtos'] = true;
     }
     
@@ -150,7 +150,7 @@
     if (!isset($input['confirmaccurate']) || !$input['confirmaccurate'])
     {
       $input['invalid'] = true;
-      $messages['errors'][] = $lang['errors']['confirmaccurateInvalid'];
+      $messages['errors'][] = $lang['errorConfirmaccurateInvalid'];
       $invalid['confirmaccurate'] = true;
     }
 
@@ -192,7 +192,7 @@
           $input['files'][$i]['file']['filesize'] > $config['upload']['maxFileSize']
          )
       {
-        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['maximumFileSizeExceeded']);
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errorMaximumFileSizeExceeded']);
         $invalid['files'][$i]['file'] = true;
         
         
@@ -208,7 +208,7 @@
       else if ($input['files'][$i]['file']['error'] !== UPLOAD_ERR_OK)
       {
         // Other errors the user doesn't need to know about
-        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['miscUploadError']);
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errorMiscUploadError']);
         $invalid['files'][$i]['file'] = true;
         
         // If the temporary name is set, and it is found to be an uploaded file,
@@ -223,7 +223,7 @@
       // upload form.
       else if (!is_uploaded_file($input['files'][$i]['file']['tmpfilename']))
       {
-        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['miscUploadError']);
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errorMiscUploadError']);
         $invalid['files'][$i]['file'] = true;
         
         // Don't unlink() the file because it wasn't something the user actually
@@ -232,7 +232,7 @@
       else if (strtolower(end(explode('.', $input['files'][$i]['file']['filename']))) != 'png')
       {
         $input['files'][$i]['invalid'] = true;
-        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['invalidFileFormat']);
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errorInvalidFileFormat']);
         $invalid['files'][$i]['file'] = true;
         
         // Delete the temporary file
@@ -248,7 +248,7 @@
         if (!$img)
         {
           $input['files'][$i]['invalid'] = true;
-          $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['invalidFileFormat']);
+          $messages['errors'][] = str_replace('%ID%', $i, $lang['errorInvalidFileFormat']);
           $invalid['files'][$i]['file'] = true;
           
           // Delete the temporary file
@@ -259,7 +259,7 @@
         else if ($img[0] == 0 || $img[1] == 0)
         {
           $input['files'][$i]['invalid'] = true;
-          $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['invalidFileFormat']);
+          $messages['errors'][] = str_replace('%ID%', $i, $lang['errorInvalidFileFormat']);
           $invalid['files'][$i]['file'] = true;
           
           // Delete the temporary file
@@ -270,7 +270,7 @@
         else if ($img[2] != IMAGETYPE_PNG)
         {
           $input['files'][$i]['invalid'] = true;
-          $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['invalidFileFormat']);
+          $messages['errors'][] = str_replace('%ID%', $i, $lang['errorInvalidFileFormat']);
           $invalid['files'][$i]['file'] = true;
           
           // Delete the temporary file
@@ -286,7 +286,7 @@
       if (!valid_authorname($input['files'][$i]['authorname']))
       {
         $input['files'][$i]['invalid'] = true;
-        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['authornameInvalid']);
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errorAuthornameInvalid']);
         $invalid['files'][$i]['authorname'] = true;
         unset($input['files'][$i]['authorname']);
       }
@@ -297,7 +297,7 @@
       if (!isset($input['files'][$i]['licenseselector']) || !is_numeric($input['files'][$i]['licenseselector']))
       {
         $input['files'][$i]['invalid'] = true;
-        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['licenseselectorInvalid']);
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errorLicenseselectorInvalid']);
         $invalid['files'][$i]['licenseselector'] = true;
         unset($input['files'][$i]['licenseselector']);
       }
@@ -305,7 +305,7 @@
       else if ($input['files'][$i]['licenseselector'] == 0)
       {
         $input['files'][$i]['invalid'] = true;
-        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['licenseselectorInvalid']);
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errorLicenseselectorInvalid']);
         $invalid['files'][$i]['licenseselector'] = true;
         unset($input['files'][$i]['licenseselector']);
       }
@@ -318,7 +318,7 @@
         if (empty($input['files'][$i]['otherlicensename']))
         {
           $input['files'][$i]['invalid'] = true;
-          $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['otherlicensenameInvalid']);
+          $messages['errors'][] = str_replace('%ID%', $i, $lang['errorOtherlicensenameInvalid']);
           $invalid['files'][$i]['otherlicensename'] = true;
           unset($input['files'][$i]['otherlicensename']);
         }
@@ -327,7 +327,7 @@
         if (empty($input['files'][$i]['otherlicenseurl']) && empty($input['files'][$i]['otherlicensetext']))
         {
           $input['files'][$i]['invalid'] = true;
-          $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['otherlicenseurlandtextInvalid']);
+          $messages['errors'][] = str_replace('%ID%', $i, $lang['errorOtherlicenseurlandtextInvalid']);
           $invalid['files'][$i]['otherlicenseurl'] = true;
           $invalid['files'][$i]['otherlicensetext'] = true;
           unset($input['files'][$i]['otherlicenseurl'], $input['files'][$i]['otherlicensetext']);
@@ -339,7 +339,7 @@
       if (!isset($input['files'][$i]['confirm']))
       {
         $input['files'][$i]['invalid'] = true;
-        $messages['errors'][] = str_replace('%ID%', $i, $lang['errors']['confirmInvalid']);
+        $messages['errors'][] = str_replace('%ID%', $i, $lang['errorConfirmInvalid']);
         $invalid['files'][$i]['confirm'] = true;
         unset($input['files'][$i]['confirm']);
       }
