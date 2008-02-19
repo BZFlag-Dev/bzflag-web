@@ -345,11 +345,12 @@
       }
     }
     
-    $validFileNames = Array();
-    
     // If the form was valid, and we had valid files, add them to the queue
     if (!$input['invalid'])
     {
+      // Store files that were successfully uploaded and placed into the database.
+      $validFileNames = Array();
+      
       for ($i = 1; $i <= $config['upload']['maxFiles']; $i++)
       {
         // If no file specified, go to the next
@@ -372,24 +373,37 @@
           $data['queue']['filemd5'] = md5_file($config['paths']['tmp'].$user['bzid'].'_'.$input['files'][$i]['file']['filename']);
           $data['queue']['authorname'] = $input['files'][$i]['authorname'];
           $data['queue']['licenseid'] = $input['files'][$i]['licenseselector'];
-          $data['queue']['licensename'] = @$input['files'][$i]['licensename'];
-          $data['queue']['licenseurl'] = @$input['files'][$i]['licenseurl'];
-          $data['queue']['licensebody'] = @$input['files'][$i]['licensebody'];
+          $data['queue']['licensename'] = @$input['files'][$i]['otherlicensename'];
+          $data['queue']['licenseurl'] = @$input['files'][$i]['otherlicenseurl'];
+          $data['queue']['licensebody'] = @$input['files'][$i]['otherlicensetext'];
           $data['queue']['moderationstatus'] = STATUS_PENDING;
           if (!$dl->Queue_Insert($data['queue']))
-            die("Unable to insert image into queue database.");
-          else {
-            $validFileNames[] = $data['queue']['filename'];
-            // If it was uploaded successfully, there is no need to redisplay it
-            // on the page, so just unset it. 
-            unset($input['files'][$i]);
+          {
+            $messages['errors'][] = str_replace('%ID%', $i, $lang['errorMiscUploadError']);
+            $input['files'][$i]['invalid'] = true;
           }
+          else
+            $validFileNames[] = $data['queue']['filename'];
         }
         
       }
       
-      $messages['top'][] = $lang['successfulUpload'].implode(',', $validFileNames);
-    
+      // If some files were successfully uploaded, add a message to the user,
+      // and send an email to moderators.
+      if (sizeof($validFileNames) > 0)
+      {
+        $messages['top'][] = $lang['successfulUpload'].implode(', ', $validFileNames);
+        $email['body'] = $tpl->fetch('email_upload.tpl');
+      }
+      
+      // If it was uploaded successfully, there is no need to redisplay it
+      // on the page, so just unset it.
+      for ($i = 1; $i <= $config['upload']['maxFiles']; $i++)
+      {
+        if (!isset($input['files'][$i]['file']) || $input['files'][$i]['invalid']) continue;
+        unset($input['files'][$i]);
+      }
+        
     }
     
     // Temporary debug output
