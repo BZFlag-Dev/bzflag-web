@@ -9,13 +9,9 @@
     <td><a href="{$config.paths.baseURL}getimage.php?filename={$item.bzid}_{$item.filename}"><img src="{$config.paths.baseURL}getthumb.php?filename={$item.bzid}_{$item.filename}" alt="{$item.filename} by {$item.authorname}"></a></td>
     <td>
       <strong>Author Name:</strong> {$item.authorname}<br>
-{if $item.licenseid != 255}
-      <strong>License:</strong> {$config.licenses[$item.licenseid].name}<br>
-{else}
-      <strong><i>Custom License:</i></strong> {$item.licensename}<br>
-      <strong><i>License URL:</i></strong> {if $item.licenseurl}<a href="{$item.licenseurl}">View</a>{else}Not specified{/if}<br>
-      <strong><i>License Text:</i></strong> {if $item.licensebody}{$item.licensebody|nl2br}{else}Not specified{/if}
-{/if}
+      <strong>Custom License:</i></strong> {$item.licensename}<br>
+      {if $item.licenseurl}<strong>License URL:</strong> <a href="{$item.licenseurl}">View License</a><br>{/if}
+      {if $item.licensetext}<strong>License Text:</strong>{$item.licensebody|nl2br}{/if}
     </td>
     <td>
       <strong>Uploader Real Name:</strong> {$item.uploaderfirstname} {$item.uploaderlastname}<br>

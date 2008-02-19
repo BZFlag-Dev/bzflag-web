@@ -18,15 +18,15 @@ function handleLicenseSelector(uploadIndex)
   if (selected != 255)
   {
     $('otherlicense'+uploadIndex).className = 'hide';
-    $('otherlicensename'+uploadIndex).disabled = true;
-    $('otherlicenseurl'+uploadIndex).disabled = true;
-    $('otherlicensetext'+uploadIndex).disabled = true;
+    $('licensename'+uploadIndex).disabled = true;
+    $('licenseurl'+uploadIndex).disabled = true;
+    $('licensetext'+uploadIndex).disabled = true;
   }
   else
   {
-    $('otherlicensename'+uploadIndex).disabled = false;
-    $('otherlicenseurl'+uploadIndex).disabled = false;
-    $('otherlicensetext'+uploadIndex).disabled = false;
+    $('licensename'+uploadIndex).disabled = false;
+    $('licenseurl'+uploadIndex).disabled = false;
+    $('licensetext'+uploadIndex).disabled = false;
     $('otherlicense'+uploadIndex).className = '';
   }
 }
@@ -111,38 +111,38 @@ function validateForm()
       } // if (licenseselector.value == 0)
       else if (licenseselector.value == 255)
       {
-        var otherlicensename = $('otherlicensename'+i);
-        var otherlicenseurl = $('otherlicenseurl'+i);
-        var otherlicensetext = $('otherlicensetext'+i);
+        var licensename = $('licensename'+i);
+        var licenseurl = $('licenseurl'+i);
+        var licensetext = $('licensetext'+i);
         
         // Assume they provide a license name, and either a license url or
         // license text
         licenseselector.className = '';
         
         // If there is no license name, mark the selector and the name invalid
-        if (otherlicensename.value.length == 0)
+        if (licensename.value.length == 0)
         {
           isError = true;
           output.push(lang['errorOtherlicensenameInvalid'].replace("%ID%", i));
           licenseselector.className = 'invalid';
-          otherlicensename.className = 'invalid';
+          licensename.className = 'invalid';
         }
-        else otherlicensename.className = '';
+        else licensename.className = '';
         
         // If there is no license url or text, mark the selector and the url and
         // text fields invalid
-        if (otherlicenseurl.value.length == 0 && otherlicensetext.value.length == 0)
+        if (licenseurl.value.length == 0 && licensetext.value.length == 0)
         {
           isError = true;
           output.push(lang['errorOtherlicenseurlandtextInvalid'].replace("%ID%", i));
           licenseselector.className = 'invalid';
-          otherlicenseurl.className = 'invalid';
-          otherlicensetext.className = 'invalid';
+          licenseurl.className = 'invalid';
+          licensetext.className = 'invalid';
         }
         else
         {
-          otherlicenseurl.className = '';
-          otherlicensetext.className = '';
+          licenseurl.className = '';
+          licensetext.className = '';
         }
       } // else if (licenseselector.value == 255)
       else licenseselector.className = '';

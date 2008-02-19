@@ -39,10 +39,10 @@
 {/foreach}
   </select><input type="button" value="{$lang.view}" onclick="javascript:showLicense({$i});"><br>
   <span id="otherlicense{$i}">
-    <label for="otherlicensename{$i}">{$lang.licensename}: </label><input{if $invalid.files[$i].otherlicensename} class="invalid"{/if} type="text" id="otherlicensename{$i}" name="otherlicensename[{$i}]"{if $input.files[$i].otherlicensename} value="{$input.files[$i].otherlicensename|escape:'htmlall'}"{/if}><br>
+    <label for="licensename{$i}">{$lang.licensename}: </label><input{if $invalid.files[$i].licensename} class="invalid"{/if} type="text" id="licensename{$i}" name="licensename[{$i}]"{if $input.files[$i].licensename} value="{$input.files[$i].licensename|escape:'htmlall'}"{/if}><br>
     {$lang.specifylicenseurlortext}<br>
-    <label for="otherlicenseurl{$i}">{$lang.licenseurl}: </label><input{if $invalid.files[$i].otherlicenseurl} class="invalid"{/if} type="text" id="otherlicenseurl{$i}" name="otherlicenseurl[{$i}]"{if $input.files[$i].otherlicenseurl} value="{$input.files[$i].otherlicenseurl|escape:'htmlall'}"{/if}><br>
-    <label for="otherlicensetext{$i}">{$lang.licensetext}: </label><br><textarea{if $invalid.files[$i].otherlicensetext} class="invalid"{/if} style="width: 100%;" cols="74" rows="10" id="otherlicensetext{$i}" name="otherlicensetext[{$i}]">{if $input.files[$i].otherlicensetext}{$input.files[$i].otherlicensetext|escape:'htmlall'}{/if}</textarea><br>
+    <label for="licenseurl{$i}">{$lang.licenseurl}: </label><input{if $invalid.files[$i].licenseurl} class="invalid"{/if} type="text" id="licenseurl{$i}" name="licenseurl[{$i}]"{if $input.files[$i].licenseurl} value="{$input.files[$i].licenseurl|escape:'htmlall'}"{/if}><br>
+    <label for="licensetext{$i}">{$lang.licensetext}: </label><br><textarea{if $invalid.files[$i].licensetext} class="invalid"{/if} style="width: 100%;" cols="74" rows="10" id="licensetext{$i}" name="licensetext[{$i}]">{if $input.files[$i].licensetext}{$input.files[$i].licensetext|escape:'htmlall'}{/if}</textarea><br>
   </span>
   <input type="checkbox" id="confirm{$i}" name="confirm[{$i}]"{if $input.files[$i].confirm} checked="checked"{/if}><label{if $invalid.files[$i].confirm} class="invalid"{/if} id="confirmlabel{$i}" for="confirm{$i}"> {$lang.thisimagetos}</label>
 </fieldset>

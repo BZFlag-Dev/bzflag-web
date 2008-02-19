@@ -118,21 +118,27 @@
     
     exit;
     
-    
-    
-    
-    
+
   }
   // We'll just be listing the queue
   else
   {
     // Handle data
     $data['queue'] = $dl->Queue_Fetch_All();
+    
+    if ($data['queue'] && is_array($data['queue']) && sizeof($data['queue']) > 0)
+    {
+      foreach ($data['queue'] as &$item)
+      {
+        if (substr($item['licensename'], 0, 1) == "*")
+          $item['licensename'] = "[".$lang['other']."] ".substr($item['licensename'], 1);
+      }
+    }
   }
   
   
   $page['title'] = 'Moderation Queue';
-	$page['javascripts'] = Array('util.js', 'queue.js');
+	$page['javascripts'] = Array('lang.js.php?lang=en', 'util.js', 'queue.js');
   
   
   // Render the page

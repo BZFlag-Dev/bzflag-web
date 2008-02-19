@@ -44,6 +44,8 @@
   
   $lang['pleasewait'] = "Please Wait...";
   $lang['pleasewaituploading'] = "We are currently uploading your images. This can take some time depending on the speed your Internet connection.";
+  
+  $lang['other'] = "Other";
 
 
   $lang['errorUploaderfirstnameInvalid'] = "The uploader first name was not valid.";

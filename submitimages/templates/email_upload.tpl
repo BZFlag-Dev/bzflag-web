@@ -20,15 +20,10 @@ File Information
 {  if !$file.invalid}
 Filename: {$file.file.filename}
 Author Name: {$file.authorname}
-{    if $file.licenseselector == 255}
-License: {$file.otherlicensename}
-{if $file.otherlicenseurl}License URL: {$file.otherlicenseurl}{/if}
-{if $file.otherlicensebody}License Text:
-{$file.otherlicensebody}{/if}
-{    else}
-License: {$config.licenses[$file.licenseselector].name}
-License URL: {$config.licenses[$file.licenseselector].url}
-{    /if}
+License: {$file.licensename}
+{if $file.licenseurl}License URL: {$file.licenseurl}{/if}
+{if $file.licensebody}License Text:
+{$file.licensebody}{/if}
 
 {    if !$smarty.foreach.files.last}
 --------------------

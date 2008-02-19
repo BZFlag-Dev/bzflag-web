@@ -40,10 +40,9 @@ CREATE TABLE `img_queue` (
   `filename` VARCHAR( 255 ) NOT NULL,
   `filemd5` VARCHAR( 32 ) NOT NULL,
   `authorname` VARCHAR( 255 ) NOT NULL,
-  `licenseid` TINYINT UNSIGNED NOT NULL COMMENT 'If 255, it is custom',
   `licensename` VARCHAR( 255 ) NOT NULL,
   `licenseurl` VARCHAR( 255 ) NOT NULL,
-  `licensebody` MEDIUMTEXT NOT NULL,
+  `licensetext` MEDIUMTEXT NOT NULL,
   `moderationstatus` TINYINT NOT NULL DEFAULT '0',
   INDEX ( `bzid` ),
   INDEX ( `filemd5` ),
@@ -54,7 +53,7 @@ CREATE TABLE `img_queue` (
   function Queue_Insert($values)
   {
     $sql = "INSERT INTO ".TBL_QUEUE." ";
-    $sql .= "(queueid, bzid, username, ipaddress, uploaderfirstname, uploaderlastname, uploaderemail, filename, filemd5, authorname, licenseid, licensename, licenseurl, licensebody, moderationstatus) ";
+    $sql .= "(queueid, bzid, username, ipaddress, uploaderfirstname, uploaderlastname, uploaderemail, filename, filemd5, authorname, licensename, licenseurl, licensetext, moderationstatus) ";
     $sql .= "VALUES (0, ";
     $sql .= "'".mysql_real_escape_string($values['bzid'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['username'], $this->link)."', ";
@@ -65,10 +64,9 @@ CREATE TABLE `img_queue` (
     $sql .= "'".mysql_real_escape_string($values['filename'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['filemd5'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['authorname'], $this->link)."', ";
-    $sql .= "'".mysql_real_escape_string($values['licenseid'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['licensename'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['licenseurl'], $this->link)."', ";
-    $sql .= "'".mysql_real_escape_string($values['licensebody'], $this->link)."', ";
+    $sql .= "'".mysql_real_escape_string($values['licensetext'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['moderationstatus'], $this->link)."'";
     $sql .= ")";
     
