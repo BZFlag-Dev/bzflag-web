@@ -36,6 +36,14 @@
 {/if}
     <li><a href="{$config.paths.baseURL}tos.php">{$lang.termsofservice}</a></li>
     </ul>
+    <form action="{$config.paths.baseURL}setlanguage.php" method="get">
+      {$lang.setlanguage}: <select name="language">
+{foreach from=$config.languages item=language}
+        <option value="{$language.code}">{$language.name}</option>
+{/foreach}
+      </select>
+      <input type="submit" value="Set">
+    </form>
   </div>
 
   <div id="content">

@@ -9,6 +9,8 @@
   $lang['moderationqueue'] = "Moderation Queue";
   $lang['logout'] = "Logout";
   $lang['termsofservice'] = "Terms Of Service";
+  
+  $lang['setlanguage'] = "Set Language";
 
   $lang['uploadsupport'] = "Currently only PNG files are supported. There is a limit of ".($config['upload']['maxFileSize']/1024)."KB per file, and you may upload ".$config['upload']['maxFiles']." files at a time.";
   

@@ -48,7 +48,15 @@
   }
   
   // Load language file
-  include($config['paths']['language'].'en.php');
+  if (!isset($_COOKIE['language']))
+    include($config['paths']['language'].$config['defaultLanguage'].'.php');
+  else
+  {
+    if (!ereg('[^A-Za-z0-9\-]', $_COOKIE['language']) || !file_exists($config['paths']['language'].$_COOKIE['language'].".php"))
+      include($config['paths']['language'].$config['defaultLanguage'].'.php');
+    else
+      include($config['paths']['language'].$_COOKIE['language'].".php");
+  }
   
   // Input
   $input = Array();
