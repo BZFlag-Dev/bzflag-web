@@ -22,8 +22,8 @@ Filename: {$file.file.filename}
 Author Name: {$file.authorname}
 License: {$file.licensename}
 {if $file.licenseurl}License URL: {$file.licenseurl}{/if}
-{if $file.licensebody}License Text:
-{$file.licensebody}{/if}
+{if $file.licensetext}License Text:
+{$file.licensetext}{/if}
 
 {    if !$smarty.foreach.files.last}
 --------------------

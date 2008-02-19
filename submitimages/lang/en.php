@@ -27,7 +27,7 @@
   $lang['specifylicenseurlortext'] = "Please specify a URL to the license and/or the license text itself.";
   $lang['licenseurl'] = "License URL";
   $lang['licensetext'] = "License Text";
-  $lang['thisimagetos'] = "I confirm that this image does not violate the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>.";
+  $lang['thisimagetos'] = "I confirm that this image does not violate the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return doPopup(this.href, 'tos');\">Terms Of Service</a>.";
 
   $lang['otherinformation'] = "Other Information";
 
@@ -35,7 +35,7 @@
   $lang['firstname'] = "First Name";
   $lang['lastname'] = "Last Name";
   $lang['emailaddress'] = "Email Address";
-  $lang['allimagetos'] = "I confirm that none of the above images violate the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>.";
+  $lang['allimagetos'] = "I confirm that none of the above images violate the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return doPopup(this.href, 'tos');\">Terms Of Service</a>.";
   $lang['confirmaccurate'] = "I confirm that all the information on this form is accurate.";
   $lang['uploadimages'] = "Upload Images";
   
@@ -51,7 +51,7 @@
   $lang['errorUploaderfirstnameInvalid'] = "The uploader first name was not valid.";
   $lang['errorUploaderlastnameInvalid'] = "The uploader last name was not valid.";
   $lang['errorUploaderemailInvalid'] = "The uploader email address was not valid.";
-  $lang['errorConfirmtosInvalid'] = "You did not confirm that your images follows the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>.";
+  $lang['errorConfirmtosInvalid'] = "You did not confirm that your images follows the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return doPopup(this.href, 'tos');\">Terms Of Service</a>.";
   $lang['errorConfirmaccurateInvalid'] = "You did not confirm the accuracy of the information on this form.";
   $lang['errorMaximumFileSizeExceeded'] = "File %ID%: The file exceeded the maximum allowed file size.";
   $lang['errorMiscUploadError'] = "File %ID%: An error has occured during file upload. Please try again. If problem persists, please contact an administrator.";
@@ -62,7 +62,7 @@
   $lang['errorOtherlicenseurlandtextInvalid'] = "File %ID%: When using an Other OSI-approved license, you must specify a valid license URL and/or the license text.";
   $lang['errorOtherlicenseurlInvalid'] = "File %ID%: When using an Other OSI-approved license, you must specify a valid license URL.";
   $lang['errorOtherlicensetextInvalid'] = "File %ID%: When using an Other OSI-approved license, you must specify valid license text.";
-  $lang['errorConfirmInvalid'] = "File %ID%: You did not confirm that your image follows the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return showTOS();\">Terms Of Service</a>.";
+  $lang['errorConfirmInvalid'] = "File %ID%: You did not confirm that your image follows the <a href=\"".$config['paths']['baseURL']."tos.php\" onclick=\"javascript:return doPopup(this.href, 'tos');\">Terms Of Service</a>.";
   $lang['errorNoFilesSpecified'] = "No files were specified for upload.";
 
 ?>

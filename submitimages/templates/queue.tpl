@@ -10,8 +10,8 @@
     <td>
       <strong>Author Name:</strong> {$item.authorname}<br>
       <strong>License:</i></strong> {$item.licensename}<br>
-      {if $item.licenseurl}<strong>License URL:</strong> <a href="{$item.licenseurl}">View License</a><br>{/if}
-      {if $item.licensetext}<strong>License Text:</strong>{$item.licensebody|nl2br}{/if}
+      {if $item.licenseurl}<strong>License URL:</strong> <a href="{$item.licenseurl}" onclick="javascript:return doPopup(this.href, 'license');">View License</a><br>{/if}
+      {if $item.licensetext}<strong>License Text:</strong>{$item.licensetext|nl2br}{/if}
     </td>
     <td>
       <strong>Uploader Real Name:</strong> {$item.uploaderfirstname} {$item.uploaderlastname}<br>

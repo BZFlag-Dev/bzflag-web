@@ -40,17 +40,7 @@ function showLicense(uploadIndex)
   if (!config_licenses || !config_licenses[selected]) return;
   
   // Open the popup
-  var licensepopup = window.open(config_licenses[selected][1], 'licensepopup');
-  // Focus on the popup
-  licensepopup.focus();
-}
-
-function showTOS()
-{  
-  var tospopup = window.open(config_paths_baseURL+'tos.php', 'tos');
-  if (!tospopup) return true;
-  tospopup.focus();
-  return false;
+  doPopup(config_licenses[selected][1], 'license');
 }
 
 function validateForm()
