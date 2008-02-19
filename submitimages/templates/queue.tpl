@@ -9,7 +9,7 @@
     <td><a href="{$config.paths.baseURL}getimage.php?filename={$item.bzid}_{$item.filename}"><img src="{$config.paths.baseURL}getthumb.php?filename={$item.bzid}_{$item.filename}" alt="{$item.filename} by {$item.authorname}"></a></td>
     <td>
       <strong>Author Name:</strong> {$item.authorname}<br>
-      <strong>Custom License:</i></strong> {$item.licensename}<br>
+      <strong>License:</i></strong> {$item.licensename}<br>
       {if $item.licenseurl}<strong>License URL:</strong> <a href="{$item.licenseurl}">View License</a><br>{/if}
       {if $item.licensetext}<strong>License Text:</strong>{$item.licensebody|nl2br}{/if}
     </td>
