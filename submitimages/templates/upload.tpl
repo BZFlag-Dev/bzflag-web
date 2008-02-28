@@ -1,7 +1,5 @@
 <form enctype="multipart/form-data" action="{$config.paths.baseURL}upload.php" method="post" onsubmit="javascript:return validateForm();">
-<input type="hidden" name="MAX_FILE_SIZE" value="{$config.upload.maxFileSize}">
-
-<p>{$lang.uploadsupport}</p>
+<p><input type="hidden" name="MAX_FILE_SIZE" value="{$config.upload.maxFileSize}">{$lang.uploadsupport}</p>
 
 {foreach from=$messages.top item=top name=top}
 {  if $smarty.foreach.top.first}
@@ -61,6 +59,7 @@
   <input type="checkbox" id="confirmaccurate" name="confirmaccurate"{if $input.confirmaccurate} checked="checked"{/if}><label{if $invalid.confirmaccurate} class="invalid" {/if} id="confirmaccuratelabel" for="confirmaccurate"> {$lang.confirmaccurate}</label><br>
   <input type="submit" value="{$lang.uploadimages}">
 </fieldset>
+
 {foreach from=$messages.errors item=error name=errors}
 {  if $smarty.foreach.errors.first}
 <hr id="errorhr">

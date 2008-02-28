@@ -98,8 +98,8 @@
   $config['defaultLanguage'] = 'en';
   
   // Define the languages that we have installed into the language directory.
-  $config['languages'][0] = Array('name' => 'English', 'code' => 'en');
-  //$config['languages'][1] = Array('name' => '', 'code' => '');
+  $config['languages'][] = Array('name' => 'English', 'code' => 'en');
+  //$config['languages'][] = Array('name' => '', 'code' => '');
   
   // This one will always be at index 255.  It is used for when the user selects
   // "Other OSI-Approved" and then defines a license name, and either a URL or
