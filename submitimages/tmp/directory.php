@@ -20,6 +20,40 @@
     return round($size, 2).$unit;
   }
   
+  // Set up the SQLite database object and query the file data for this directory
+  
+  define('DATABASE_VERSION', 1);
+  
+  $filename = $filedirectory.'/data.sqlite3';
+  
+  $data = Array();
+  $data['files'] = Array();
+  
+  if (file_exists($filename))
+  {
+  
+    // create a SQLite3 database file with PDO and return a database handle (Object Oriented)
+    try
+    {
+      $sqlite = new PDO('sqlite:'.$filename);
+      
+      // Verify that we don't need to upgrade the database file
+      $query['checkVersion'] = $sqlite->query("SELECT value FROM info WHERE name = 'dbversion'");
+      $data['checkVersion'] = $query['checkVersion']->fetch();
+  
+      // For now, only run further queries if the database version matches   
+      if ($data['checkVersion']['value'] == DATABASE_VERSION)
+      {
+        $query['files'] = $sqlite->query("SELECT * FROM files");
+        $data['files'] = $query['files']->fetchAll();
+      }
+    }
+    catch( PDOException $exception )
+    {
+      //die($exception->getMessage());
+    }
+  }
+
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
 "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -91,7 +125,28 @@
       foreach($items['directories'] as $item)
         echo "      <tr><td><a href=\"$httpdirectory$item/\">$item</a></td><td>&lt;DIR&gt;</td><td>N/A</td><td>N/A</td><td>N/A</td></tr>\n";
       foreach($items['files'] as $item)
-        echo "      <tr><td><a href=\"$httpdirectory$item\">$item</a></td><td>".nicefilesize($filedirectory."/".$item)."</td><td>(Unknown)</td><td>(Unknown)</td><td>(Unknown)</td></tr>\n";
+      {
+        $file = false;
+        foreach($data['files'] as $f)
+        {
+          if ($f['filename'] == $item)
+          {
+            $file = $f;
+          }
+        }
+        
+        if ($file)
+        {
+          echo "      <tr><td><a href=\"$httpdirectory$item\">$item</a></td><td>".nicefilesize($filedirectory."/".$item)."</td><td>".$file['author']."</td><td>".$file['uploader']."</td><td>";
+          if ($file['licenseurl'])
+            echo '<a href="'.$file['licenseurl'].'">'.$file['licensename']."</a>";
+          else
+            $file['licensename'];
+          echo "</td></tr>\n";
+        }
+        else
+          echo "      <tr><td><a href=\"$httpdirectory$item\">$item</a></td><td>".nicefilesize($filedirectory."/".$item)."</td><td>(Unknown)</td><td>(Unknown)</td><td>(Unknown)</td></tr>\n";
+      }
     }
     else
       echo "      <tr><td colspan=\"5\">No files or folders exist in this directory</td></tr>\n";
