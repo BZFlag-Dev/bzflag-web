@@ -13,10 +13,6 @@ CREATE TABLE `img_queue` (
   `licensename` VARCHAR( 255 ) NOT NULL,
   `licenseurl` VARCHAR( 255 ) NOT NULL,
   `licensetext` MEDIUMTEXT NOT NULL,
-  `moderationstatus` TINYINT NOT NULL DEFAULT '0',
-  `moderationmessage` MEDIUMTEXT NOT NULL,
-  `moderator` VARCHAR ( 255 ) NOT NULL,
   INDEX ( `bzid` ),
-  INDEX ( `filemd5` ),
-  INDEX ( `moderationstatus` )
+  INDEX ( `filemd5` )
 ) TYPE = MYISAM ;

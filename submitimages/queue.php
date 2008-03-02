@@ -5,6 +5,8 @@
 
   include('common.php');
   
+  include($config['paths']['includes']."directorydb.class.php");
+  
   // Must be logged in to access the queue
   if (!$user)
   {
@@ -69,12 +71,35 @@
             {
               echo "This item was successfully moved into the public directory";
               
-              $data['update'] = Array();
-              $data['update']['moderationstatus'] = STATUS_APPROVED;
-              $data['update']['moderationmessage'] = $input['message'];
-              $data['update']['moderator'] = $user['username'];
-              if (!$dl->Queue_Update_ByID($data['queueitem']['queueid'], $data['update']))
-                echo "There was an error updating the database entry for this item.\n";
+              // Prepare the data to be added into the SQLite database
+              $data['file'] = Array();              
+              $data['file']['filename'] = $data['queueitem']['filename'];
+              $data['file']['bzid'] = $data['queueitem']['bzid'];
+              $data['file']['username'] = $data['queueitem']['username'];
+              $data['file']['ipaddress'] = $data['queueitem']['ipaddress'];
+              $data['file']['uploaderfirstname'] = $data['queueitem']['uploaderfirstname'];
+              $data['file']['uploaderlastname'] = $data['queueitem']['uploaderlastname'];
+              $data['file']['uploaderemail'] = $data['queueitem']['uploaderemail'];
+              $data['file']['filemd5'] = $data['queueitem']['filemd5'];
+              $data['file']['authorname'] = $data['queueitem']['authorname'];
+              
+              if (substr($data['queueitem']['licensename'], 0, 1) == "*")
+                $data['file']['licensename'] = substr($data['queueitem']['licensename'], 1);
+              else
+                $data['file']['licensename'] = $data['queueitem']['licensename'];
+              $data['file']['licenseurl'] = $data['queueitem']['licenseurl'];
+              $data['file']['licensetext'] = $data['queueitem']['licensetext'];
+              $data['file']['moderationmessage'] = $input['message'];
+              $data['file']['moderator'] = $user['username'];
+              
+              $dirdb = new DirectoryDB($config['paths']['publicDirectory'].$subdir.'/data.sqlite3');
+              if ($dirdb->AddEntry($data['file']))
+              {
+                if (!$dl->Queue_Delete_ByID($data['queueitem']['queueid']))
+                  echo "There was an error deleting the MySQL database entry for this item.\n";
+              }
+              else
+                echo "There was an error adding the directory database entry for this item.\n";
             }
             else
               echo "We were unable to rename the file to the destination location.\n";
@@ -101,11 +126,7 @@
           echo "Rejecting image with the following message to the user:\n".$input['message']."\n\n";
           
           // Try to delete the database entry
-          $data['update'] = Array();
-          $data['update']['moderationstatus'] = STATUS_REJECTED;
-          $data['update']['moderationmessage'] = $input['message'];
-          $data['update']['moderator'] = $user['username'];
-          if (!$dl->Queue_Update_ByID($data['queueitem']['queueid'], $data['update']))
+          if (!$dl->Queue_Delete_ByID($data['queueitem']['queueid']))
             echo "There was an error removing the database entry for this item.\n";
           
           // Try to delete the temporary file

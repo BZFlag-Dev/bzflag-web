@@ -2,12 +2,6 @@
 
   $prefix = "img_";
   define('TBL_QUEUE', $prefix.'queue');
-  //define('TBL_', $prefix.'');
-
-  // Few defines for moderation status
-  define('STATUS_PENDING', 0);
-  define('STATUS_APPROVED', 1);
-  define('STATUS_REJECTED', 2);
   
 class DataLayer
 {
@@ -43,17 +37,15 @@ CREATE TABLE `img_queue` (
   `licensename` VARCHAR( 255 ) NOT NULL,
   `licenseurl` VARCHAR( 255 ) NOT NULL,
   `licensetext` MEDIUMTEXT NOT NULL,
-  `moderationstatus` TINYINT NOT NULL DEFAULT '0',
   INDEX ( `bzid` ),
-  INDEX ( `filemd5` ),
-  INDEX ( `moderationstatus` )
+  INDEX ( `filemd5` )
 ) TYPE = MYISAM ;
 */
   
   function Queue_Insert($values)
   {
     $sql = "INSERT INTO ".TBL_QUEUE." ";
-    $sql .= "(queueid, bzid, username, ipaddress, uploaderfirstname, uploaderlastname, uploaderemail, filename, filemd5, authorname, licensename, licenseurl, licensetext, moderationstatus) ";
+    $sql .= "(queueid, bzid, username, ipaddress, uploaderfirstname, uploaderlastname, uploaderemail, filename, filemd5, authorname, licensename, licenseurl, licensetext) ";
     $sql .= "VALUES (0, ";
     $sql .= "'".mysql_real_escape_string($values['bzid'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['username'], $this->link)."', ";
@@ -66,8 +58,7 @@ CREATE TABLE `img_queue` (
     $sql .= "'".mysql_real_escape_string($values['authorname'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['licensename'], $this->link)."', ";
     $sql .= "'".mysql_real_escape_string($values['licenseurl'], $this->link)."', ";
-    $sql .= "'".mysql_real_escape_string($values['licensetext'], $this->link)."', ";
-    $sql .= "'".mysql_real_escape_string($values['moderationstatus'], $this->link)."'";
+    $sql .= "'".mysql_real_escape_string($values['licensetext'], $this->link)."'";
     $sql .= ")";
     
     $result = mysql_query($sql);
@@ -75,10 +66,9 @@ CREATE TABLE `img_queue` (
     else return false;
   }
   
-  function Queue_Fetch_All($onlyPending = true)
+  function Queue_Fetch_All()
   {
     $sql = "SELECT * FROM ".TBL_QUEUE;
-    if ($onlyPending) $sql .= " WHERE moderationstatus = ".STATUS_PENDING;
            
     $result = mysql_query($sql);
     
@@ -96,11 +86,10 @@ CREATE TABLE `img_queue` (
     else return false;
   }
   
-  function Queue_Fetch_ByBZID($bzid, $onlyPending = true)
+  function Queue_Fetch_ByBZID($bzid)
   {
     $sql = "SELECT * FROM ".TBL_QUEUE." WHERE ";
     $sql .= "bzid = '".mysql_real_escape_string($bzid, $this->link)."'";
-    if ($onlyPending) $sql .= " AND moderationstatus = ".STATUS_PENDING;
            
     $result = mysql_query($sql);
     
@@ -133,20 +122,10 @@ CREATE TABLE `img_queue` (
     else return false;
   }
   
-  function Queue_Update_ByID($queueid, $modified)
+  function Queue_Delete_ByID($queueid)
   {
-    if (!is_array($modified) || sizeof($modified) < 1)
-      return true;
-
-    $sql = "UPDATE ".TBL_QUEUE." SET ";
-    // Loop through the items we are updating
-    foreach($modified as $field => $value)
-      $sql .= $field."='".mysql_real_escape_string($value, $this->link)."', ";
-    // Trim off the last ", " from the query
-    $sql = substr($sql, 0, strlen($sql)-2);
-    // Add on our WHERE statement
-    $sql .= " WHERE queueid = '".mysql_real_escape_string($queueid, $this->link)."' ";
-    // Limit this to affecting 1 item (shouldn't be necessary, but just in case)
+    $sql = "DELETE FROM ".TBL_QUEUE." WHERE ";
+    $sql .= "queueid = '".mysql_real_escape_string($queueid, $this->link)."' ";
     $sql .= "LIMIT 1";
     
     $result = mysql_query($sql);

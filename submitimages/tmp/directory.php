@@ -137,7 +137,7 @@
         
         if ($file)
         {
-          echo "      <tr><td><a href=\"$httpdirectory$item\">$item</a></td><td>".nicefilesize($filedirectory."/".$item)."</td><td>".$file['author']."</td><td>".$file['uploader']."</td><td>";
+          echo "      <tr><td><a href=\"$httpdirectory$item\">$item</a></td><td>".nicefilesize($filedirectory."/".$item)."</td><td>".$file['authorname']."</td><td>".$file['uploaderfirstname']." ".$file['uploaderlastname']."</td><td>";
           if ($file['licenseurl'])
             echo '<a href="'.$file['licenseurl'].'">'.$file['licensename']."</a>";
           else
