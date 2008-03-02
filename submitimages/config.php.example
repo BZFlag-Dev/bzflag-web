@@ -92,6 +92,11 @@
   $config['licenses'][4] = Array('name' => 'Creative Commons Attribution-ShareAlike 3.0', 'url' => 'http://creativecommons.org/licenses/by-sa/3.0/');
   $config['licenses'][5] = Array('name' => 'Public Domain', 'url' => 'http://creativecommons.org/licenses/publicdomain/');
   
+  // This one will always be at index 255.  It is used for when the user selects
+  // "Other OSI-Approved" and then defines a license name, and either a URL or
+  // a full text version of the license.
+  $config['licenses'][255] = Array('name' => 'Other OSI-Approved', 'url' => 'http://www.opensource.org/licenses/');
+
   // Default language to use. This will be select in the event that the user has
   // not yet chosen a language, or if the language they selected does not exist.
   // Default: 'en'
@@ -100,11 +105,6 @@
   // Define the languages that we have installed into the language directory.
   $config['languages'][] = Array('name' => 'English', 'code' => 'en');
   //$config['languages'][] = Array('name' => '', 'code' => '');
-  
-  // This one will always be at index 255.  It is used for when the user selects
-  // "Other OSI-Approved" and then defines a license name, and either a URL or
-  // a full text version of the license.
-  $config['licenses'][255] = Array('name' => 'Other OSI-Approved', 'url' => 'http://www.opensource.org/licenses/');
   
   // Maximum thumbnail width for the queue list
   // Default: 128
