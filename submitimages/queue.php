@@ -1,7 +1,7 @@
 <?php
 
   define('USING_SMARTY', true);
-  define('USING_DATALAYER', true);
+  define('USING_QUEUEDB', true);
 
   include('common.php');
   
@@ -43,7 +43,7 @@
     // Process input and generate any errors
     //////////////////////////////////////////
     
-    $data['queueitem'] = $dl->Queue_Fetch_ByID($input['queueid']);
+    $data['queueitem'] = $qdb->Queue_Fetch_ByID($input['queueid']);
 
     header('Content-Type: text/plain');
     
@@ -69,7 +69,7 @@
             // Attempt to rename the file into this directory
             if (rename($config['paths']['tmp'].$data['queueitem']['bzid'].'_'.$data['queueitem']['filename'], $config['paths']['publicDirectory'].$subdir.'/'.$data['queueitem']['filename']))
             {
-              echo "This item was successfully moved into the public directory";
+              echo "This item was successfully moved into the public directory.\n";
               
               // Prepare the data to be added into the SQLite database
               $data['file'] = Array();              
@@ -95,7 +95,7 @@
               $dirdb = new DirectoryDB($config['paths']['publicDirectory'].$subdir.'/data.sqlite3');
               if ($dirdb->AddEntry($data['file']))
               {
-                if (!$dl->Queue_Delete_ByID($data['queueitem']['queueid']))
+                if (!$qdb->Queue_Delete_ByID($data['queueitem']['queueid']))
                   echo "There was an error deleting the MySQL database entry for this item.\n";
               }
               else
@@ -126,7 +126,7 @@
           echo "Rejecting image with the following message to the user:\n".$input['message']."\n\n";
           
           // Try to delete the database entry
-          if (!$dl->Queue_Delete_ByID($data['queueitem']['queueid']))
+          if (!$qdb->Queue_Delete_ByID($data['queueitem']['queueid']))
             echo "There was an error removing the database entry for this item.\n";
           
           // Try to delete the temporary file
@@ -134,6 +134,10 @@
             echo "There was an error removing the temporary file for this item.\n";
         }
       }
+    }
+    else
+    {
+      echo "The image specified was not found in the queue.\n";
     }
     
     
@@ -145,7 +149,7 @@
   else
   {
     // Handle data
-    $data['queue'] = $dl->Queue_Fetch_All();
+    $data['queue'] = $qdb->Queue_Fetch_All();
     
     if ($data['queue'] && is_array($data['queue']) && sizeof($data['queue']) > 0)
     {

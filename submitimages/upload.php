@@ -1,7 +1,7 @@
 <?php
 
   define('USING_SMARTY', true);
-  define('USING_DATALAYER', true);
+  define('USING_QUEUEDB', true);
 
   include('common.php');
   // Must be logged in to upload images
@@ -397,8 +397,7 @@
           $data['queue']['licensename'] = @$input['files'][$i]['licensename'];
           $data['queue']['licenseurl'] = @$input['files'][$i]['licenseurl'];
           $data['queue']['licensetext'] = @$input['files'][$i]['licensetext'];
-          $data['queue']['moderationstatus'] = STATUS_PENDING;
-          if (!$dl->Queue_Insert($data['queue']))
+          if (!$qdb->Queue_Insert($data['queue']))
           {
             $messages['errors'][] = str_replace('%ID%', $i, $lang['errorMiscUploadError']);
             $input['files'][$i]['invalid'] = true;

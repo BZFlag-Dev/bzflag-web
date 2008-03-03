@@ -63,12 +63,12 @@
         $query['checkVersion'] = $this->sql->query("SELECT value FROM info WHERE name = 'dbversion'");
         $data['checkVersion'] = $query['checkVersion']->fetch();
         
-        if ($data['checkVersion']['value'] < DATABASE_VERSION)
+        if ($data['checkVersion']['value'] < DIRECTORY_VERSION)
         {
           // TODO: Upgrade it
           return false;
         }
-        else if ($data['checkVersion']['value'] < DATABASE_VERSION)
+        else if ($data['checkVersion']['value'] < DIRECTORY_VERSION)
         {
           // The database version is newer than our script. We can't read this file.
           return false;

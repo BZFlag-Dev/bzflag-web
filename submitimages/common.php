@@ -17,10 +17,10 @@
     ini_set('display_errors', false);
     
   
-  if (defined('USING_DATALAYER') && USING_DATALAYER)
+  if (defined('USING_QUEUEDB') && USING_QUEUEDB)
   {
-    require($config['paths']['includes'].'datalayer.class.php');
-    $dl = new DataLayer($config['datalayer']);
+    require($config['paths']['includes'].'queuedb.class.php');
+    $qdb = new QueueDB($config['paths']['baseDirectory'].'data.sqlite3');
     $data = Array();
   }
   
@@ -98,7 +98,7 @@
 
     $tpl->assign('lang', $lang);
     
-    if (defined('USING_DATALAYER') && USING_DATALAYER)
+    if (defined('USING_QUEUEDB') && USING_QUEUEDB)
       $tpl->assign_by_ref('data', $data);
   }
 
