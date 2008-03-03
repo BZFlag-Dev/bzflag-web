@@ -59,18 +59,9 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <style type="text/css">
     body {
-      background-color: black;
+      background-color: white;
       color: black;
       font-family: monospace;
-      margin: 0;
-      padding: 0;
-    }
-    
-    #main {
-      margin: 25px;
-      padding: 5px;
-      background-color: #FFE666;
-      color: black;
     }
     
     h1 {
@@ -78,21 +69,28 @@
       padding: 0;
     }
     
+    table {
+      border-collapse: collapse;
+    }
+    
     td, th {
       border: 1px solid black;
       padding: 5px 10px;
     }
+    
+    th {
+      background-color: #CCC;
+    }
   </style>
 </head>
 <body>
-  <div id="main">
-    <h1>Index of <?php echo $httpdirectory; ?></h1>
+  <h1>Index of <?php echo $httpdirectory; ?></h1>
     
-    <table>
-      <tr><th>Name</th><th>Size</th><th>Author</th><th>Uploader</th><th>License</th></tr>
+  <table>
+    <tr><th>Name</th><th>Size</th><th>Author</th><th>Uploader</th><th>License</th></tr>
 <?php
   if ($httpdirectory != '/')
-    echo "      <tr><td><a href=\"../\">Parent Directory</a></td><td>&lt;DIR&gt;</td><td>N/A</td><td>N/A</td><td>N/A</td></tr>\n";
+    echo "    <tr><td><a href=\"../\">Parent Directory</a></td><td>&lt;DIR&gt;</td><td>N/A</td><td>N/A</td><td>N/A</td></tr>\n";
 
   $items = Array('directories' => Array(), 'files' => Array());
   if (is_dir($filedirectory))
@@ -120,7 +118,7 @@
     if (sizeof($items['directories']) + sizeof($items['files']) > 0)
     {
       foreach($items['directories'] as $item)
-        echo "      <tr><td><a href=\"$httpdirectory$item/\">$item</a></td><td>&lt;DIR&gt;</td><td>N/A</td><td>N/A</td><td>N/A</td></tr>\n";
+        echo "    <tr><td><a href=\"$httpdirectory$item/\">$item</a></td><td>&lt;DIR&gt;</td><td>N/A</td><td>N/A</td><td>N/A</td></tr>\n";
       foreach($items['files'] as $item)
       {
         $file = false;
@@ -134,7 +132,7 @@
         
         if ($file)
         {
-          echo "      <tr><td><a href=\"$httpdirectory$item\">$item</a></td><td>".nicefilesize($filedirectory."/".$item)."</td><td>".$file['authorname']."</td><td>".$file['uploaderfirstname']." ".$file['uploaderlastname']."</td><td>";
+          echo "    <tr><td><a href=\"$httpdirectory$item\">$item</a></td><td>".nicefilesize($filedirectory."/".$item)."</td><td>".$file['authorname']."</td><td>".$file['uploaderfirstname']." ".$file['uploaderlastname']."</td><td>";
           if ($file['licenseurl'])
             echo '<a href="'.$file['licenseurl'].'">'.$file['licensename']."</a>";
           else
@@ -142,15 +140,14 @@
           echo "</td></tr>\n";
         }
         else
-          echo "      <tr><td><a href=\"$httpdirectory$item\">$item</a></td><td>".nicefilesize($filedirectory."/".$item)."</td><td>(Unknown)</td><td>(Unknown)</td><td>(Unknown)</td></tr>\n";
+          echo "    <tr><td><a href=\"$httpdirectory$item\">$item</a></td><td>".nicefilesize($filedirectory."/".$item)."</td><td>(Unknown)</td><td>(Unknown)</td><td>(Unknown)</td></tr>\n";
       }
     }
     else
-      echo "      <tr><td colspan=\"5\">No files or folders exist in this directory</td></tr>\n";
+      echo "    <tr><td colspan=\"5\">No files or folders exist in this directory</td></tr>\n";
   }
 
 ?>
-      </table>
-    </div>
+    </table>
   </body>
 </html>
