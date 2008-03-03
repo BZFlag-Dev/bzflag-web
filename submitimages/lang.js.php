@@ -7,6 +7,8 @@
   
   // Pull in the configuration file.
   include('config.php');
+
+  include($config['paths']['includes'].'functions.php');
   
   // Pull the requested language from 
   $input['lang'] = $_GET['lang'];
