@@ -1,10 +1,7 @@
 <?php
   // Set up some variables for this session
-  $filedirectory = dirname($_SERVER['SCRIPT_FILENAME']);
-  $httpdirectory = str_replace("\\", "/", dirname($_SERVER['SCRIPT_NAME']));
-  
-  if ($httpdirectory != '/')
-    $httpdirectory .= '/';
+  $filedirectory = $_SERVER['DOCUMENT_ROOT'].$_SERVER['REQUEST_URI'];
+  $httpdirectory = $_SERVER['REQUEST_URI'];
   
   function nicefilesize($filename)
   {
@@ -109,7 +106,7 @@
           continue;
         
         // Only list directories or PNG files.
-        if (is_dir($item))
+        if (is_dir($filedirectory.$item))
           $items['directories'][] = $item;
         else if (strtolower(end(explode('.', $item))) == 'png')
           $items['files'][] = $item;

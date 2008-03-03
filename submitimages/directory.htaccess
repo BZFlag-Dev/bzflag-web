@@ -1,0 +1,10 @@
+<FilesMatch "\.(sqlite3)$">
+Deny from all
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+  RewriteRule submitimages/$ /submitimages/index.php [L]
+  RewriteRule ^$ /submitimages/directory.index.php [L]
+  RewriteRule /$ /submitimages/directory.index.php [L]
+</IfModule>
