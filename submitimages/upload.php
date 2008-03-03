@@ -12,7 +12,6 @@
   }
   
   include($config['paths']['includes'].'validation.php');
-  include($config['paths']['includes'].'functions.php');
   
   // If they submit the form, let's process that
   if (sizeof($_POST) > 0)

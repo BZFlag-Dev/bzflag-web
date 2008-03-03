@@ -15,6 +15,8 @@
     ini_set('display_errors', true);
   else
     ini_set('display_errors', false);
+
+  include($config['paths']['includes'].'functions.php');
     
   
   if (defined('USING_QUEUEDB') && USING_QUEUEDB)

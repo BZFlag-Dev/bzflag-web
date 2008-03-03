@@ -52,5 +52,16 @@
     return $value;
   }
 
+  // Start off with the size in bytes
+  function nicefilesize($size)
+  {
+    $units = array('B', 'KB', 'MB', 'GB', 'TB');
+    foreach ($units as $unit) {
+      if ($size >= 1024) $size = $size / 1024;
+      else break;
+    }
+
+    return round($size, 2).$unit;
+  }
 
 ?>

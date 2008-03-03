@@ -12,7 +12,7 @@
   
   $lang['setlanguage'] = "Set Language";
 
-  $lang['uploadsupport'] = "Currently only PNG files are supported. There is a limit of ".($config['upload']['maxFileSize']/1024)."KB per file, and you may upload ".$config['upload']['maxFiles']." files at a time.";
+  $lang['uploadsupport'] = "Currently only PNG files are supported. There is a limit of ".nicefilesize($config['upload']['maxFileSize'])." per file, and you may upload ".$config['upload']['maxFiles']." files at a time.";
   
   $lang['success'] = "Success";
   $lang['successfulUpload'] = "The following files were successfully uploaded and are now awaiting moderation: ";
