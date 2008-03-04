@@ -39,7 +39,9 @@
   // stored in a directory that is associated with the uploader's real name.
   // This needs to be writable by the web server or the user that PHP operates
   // under.
-  $config['paths']['public'] = $config['paths']['baseDirectory'].'../';
+  $config['paths']['publicDirectory'] = $config['paths']['baseDirectory'].'../';
+  
+  $config['paths']['publicURL'] = "http://YourDomain.com/";
   
   
   // This is the main title of the application that will appear in various

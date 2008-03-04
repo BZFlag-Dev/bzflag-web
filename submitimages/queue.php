@@ -59,15 +59,15 @@
         {
           $subdir = strtolower(substr($data['queueitem']['uploaderfirstname'], 0, 1).$data['queueitem']['uploaderlastname']);
           echo "Subdirectory name for this uploader will be '$subdir'\n";
-          echo "Final location for file will be: ".$config['paths']['public'].$subdir.'/'.$data['queueitem']['filename'];
+          echo "Final location for file will be: ".$config['paths']['publicDirectory'].$subdir.'/'.$data['queueitem']['filename'];
           echo "\n";
           echo "Final URL for file will be: ".$config['paths']['publicURL'].$subdir.'/'.$data['queueitem']['filename'];
           echo "\n";
           
           // First, make sure our destination directory exists. If not, try to create it
-          if (is_dir($config['paths']['public'].$subdir.'/') || mkdir($config['paths']['public'].$subdir.'/')) {
+          if (is_dir($config['paths']['publicDirectory'].$subdir.'/') || mkdir($config['paths']['publicDirectory'].$subdir.'/')) {
             // Attempt to rename the file into this directory
-            if (rename($config['paths']['tmp'].$data['queueitem']['bzid'].'_'.$data['queueitem']['filename'], $config['paths']['public'].$subdir.'/'.$data['queueitem']['filename']))
+            if (rename($config['paths']['tmp'].$data['queueitem']['bzid'].'_'.$data['queueitem']['filename'], $config['paths']['publicDirectory'].$subdir.'/'.$data['queueitem']['filename']))
             {
               echo "This item was successfully moved into the public directory.\n";
               
@@ -92,7 +92,7 @@
               $data['file']['moderationmessage'] = $input['message'];
               $data['file']['moderator'] = $user['username'];
               
-              $dirdb = new DirectoryDB($config['paths']['public'].$subdir.'/data.sqlite3');
+              $dirdb = new DirectoryDB($config['paths']['publicDirectory'].$subdir.'/data.sqlite3');
               if ($dirdb->AddEntry($data['file']))
               {
                 if (!$qdb->Queue_Delete_ByID($data['queueitem']['queueid']))
