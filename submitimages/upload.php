@@ -413,6 +413,7 @@
       {
         $messages['top'][] = $lang['successfulUpload'].implode(', ', $validFileNames);
         $email['body'] = $tpl->fetch('email_upload.tpl');
+	email($config['mail']['notifyaddress'], $config['mail']['fromaddress'], "New Image Submission: Moderation Pending", $email['body']);
       }
       
       // If it was uploaded successfully, there is no need to redisplay it

@@ -64,4 +64,10 @@
     return round($size, 2).$unit;
   }
 
+  // Basic email function
+  function email($to, $from, $subject, $message)
+  {
+    return mail($to, $subject, str_replace("\r\n", "\n", $message), "From: ".$from);
+  }
+
 ?>
