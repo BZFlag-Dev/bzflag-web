@@ -1,6 +1,6 @@
 <?php
   // Set up some variables for this session
-  $filedirectory = $_SERVER['DOCUMENT_ROOT'].$_SERVER['REQUEST_URI'];
+  $filedirectory = $_SERVER['DOCUMENT_ROOT'].urldecode($_SERVER['REQUEST_URI']);
   $httpdirectory = $_SERVER['REQUEST_URI'];
   
   function nicefilesize($filename)
