@@ -238,10 +238,10 @@
 
           echo "</td><td>";
           
-          if ($file['licenseurl'])
+          if (strlen(trim($file['licenseurl'])) > 0)
             echo '<a href="'.$file['licenseurl'].'">'.$file['licensename']."</a>";
           else
-            $file['licensename'];
+            echo $file['licensename'];
           echo "</td></tr>\n";
         }
         else
