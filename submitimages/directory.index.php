@@ -203,7 +203,7 @@
     {
       while (($item = readdir($dir)) !== false)
       {
-        if ($item == '.' || $item == '..')
+        if ($item == '.' || $item == '..' || $item == '.svn')
           continue;
         
         // Only list directories or PNG files.
