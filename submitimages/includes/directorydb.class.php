@@ -17,7 +17,7 @@
       }
       catch( PDOException $exception )
       {
-        //die($exception->getMessage());
+        die($exception->getMessage());
       }
     }
     
