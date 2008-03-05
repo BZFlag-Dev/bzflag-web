@@ -1,18 +1,8 @@
 TODO List
 -------------------------------------------------
-- The file MD5 was just added to the database. Next thing to do with this is
-  to run a check in the moderation queue to identify previously rejected images
 
 - Make the moderation queue page have a proper HTML feedback page instead of the
   debug text.
-
-- Copy in author details for the images, and display the data when browsing the
-  image directories.  Make a nice display system as well, possibly with
-  thumbnail previews.
-
-- Actually send out email...
-
-- Allow users to view their own pending images.
 
 - Move the rest of the website's text into the language file.
 
@@ -21,5 +11,3 @@ TODO List
 
 - Clear the TOS and accuracy checkboxes under Uploader Information if all files
   were uploaded sucessfully.
-
-- Verify that the JavaScript input validation matches the PHP input validation.

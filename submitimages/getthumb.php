@@ -2,10 +2,11 @@
 
   include('common.php');
   
-  // This area is only for moderators. Everyone else, bye bye!
-  if (!isset($user) || !$user || !$user['moderator'])
+  // Allow any logged in user to view the images. We could restrict this to
+  // moderators or the uploader of the image, but not really worth the effort.
+  if (!isset($user) || !$user)
   {
-    echo "You are not logged in as a moderator. This page is restricted.";
+    echo "You are not logged in. This page is restricted.";
     exit;
   }
 
