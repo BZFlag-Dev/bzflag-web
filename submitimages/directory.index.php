@@ -129,6 +129,8 @@
       $query->bindParam(':licensename', $oldfile['license'], PDO::PARAM_STR);
       if (file_exists($filedirectory.'/'.$oldfile['filename']))
         $query->bindParam(':filemd5', md5_file($filedirectory.'/'.$oldfile['filename']), PDO::PARAM_STR);
+      else
+        $query->bindParam(':filemd5', "", PDO::PARAM_STR);
       $query->execute();
     }
     
