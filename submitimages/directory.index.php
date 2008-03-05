@@ -103,7 +103,7 @@
       else if (strncmp("License for ", $oldline, strlen("License for ")) == 0)
       {
         $oldfiles[] = Array('filename' => substr($oldline, strlen("License for "), strpos($oldline, ":")-strlen("License for ")),
-                            'license' => substr($oldline, strpos($oldline, ":")+2) );
+                            'license' => trim(substr($oldline, strpos($oldline, ":")+2) ));
       }
     }
     
@@ -118,17 +118,29 @@
     echo "</pre>";
     
     // Prepare a query to insert new entries into the 'files' table
-    $query = $sqlite->prepare('INSERT INTO files (filename, uploaderfirstname, uploaderlastname, filemd5, licensename) VALUES (:filename, :uploaderfirstname, :uploaderlastname, :filemd5, :licensename)');
+    $query = $sqlite->prepare('INSERT INTO files (filename, uploaderfirstname, uploaderlastname, filemd5, licensename, licenseurl, moderationmessage) VALUES (:filename, :uploaderfirstname, :uploaderlastname, :filemd5, :licensename, :licenseurl, :moderationmessage)');
 
     $query->bindParam(':uploaderfirstname', $olduploadername[0], PDO::PARAM_STR);
     $query->bindParam(':uploaderlastname', $olduploadername[1], PDO::PARAM_STR);
+    $moderation = "Imported from old system.";
+    $query->bindParam(':moderationmessage', $moderation, PDO::PARAM_STR);
     
     $null = "";
+    
+    $licenses['gpl'] = "http://www.gnu.org/copyleft/gpl.html";
+    $licenses['publicdomain'] = "http://creativecommons.org/licenses/publicdomain/";
     
     foreach($oldfiles as $oldfile)
     {
       $query->bindParam(':filename', $oldfile['filename'], PDO::PARAM_STR);
       $query->bindParam(':licensename', $oldfile['license'], PDO::PARAM_STR);
+      if ($oldfile['license'] == "GPL")
+        $query->bindParam(':licenseurl', $licenses['gpl'], PDO::PARAM_STR);
+      else if ($oldfile['license'] == "Public Domain")
+        $query->bindParam(':licenseurl', $licenses['publicdomain'], PDO::PARAM_STR);
+      else
+        $query->bindParam(':licenseurl', $null, PDO::PARAM_STR);
+      
       if (file_exists($filedirectory.'/'.$oldfile['filename']))
       {
         $oldfile['filemd5'] = md5_file($filedirectory.'/'.$oldfile['filename']);
