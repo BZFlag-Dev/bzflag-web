@@ -123,14 +123,19 @@
     $query->bindParam(':uploaderfirstname', $olduploadername[0], PDO::PARAM_STR);
     $query->bindParam(':uploaderlastname', $olduploadername[1], PDO::PARAM_STR);
     
+    $null = "";
+    
     foreach($oldfiles as $oldfile)
     {
       $query->bindParam(':filename', $oldfile['filename'], PDO::PARAM_STR);
       $query->bindParam(':licensename', $oldfile['license'], PDO::PARAM_STR);
       if (file_exists($filedirectory.'/'.$oldfile['filename']))
-        $query->bindParam(':filemd5', md5_file($filedirectory.'/'.$oldfile['filename']), PDO::PARAM_STR);
+      {
+        $oldfile['filemd5'] = md5_file($filedirectory.'/'.$oldfile['filename']);
+        $query->bindParam(':filemd5', $oldfile['filemd5'], PDO::PARAM_STR);
+      }
       else
-        $query->bindParam(':filemd5', "", PDO::PARAM_STR);
+        $query->bindParam(':filemd5', $null, PDO::PARAM_STR);
       $query->execute();
     }
     
