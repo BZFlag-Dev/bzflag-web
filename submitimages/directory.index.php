@@ -82,7 +82,7 @@
     }
     catch( PDOException $exception )
     {
-      //die($exception->getMessage());
+      die($exception->getMessage());
     }
 
     echo "Upgrading old author.txt to SQLite system<br>";
