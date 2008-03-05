@@ -207,9 +207,11 @@
           continue;
         
         // Only list directories or PNG files.
-        if (is_dir($filedirectory.$item))
+        if (is_dir($filedirectory.$item)) {
+	  if ($item[0] == '.' || file_exists("$filedirectory/$item/.ignore"))
+	    continue;
           $items['directories'][] = $item;
-        else if (strtolower(end(explode('.', $item))) == 'png')
+        } else if (strtolower(end(explode('.', $item))) == 'png')
           $items['files'][] = $item;
       }
       closedir($dir);
