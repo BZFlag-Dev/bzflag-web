@@ -83,7 +83,7 @@
   
   // Any license we want to build into the system will be here, ranging from an
   // array index of 1 to 254.
-  $config['licenses'][1] = Array('name' => 'GNU LGPL', 'url' => 'http://www.gnu.org/licenses/lgpl.html');
+  $config['licenses'][1] = Array('name' => 'GNU LGPL', 'url' => 'http://opensource.org/licenses/lgpl-2.1.php');
   $config['licenses'][2] = Array('name' => 'BSD/MIT', 'url' => 'http://opensource.org/licenses/bsd-license.php');
   $config['licenses'][3] = Array('name' => 'Creative Commons Attribution 3.0', 'url' => 'http://creativecommons.org/licenses/by/3.0/');
   $config['licenses'][4] = Array('name' => 'Creative Commons Attribution-ShareAlike 3.0', 'url' => 'http://creativecommons.org/licenses/by-sa/3.0/');
