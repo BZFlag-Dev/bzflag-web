@@ -3,7 +3,7 @@ BZFlag Image Submission System
 One or more images have been uploaded to the image submission system. As a
 moderator, you have received this email. To approve or reject these images,
 visit the URL below and login:
-{$config.paths.baseURL}
+{$config.paths.baseURL}/queue.php
 
 --------------------
 Uploader Information
