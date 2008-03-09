@@ -41,9 +41,6 @@
   // under.
   $config['paths']['publicDirectory'] = $config['paths']['baseDirectory'].'../';
   
-  // URL to the queue script for e-mail notifications.
-  $config['paths']['queueURL'] = $config['paths']['baseURL'].'queue.php';
-  
   $config['paths']['publicURL'] = "http://YourDomain.com/";
   
   
