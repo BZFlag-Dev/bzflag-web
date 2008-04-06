@@ -6,7 +6,7 @@
 {/if}
 
   <tr>
-    <td><a href="{$config.paths.baseURL}getimage.php?filename={$item.bzid}_{$item.filename}"><img src="{$config.paths.baseURL}getthumb.php?filename={$item.bzid}_{$item.filename}" alt="{$item.filename} by {$item.authorname}"></a></td>
+    <td><a href="{$config.paths.baseURL}getimage.php?filename={$item.bzid}_{$item.filename|escape:"url"}"><img src="{$config.paths.baseURL}getthumb.php?filename={$item.bzid}_{$item.filename|escape:"url"}" alt="{$item.filename|escape:"html"} by {$item.authorname|escape:"html"}"></a></td>
     <td>
       <strong>Author Name:</strong> {$item.authorname}<br>
       <strong>License:</i></strong> {$item.licensename}<br>
