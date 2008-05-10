@@ -104,7 +104,6 @@ Other Links
 <ul>
 <li><a href="http://bzflag.org/">BZFlag.org</a></li>
 <li><a href="/bb/">Forums</a></li>
-<li><a href="/irc/irc.cgi">IRC Chat</a></li>
 <li><a href="/league/">CTF League</a></li>
 <li><a href="http://my.bzflag.org/w">BZFlag Wiki</a></li>
 <li><a href="http://my.bzflag.org/w/Download">Download</a></li>
