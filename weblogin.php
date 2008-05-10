@@ -121,7 +121,7 @@ function action_weblogin() {
 					<tr>
 						<td valign="top">
 							<table width="40%" border="0" cellpadding="0" cellspacing="0">
-							<form action="" method="POST" >
+							<form action="http://my.bzflag.org/weblogin.php" method="POST" >
 							<tr>
 								<td>Username <INPUT type ="text" name="username"></td>
 							</tr>
