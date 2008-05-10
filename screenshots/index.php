@@ -20,7 +20,7 @@ print <<< end
 <p>Version 2 marks the beginning of enhanced graphics support, improved texturing, more detailed models, more detailed worlds and more more more.</p>
 <br>
 
-<p>There are a lot of nice 2.0 screenshots provided by <i>romfls</i> on his site at  <b><a href="http://bzflag.at/screenshots/">http://bzflag.at/screenshots/</a></b>.  Enjoy!</p>
+<p>There are a lot of nice 2.0 screenshots provided by <i>romfls</i> on his site at  <b><a href="http://www.bzflag.at/index.php?a=screenshots">http://www.bzflag.at/index.php?a=screenshots</a></b>.  Enjoy!</p>
 
 <br>
 <hr>

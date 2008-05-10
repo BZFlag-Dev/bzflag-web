@@ -15,11 +15,7 @@ print <<< end
 </tr>
 <tr>
 <td>
-BZFlag is a free multiplayer multiplatform 3D tank battle game. The name stands
-for Battle Zone capture Flag. It runs on Irix, Linux, *BSD, Windows, Mac OS X
-and other platforms. It's one of the most popular games ever on Silicon
-Graphics machines. For more information, check out some of the <a
-href="reviews.php">reviews</a>.
+BZFlag is a free online multiplayer cross-platform open source 3D tank battle game.  The name originates from "Battle Zone capture the Flag".  It runs on Irix, Linux, *BSD, Windows, Mac OS X, and many other platforms.  It's one of the most popular games ever on Silicon Graphics machines and continues to be developed and improved to this day.  It's one of the most popular open source games ever.  For more information, check out some of the <a href="reviews.php">reviews</a>.
 </td>
 </tr>
 </table>
@@ -40,9 +36,11 @@ if(mysql_num_rows($result) == 0) {
     }
     $i++;
   }
+/*
   if(mysql_num_rows($result) > 5) {
     print "<br><div align=\"center\"><a href=\"/bzflag/news/old.php\">old news</a></div>\n</td></tr></table>";
   }
+*/
 }
 
 mysql_free_result($result);

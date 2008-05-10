@@ -46,9 +46,10 @@ print <<< end
 								<table class="sidebar_border" bgcolor="#FFFFFF" border="0" cellpadding="0">
 									<tr><td>
 										<a href="/" class="navbar">home</a><br>
-										<a href="http://my.bzflag.org/bb/profile.php?mode=register" class="navbar" style="color: red;">register</a><br>
+										<a href="http://my.bzflag.org/w/Getting_Started" class="navbar" style="color: red;">Getting Started</a><br>
 										<a href="http://my.bzflag.org/w/Getting Help" class="navbar">getting&nbsp;help</a><br>
 										<a href="http://my.bzflag.org/w/Download" class="navbar">download</a><br>
+										<a href="http://store.bzflag.org/" class="navbar" style="color: green;"><strong>Store</strong></a><br>
 										<a href="/help/" class="navbar">help</a><br>
 										<a href="http://my.bzflag.org/w/BZFlag_Source" class="navbar">developers</a><br>
 										<a href="/screenshots/" class="navbar">screenshots</a><br>
@@ -59,7 +60,6 @@ print <<< end
 										<a href="http://my.BZFlag.org/" class="navbar">stats</a><br>
 										<a href="http://my.BZFlag.org/bb/" class="navbar">forums</a><br>
 										<a href="http://my.BZFlag.org/league/" class="navbar">CTF&nbsp;league</a><br>
-										<a href="http://bzflag.svn.sourceforge.net/viewvc/*checkout*/bzflag/trunk/bzflag/TODO class="navbar">TODO</a><br>
 										<br>
 										<a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
 										&nbsp;<a href="http://bzflag.svn.sourceforge.net/viewvc/bzflag/" class="navbar">browse&nbsp;Subversion</a><br>
@@ -152,6 +152,13 @@ print <<< end
 		</tr>
 	</table>
 </div>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-2168055-4";
+urchinTracker();
+</script>
 
 </body>
 </html>
