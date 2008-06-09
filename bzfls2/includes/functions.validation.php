@@ -95,7 +95,7 @@
       // If it does not have four parts, it is not an IP address
       if (sizeof($parts) != 4) return false;
       
-      // If any part is contains non-digit parts, it is not an IP address
+      // If any part contains non-digit parts, it is not an IP address
       if (!ctype_digit($parts[0]) || !ctype_digit($parts[1]) || 
           !ctype_digit($parts[2]) || !ctype_digit($parts[3]))
         return false;

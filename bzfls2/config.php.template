@@ -9,6 +9,22 @@
   $config['datalayer']['password'] = "";
   $config['datalayer']['database'] = "";
   
+  // Enable logging to file
+  // Default: false
+  $config['logging']['enable'] = false;
+  
+  // Logging file. Must be writable by the webserver.
+  $config['logging']['filename'] = '';
+  
+  // The higher the logging level, the more messages that will be logged. A
+  // typical production setup should be set to 1.
+  // Default: 1
+  $config['logging']['level'] = 1;
+  
+  // This option will generate timestamps in the log file.
+  // Default: true
+  $config['logging']['timestamp'] = true;
+  
   // When this is set to true, we will not check if a server's hostname matches
   // the IP of who or what is requesting an ADD or REMOVE action.  ONLY set this
   // to true for TESTING.  With this set to true, anyone can add or remove any

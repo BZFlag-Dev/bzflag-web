@@ -19,6 +19,37 @@
   
   */
   
+  $logLines = Array();
+  function bzfinish()
+  {
+  
+    if ($GLOBALS['config']['logging']['enable'] && !empty($config['logging']['filename']) && is_writable($config['logging']['filename']))
+    {
+      bzlog('Closing log for '.$_SERVER['REMOTE_ADDR']);
+      // Open a file pointer to the log file
+      $logfp = fopen($GLOBALS['config']['logging']['filename'], "a");
+
+      if ($logfp)
+      {
+        flock($logfp, LOCK_EX);
+        fwrite($logfp, implode("\n", $GLOBALS['logLines'])."\n");
+        flock($logfp, LOCK_UN);
+        fclose($logfp);
+      }
+    }
+  }
+  register_shutdown_function('bzfinish');
+  
+  function bzlog($message, $level = 0)
+  {
+    if (!$GLOBALS['config']['logging']['enable'] || $level > $GLOBALS['config']['logging']['level']) return;
+    
+    if ($GLOBALS['config']['logging']['timestamp'])
+      $GLOBALS['logLines'][] = date("Y-m-d H:i:s.u -- ").$message;
+    else
+      $GLOBALS['logLines'][] = $message;
+  }
+  
   // Use the same time throughout the whole duration of the script
   define('NOW', mktime());
  
@@ -35,6 +66,8 @@
   
   include('includes/functions.utility.php');
   include('includes/functions.validation.php');
+  
+  bzlog('Opening log for '.$_SERVER['REMOTE_ADDR']);
 
   //////////////////////////////////////////
   
@@ -67,6 +100,7 @@
   // First check if we will be displaying the HTML form
   if (!isset($_REQUEST['action']) || !in_array($_REQUEST['action'], Array('ADD', 'REMOVE', 'LIST', 'GETTOKEN', 'CHECKTOKENS', 'REGISTER', 'CONFIRM')))
   {
+    bzdebug('Displaying HTML form');
     // We are displaying HTML, so send out the right content type
     header('Content-Type: text/html');
     echo
@@ -132,8 +166,7 @@
       $input['version'] = smart_strip_slashes($_REQUEST['version']);
     
     // gameinfo (ADD) - Hex string that defines server configuration and
-    //   player counts; Technically could be removed, and have bzfls.php
-    //   query the server to obtain this information
+    //   player counts
     if (isset($_REQUEST['gameinfo']) && ($input['action'] == 'ADD'))
       $input['gameinfo'] = smart_strip_slashes($_REQUEST['gameinfo']);
     
@@ -519,6 +552,7 @@
     if ($dl === false) die("ERROR: Unable to connect to database.\n");
     
     // Prune out dead servers
+    bzlog('Deleting inactive servers from list',3);
     $dl->Servers_Delete_ByAge(NOW-$config['maximumServerAge']);
     
     // Check if they are requesting a token
