@@ -169,6 +169,20 @@ class Pastebin
 				setcookie ('persistName', '', 0);
 		}
 		
+		/* reCAPTCHA - Start */
+                require_once('recaptcha-php/recaptchalib.php');
+                $resp = recaptcha_check_answer($GLOBALS['CONF']['recaptcha_private_key'],
+                                               $_SERVER["REMOTE_ADDR"],
+                                               $_POST["recaptcha_challenge_field"],
+                                               $_POST["recaptcha_response_field"]);
+                if (!$resp->is_valid)
+                {
+                  $this->errors[]='The reCAPTCHA was not entered correctly. Please try again.';
+		}
+
+		else /* if (strlen($post['code2'])) */
+                /* reCAPTCHA - End */
+		
 		if (strlen($post['code2']))
 		{
 			$poster=preg_replace('/[^A-Za-z0-9_ \-]/', '',$post['poster']);
@@ -196,7 +210,7 @@ class Pastebin
 		{
 			$this->errors[]='No code specified';
 		}
-		
+
 		return $id;
 	}	
 	

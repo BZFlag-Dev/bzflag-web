@@ -204,4 +204,11 @@ $CONF['popular_syntax']=array(
 	'text','bash', 'c', 'cpp', 'html4strict',
 	'java','javascript','php','perl', 'python', 'ruby', 'lua');
 
+/**
+* reCAPTCHA keys
+*/
+
+$CONF['recaptcha_public_key'] = "";
+$CONF['recaptcha_private_key'] = "";
+
 ?>

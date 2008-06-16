@@ -486,6 +486,10 @@ foreach ($CONF['all_syntax'] as $code=>$name)
 <textarea id="code" class="codeedit" name="code2" cols="80" rows="10" onkeydown="return catchTab(this,event)"><?php 
 echo htmlentities($page['post']['editcode'], ENT_COMPAT,$CONF['htmlentity_encoding']) ?></textarea>
 
+<!-- reCAPTCHA - Start -->
+<div id="recaptcha"><?php echo recaptcha_get_html($CONF['recaptcha_public_key']); ?></div>
+<!-- reCAPTCHA - End -->
+
 <div id="namebox">
 	
 <label for="poster"><?php echo t('Your Name')?></label><br/>

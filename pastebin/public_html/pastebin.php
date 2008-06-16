@@ -31,6 +31,10 @@ require_once('geshi/geshi.php');
 require_once('pastebin/diff.class.php');
 require_once('pastebin/pastebin.class.php');
 
+/* reCAPTCHA - start */
+require_once('recaptcha-php/recaptchalib.php');
+/* reCAPTCHA - end */
+
 /**
 * This array contains information needed to support a particular character set
 * the http entry is the name of the encoding used in HTTP headers and the
