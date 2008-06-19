@@ -123,7 +123,7 @@ function section_register_doSubmit (&$se){
 
 function section_register_presentEditForm (&$se){
   // New user
-  echo '<BR><center><font size=+1>Welcome to the <a href="http://bzflag.org" target="_blank">BZFlag</a>
+  echo '<BR><center><font size=+1>Welcome to the <a href="http://BZFlag.org/" target="_blank">BZFlag</a>
     Capture The Flag League registration page!<br><br>
     If you haven'."'".'t read the F.A.Q. yet, please <a href="index.php?link=faq"><b>do it now</b></a>
     .<p></font> When you are ready, please fill in the following information<BR>
@@ -138,7 +138,7 @@ function section_register_presentEditForm (&$se){
   echo '<BR>';
   $se->formStart (array (link, id), 'ppedit');
 
-  $se->formDescript ('Enter your BZflag callsign here.  Your callsign is also 
+  $se->formDescript ('Enter your BZflag callsign here.  Your callsign is also
     your user name for logging in to this site.', ST_FORMDESC);
   $se->formText ('callsign', 'Callsign', 20, 40, ST_FORMREQ);
 
