@@ -1,13 +1,32 @@
 TODO List
 -------------------------------------------------
 
-- Make the moderation queue page have a proper HTML feedback page instead of the
-  debug text.
+- Make the moderation queue page have a proper HTML feedback page instead of
+  the debug text.
 
 - Move the rest of the website's text into the language file.
 
 - Add a warning to the user if they don't re-enter the file to upload after a
   server-side error is detected.
 
-- Clear the TOS and accuracy checkboxes under Uploader Information if all files
-  were uploaded sucessfully.
+- Clear the TOS and accuracy checkboxes under Uploader Information if all
+  files were uploaded sucessfully.
+
+- Filter out odd characters
+
+- Allow commenting on images so that we don't always have to reject
+
+- Allow editing the details of an uploaded image so that a user wouldn't have
+  to resubmit (goes along with the previous item)
+
+- Get rid of the confirm boxes
+
+- Allow accepting/rejecting multiple images at once
+
+- Don't make the permission page launch if "I stole this" is selected, but
+  have a link to it elsewhere
+
+- Add a reCAPTCHA for the takedown email address
+
+- Throw together some batch import script that can read a zip file full of
+  images
