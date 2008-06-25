@@ -93,7 +93,7 @@
               $data['file']['moderator'] = $user['username'];
               
               $dirdb = new DirectoryDB($config['paths']['publicDirectory'].$subdir.'/data.sqlite3');
-              if ($dirdb->AddEntry($data['file']))
+              if ($dirdb->File_Insert($data['file']))
               {
                 if ($qdb->Queue_Delete_ByID($data['queueitem']['queueid']))
                 {

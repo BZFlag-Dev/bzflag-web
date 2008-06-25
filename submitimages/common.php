@@ -23,8 +23,9 @@
   {
     require($config['paths']['includes'].'queuedb.class.php');
     $qdb = new QueueDB($config['paths']['baseDirectory'].'data.sqlite3');
-    $data = Array();
   }
+  
+  $data = Array();
   
   
     
@@ -97,11 +98,9 @@
     $tpl->assign_by_ref('messages', $messages);
     $tpl->assign_by_ref('invalid', $invalid);
     $tpl->assign_by_ref('page', $page);
+    $tpl->assign_by_ref('data', $data);
 
     $tpl->assign('lang', $lang);
-    
-    if (defined('USING_QUEUEDB') && USING_QUEUEDB)
-      $tpl->assign_by_ref('data', $data);
   }
 
 ?>
