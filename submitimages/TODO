@@ -19,8 +19,6 @@ TODO List
 - Allow editing the details of an uploaded image so that a user wouldn't have
   to resubmit (goes along with the previous item)
 
-- Get rid of the confirm boxes
-
 - Allow accepting/rejecting multiple images at once
 
 - Don't make the permission page launch if "I stole this" is selected, but

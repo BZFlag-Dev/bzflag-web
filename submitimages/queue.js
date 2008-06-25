@@ -12,17 +12,14 @@ function validateForm(index)
   if (!message || !accept || !reject)
     return true;
 
-  // Accepted, so confirm
+  // Accepted
   if (accept.checked)
-    return confirm("Are you sure you want to ACCEPT this image?");
+    return true;
   // Rejected
   else if (reject.checked)
   {
-    // Rejected, and message was set, so confirm
-    if (message.value.length > 0)
-      return confirm("Are you sure you want to REJECT this image?");
     // Message wasn't set, which is required for rejecting images
-    else
+    if (message.value.length == 0)
     {
       alert("You need to write a message to the user when rejecting an image.");
       return false;
