@@ -52,10 +52,6 @@ function validateForm()
   // script until everything was validated so that we can highlight every error
   var isError = false;
   
-  // Only show the permission page once
-  // This is triggered when they have "I stole this" for an image license
-  var shownPermissionPage = false;
-  
   // Keep track of how many images the user wants to upload
   var imageUploads = 0;
   
@@ -89,15 +85,6 @@ function validateForm()
         isError = true;
         output.push(lang['errorLicenseselectorInvalid'].replace("%ID%", i));
         licenseselector.className = 'invalid';
-        
-        // Open a popup, but only once per validation
-        if (!shownPermissionPage) {
-          var istolethis = window.open(config_paths_baseURL+'permission.php', 'istolethis');
-          if (istolethis) {
-            shownPermissionPage = true;
-            istolethis.focus();
-          }
-        }
       } // if (licenseselector.value == 0)
       else if (licenseselector.value == 255)
       {
