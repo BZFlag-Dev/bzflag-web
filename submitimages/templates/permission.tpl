@@ -17,7 +17,7 @@ Quote from Wikipedia:<br>
 
 <h2>Derivative work</h2>
 
-<p>If you've modified someone else's image and created your own derivative (e.g. taking the BZFlag tank icon and slapping a decal logo on the side), the original author must have explicitly granted permission to create and redistribute that derivative.  You may find it hilarious to draw a moustache on a likeness of Steve Jobs that you want to use on your server, but unless you have a statement from the person that took the original picture that grants you that right, then the image cannot be hosted.  Sites that say their content is available under one of the licenses that we've already listed allow derivative works (e.g. LGPL, BSD, CC-by, etc).</p>
+<p>If you've modified someone else's image and created your own derivative (e.g. taking the BZFlag tank icon and slapping a decal logo on the side), the original author must have explicitly granted permission to create and redistribute that derivative.  You may find it hilarious to draw a moustache on a likeness of Steve Jobs that you want to use on your server, but unless you have a statement from the person that took the original picture that grants you that right, then the image cannot be hosted.  Sites that say their content is available under many of the licenses that we've already listed allow derivative works (e.g. LGPL, BSD, CC-by, etc).</p>
 
 <h2>Open Source terms</h2>
 

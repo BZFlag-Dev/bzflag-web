@@ -15,6 +15,7 @@
 <p>You may upload the file under an OSI-approved license of your choice.</p>
 <h2>If you do not own the file:</h2>
 <p>If the file is released under an OSI-approved license, you may upload the file under the same license with which the file was released.  If the file was <strong>NOT</strong> released under an OSI-approved license, you must obtain written permission from the copyright holder, and provide that written permission.</p>
+<p>For more information about using files created by someone else, see our <a href="permission.php">Permission to Use Content</a> page.</p>
 <h2>In any case:</h2>
 <p>The file must be released or licensed under an OSI-approved license. We will <strong>NOT</strong> host files that are released under a proprietary license.</p>
 

@@ -85,6 +85,7 @@ blockquote {
   border-style: solid;
   border-color: gray;
   padding-left: 1em;
+  margin-bottom: 1em;
 }
 
 a.quotesource:link, a.quotesource:visited {

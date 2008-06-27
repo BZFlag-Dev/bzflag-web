@@ -21,10 +21,5 @@ TODO List
 
 - Allow accepting/rejecting multiple images at once
 
-- Don't make the permission page launch if "I stole this" is selected, but
-  have a link to it elsewhere
-
-- Add a reCAPTCHA for the takedown email address
-
 - Throw together some batch import script that can read a zip file full of
   images
