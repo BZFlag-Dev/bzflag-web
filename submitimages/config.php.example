@@ -60,6 +60,11 @@
   // When a new image is posted, the following email will be notified
   $config['mail']['notifyaddress'] = 'toaddress@domain.com';
   
+  // The email that use used for takedown notices will be posted on the TOS
+  // page. If possible, it will be protected using reCAPTCHA. (See the settings
+  // for reCAPTCHA to configure the public and private keys)
+  $config['mail']['takedown'] = "takedown@domain.com";
+  
   // Specify the group that will be allowed to view, approve, or deny any
   // pending images using the moderation page. Case-sensitive.
   $config['imageModeratorGroup'] = 'site.imageauth';
@@ -77,8 +82,8 @@
   // These are the various licenses that we have by default. These can all
   // contain a 'name' and 'url' index.
   $config['licenses'] = Array();
-  // Th "I stole this" is always at 0. It is the default, and it triggers
-  // loading the "Permisson to Use Content" page.
+  
+  // The "I stole this" is always at 0. It is the default license selected.
   $config['licenses'][0] = Array('name' => 'I stole this', 'url' => $config['paths']['baseURL'].'permission.php');
   
   // Any license we want to build into the system will be here, ranging from an
@@ -110,5 +115,10 @@
   // Maximum thumbnail height for the queue list
   // Default: 128
   $config['thumbnail']['maxHeight'] = 128;
+  
+  // reCAPTCHA Mailhide keys
+  // http://mailhide.recaptcha.net/apikey
+  $config['recaptchamailhide']['publickey'] = '';
+  $config['recaptchamailhide']['privatekey'] = '';
   
 ?>
