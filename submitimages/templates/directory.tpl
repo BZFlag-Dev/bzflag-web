@@ -31,6 +31,8 @@
   {/literal}</style>
 </head>
 <body>
+  <a href="{$config.paths.baseURL}">Submit Images</a><hr>
+
   <h1>Index of {$data.httpdirectory}</h1>
     
   <table>
