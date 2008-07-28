@@ -23,3 +23,10 @@ TODO List
 
 - Throw together some batch import script that can read a zip file full of
   images
+
+- Allow uploaders to pick the path they want the file to be stored at.
+
+- Allow uploaders to replace their existing files with new copies.
+
+- Replace certain characters in filenames (like spaces with underscores)
+  and/or URL encode them in the email responses and the directory listings
