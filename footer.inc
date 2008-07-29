@@ -6,7 +6,7 @@
 
 <div id="copyright">
 <a href="copyright.php">
-copyright &copy;</a> 2003 Tucker McLean
+copyright &copy;</a> 2008 Tim Riker
 </div>
 
 <div id="footer">
