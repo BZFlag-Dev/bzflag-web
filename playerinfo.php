@@ -1,8 +1,8 @@
 <?php
 
   require('common.php');
-  $page['title'] = "Home";
-  $page['area'] = "home";
+  $page['title'] = "Player Info";
+  $page['area'] = "players";
   
   // Handle input
   $input['callsign'] = $_GET['callsign'];
