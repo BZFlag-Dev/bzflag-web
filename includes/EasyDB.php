@@ -19,6 +19,14 @@
       return mysql_real_escape_string($value, $this->link);
     }
     
+    function NumRows($sql)
+    {
+      $result = mysql_query($sql, $this->link);
+      
+      if ($result) return mysql_num_rows($result);
+      else return 0;
+    }
+    
     function FetchAll($sql)
     {
       $result = mysql_query($sql, $this->link);
@@ -32,7 +40,10 @@
         }
       }
       
-      return $rows;
+      //if (sizeof($rows) > 0)
+        return $rows;
+      //else
+        //return false;
     }
     
     function FetchRow($sql)
