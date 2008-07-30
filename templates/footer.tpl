@@ -3,7 +3,8 @@
 <div id="footercontainer">
 
 <div id="copyright">
-<a href="copyright.php">copyright &copy;</a> {$smarty.now|date_format:"%Y"} Tim Riker
+Copyright &copy; {$smarty.now|date_format:"%Y"} Tim Riker<br>
+Licensed under the <a href="http://opensource.org/licenses/lgpl-2.1.php">GNU Lesser General Public License</a>
 </div>
 
 <div id="footer">
