@@ -14,6 +14,11 @@
         die("Could not select database");
     }
     
+    function Escape($value)
+    {
+      return mysql_real_escape_string($value, $this->link);
+    }
+    
     function FetchAll($sql)
     {
       $result = mysql_query($sql, $this->link);

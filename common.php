@@ -12,6 +12,7 @@
   // Set up some variables
   $page = Array();
   $data = Array();
+  $input = Array();
   
   $page['theme'] = 'industrial';
   $page['servername'] = $_SERVER['SERVER_NAME'];
@@ -31,5 +32,6 @@
   
   $tpl->assign_by_ref('page', $page);
   $tpl->assign_by_ref('data', $data);
+  $tpl->assign_by_ref('input', $input);
 
 ?>
