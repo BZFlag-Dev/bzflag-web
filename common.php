@@ -16,12 +16,11 @@
   
   $page['theme'] = 'industrial';
   $page['servername'] = $_SERVER['SERVER_NAME'];
+  $page['baseURL'] = 'http://'.$_SERVER['HTTP_HOST'].'/';
 
 	$page['refreshed_date'] = date('D, M d H:i:s T Y', $misc[0]['lastrefreshed']);
 	$page['refreshed_epoch'] = $misc[0]['lastrefreshed'];
 	$page['refreshed_rfc2822'] = date('r', $misc[0]['lastrefreshed']);
-  
-  $page[''] = '';
   $page[''] = '';
   $page[''] = '';
   $page['separator'] = '<div class="center">&middot; &middot; &middot; &middot; &middot; &middot; &middot;</div>';

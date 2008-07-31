@@ -35,7 +35,7 @@ href="http://search.cpan.org/">CPAN</a>!</p>
 retrieving information about servers and players into a Perl module
 called <a
 href="http://search.cpan.org/~tuckerm/BZFlag-Info/Info.pm">BZFlag::Info</a>,
-which you can download from href="http://search.cpan.org/">CPAN</a>!</p>
+which you can download from <a href="http://search.cpan.org/">CPAN</a>!</p>
 
 <!--<p><strong>11/01/2003:</strong> Due to popular demand (well, just one
 request, for now :-) ) the <a href="maps/">maps</a> are again
