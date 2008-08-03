@@ -24,7 +24,7 @@
 <caption>Players</caption>
 <tr class="tableheader"><td>Callsign</td><td>Last Server</td></tr>
 {  /if}
-<tr class="{cycle values="odd,even"}row"><td><a href="playerinfo.php?callsign={$player.callsign|escape:"url"}">{$player.callsign|escape:"hexentity"}</a></td><td><a href="serverinfo.php?server={$player.lastserver|escape:'url'}">{$player.lastserver}</a></td></tr>
+<tr class="{cycle values="odd,even"}row"><td><a href="playerinfo.php?callsign={$player.callsign|escape:"url"}">{$player.callsign|escape:"html"}</a></td><td><a href="serverinfo.php?server={$player.lastserver|escape:'url'}">{$player.lastserver}</a></td></tr>
 {  if $smarty.foreach.playersearch.last}
 </table>
 {  /if}

@@ -14,6 +14,17 @@
   $data = Array();
   $input = Array();
   
+  // Temporarily put team names here until a better place/way is found
+  $data['teamnames'] = Array(
+		   'R' => 'Red',
+		   'G' => 'Green',
+		   'B' => 'Blue',
+		   'P' => 'Purple',
+		   'O' => 'Observer',
+		   'H' => 'Rabbit',
+		   'X' => 'Rogue',
+		   );
+  
   $page['theme'] = 'industrial';
   $page['servername'] = $_SERVER['SERVER_NAME'];
   $page['baseURL'] = 'http://'.$_SERVER['HTTP_HOST'].'/';

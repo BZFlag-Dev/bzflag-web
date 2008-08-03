@@ -9,7 +9,7 @@
 {/if}
 {if $page.theme != 'none'}
   <link rel="stylesheet" type="text/css" href="css/{$page.theme}.css">
-  <link rel="stylesheet" type="text/css" media="print" href="css/print.css?" />
+  <link rel="stylesheet" type="text/css" media="print" href="css/print.css?">
 {/if}
   <title>{$page.servername}{if $page.title} - {$page.title}{/if}</title>
 </head>
@@ -27,7 +27,7 @@
 <div id="main">
 
 <!--<div id="languages">
-Languages: <a href="{$page.baseURL}?language=en"><img src="{$page.baseURL}flags/f0-us.gif" alt="en" /></a> | <a href="{$page.baseURL}?language=it"><img src="{$page.baseURL}flags/f0-it.gif" alt="it" /></a>
+Languages: <a href="{$page.baseURL}?language=en"><img src="{$page.baseURL}flags/f0-us.gif" alt="en"></a> | <a href="{$page.baseURL}?language=it"><img src="{$page.baseURL}flags/f0-it.gif" alt="it"></a>
 </div>-->
 
 <h1>{$page.servername}{if $page.title} - {$page.title}{/if}</h1>
@@ -92,9 +92,9 @@ Auto refresh?</p>
 <div class="menusection">
 
 <div class="center">
-<p><a href="rssgenerator.php"><img src="images/xml.gif" alt="RSS Feed" /></a></p>
-<p><a href="link.php"><img src="images/link_{if $theme == 'bluetangerine'}bronze{elseif $theme == 'industrial'}silver{else}blue{/if}.png" alt="got stats?" /></a></p>
-<p><a href="http://validator.w3.org/check/referer"><img src="images/valid-xhtml10.png" alt="Valid XHTML 1.0!" /></a></p>
+<p><a href="rssgenerator.php"><img src="images/xml.gif" alt="RSS Feed"></a></p>
+<p><a href="link.php"><img src="images/link_{if $theme == 'bluetangerine'}bronze{elseif $theme == 'industrial'}silver{else}blue{/if}.png" alt="got stats?"></a></p>
+<p><a href="http://validator.w3.org/check/referer"><img src="images/valid-xhtml10.png" alt="Valid XHTML 1.0!"></a></p>
 </div>
 </div>
 
