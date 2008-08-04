@@ -1,83 +1,37 @@
-<? include ('header.inc') ?>
+<?php
 
-<h2>Information sampled every 5 minutes</h2>
-
-<?
-
-if (isset($order)) {
-	if ($order == 'callsign') { $orderby = "`callsign`";
-	} elseif ($order == 'callsigndesc') { $orderby = "`callsign` DESC";
-	} elseif ($order == 'server') { $orderby = "`server`";
-	} elseif ($order == 'serverdesc') { $orderby = "`server` DESC";
-	} elseif ($order == 'score') { $orderby = "`score` DESC";
-	} elseif ($order == 'scoreasc') { $orderby = "`score`";
-	} elseif ($order == 'strengthindex') { $orderby = "`strengthindex` DESC";
-	} elseif ($order == 'strengthindexasc') { $orderby = "`strengthindex`";
-	} else { $order == 'callsign'; $orderby = "`callsign`";
-	}
-} else {
-	$order = 'callsign';
-	$orderby = '`callsign`';
-}
-
-
-if ((num_rows("SELECT * FROM `currentplayers` ORDER BY $orderby")) > 0) {
-
-?>
-<table id="currentplayers">
-<caption>Players</caption>
-<tr class="tableheader">
-<td><a href="<?=$PHP_SELF?>?order=<?=($order == 'callsign')?'callsigndesc':'callsign'?>">Callsign</a>
-   <?=(($order == 'callsign')?' <img src="images/uparrow.png" alt="^" />':($order == 'callsigndesc' ? ' <img src="images/downarrow.png" alt="v" />':''))?></td>
-
-<td><a href="<?=$PHP_SELF?>?order=<?=($order == 'server')?'serverdesc':'server'?>">Server</a>
-   <?=(($order == 'server')?' <img src="images/uparrow.png" alt="^" />':($order == 'serverdesc' ? ' <img src="images/downarrow.png" alt="v" />':''))?></td>
-
-<td><a href="<?=$PHP_SELF?>?order=<?=($order == 'score')?'scoreasc':'score'?>">Score</a>
-   <?=(($order == 'scoreasc')?' <img src="images/uparrow.png" alt="^" />':($order == 'score' ? ' <img src="images/downarrow.png" alt="v" />':''))?></td>
-
-<td><a href="<?=$PHP_SELF?>?order=<?=($order == 'strengthindex')?'strengthindexasc':'strengthindex'?>">Strength Index</a> <a class="help" href="help.php#strengthindex">?</a>
-   <?=(($order == 'strengthindexasc')?' <img src="images/uparrow.png" alt="^" />':($order == 'strengthindex' ? ' <img src="images/downarrow.png" alt="v" />':''))?></td>
-
-<td>Team</td>
-</tr>
-
-<?
-
-	$currentplayers = mysql_query ("SELECT * FROM `currentplayers` ORDER BY $orderby");
-
-
-	while ($row = mysql_fetch_array($currentplayers, MYSQL_ASSOC)) {
+  require('common.php');
+  $page['title'] = "Current Players";
+  $page['area'] = "players";
+  
+  // Handle input
+  
+  $input['order'] = $_GET['order'];
+  
+  // Fetch data
+  
+  // Generate the sort order the user wants
+  switch($input['order'])
+  {
+    case 'callsign': $orderby = '`callsign`'; break;
+    case 'callsigndesc': $orderby = '`callsign` DESC'; break;
+    case 'server': $orderby = '`server`'; break;
+    case 'serverdesc': $orderby = '`server` DESC'; break;
+    case 'score': $orderby = '`score` DESC'; break;
+    case 'scoreasc': $orderby = '`score`'; break;
+    case 'strengthindex': $orderby = '`strengthindex` DESC'; break;
+    case 'strengthindexasc': $orderby = '`strengthindex`'; break;
+    default: $orderby = '`callsign`';
+  }
+  
+  // List of players
+  $data['players'] = $db->FetchAll("SELECT * FROM `currentplayers` ORDER BY $orderby");
+  
+  
+  // Display output
+  
+  $tpl->display('header.tpl');
+  $tpl->display('currentplayers.tpl');
+  $tpl->display('footer.tpl');
 
 ?>
-<tr class="oddrow"><td><?=callsignlink($row[callsign])?></td>
-<td><?=serverlink($row[server])?></td>
-<td align="right"><?=$row[score]?></td>
-<td align="right"><?=number_format($row[strengthindex], 3)?></td>
-<td><?=teamname($row[team])?></td>
-</tr>
-<?
-		if ($row = mysql_fetch_array($currentplayers, MYSQL_ASSOC)) {
-?>
-<tr class="evenrow"><td><?=callsignlink($row[callsign])?></td>
-<td><?=serverlink($row[server])?></td>
-<td align="right"><?=$row[score]?></td>
-<td align="right"><?=number_format($row[strengthindex], 3)?></td>
-<td><?=teamname($row[team])?></td>
-</tr>
-<?
-		}
-	}
-} else {
-
-?>
-
-<p>Oh crap! The monkeys ate the list server!</p>
-<?
-
-}
-
-?>
-</table>
-
-<? include('footer.inc'); ?>

@@ -1,6 +1,6 @@
 <form method="get" action="{$page.baseURL}playersearch.php">
 <p>Callsign:</p>
-<p><input type="text" name="callsign"{if $input.callsign} value="{$input.callsign|escape:htmlentities}"{/if}><input type="submit" value="Search"></p>
+<p><input type="text" name="callsign"{if $input.callsign} value="{$input.callsign|escape}"{/if}><input type="submit" value="Search"></p>
 </form>
 
 {if $input.callsign}
@@ -24,7 +24,7 @@
 <caption>Players</caption>
 <tr class="tableheader"><td>Callsign</td><td>Last Server</td></tr>
 {  /if}
-<tr class="{cycle values="odd,even"}row"><td><a href="{$page.baseURL}playerinfo.php?callsign={$player.callsign|escape:"url"}">{$player.callsign|escape:"html"}</a></td><td><a href="{$page.baseURL}serverinfo.php?server={$player.lastserver|escape:"url"}">{$player.lastserver}</a></td></tr>
+<tr class="{cycle values="odd,even"}row"><td><a href="{$page.baseURL}playerinfo.php?callsign={$player.callsign|escape:"url"}">{$player.callsign|escape}</a></td><td><a href="{$page.baseURL}serverinfo.php?server={$player.lastserver|escape:"url"}">{$player.lastserver}</a></td></tr>
 {  if $smarty.foreach.playersearch.last}
 </table>
 {  /if}
