@@ -1,104 +1,59 @@
-<?
+<?php
 
-include('header.inc');
-
-if ($submitted == "yes") {
-  if ($fullplayerlist == "no") {
-    if ($showserver == "") {
-      ?><p><strong>You must enter a server to display info from</strong></p><?
-	   } else {
-	     $rssfeed = "&server=$showserver";
-	   }
-  }
-  if ($order == "callsign") {
-    if ($callsigndesc == "yes") {
-      $rssfeed .= "&order=callsigndesc";
-    } else {
-      $rssfeed .= "&order=callsign";
+  require('common.php');
+  $page['title'] = "RSS Feed Generator";
+  $page['area'] = "";
+  
+  // Handle input
+  $input['callsign'] = $_GET['callsign'];
+  
+  if (isset($_GET['fullplayerlist']))
+  {
+    $input['fullplayerlist'] = $_GET['fullplayerlist'];
+    
+    if ($input['fullplayerlist'] == 'no')
+    {
+      if (isset($_GET['server']))
+        $input['server'] = $_GET['server'];
     }
   }
-  if ($order == "server") {
-    if ($serverdesc == "yes") {
-      $rssfeed .= "&order=serverdesc";
-    } else {
-      $rssfeed .= "&order=server";
+  
+  if (isset($_GET['order']))
+    $input['order'] = $_GET['order'];
+  
+  if (isset($input['fullplayerlist'], $input['order']))
+  {
+    if ($input['fullplayerlist'] == "no")
+    {
+      if (empty($input['server']))
+      {
+        $tpl->assign('rsserror', "You must enter a server to display info from.");
+  	   } else {
+  	     $rssfeed = "&server=".$input['server'];
+  	   }
+    }
+    if ($input['fullplayerlist'] == "yes" || !empty($input['server']))
+    {
+      $validSortOrders = Array('callsign', 'callsigndesc', 'server',
+      'serverdesc', 'score', 'scoreasc', 'strengthindex', 'strengthindexasc');
+      
+      if (in_array($input['order'], $validSortOrders))
+        $rssfeed .= "&order=".$input['order'];
+      else
+        $rssfeed .= "&order=callsign";
+        
+      $tpl->assign('rssfeed', $rssfeed);
     }
   }
-  if ($order == "score") {
-    if ($scoreasc == "yes") {
-      $rssfeed .= "&order=scoreasc";
-    } else {
-      $rssfeed .= "&order=score";
-    }
-  }
-  if ($order == "strengthindexasc") {
-    if ($strengthindexasc == "yes") {
-      $rssfeed .= "&order=strengthindexasc";
-    } else {
-      $rssfeed .= "&order=strengthindex";
-    }
-  }
-}
-
-if (isset($rssfeed)) {
-  ?>
-<pre>
-http://<? echo $_SERVER['SERVER_NAME']; ?>/rss.php?feed=players<?=$rssfeed?>
-</pre>
-<?
-   }
+  
+  
+  
+  // Fetch data
+  
+  // Display output
+  
+  $tpl->display('header.tpl');
+  $tpl->display('rssgenerator.tpl');
+  $tpl->display('footer.tpl');
 
 ?>
-
-<p>Fill out the form, and submit it. You will then be given a URL for an RSS feed with the settings you specify</p>
-
-<form action="<?=$PHP_SELF?>" method="get">
-
-<input type="hidden" name="submitted" value="yes" />
-
-<table>
-
-<caption>Server</caption>
-
-<tr class="evenrow">
-<td colspan="2"><input type="radio" name="fullplayerlist" value="yes" <?=($fullplayerlist=='yes' || !isset($fullplayerlist))?'checked="checked" ':''?>/> Show full player list</td>
-</tr>
-<tr>
-<td><input type="radio" name="fullplayerlist" value="no" <?=($fullplayerlist=='no')?'checked="checked" ':''?>/> Show only players on this server: <input name="showserver" <?=(isset($showserver))?'value="'.$showserver.'" ':''?>/></td>
-</tr>
-
-</table>
-
-<table>
-
-<caption>Display Order</caption>
-
-<tr class="evenrow">
-<td><input type="radio" name="order" value="callsign" <?=($order=='callsign' || !isset($callsign))?'checked="checked" ':''?>/> Callsign</td>
-<td><input type="checkbox" name="callsigndesc" value="yes" <?=($callsigndesc=='yes')?'checked="checked" ':''?>/> Descending</td>
-</tr>
-
-<tr class="oddrow">
-<td><input type="radio" name="order" value="server" <?=($order=='server')?'checked="checked" ':''?>/> Server</td>
-<td><input type="checkbox" name="serverdesc" value="yes" <?=($serverdesc=='yes')?'checked="checked" ':''?>/> Descending</td>
-</tr>
-
-<tr class="evenrow">
-<td><input type="radio" name="order" value="score" <?=($order=='score')?'checked="checked" ':''?>/> Score</td>
-<td><input type="checkbox" name="scoreasc" value="yes" <?=($scoreasc=='yes')?'checked="checked" ':''?>/> Ascending</td>
-</tr>
-
-<tr class="oddrow">
-<td><input type="radio" name="order" value="strengthindex" <?=($order=='strengthindex')?'checked="checked" ':''?>/> Strength Index</td>
-<td><input type="checkbox" name="strengthindexasc" value="yes" <?=($strengthindexasc=='yes')?'checked="checked" ':''?>/> Ascending</td>
-</tr>
-
-<tr class="evenrow">
-<td colspan="2"><input type="submit" /></td>
-</tr>
-
-</table>
-
-</form>
-
-<? include('footer.inc'); ?>
