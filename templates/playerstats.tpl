@@ -3,7 +3,7 @@
 <table>
 <tr>
   <th colspan="2">High Scores</th>
-  <th colspan="2">High Strength Indexes <a class="help" href="help.php#strengthindex">?</a></th>
+  <th colspan="2">High Strength Indexes <a class="help" href="{$page.baseURL}help.php#strengthindex">?</a></th>
 </tr>
 <tr class="tableheader">
   <td>Callsign</td>
@@ -13,18 +13,20 @@
 </tr>
 
 {section name=halloffame start=0 loop=20 step=1}
+{assign var=playerhighscore value=$data.playershighscore[$smarty.section.halloffame.index]}
 <tr class="{cycle values="odd,even"}row">
-{  if $data.playershighscore[$smarty.section.halloffame.index]}
-  <td><a href="playerinfo.php?callsign={$data.playershighscore[$smarty.section.halloffame.index].callsign|escape:"url"}">{$data.playershighscore[$smarty.section.halloffame.index].callsign|escape}</a></td>
-  <td class="score">{$data.playershighscore[$smarty.section.halloffame.index].highscore}</td>
+{  if $playerhighscore}
+  <td><a href="{$page.baseURL}playerinfo.php?callsign={$playerhighscore.callsign|escape:"url"}">{$playerhighscore.callsign|escape}</a></td>
+  <td class="score">{$playerhighscore.highscore}</td>
 {  else}
   <td>&nbsp;</td>
   <td>&nbsp;</td>
 {  /if}
 
-{  if $data.playershighstrength[$smarty.section.halloffame.index]}
-  <td><a href="playerinfo.php?callsign={$data.playershighstrength[$smarty.section.halloffame.index].callsign|escape:"url"}">{$data.playershighstrength[$smarty.section.halloffame.index].callsign|escape}</a></td>
-  <td class="strengthindex">{$data.playershighstrength[$smarty.section.halloffame.index].highstrengthindex|string_format:"%.3f"}</td>
+{assign var=playerhighstrength value=$data.playershighstrength[$smarty.section.halloffame.index]}
+{  if $playerhighstrength}
+  <td><a href="{$page.baseURL}playerinfo.php?callsign={$playerhighstrength.callsign|escape:"url"}">{$playerhighstrength.callsign|escape}</a></td>
+  <td class="strengthindex">{$playerhighstrength.highstrengthindex|string_format:"%.3f"}</td>
 {  else}
   <td>&nbsp;</td>
   <td>&nbsp;</td>
@@ -38,7 +40,7 @@
 <table>
 <tr>
   <th colspan="2">Low Scores</th>
-  <th colspan="2">Low Strength Indexes <a class="help" href="help.php#strengthindex">?</a></th>
+  <th colspan="2">Low Strength Indexes <a class="help" href="{$page.baseURL}help.php#strengthindex">?</a></th>
 </tr>
 <tr class="tableheader">
   <td>Callsign</td>
@@ -48,18 +50,20 @@
 </tr>
 
 {section name=hallofshame start=0 loop=20 step=1}
+{assign var=playerlowscore value=$data.playerslowscore[$smarty.section.hallofshame.index]}
 <tr class="{cycle values="odd,even"}row">
-{  if $data.playerslowscore[$smarty.section.hallofshame.index]}
-  <td><a href="playerinfo.php?callsign={$data.playerslowscore[$smarty.section.hallofshame.index].callsign|escape:"url"}">{$data.playerslowscore[$smarty.section.hallofshame.index].callsign|escape}</a></td>
-  <td class="score">{$data.playerslowscore[$smarty.section.hallofshame.index].lowscore}</td>
+{  if $playerlowscore}
+  <td><a href="{$page.baseURL}playerinfo.php?callsign={$playerlowscore.callsign|escape:"url"}">{$playerlowscore.callsign|escape}</a></td>
+  <td class="score">{$playerlowscore.lowscore}</td>
 {  else}
   <td>&nbsp;</td>
   <td>&nbsp;</td>
 {  /if}
 
+{assign var=playerlowstrength value=$data.playerslowstrength[$smarty.section.hallofshame.index]}
 {  if $data.playerslowstrength[$smarty.section.hallofshame.index]}
-  <td><a href="playerinfo.php?callsign={$data.playerslowstrength[$smarty.section.hallofshame.index].callsign|escape:"url"}">{$data.playerslowstrength[$smarty.section.hallofshame.index].callsign|escape}</a></td>
-  <td class="strengthindex">{$data.playerslowstrength[$smarty.section.hallofshame.index].lowstrengthindex|string_format:"%.3f"}</td>
+  <td><a href="{$page.baseURL}playerinfo.php?callsign={$playerlowstrength.callsign|escape:"url"}">{$playerlowstrength.callsign|escape}</a></td>
+  <td class="strengthindex">{$playerlowstrength.lowstrengthindex|string_format:"%.3f"}</td>
 {  else}
   <td>&nbsp;</td>
   <td>&nbsp;</td>

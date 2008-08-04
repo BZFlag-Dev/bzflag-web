@@ -11,7 +11,7 @@
 
 <p><strong>1/11/2004:</strong> A happy new layout for the happy New Year!</p>
 
-<p><strong>12/22/2003:</strong> Check out the new server info pages and the new <a href="http://{$page.servername}/serverlist.php">server list</a> page. {$page.servername} - More Useful, Every Day!&trade;</p>
+<p><strong>12/22/2003:</strong> Check out the new server info pages and the new <a href="{$page.baseURL}serverlist.php">server list</a> page. {$page.servername} - More Useful, Every Day!&trade;</p>
 
 <p><strong>12/15/2003:</strong> I've updated <a
 href="http://search.cpan.org/~tuckerm/BZFlag-Info/Info.pm">BZFlag::Info</a>
@@ -42,7 +42,7 @@ request, for now :-) ) the <a href="maps/">maps</a> are again
 available for download.</p>-->
 
 <p><strong>10/31/2003:</strong> {$page.servername} is back! It has been completely redesigned, and should now work much smoother and look more
-consistent. Drop me a line</a>, and give me some feedback.</p>
+consistent. Drop me a line, and give me some feedback.</p>
 
 {$page.separator}
 
@@ -51,7 +51,7 @@ consistent. Drop me a line</a>, and give me some feedback.</p>
 <!-- This list should be generated statistically -->
 <ul>
 {foreach from=$data.commonservers item=server name=commonservers}
-<li><a href="serverinfo.php?server={$server|escape:'url'}">{$server}</a></li>
+<li><a href="{$page.baseURL}serverinfo.php?server={$server|escape:"url"}">{$server}</a></li>
 {/foreach}
 </ul>
 
@@ -62,7 +62,7 @@ consistent. Drop me a line</a>, and give me some feedback.</p>
 <table>
 <tr class="evenrow"><td>Most popular server</td><td>
 {if $data.mostpopularserver}
-<a href="serverinfo.php?server={$data.mostpopularserver.server|escape:'url'}">{$data.mostpopularserver.server}</a> with <strong>{$data.mostpopularserver.players}</strong> players
+<a href="{$page.baseURL}serverinfo.php?server={$data.mostpopularserver.server|escape:"url"}">{$data.mostpopularserver.server}</a> with <strong>{$data.mostpopularserver.players}</strong> players
 {else}
 No info available
 {/if}
@@ -70,16 +70,16 @@ No info available
 
 <tr class="oddrow"><td>Player with highest score</td><td>
 {if $data.playerhighestscore}
-<a href="playerinfo.php?callsign={$data.playerhighestscore.callsign|escape:"url"}">{$data.playerhighestscore.callsign|escape:"hexentity"}</a> on <a href="serverinfo.php?server={$data.playerhighestscore.server|escape:'url'}">{$data.playerhighestscore.server}</a> with a score of <strong>{$data.playerhighestscore.score}</strong>
+<a href="{$page.baseURL}playerinfo.php?callsign={$data.playerhighestscore.callsign|escape:"url"}">{$data.playerhighestscore.callsign|escape}</a> on <a href="{$page.baseURL}serverinfo.php?server={$data.playerhighestscore.server|escape:"url"}">{$data.playerhighestscore.server}</a> with a score of <strong>{$data.playerhighestscore.score}</strong>
 {else}
 No info available
 {/if}
 </td></tr>
 
 
-<tr class="evenrow"><td>Player with highest Strength Index <a class="help" href="help.php#strengthindex">?</a></td><td>
+<tr class="evenrow"><td>Player with highest Strength Index <a class="help" href="{$page.baseURL}help.php#strengthindex">?</a></td><td>
 {if $data.playerhigheststrength}
-<a href="playerinfo.php?callsign={$data.playerhigheststrength.callsign|escape:"url"}">{$data.playerhigheststrength.callsign|escape:"hexentity"}</a> on <a href="serverinfo.php?server={$data.playerhigheststrength.server|escape:'url'}">{$data.playerhigheststrength.server}</a> with a Strength Index of <strong>{$data.playerhigheststrength.strengthindex|string_format:"%.3f"}</strong>
+<a href="{$page.baseURL}playerinfo.php?callsign={$data.playerhigheststrength.callsign|escape:"url"}">{$data.playerhigheststrength.callsign|escape}</a> on <a href="{$page.baseURL}serverinfo.php?server={$data.playerhigheststrength.server|escape:"url"}">{$data.playerhigheststrength.server}</a> with a Strength Index of <strong>{$data.playerhigheststrength.strengthindex|string_format:"%.3f"}</strong>
 {else}
 No info available
 {/if}
@@ -88,16 +88,16 @@ No info available
 
 <tr class="oddrow"><td>Player with lowest score</td><td>
 {if $data.playerlowestscore}
-<a href="playerinfo.php?callsign={$data.playerlowestscore.callsign|escape:"url"}">{$data.playerlowestscore.callsign|escape:"hexentity"}</a> on <a href="serverinfo.php?server={$data.playerlowestscore.server|escape:'url'}">{$data.playerlowestscore.server}</a> with a score of <strong>{$data.playerlowestscore.score}</strong>
+<a href="{$page.baseURL}playerinfo.php?callsign={$data.playerlowestscore.callsign|escape:"url"}">{$data.playerlowestscore.callsign|escape}</a> on <a href="{$page.baseURL}serverinfo.php?server={$data.playerlowestscore.server|escape:"url"}">{$data.playerlowestscore.server}</a> with a score of <strong>{$data.playerlowestscore.score}</strong>
 {else}
 No info available
 {/if}
 </td></tr>
 
 
-<tr class="evenrow"><td>Player with lowest Strength Index <a class="help" href="help.php#strengthindex">?</a></td><td>
+<tr class="evenrow"><td>Player with lowest Strength Index <a class="help" href="{$page.baseURL}help.php#strengthindex">?</a></td><td>
 {if $data.playerloweststrength}
-<a href="playerinfo.php?callsign={$data.playerloweststrength.callsign|escape:"url"}">{$data.playerloweststrength.callsign|escape:"hexentity"}</a> on <a href="serverinfo.php?server={$data.playerloweststrength.server|escape:'url'}">{$data.playerloweststrength.server}</a> with a Strength Index of <strong>{$data.playerloweststrength.strengthindex|string_format:"%.3f"}</strong>
+<a href="{$page.baseURL}playerinfo.php?callsign={$data.playerloweststrength.callsign|escape:"url"}">{$data.playerloweststrength.callsign|escape}</a> on <a href="{$page.baseURL}serverinfo.php?server={$data.playerloweststrength.server|escape:"url"}">{$data.playerloweststrength.server}</a> with a Strength Index of <strong>{$data.playerloweststrength.strengthindex|string_format:"%.3f"}</strong>
 {else}
 No info available
 {/if}

@@ -1,4 +1,4 @@
-<h2>Current info for {if $data.serverinfo}{$data.serverinfo.server|escape}{else}{$input.server|escape}{/if}</h2>
+<h2>Current info for {if $data.serverinfo}{$data.serverinfo.server}{else}{$input.server}{/if}</h2>
 
 {if $data.serverinfo}
 <h3>{$data.serverinfo.description|escape}</h3>
@@ -65,7 +65,7 @@
     <td>Team</td><td>Score</td>
     <td>Wins - Losses</td></tr>
 {  foreach from=$data.teaminfo item=teaminfo name=teaminfo}
-      <tr class="{cycle values="odd,even"}row"><td class="team{$data.teamnames[$teaminfo.team]|lower}">{$data.teamnames[$teaminfo.team]}</td>
+      <tr class="{cycle name="teaminfo" values="odd,even"}row"><td class="team{$data.teamnames[$teaminfo.team]|lower}">{$data.teamnames[$teaminfo.team]}</td>
       <td class="score">{$teaminfo.score}</td>
       <td>{$teaminfo.won}-{$teaminfo.lost}</td></tr>
 {  /foreach}
@@ -78,8 +78,8 @@
 {assign var="haveplayers" value="0"}
 {foreach from=$data.currentplayers item=player name=currentplayers}
 {  if $player.team != 'O'}
-  <tr class="{cycle name="odd,even"}row">
-    <td><a href="playerinfo.php?callsign={$player.callsign|escape:"url"}">{$player.callsign|escape:"html"}{if $player.email} ({$player.email|escape}){/if}</a></td>
+  <tr class="{cycle name="currentplayers" values="odd,even"}row">
+    <td><a href="{$page.baseURL}playerinfo.php?callsign={$player.callsign|escape:"url"}">{$player.callsign|escape:"html"}{if $player.email} ({$player.email|escape}){/if}</a></td>
     <td class="team{$data.teamnames[$player.team]|lower}">{$data.teamnames[$player.team]}</td>
     <td class="score">{$player.score}</td>
   </tr>
@@ -98,8 +98,8 @@
 {assign var="haveobservers" value="0"}
 {foreach from=$data.currentplayers item=player name=currentobservers}
 {  if $player.team == 'O'}
- <tr class="{cycle value="odd,even"}row">
-    <td><a href="playerinfo.php?callsign={$player.callsign|escape:"url"}">{$player.callsign|escape:"html"}{if $player.email} ({$player.email|escape}){/if}</a></td>
+ <tr class="{cycle name="currentobservers" values="odd,even"}row">
+    <td><a href="{$page.baseURL}playerinfo.php?callsign={$player.callsign|escape:"url"}">{$player.callsign|escape:"html"}{if $player.email} ({$player.email|escape}){/if}</a></td>
     </tr>
 {    assign var="haveobservers" value="1"}
 {  /if}

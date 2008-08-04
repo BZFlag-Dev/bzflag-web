@@ -2,14 +2,14 @@
 "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-  <link href="/favicon.ico" rel="shortcut icon">
+  <link href="{$page.baseURL}favicon.ico" rel="shortcut icon">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 {if $page.refresh}
   <meta http-equiv="Refresh" content="50">
 {/if}
 {if $page.theme != 'none'}
-  <link rel="stylesheet" type="text/css" href="css/{$page.theme}.css">
-  <link rel="stylesheet" type="text/css" media="print" href="css/print.css?">
+  <link rel="stylesheet" type="text/css" href="{$page.baseURL}css/{$page.theme}.css">
+  <link rel="stylesheet" type="text/css" media="print" href="{$page.baseURL}css/print.css">
 {/if}
   <title>{$page.servername}{if $page.title} - {$page.title}{/if}</title>
 </head>
@@ -33,25 +33,25 @@ Languages: <a href="{$page.baseURL}?language=en"><img src="{$page.baseURL}flags/
 <h1>{$page.servername}{if $page.title} - {$page.title}{/if}</h1>
 
 <div id="menu">
-<div class="{if $page.area == 'home'}menusectionactive{else}menusectionhome{/if}"><a href="/">Home</a></div>
+<div class="{if $page.area == 'home'}menusectionactive{else}menusectionhome{/if}"><a href="{$page.baseURL}">Home</a></div>
 
 <div class="{if $page.area == 'players'}menusectionactive{else}menusection{/if}">
 Players
 <ul>
-<li><a href="currentplayers.php">Current Players</a></li>
-<li><a href="playerstats.php">Player Stats</a></li>
-<li><a href="playersearch.php">Player Search</a></li>
+<li><a href="{$page.baseURL}currentplayers.php">Current Players</a></li>
+<li><a href="{$page.baseURL}playerstats.php">Player Stats</a></li>
+<li><a href="{$page.baseURL}playersearch.php">Player Search</a></li>
 </ul>
 </div>
 
 <div class="{if $page.area == 'servers'}menusectionactive{else}menusection{/if}">
 Servers
 <ul>
-<li><a href="serverlist.php">Server List</a></li>
+<li><a href="{$page.baseURL}serverlist.php">Server List</a></li>
 </ul>
 </div>
 
-<div class="{if $page.area == 'help'}menusectionactive{else}menusection{/if}"><a href="help.php">Help</a></div>
+<div class="{if $page.area == 'help'}menusectionactive{else}menusection{/if}"><a href="{$page.baseURL}help.php">Help</a></div>
 
 <div class="menusection">
 Other Links
@@ -62,7 +62,7 @@ Other Links
 <li><a href="http://my.bzflag.org/w">BZFlag Wiki</a></li>
 <li><a href="http://my.bzflag.org/w/Download">Download</a></li>
 <li><a href="http://my.bzflag.org/w/Other_Links">Other Links</a></li>
-<li><em><a href="link.php">Link to us!</a></em></li>
+<li><em><a href="{$page.baseURL}link.php">Link to us!</a></em></li>
 </ul>
 </div>
 
@@ -92,8 +92,8 @@ Auto refresh?</p>
 <div class="menusection">
 
 <div class="center">
-<p><a href="rssgenerator.php"><img src="images/xml.gif" alt="RSS Feed"></a></p>
-<p><a href="link.php"><img src="images/link_{if $theme == 'bluetangerine'}bronze{elseif $theme == 'industrial'}silver{else}blue{/if}.png" alt="got stats?"></a></p>
+<p><a href="{$page.baseURL}rssgenerator.php"><img src="images/xml.gif" alt="RSS Feed"></a></p>
+<p><a href="{$page.baseURL}link.php"><img src="images/link_{if $theme == 'bluetangerine'}bronze{elseif $theme == 'industrial'}silver{else}blue{/if}.png" alt="got stats?"></a></p>
 <p><a href="http://validator.w3.org/check/referer"><img src="images/valid-xhtml10.png" alt="Valid XHTML 1.0!"></a></p>
 </div>
 </div>
