@@ -5,7 +5,7 @@
   <link href="{$page.baseURL}favicon.ico" rel="shortcut icon">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 {if $page.refresh}
-  <meta http-equiv="Refresh" content="50">
+  <meta http-equiv="Refresh" content="120">
 {/if}
 {if $page.theme != 'none'}
   <link rel="stylesheet" type="text/css" href="{$page.baseURL}css/{$page.theme}.css">
@@ -67,22 +67,19 @@ Other Links
 </div>
 
 <div class="menusection">
-<form action="{$smarty.server.PHP_SELF}" method="get">
+<form action="{$page.baseURL}setoptions.php" method="post">
 <p>Options</p>
 
 <p><select name="theme" style="width: 120px;">
-<option value="">Choose a theme</option>
-<option value="bluetangerine">Blue Tangerine{if $page.theme == 'bluetangerine'}*{/if}</option>
-<option value="industrial">Industrial{if $page.theme == 'industrial'}*{/if}</option>
-<option value="test">Test{if $page.theme == 'test'}*{/if}</option>
-<option value="none">No theme{if $page.theme == 'none'}*{/if}</option>
+{foreach from=$themes item=themename key=themeid}
+<option value="{$themeid}"{if $themeid == $page.theme} selected="selected"{/if}>{$themename}{if $themeid == $page.theme}*{/if}</option>
+{/foreach}
 </select></p>
 
 <p><input type="checkbox" name="refresh" value="yes"{if $page.refresh} checked="checked"{/if}>
 Auto refresh?</p>
 
 <p>
-<input type="hidden" name="optionschanged" value="yes">
 <input type="submit" value="Save">
 </p>
 </form>
