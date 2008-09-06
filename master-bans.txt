@@ -142,7 +142,27 @@ reason: (Axl Rose) web service abuse
 end: 0
 banner: blast007
 reason: (Axl Rose) foul language on multiple servers, web service abuse
+69.8.*.*
+end: 0
+banner: brlcad
+reason: (the_lone_tanker) Multiple instances of abuse and inappropriate language
+72.9.*.*
+end: 0
+banner: brlcad
+reason: (the_lone_tanker) Multiple instances of abuse and inappropriate language
+67.127.*
+end: 0
+banner: Project Admins
+reason: (XJ62495) service abbuse, cheat distrobution
+68.120.*
+end: 0
+banner: Project Admins
+reason: (XJ62495)  service abbuse, cheat distrobution
+67.126.*
+end: 0
+banner: Project Admins
+reason: (Sk3letr0n) service abbuse, cheat distroubtion, cheating
 71.59.113.232
 end: 0
-banner: Constitution
+banner: Project Admins
 reason: (laserball2) cheating and exploits on multiple servers
