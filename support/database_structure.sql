@@ -122,6 +122,7 @@ CREATE TABLE `server_advert_groups` (
 
 CREATE TABLE `serverbans` (
   `banid` int(2) NOT NULL auto_increment,
+  `type` varchar(32) NOT NULL,
   `address` varchar(64) NOT NULL,
   `owner` varchar(64) default NULL,
   `reason` varchar(128) default NULL,

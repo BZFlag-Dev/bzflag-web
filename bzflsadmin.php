@@ -139,6 +139,7 @@ case 'EDIT':
 	<input type="hidden" name="action" value="UPDATE">
 	<input type="hidden" name="id" value="<?php echo $_POST['id']; ?>">
 	<table class="listform">
+	  <tr><td>Ban Type:</td><td><select name="type"><option value="ipaddress"<?php if ($data['type'] == 'ipaddress') echo ' selected="selected"'; ?>>IP Address</option><option value="hostname"<?php if ($data['type'] == 'hostname') echo ' selected="selected"'; ?>>Hostname</option></select></td></tr>
 		<tr><td>IP/Hostname</td><td><input type="text" name="address" value="<?php echo $data['address']; ?>"></td></tr>
 		<tr><td>Owner</td><td><input type="text" name="owner" value="<?php echo $data['owner']; ?>"></td></tr>
 		<tr><td>Reason</td><td><input type="text" name="reason" value="<?php echo $data['reason']; ?>"></td></tr>
@@ -169,14 +170,16 @@ case 'UPDATE':
 	// run update query
 	mysql_select_db ($dbname) or die ("Could not select bzbb database.");
 	if ($_POST['id'])
-		$sql = sprintf ('UPDATE serverbans SET address = "%s", owner = "%s", reason = "%s", lastby = %u WHERE banid = %u',
+		$sql = sprintf ("UPDATE serverbans SET type = '%s', address = '%s', owner = '%s', reason = '%s', lastby = %u WHERE banid = %u",
+        mysql_real_escape_string ($_POST['type']),
 				mysql_real_escape_string ($_POST['address']),
 				mysql_real_escape_string ($_POST['owner']),
 				mysql_real_escape_string ($_POST['reason']),
 				$_SESSION['bzid'],
 				$_POST['id']);
 	else
-		$sql = sprintf ('INSERT INTO serverbans SET address = "%s", owner = "%s", reason = "%s", lastby = %u',
+		$sql = sprintf ("INSERT INTO serverbans SET type = '%s', address = '%s', owner = '%s', reason = '%s', lastby = %u",
+		    mysql_real_escape_string ($_POST['type']),
 				mysql_real_escape_string ($_POST['address']),
 				mysql_real_escape_string ($_POST['owner']),
 				mysql_real_escape_string ($_POST['reason']),
@@ -290,6 +293,7 @@ This page is the admin interface for the BZFlag list server located at my.bzflag
 <table cellpadding="5px" class="listform" border=1>
 	<tr class="dark">
 		<td>Active</td>
+		<td>Type</td>
 		<td>IP/Hostname</td>
 		<td>Owner</td>
 		<td>Reason</td>
@@ -303,6 +307,7 @@ This page is the admin interface for the BZFlag list server located at my.bzflag
 			array_push ($bans, array(
 			'id' => $result_array['banid'],
 			'active' => $result_array['active'],
+			'type' => $result_array['type'],
 			'address' => $result_array['address'],
 			'owner' => $result_array['owner'],
 			'reason' => $result_array['reason'],
@@ -320,8 +325,15 @@ This page is the admin interface for the BZFlag list server located at my.bzflag
 		// output the row
 		foreach ($bans as $ban) {
 			echo '<tr'.($ban['active'] ? ' class="highlight"' : '').'>'.
-					'<td>'.($ban['active'] ? 'Yes' : 'No').'</td>'.
-					'<td>'.$ban['address'].'</td>'.
+					'<td>'.($ban['active'] ? 'Yes' : 'No').'</td>';
+			if ($ban['type'] == 'ipaddress')
+				echo '<td>IP Address</td>';
+			else if ($ban['type'] == 'hostname')
+				echo '<td>Hostname</td>';
+			else
+				echo '<td>Unknown</td>';
+				
+			echo '<td>'.$ban['address'].'</td>'.
 					'<td>'.$ban['owner'].'</td>'.
 					'<td>'.$ban['reason'].'</td>'.
 					'<td>'.$ban['lastby'].'</td>'.
