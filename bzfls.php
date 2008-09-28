@@ -31,6 +31,8 @@ include('/etc/bzflag/serversettings.php');
 // $dbuname = 'bzflag';
 // $dbpass  = 'bzflag';
 
+include('banfunctions.php');
+
 debug('Connecting to the database', 3);
 
 # Connect to the server database persistently.
@@ -48,13 +50,10 @@ if (!mysql_select_db($dbname)) {
 # ip address. value is not used at present. these are pulled
 # from the serverbans table.
 $banlist = array();
-$result = sqlQuery ('SELECT address, owner, reason FROM serverbans '
+$result = sqlQuery ('SELECT type, value, owner, reason FROM serverbans '
 	. 'WHERE active = 1');
 for ($i = 0; $i < mysql_num_rows ($result); ++$i) {
-	$banlist[mysql_result ($result, $i, 'address')] =
-    			mysql_result ($result, $i, 'owner').
-					(mysql_result ($result, $i, 'reason') != '' ?
-			  		': '.mysql_result ($result, $i, 'reason') : '' );
+	$banlist[] = mysql_fetch_assoc($result);
 }
 
 // $alternateServers = array('http://my.BZFlag.org/db/','');
@@ -779,8 +778,20 @@ function action_confirm() {
   print('See <a href="http://BZFlag.org">http://BZFlag.org</a></body></html>');
 }
 
+# set up a list of addresses to check
+$values = Array();
+$values['ipaddress'][0] = $_SERVER['REMOTE_ADDR'];
+$values['hostname'][0] = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+
+# If the hostname value came back as an IP, there wasn't a reverse DNS name,
+# so ditch it
+if ($values['hostname'][0] == $values['ipaddress'][0])
+  unset($values['hostname'][0]);
+
+# TODO: Add a check for the $nameport variable here and add that to $values
+
 # ignore banned servers outright
-if ($banlist[$_SERVER['REMOTE_ADDR']] != "") {
+if (IsBanned($values, $banlist)) {
   # reject the connection attempt
   header('Content-type: text/plain');
   $remote_addr = $_SERVER['REMOTE_ADDR'];
