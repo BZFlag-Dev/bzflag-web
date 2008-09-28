@@ -796,7 +796,7 @@ if (IsBanned($values, $banlist)) {
   header('Content-type: text/plain');
   $remote_addr = $_SERVER['REMOTE_ADDR'];
   debug("Connection rejected from $remote_addr", 1);
-  die('Connection attempt rejected.  See #bzflag on irc.freenode.net');
+  die("ERROR: Connection attempt rejected.  See #bzflag on irc.freenode.net\n");
 }
 
 if (rand(1, 100) == 50){     // menotume 2006-04-30 : reduce queries
