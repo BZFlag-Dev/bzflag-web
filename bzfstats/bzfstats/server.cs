@@ -207,7 +207,7 @@ namespace bzfstats
 
                 server.description = connection.getArg("desc");
                 string playerBlob = connection.getArg("players");
-                if (playerBlob != string.Empty) 
+                if (playerBlob != null && playerBlob != string.Empty) 
                 {
                     // parse players
                     XmlSerializer xml = new XmlSerializer(typeof(List<GamePlayer>));
@@ -236,13 +236,21 @@ namespace bzfstats
                     connection.writeToContext("No Results\n");
                 else
                 {
-                    string temp = string.Empty;
-
                     // parse players
                     XmlSerializer xml = new XmlSerializer(typeof(List<ServerHost>));
-                    StreamWriter writer = new StreamWriter(temp);
+
+                    MemoryStream memStream = new MemoryStream();
+
+                    StreamWriter writer = new StreamWriter(memStream);
                     xml.Serialize(writer, hosts);
                     writer.Close();
+
+                    memStream.Seek(0, SeekOrigin.Begin);
+                    StreamReader reader = new StreamReader(memStream);
+                    string temp = reader.ReadToEnd();
+                 //   string temp = new string(System.Text.ASCIIEncoding.ASCII.GetChars(memStream.GetBuffer(),0,(int)memStream.Length));
+                    reader.Close();
+                    memStream.Close();
 
                     connection.writeToContext(temp);
                 }
