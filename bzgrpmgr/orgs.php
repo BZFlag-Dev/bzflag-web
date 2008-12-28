@@ -1,7 +1,7 @@
 <?php
 
 // Includes
-require_once( 'include/global.inc' );
+require_once( 'include/global.php' );
 
 // Main action switch
 switch( $_GET['action'] ) {
@@ -12,7 +12,7 @@ switch( $_GET['action'] ) {
 		if( $_GET['id'] && ! $data->isOrgAdmin( $auth->getUserID(), $_GET['id'] ) )
 			header( "Location: ." );
 
-		require_once( 'template/header.inc' );
+		require_once( 'template/header.php' );
 
 		?>
 
@@ -35,7 +35,7 @@ if( $_GET['id'] ) echo "Update"; else echo "Create";
 
 <?php
 
-		require_once( 'template/footer.inc' );
+		require_once( 'template/footer.php' );
 
 		break;
 	case "update":

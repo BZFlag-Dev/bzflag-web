@@ -1,10 +1,10 @@
 <?php
 
 // Includes
-require_once( 'include/global.inc' );
+require_once( 'include/global.php' );
 
 // Page content
-require_once( 'template/header.inc' );
+require_once( 'template/header.php' );
 
 ?>
 
@@ -18,7 +18,7 @@ require_once( 'template/header.inc' );
 
 <?php
 
-require_once( 'template/footer.inc' );
+require_once( 'template/footer.php' );
 
 
 
@@ -29,7 +29,7 @@ require_once( 'template/footer.inc' );
 
 /*
 require_once( "data_phpbb2.class.php" );
-require_once( "functions.inc" );
+require_once( "functions.php" );
 require_once( "config.php" );
 
 // Temporary userdata settings... will incorporate with weblogin later

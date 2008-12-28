@@ -1,10 +1,10 @@
 <?php
 
 // Includes
-require_once( 'include/global.inc' );
+require_once( 'include/global.php' );
 
 // Page content
-require_once( 'template/header.inc' );
+require_once( 'template/header.php' );
 
 // ==================== General info ====================
 ?>
@@ -195,6 +195,6 @@ Users Today:
 
 <?php
 
-require_once( 'template/footer.inc' );
+require_once( 'template/footer.php' );
 
 ?>

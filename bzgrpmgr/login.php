@@ -1,7 +1,7 @@
 <?php
 
 // Includes
-require_once( 'include/global.inc' );
+require_once( 'include/global.php' );
 
 switch( $_GET['action'] ) {
 	case "login":
@@ -10,11 +10,11 @@ switch( $_GET['action'] ) {
 
 			exit;
 		} else {
-			require_once( 'template/header.inc' );
+			require_once( 'template/header.php' );
 			?>
 Sorry, your login was unsuccessful.
 <?php
-			require_once( 'template/footer.inc' );
+			require_once( 'template/footer.php' );
 
 			exit;
 		}
@@ -28,7 +28,7 @@ Sorry, your login was unsuccessful.
 
 		break;
 	default:
-		require_once( 'template/header.inc' );
+		require_once( 'template/header.php' );
 
 		?>
 
@@ -63,7 +63,7 @@ Sorry, your login was unsuccessful.
 
 <?php
 
-require_once( 'template/footer.inc' );
+require_once( 'template/footer.php' );
 		break;
 }
 

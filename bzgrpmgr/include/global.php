@@ -7,12 +7,12 @@ define( 'GRPSTATE_HIDDEN', 3 );
 define( 'GRPSTATE_INACTIVE', 4 );
 
 // Load the site config
-require_once( "config.inc" );
+require_once( "config.php" );
 
 // Load utility and class includes
-require_once( "functions.inc" );
-require_once( "data.class.inc" );
-require_once( "auth.class.inc" );
+require_once( "functions.php" );
+require_once( "data.class.php" );
+require_once( "auth.class.php" );
 
 session_start();
 

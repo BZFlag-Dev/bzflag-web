@@ -16,11 +16,11 @@
 
 		<table style="width: 90%; margin-right: auto; margin-left: auto; border-spacing: 15px;">
 			<tr>
-				<td class="banner"><?php include( "links.inc" ); ?></td>
+				<td class="banner"><?php include( "links.php" ); ?></td>
 			</tr>
 			<?php if( $auth->isAdmin() ) { ?>
 			<tr>
-				<td class="banner"><?php include( "adminlinks.inc" ); ?></td>
+				<td class="banner"><?php include( "adminlinks.php" ); ?></td>
 			</tr>
 			<?php } ?>
 			<tr>
