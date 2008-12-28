@@ -11,6 +11,8 @@
 // IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
+include('bzfls_phpbb3functions.php');
+
 // where to send debug printing (might override below)
 $enableDebug= 0;
 $debugFile= 'bzfls.log';
@@ -29,8 +31,8 @@ $link = @mysql_connect ($dbhost, $dbuname, $dbpass) or die ("Could not connect t
 switch ($_REQUEST['action']) {
 case 'LOGIN':
 	mysql_select_db ($bbdbname) or die ("Could not select user database.");
-	$sql = sprintf ('SELECT user_id FROM phpbb_users WHERE username = "%s" AND user_password = MD5("%s")',
-			mysql_real_escape_string ($_POST['username']), mysql_real_escape_string ($_POST['password']));
+	$sql = sprintf ('SELECT user_id, user_password FROM bzbb3_users WHERE username = "%s"',
+			mysql_real_escape_string ($_POST['username']));
 	$result = mysql_query ($sql);
 
 	// check for valid result and valid login
@@ -49,12 +51,21 @@ case 'LOGIN':
 		break;
 	}
 
+	$row = mysql_fetch_assoc($result);
+
+	if (!phpbb_check_hash($_POST['password'], $row['user_password'])) {
+		dumpPageHeader();
+		echo 'Sorry, could not log you in with the specified credentials.';
+		dumpPageFooter();
+		break;
+	}
+
 	// get the bzid and put it in the session var
-	$_SESSION['bzid'] = mysql_result ($result, 0, "user_id");
+	$_SESSION['bzid'] = $row['user_id'];
 
 	// check that this user is a list server admin
-	$sql = 'SELECT group_id FROM phpbb_user_group WHERE user_id = '.$_SESSION['bzid'].' AND group_id = '.
-			'(SELECT group_id FROM phpbb_groups WHERE group_name = "bzfls.admin")';
+	$sql = 'SELECT group_id FROM bzbb3_user_group WHERE user_id = '.$_SESSION['bzid'].' AND group_id = '.
+			'(SELECT group_id FROM bzbb3_groups WHERE group_name = "bzfls.admin")';
 	$result = mysql_query ($sql);
 	if (! $result) {
 		dumpPageHeader();
@@ -262,7 +273,7 @@ This page is the admin interface for the BZFlag list server located at my.bzflag
 
 	// user is logged in... print main admin page, starting with welcome
 	mysql_select_db ($bbdbname) or die ("Could not select user database.");
-	$sql = 'SELECT username FROM phpbb_users WHERE user_id = '.$_SESSION['bzid'];
+	$sql = 'SELECT username FROM bzbb3_users WHERE user_id = '.$_SESSION['bzid'];
 	$result = mysql_query ($sql);
 
 	if (! $result) {
@@ -316,7 +327,7 @@ This page is the admin interface for the BZFlag list server located at my.bzflag
 		// convert each 'lastby' bzid to a username
 		mysql_select_db ($bbdbname) or die ("Could not select user database.");
 		for ($i = 0; $i < count ($bans); ++$i) {
-			$sql = 'SELECT username FROM phpbb_users WHERE user_id = '.$bans[$i]['lastby'];
+			$sql = 'SELECT username FROM bzbb3_users WHERE user_id = '.$bans[$i]['lastby'];
 			$result = mysql_query ($sql);
 			if ($result && mysql_num_rows ($result) > 0)
 				$bans[$i]['lastby'] = mysql_result ($result, 0, "username");
