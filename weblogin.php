@@ -11,6 +11,8 @@
 // IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
+include('bzfls_phpbb3functions.php');
+
 # where to send debug printing (might override below)
 $enableDebug	= 0;
 $debugFile	= 'bzfls.log';
@@ -165,16 +167,15 @@ function action_webvalidate() {
       die('Could not open db:' . $bbdbname .' ' . mysql_error());
     }
 
-    $result = mysql_query(	"SELECT user_id FROM phpbb_users "
+    $result = mysql_query(	"SELECT user_id, user_password FROM bzbb3_users "
 							. "WHERE username='$username' "
-							. "AND user_password=MD5('$password')"
-							. "AND user_active=1", $link)
+							. "AND user_inactive_reason=0", $link)
 							  or die ("Invalid query: " . mysql_error());
 
     $row = mysql_fetch_row($result);
     $playerid = $row[0];
 
-    if (!$playerid)
+    if (!$playerid && !phpbb_check_hash($password, $row[1]))
 	{
 		dumpPageHeader();
 		print('
@@ -191,7 +192,7 @@ function action_webvalidate() {
       srand(microtime() * 100000000);
       $token = rand(0,2147483647);
 
-      $result = mysql_query("UPDATE phpbb_users SET "
+      $result = mysql_query("UPDATE bzbb3_users SET "
 							  . "user_token='$token', "
 							  . "user_tokendate='" . time() . "', "
 							  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "

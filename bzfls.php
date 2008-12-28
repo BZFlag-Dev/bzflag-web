@@ -16,6 +16,8 @@
 define (MYSQL_PERSISTENT, false);
 define (MD5_PASSWORD, true);
 
+include('bzfls_phpbb3functions.php');
+
 # where to send debug printing (might override below)
 $debugLevel= 2;      // set to >2 to see all sql queries (>1 to see GET/POST input args)
 $debugFilename	= '/var/log/bzfls/bzfls.log';
@@ -339,37 +341,38 @@ function action_list() {
       debug("Database $bbdbname did not exist", 1);
       die('Could not open db: ' . mysql_error());
     }
-    $result = mysql_query("SELECT user_id FROM phpbb_users "
+    $result = mysql_query("SELECT user_id, user_password FROM bzbb3_users "
 	. "WHERE username='$callsign' "
-	. "AND user_password=MD5('$password')"
-	. "AND user_active=1", $link)
+	. "AND user_inactive_reason=0", $link)
       or die ("Invalid query: " . mysql_error());
     $row = mysql_fetch_row($result);
     $playerid = $row[0];
-    if (!$playerid) {
+    if (!$playerid || !phpbb_check_hash($password, $row[1])) {
       print("NOTOK: invalid callsign or password\n");
       debug ("NOTOK", 2);
     } else {
       srand(microtime() * 100000000);
       $token = rand(0,2147483647);
       debug ("OK   token=$token", 2);
-      $result = mysql_query("UPDATE phpbb_users SET "
+      $result = mysql_query("UPDATE bzbb3_users SET "
 	  . "user_token='$token', "
 	  . "user_tokendate='" . time() . "', "
 	  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
 	  . "WHERE user_id='$playerid'", $link)
 	or die ("Invalid query: ". mysql_error());
       print("TOKEN: $token\n");
+/* // Temporarily disabled the PM check
       # check for private messages and send a notice if there is one
-      $result = mysql_query("SELECT user_new_privmsg FROM phpbb_users "
+      $result = mysql_query("SELECT user_new_privmsg FROM bzbb3_users "
 	  . "WHERE username='$callsign' "
 	  . "AND user_password=MD5('$password')"
-	  . "AND user_active=1", $link)
+	  . "AND user_inactive_reason=0", $link)
 	or die ("Invalid query: " . mysql_error());
       $pms = mysql_result($result, 0);
       if ($pms) {
 	print("NOTICE: You have $pms private messages waiting for you, $callsign.  Log in at http://my.bzflag.org/bb/ to read them.\n");
       }
+*/
     }
     if (!mysql_select_db($dbname)) {
       debug("Database $dbname did not exist", 1);
@@ -384,12 +387,12 @@ function action_list() {
     debug ("FETCHING GROUPS", 3);
 
 //    $result = sqlQuery ("
-//      SELECT g.group_id FROM phpbb_user_group ug, phpbb_groups g
+//      SELECT g.group_id FROM bzbb3_user_group ug, bzbb3_groups g
 //      WHERE g.group_id=ug.group_id AND (ug.user_id = $playerid AND g.group_name<>'') OR g.group_name='VERIFIED'");
 
 // menotume hack 2006/14/18 - speed fix ??
     $result = sqlQuery ("
-      SELECT g.group_id FROM phpbb_user_group ug, phpbb_groups g
+      SELECT g.group_id FROM bzbb3_user_group ug, bzbb3_groups g
       WHERE g.group_id=ug.group_id AND ug.user_pending=0 AND ((ug.user_id = $playerid AND g.group_name<>'') OR (g.group_name='VERIFIED'))");
 
     while ($row = mysql_fetch_row($result))
@@ -433,19 +436,18 @@ function action_gettoken (){
       debug("Database $bbdbname did not exist", 1);
       die('Could not open db: ' . mysql_error());
     }
-    $result = mysql_query("SELECT user_id FROM phpbb_users "
+    $result = mysql_query("SELECT user_id, user_password FROM bzbb3_users "
 	. "WHERE username='$callsign' "
-	. "AND user_password=MD5('$password')"
-	. "AND user_active=1", $link)
+	. "AND user_inactive_reason=0", $link)
       or die ("Invalid query: " . mysql_error());
     $row = mysql_fetch_row($result);
     $playerid = $row[0];
-    if (!$playerid) {
+    if (!$playerid || !phpbb_check_hash($password, $row[1])) {
       print("NOTOK: invalid callsign or password ($callsign:$password)\n");
     } else {
       srand(microtime() * 100000000);
       $token = rand(0,2147483647);
-      $result = mysql_query("UPDATE phpbb_users SET "
+      $result = mysql_query("UPDATE bzbb3_users SET "
 	  . "user_token='$token', "
 	  . "user_tokendate='" . time() . "', "
 	  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
@@ -473,7 +475,7 @@ function checktoken($callsign, $ip, $token, $garray) {
   }
 
   # Check if player exists. if not, just return UNK
-  $result = mysql_query("SELECT user_id FROM phpbb_users "
+  $result = mysql_query("SELECT user_id FROM bzbb3_users "
 			. "WHERE username='$callsign' ", $link)
     or die ('Invalid query: ' . mysql_error());
   $rows = mysql_num_rows($result);
@@ -490,9 +492,9 @@ function checktoken($callsign, $ip, $token, $garray) {
     $testtoken .= "AND user_tokenip='$ip'";
   }
 
-//debug ( "SELECT user_id FROM phpbb_users ". "WHERE username='$callsign' " . $testtoken, 2);
+//debug ( "SELECT user_id FROM bzbb3_users ". "WHERE username='$callsign' " . $testtoken, 2);
 
-  $result = mysql_query("SELECT user_id FROM phpbb_users "
+  $result = mysql_query("SELECT user_id FROM bzbb3_users "
       . "WHERE username='$callsign' "
       . $testtoken, $link)
     or die ('Invalid query: ' . mysql_error());
@@ -500,7 +502,7 @@ function checktoken($callsign, $ip, $token, $garray) {
   $playerid = $row[0];
   if ($playerid) {
     # clear tokendate so nasty game server admins can't login someplace else
-    $result = mysql_query("UPDATE phpbb_users SET "
+    $result = mysql_query("UPDATE bzbb3_users SET "
 			  . "user_lastvisit='" . time() . "', "
     #. "user_tokendate='" . time() . "'"
 			  . "user_tokendate='0'"
@@ -508,12 +510,12 @@ function checktoken($callsign, $ip, $token, $garray) {
       or die ('Invalid query: ' . mysql_error());
     print ("TOKGOOD: $callsign");
     if (count($garray)) {
-      $query = "SELECT phpbb_groups.group_name FROM phpbb_groups, phpbb_user_group "
-	. "WHERE phpbb_user_group.user_id='$playerid' "
-	. "AND phpbb_user_group.group_id=phpbb_groups.group_id "
-	. "AND phpbb_user_group.user_pending=0 "
-	. "and (phpbb_groups.group_name='"
-	. implode("' or phpbb_groups.group_name='", $garray) . "' )";
+      $query = "SELECT bzbb3_groups.group_name FROM bzbb3_groups, bzbb3_user_group "
+	. "WHERE bzbb3_user_group.user_id='$playerid' "
+	. "AND bzbb3_user_group.group_id=bzbb3_groups.group_id "
+	. "AND bzbb3_user_group.user_pending=0 "
+	. "and (bzbb3_groups.group_name='"
+	. implode("' or bzbb3_groups.group_name='", $garray) . "' )";
       $result = mysql_query("$query")
 	or die ('Invalid query: ' . mysql_error());
       while ($row = mysql_fetch_row($result)) {
@@ -571,7 +573,7 @@ function add_advertList ($serverID){
     } else {
       sqlQuery ("
         INSERT INTO server_advert_groups (server_id, group_id)
-        SELECT $serverID, group_id FROM $bbdbname.phpbb_groups
+        SELECT $serverID, group_id FROM $bbdbname.bzbb3_groups
         WHERE group_name IN ('". implode ("','", $advertList) ."')");
     }
   }
