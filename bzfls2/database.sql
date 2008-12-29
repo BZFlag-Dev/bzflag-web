@@ -1,8 +1,8 @@
 -- 
--- Table structure for table `players`
+-- Table structure for table `bzfls_players`
 -- 
 
-CREATE TABLE `players` (
+CREATE TABLE `bzfls_players` (
   `playerid` mediumint(8) unsigned NOT NULL auto_increment,
   `username` varchar(25) collate latin1_general_ci NOT NULL,
   `password` varchar(32) collate latin1_general_ci NOT NULL,
@@ -25,10 +25,10 @@ CREATE TABLE `players` (
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `servers`
+-- Table structure for table `bzfls_servers`
 -- 
 
-CREATE TABLE `servers` (
+CREATE TABLE `bzfls_servers` (
   `serverid` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(64) collate latin1_general_ci NOT NULL,
   `port` smallint(5) unsigned NOT NULL,

@@ -1,6 +1,6 @@
 <?php
 
-  $prefix = "";
+  $prefix = "bzfls_";
   define('TBL_SERVERS', $prefix.'servers');
   define('TBL_PLAYERS', $prefix.'players');
   define('TBL_GROUPS', $prefix.'groups');
