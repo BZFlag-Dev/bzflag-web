@@ -174,7 +174,7 @@ function action_webvalidate() {
     }
 
     $result = mysql_query(	"SELECT user_id, user_password FROM bzbb3_users "
-							. "WHERE username='$username' "
+							. "WHERE username_clean='$username' "
 							. "AND user_inactive_reason=0", $link)
 							  or die ("Invalid query: " . mysql_error());
 
