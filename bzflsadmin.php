@@ -11,7 +11,11 @@
 // IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-include('bzfls_phpbb3functions.php');
+define('IN_PHPBB', true);
+$phpbb_root_path = 'bb/';
+$phpEx = 'php';
+
+include($phpbb_root_path.'includes/functions.'.$phpEx);
 
 // where to send debug printing (might override below)
 $enableDebug= 0;

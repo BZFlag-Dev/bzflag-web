@@ -11,7 +11,13 @@
 // IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-include('bzfls_phpbb3functions.php');
+define('IN_PHPBB', true);
+$phpbb_root_path = 'bb/';
+$phpEx = 'php';
+
+include($phpbb_root_path.'includes/functions.'.$phpEx);
+include($phpbb_root_path.'includes/utf/utf_tools2.'.$phpEx);
+include($phpbb_root_path.'includes/utf/utf_normalizer.'.$phpEx);
 
 # where to send debug printing (might override below)
 $enableDebug	= 0;
@@ -152,7 +158,7 @@ function action_webvalidate() {
 		die ('ERROR, you must pass in a URL value');
 
 	if ( array_key_exists("username", $_REQUEST) )
-		$username =  $_REQUEST['username'];
+		$username =  utf8_clean_string($_REQUEST['username']);
 	else
 		die ('ERROR, you must pass in a USERNAME value');
 

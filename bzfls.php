@@ -16,7 +16,14 @@
 define (MYSQL_PERSISTENT, false);
 define (MD5_PASSWORD, true);
 
-include('bzfls_phpbb3functions.php');
+define('IN_PHPBB', true);
+$phpbb_root_path = 'bb/';
+$phpEx = 'php';
+
+include($phpbb_root_path.'includes/functions.'.$phpEx);
+include($phpbb_root_path.'includes/utf/utf_tools2.'.$phpEx);
+include($phpbb_root_path.'includes/utf/utf_normalizer.'.$phpEx);
+
 
 # where to send debug printing (might override below)
 $debugLevel= 2;      // set to >2 to see all sql queries (>1 to see GET/POST input args)
@@ -341,8 +348,10 @@ function action_list() {
       debug("Database $bbdbname did not exist", 1);
       die('Could not open db: ' . mysql_error());
     }
+    $clean_callsign = utf8_clean_string($callsign);
+
     $result = mysql_query("SELECT user_id, user_password FROM bzbb3_users "
-	. "WHERE username='$callsign' "
+	. "WHERE username_clean='$clean_callsign' "
 	. "AND user_inactive_reason=0", $link)
       or die ("Invalid query: " . mysql_error());
     $row = mysql_fetch_row($result);
@@ -436,8 +445,10 @@ function action_gettoken (){
       debug("Database $bbdbname did not exist", 1);
       die('Could not open db: ' . mysql_error());
     }
+    $clean_callsign = utf8_clean_string($callsign);
+
     $result = mysql_query("SELECT user_id, user_password FROM bzbb3_users "
-	. "WHERE username='$callsign' "
+	. "WHERE username_clean='$clean_callsign' "
 	. "AND user_inactive_reason=0", $link)
       or die ("Invalid query: " . mysql_error());
     $row = mysql_fetch_row($result);
@@ -474,9 +485,11 @@ function checktoken($callsign, $ip, $token, $garray) {
     die('Could not open db: ' . mysql_error());
   }
 
+  $clean_callsign = utf8_clean_string($callsign);
+
   # Check if player exists. if not, just return UNK
   $result = mysql_query("SELECT user_id FROM bzbb3_users "
-			. "WHERE username='$callsign' ", $link)
+			. "WHERE username_clean='$clean_callsign' ", $link)
     or die ('Invalid query: ' . mysql_error());
   $rows = mysql_num_rows($result);
   if (!mysql_num_rows($result)) {
@@ -495,7 +508,7 @@ function checktoken($callsign, $ip, $token, $garray) {
 //debug ( "SELECT user_id FROM bzbb3_users ". "WHERE username='$callsign' " . $testtoken, 2);
 
   $result = mysql_query("SELECT user_id FROM bzbb3_users "
-      . "WHERE username='$callsign' "
+      . "WHERE username_clean='$clean_callsign' "
       . $testtoken, $link)
     or die ('Invalid query: ' . mysql_error());
   $row = mysql_fetch_row($result);
