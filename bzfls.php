@@ -631,9 +631,9 @@ function action_add() {
 
   # Test to see whether nameport is valid by attempting to establish a
   # connection to it
-  $fp = fsockopen ($servname, $servport, $errno, $errstring, 30);
+  $fp = @fsockopen ($servname, $servport, $errno, $errstring, 5);
   if (!$fp) {
-    print("failed to connect: $errstring\n");
+    print("ERROR: Unable to reach your server. Check your router/firewall. ($errstring)\n");
     return;
   }
   # FIXME - should callback and update all stats instead of bzupdate.pl
