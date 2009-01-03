@@ -31,6 +31,8 @@ session_start();
 // connect to MySQL
 $link = @mysql_connect ($dbhost, $dbuname, $dbpass) or die ("Could not connect to MySQL.");
 
+@mysql_query("SET NAMES 'utf8'", $link);
+
 // main action logic switch
 switch ($_REQUEST['action']) {
 case 'LOGIN':

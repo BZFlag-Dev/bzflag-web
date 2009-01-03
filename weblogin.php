@@ -227,6 +227,8 @@ $link = mysql_pconnect($dbhost, $dbuname, $dbpass)
 if (!mysql_select_db($dbname))
   die('Could not open db: ' . mysql_error());
 
+@mysql_query("SET NAMES 'utf8'", $link);
+
 // start of script
 // figure out what we are doing
 if ( array_key_exists('action', $_REQUEST) )

@@ -55,6 +55,8 @@ if (!mysql_select_db($dbname)) {
   die('Could not open db: ' . mysql_error());
 }
 
+@mysql_query("SET NAMES 'utf8'", $link);
+
 # for banning.  provide key => value pairs where the key is an
 # ip address. value is not used at present. these are pulled
 # from the serverbans table.
