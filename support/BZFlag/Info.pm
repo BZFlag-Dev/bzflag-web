@@ -34,7 +34,7 @@ sub serverlist(%) {
 
     $ua->timeout(10);
 
-    my $url = ($options{Server} ? $options{Server} : $self->listserver) . '?action=LIST';
+    my $url = ($options{Server} ? $options{Server} : $self->listserver) . '?action=LIST&version=BZFS0026';
     my $req = HTTP::Request->new('GET', $url);
     my $res = $ua->request($req);
     die "Can't get $url" unless $res->is_success;

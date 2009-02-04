@@ -10,7 +10,7 @@
   // Fetch data
   
   // List of servers
-  $data['servers'] = $db->FetchAll("SELECT `server`, `players`, `ctf`, `rabbitchase`, `description` FROM `serverinfo` ORDER BY `players` DESC");
+  $data['servers'] = $db->FetchAll("SELECT `server`, `players`, `ctf`, `rabbitchase`, `description` FROM `serverinfo` WHERE `version` = 'BZFS0026' ORDER BY `players` DESC");
   
   
   // Display output
