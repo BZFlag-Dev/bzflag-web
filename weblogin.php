@@ -181,7 +181,7 @@ function action_webvalidate() {
     $row = mysql_fetch_row($result);
     $playerid = $row[0];
 
-    if (!$playerid && !phpbb_check_hash($password, $row[1]))
+    if (!$playerid || !phpbb_check_hash($password, $row[1]))
 	{
 		dumpPageHeader();
 		print('
