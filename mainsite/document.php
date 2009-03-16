@@ -2,8 +2,15 @@
 if(!defined("__DOCUMENT_INC__")) {
 define("__DOCUMENT_INC__", 1);
 
-$db = mysql_connect("server", "user", "password");
-mysql_select_db("database");
+include('/etc/bzflag/serversettings.php');
+
+# Connect to the server database persistently.
+if (MYSQL_PERSISTENT === true){
+  $db = mysql_pconnect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
+}else{
+  $db = mysql_connect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
+}
+mysql_select_db($dbname);
 
 class Document {
   function begin($title, $session = 0) {
@@ -18,9 +25,10 @@ print <<< end
 </head>
 <body>
 <div align="center">
-	<table border="0" cellpadding="0" cellspacing="0" width="85%">
+	<table border="0" cellpadding="0" cellspacing="0" width="90%">
 		<tr>
 			<td align="center">
+				<br>
 				<a href="http://bzflag.org/"><img src="/images/title.png" border=0></a>
 			</td>
 		</tr>
@@ -30,45 +38,44 @@ print <<< end
 			</td>
 		</tr>
 	</table>
-	<table border="0" cellpadding="0" cellspacing="0" width="85%"><!-- Main table for entire page -->
+	<table class="sidebar_border" border="0" cellpadding="0" cellspacing="0" width="90%"><!-- Main table for entire page -->
 		<tr>
 			<td valign="top">	<!-- left sidebar, row 1 main table, field one -->
-				<table width="125" bgcolor="#AAAAAA" class="sidebar_border" border="0" cellspacing="0" cellpadding="4">
+				<table width="125" bgcolor="#AAAAAA" border="0" cellspacing="0" cellpadding="4">
+<!--
 					<tr><td align="center">
 						<table align="center" height="26" width="100" background="/images/content_header.png">
-							<tr><td align="center">Contents</td></tr>
+							<tr><td align="center"><b>Menu</b></td></tr>
 						</table>
-					</td></tr>
 
+					</td></tr>
+-->
 					<tr><td align="center">
 						<table border="0" cellpadding="2">
 							<tr><td>
-								<table class="sidebar_border" bgcolor="#FFFFFF" border="0" cellpadding="0">
-									<tr><td>
+								<table class="sidebar_border" bgcolor="#FFFFFF" border="0" cellpadding="8">
+									<tr><td class="menu">
 										<a href="/" class="navbar">home</a><br>
 										<a href="http://my.bzflag.org/w/Getting_Started" class="navbar" style="color: red;">Getting Started</a><br>
-										<a href="http://my.bzflag.org/w/Getting Help" class="navbar">getting&nbsp;help</a><br>
+										<a href="http://my.bzflag.org/w/Getting Help" class="navbar">support</a><br>
 										<a href="http://my.bzflag.org/w/Download" class="navbar">download</a><br>
 										<a href="http://store.bzflag.org/" class="navbar" style="color: green;"><strong>Store</strong></a><br>
-										<a href="/help/" class="navbar">help</a><br>
-										<a href="http://my.bzflag.org/w/BZFlag_Source" class="navbar">developers</a><br>
 										<a href="/screenshots/" class="navbar">screenshots</a><br>
 										<a href="http://bzflag.svn.sourceforge.net/viewvc/*checkout*/bzflag/trunk/bzflag/COPYING" class="navbar">license</a><br>
 										<a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
 										<a href="http://my.bzflag.org/w/Other_Links" class="navbar">links</a><br>
 										<a href="http://my.bzflag.org/w/Main_Page" class="navbar">wiki</a><br>
-										<a href="http://my.BZFlag.org/" class="navbar">stats</a><br>
+										<a href="http://stats.BZFlag.org/" class="navbar">stats</a><br>
 										<a href="http://my.BZFlag.org/bb/" class="navbar">forums</a><br>
+										<a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">mailing&nbsp;lists</a><br>
 										<a href="http://my.BZFlag.org/league/" class="navbar">CTF&nbsp;league</a><br>
 										<br>
 										<a href="http://sourceforge.net/projects/bzflag/" class="navbar">sourceforge</a><br>
-										&nbsp;<a href="http://bzflag.svn.sourceforge.net/viewvc/bzflag/" class="navbar">browse&nbsp;Subversion</a><br>
 										&nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=103248" class="navbar">bug&nbsp;reports</a><br>
-										&nbsp;<a href="http://my.bzflag.org/w/BZFlag_SVN" class="navbar">SVN&nbsp;access</a><br>
 										&nbsp;<a href="http://sourceforge.net/tracker/?atid=353248&amp;group_id=3248&amp;func=browse" class="navbar">feature&nbsp;requests</a><br>
-										&nbsp;<a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">mailing&nbsp;lists</a><br>
-										&nbsp;<a href="http://sourceforge.net/tracker/?atid=423059&amp;group_id=3248&amp;func=browse" class="navbar">maps</a><br>
 										&nbsp;<a href="http://sourceforge.net/tracker/?group_id=3248&amp;atid=203248" class="navbar">support</a><br>
+										&nbsp;<a href="http://sourceforge.net/tracker/?atid=423059&amp;group_id=3248&amp;func=browse" class="navbar">maps</a><br>
+										<a href="http://my.bzflag.org/w/BZFlag_Source" class="navbar">source&nbsp;code</a><br>
 end;
 if($session == 1){
 print <<< end
@@ -100,7 +107,7 @@ print <<< end
 					<tr>
 						<td>
 							<!-- Main content area -->
-							<table class="sidebar_border" border="0" cellspacing="0" cellpadding="6" bgcolor="#FFFFFF">
+							<table border="0" cellspacing="0" cellpadding="8" bgcolor="#FFFFFF">
 								<tr><td>
 									<div class="content">
 end;
@@ -128,7 +135,7 @@ print <<< end
 		</tr>
 	</table><!-- End main table for entire page -->
 
-	<table width="85%" class="sidebar_border" bgcolor="#FFFFFF" border="0" cellpadding="2"> <!-- Search bar at bottom of page -->
+	<table width="90%" class="sidebar_border" bgcolor="#FFFFFF" border="0" cellpadding="2"> <!-- Search bar at bottom of page -->
 		<tr>
 			<td valign="middle" align="left">
 				<form method="GET" action="http://www.google.com/custom">
