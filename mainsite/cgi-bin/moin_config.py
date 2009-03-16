@@ -29,12 +29,12 @@ import os
 sitename = 'BZFlag'
 interwikiname = None
 data_dir = '/home/groups/b/bz/bzflag/moin/data/'
-url_prefix = '/wiki'
+url_prefix = '/oldwiki'
 css_url = '/general.css'
 logo_url = url_prefix + '/img/moinmoin.gif'
-#url_path = os.environ.get("SCRIPT_NAME", "/wiki") \
+#url_path = os.environ.get("SCRIPT_NAME", "/oldwiki") \
 #     + os.environ.get("PATH_INFO", "/FrontPage")
-url_path = "/wiki" + os.environ.get("PATH_INFO", "/FrontPage")
+url_path = "/oldwiki" + os.environ.get("PATH_INFO", "/FrontPage")
 page_icons = ''
 page_footer1 = '<hr>'
 navi_bar = ''
@@ -68,15 +68,15 @@ title1 = """<div align="center">
           <table class="sidebar_border" bgcolor="#FFFFFF" border="0" cellpadding="0">
           <tr><td>
             <a href="/" class="navbar">home</a><br>
-            <a href="/wiki/GettingHelp" class="navbar">getting&nbsp;help</a><br>
-            <a href="/wiki/Download" class="navbar">download</a><br>
+            <a href="http://My.BZFlag.org/w/GettingHelp" class="navbar">getting&nbsp;help</a><br>
+            <a href="http://My.BZFlag.org/w/Download" class="navbar">download</a><br>
             <a href="/help/" class="navbar">help</a><br>
-            <a href="/wiki/Developers" class="navbar">developers</a><br>
+            <a href="http://My.BZFlag.org/w/Developers" class="navbar">developers</a><br>
             <a href="/screenshots/" class="navbar">screenshots</a><br>
             <a href="http://bzflag.cvs.sourceforge.net/bzflag/bzflag/COPYING?view=markup" class="navbar">license</a><br>
             <a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
-            <a href="/wiki/OtherLinks" class="navbar">links</a><br>
-            <a href="/wiki/" class="navbar">wiki</a><br>
+            <a href="http://My.BZFlag.org/w/OtherLinks" class="navbar">links</a><br>
+            <a href="http://My.BZFlag.org/w/" class="navbar">wiki</a><br>
             <a href="http://my.BZFlag.org/" class="navbar">stats</a><br>
             <a href="http://my.BZFlag.org/bb/" class="navbar">forums</a><br>
             <a href="http://my.BZFlag.org/league/" class="navbar">CTF&nbsp;league</a><br>
@@ -118,7 +118,7 @@ page_footer2 = """        </div>
     <tr>
       <td>&nbsp;</td><td><table border="0" cellpadding="0" cellspacing="0" width="100%%"><tr>
         <td bgcolor="#888888" align="right">
-          <span class="copyright">copyright &copy; <a href="/wiki/CurrentMaintainer">CurrentMaintainer</a> 1993-2002&nbsp;</span>
+          <span class="copyright">copyright &copy; <a href="http://My.BZFlag.org/w/CurrentMaintainer">CurrentMaintainer</a> 1993-2002&nbsp;</span>
         </td>
       </tr></table></td>
     </tr>
