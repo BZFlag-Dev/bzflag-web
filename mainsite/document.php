@@ -6,11 +6,11 @@ include('/etc/bzflag/serversettings.php');
 
 # Connect to the server database persistently.
 if (MYSQL_PERSISTENT === true){
-  $db = mysql_pconnect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
+  $db = mysql_pconnect($dbhost, $dbuname2, $dbpass) or die('Could not connect: ' . mysql_error());
 }else{
-  $db = mysql_connect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
+  $db = mysql_connect($dbhost, $dbuname2, $dbpass) or die('Could not connect: ' . mysql_error());
 }
-mysql_select_db($dbname);
+mysql_select_db($dbname2);
 
 class Document {
   function begin($title, $session = 0) {
