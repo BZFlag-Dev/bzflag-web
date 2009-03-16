@@ -3,8 +3,8 @@ include "../document.php";
 
 $doc = new Document;
 $doc->begin("add news", 1);
-if(isset($sessionID)) {
-  $substr = explode("|", $sessionID);
+if(isset($bzID)) {
+  $substr = explode("|", $bzID);
   $result = mysql_query("SELECT * FROM passwd WHERE password = '$substr[1]' AND username = '$substr[0]' AND access = '$substr[2]'");
   if(mysql_num_rows($result) == 1 && $substr[2] >= 1) {
     if(!isset($add)) {
@@ -22,7 +22,7 @@ end;
 print <<< end
 <div align="center"><b>News Added</b></div><br><br>
 end;
-      $substr = explode("|", $sessionID);
+      $substr = explode("|", $bzID);
       $user = $substr[0];
       $query = "INSERT INTO news (headline, body, date, username) values ('$headline', '$body', '" . time() . "', '$user')";
       $result = mysql_query($query);

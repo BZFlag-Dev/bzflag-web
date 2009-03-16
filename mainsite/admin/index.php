@@ -3,8 +3,8 @@ include "../document.php";
 
 $doc = new Document;
 
-if(isset($sessionID) && !isset($function)) {
-  $substr = explode("|", $sessionID);
+if(isset($bzID) && !isset($function)) {
+  $substr = explode("|", $bzID);
   $query = "SELECT * FROM passwd WHERE password = '$substr[1]' AND username = '$substr[0]' AND access = '$substr[2]'";
   $result = mysql_query($query);
   if(mysql_num_rows($result) == 1) {
@@ -60,7 +60,7 @@ end;
   }
   mysql_free_result($result);
 } else if(isset($function) && $function == "logout") {
-  setcookie("sessionID", "", time() - 10);
+  setcookie("bzID", "", time() - 10);
   $doc->begin("admin", 1);
 print <<< end
 <br>
@@ -90,7 +90,7 @@ end;
     if(mysql_num_rows($result) == 1) {
       $currow = mysql_fetch_array($result);
       $cookie = sprintf("%s|%s|%s", $currow["username"], $currow["password"], $currow["access"]);
-      setcookie("sessionID", $cookie, 0);
+      setcookie("bzID", $cookie, 0);
       $access = $currow["access"];
       $doc->begin("admin", 1);
       if($access >= 1) {

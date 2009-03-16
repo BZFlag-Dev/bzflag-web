@@ -2,8 +2,8 @@
 include "../document.php";
 
 $doc = new Document;
-if(isset($sessionID)) {
-  $substr = explode("|", $sessionID);
+if(isset($bzID)) {
+  $substr = explode("|", $bzID);
   $result = mysql_query("SELECT * FROM passwd WHERE password = '$substr[1]' AND username = '$substr[0]' AND access = '$substr[2]'");
   if(mysql_num_rows($result) == 1) {
     if(!(isset($pass) || isset($passconf))) {
@@ -51,7 +51,7 @@ end;
       $hash = md5($pass);
       $result = mysql_query("UPDATE passwd SET password = '$hash' WHERE username = '$substr[0]'");
       $cookie = "$substr[0]|$hash|$substr[2]";
-      setcookie("sessionID", $cookie, 0);
+      setcookie("bzID", $cookie, 0);
       $doc->begin("changed", 1);
 print <<< end
 Password changed.
