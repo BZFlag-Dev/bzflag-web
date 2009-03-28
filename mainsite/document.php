@@ -90,7 +90,7 @@ print <<< end
 								<td align="center" >
 									<table align="center" border="0" cellspacing="0" cellpadding="0">
 										<tr><td><a href="http://www.opengl.org/"><img src="/images/opengl.gif" alt="opengl" width="88" height="31" border="0"></a></td></tr>
-										<tr><td><a href="http://sourceforge.net/project/?group_id=3248"><img src="http://sourceforge.net/sflogo.php?group_id=3248&amp;type=1" width="88" height="31" alt="sourceforge" border="0"></a></td></tr>
+										<tr><td><a href="http://sourceforge.net/project/?group_id=3248" style="color: #000000;"><img src="http://sourceforge.net/sflogo.php?group_id=3248&amp;type=1" width="86" height="30" alt="sourceforge" border="1"></a></td></tr>
 										<tr><td><a href="http://sourceforge.net/donate/index.php?group_id=3248"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" border="0" alt="Support This Project"/></a></td></tr>
 										<tr><td><a href="http://www.linuxgames.com/"><img src="/images/linuxgames.gif" width="88" height="31" alt="linuxgames" border="0"></a></td></tr>
 										<tr><td><a href="http://www.telefragged.com/"><img src="/images/telefragged.gif" width="88" height="31" alt="telefragged" border="0"></a></td></tr>
