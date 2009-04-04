@@ -1,6 +1,4 @@
 <?php  
-
-	$responce = "";
 	
 	$port = $_REQUEST['port'];
 	if (!$port)
@@ -18,10 +16,15 @@
 		}
 	}
 	
+	$somethingFailed = false;
+	
 	// test via TCP
 	$socket = @fsockopen ($address, $port, $socketerrno, $socketerrstring, 5);
 	if (!$socket || $socketerrno != 0 )
-		$responce += "TCP Connection Fialed\n";		
+	{
+		echo "TCP Connection Fialed" . $socketerrstring . "\n";	
+		$somethingFailed = true;
+	}
 	else
 		fwrite($socket,"1234");
 	@fclose($socket);
@@ -29,11 +32,12 @@
 	// test via UDP
 	$socket = @fsockopen ("udp://".$address, $port, $socketerrno, $socketerrstring, 5);
 	if (!$socket || $socketerrno != 0 )
-		$responce += "UDP Connection Fialed\n";
+	{
+		echo "UDP Connection Fialed" . $socketerrstring . "\n";	
+		$somethingFailed = true;
+	}
 	@fclose($socket);
 
-	if(!$responce)
-		$responce = "OK on " . $address . ":" . $port;
-		
-	echo $responce;
+	if(!$somethingFailed)
+		echo "OK on " . $address . ":" . $port;
 ?>
