@@ -4,16 +4,16 @@
 	if (!$port)
 		$port = 5154;
 		
-	if (!$_REQUEST['address'])
-		$address = $_SERVER['REMOTE_ADDR'];
-	else
+	$address = $_SERVER['REMOTE_ADDR'];
+	$host = $_REQUEST['address'];
+	
+	if ($host)
 	{
-		$address = gethostbyname($_REQUEST['address']);
-		if ($address == '0.0.0.0')
-		{
-			$responce += "address did not resolve\n";
-			$address = $_SERVER['REMOTE_ADDR'];
-		}
+		$hostAddress = gethostbyname($host);
+		if ($hostAddress == '0.0.0.0')
+			echo "Host address did not resolve\r\n";
+		if ($hostAddress != $address)
+			echo "Host address does not match request\r\n";
 	}
 	
 	$somethingFailed = false;
@@ -22,7 +22,7 @@
 	$socket = @fsockopen ($address, $port, $socketerrno, $socketerrstring, 5);
 	if (!$socket || $socketerrno != 0 )
 	{
-		echo "TCP Connection Fialed" . $socketerrstring . "\n";	
+		echo "TCP Connection Fialed" . $socketerrstring . "\r\n";	
 		$somethingFailed = true;
 	}
 	else
@@ -33,7 +33,7 @@
 	$socket = @fsockopen ("udp://".$address, $port, $socketerrno, $socketerrstring, 5);
 	if (!$socket || $socketerrno != 0 )
 	{
-		echo "UDP Connection Fialed" . $socketerrstring . "\n";	
+		echo "UDP Connection Fialed" . $socketerrstring . "\r\n";	
 		$somethingFailed = true;
 	}
 	@fclose($socket);
