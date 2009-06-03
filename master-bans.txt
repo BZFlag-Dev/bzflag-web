@@ -158,3 +158,19 @@ reason: (Sk3letr0n) service abuse, cheat distribution, cheating
 end: 0
 banner: Project Admins
 reason: (laserball2) cheating and exploits on multiple servers
+64.55.144.*
+end: 0
+banner: Project Admins
+reason: Anonymous VPN banned for abuse
+64.55.145.*
+end: 0
+banner: Project Admins
+reason: Anonymous VPN banned for abuse
+64.55.146.*
+end: 0
+banner: Project Admins
+reason: Anonymous VPN banned for abuse
+64.55.147.*
+end: 0
+banner: Project Admins
+reason: Anonymous VPN banned for abuse
