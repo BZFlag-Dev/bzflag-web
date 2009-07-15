@@ -1,6 +1,16 @@
 <?php  
 	include_once("conf/config.php");
 	
+	function Sanitize ( $value )
+	{
+		return mysql_real_escape_string(addslashes($value));	
+	}
+	
+	function Unsanitize ( $value )
+	{
+		return stripslashes($value);	
+	}
+	
 	function ConnectToDB ()
 	{
 		global $CONFIG_DATABASE_SERVER;
@@ -53,7 +63,28 @@
 		for ($i = 0; $i < $count; $i += 1)
 		{
 			$row = mysql_fetch_array($result);
-			$list[] = $row[$field];
+			$list[] = Unsanitize($row[$field]);
+		}
+		
+		return $list;
+	}
+	
+	function GetQueryResultsArray ( $result  )
+	{
+		if (!$result)
+			return FALSE;
+			
+		$list = array(); 
+		$count = mysql_num_rows($result);
+		for ($i = 0; $i < $count; $i += 1)
+		{
+			$row = mysql_fetch_array($result);
+			$rowList = array();
+			foreach ($row as $key => $value)
+			{
+				$rowList[$key] = Unsanitize($value);
+			}
+			$list[] = $rowList;
 		}
 		
 		return $list;
@@ -83,15 +114,6 @@
 	{
 		return SetDBFieldForKey("ID", $id, $db, $field, $value);
 	}
-	
-	function Sanitize ( $value )
-	{
-		return mysql_real_escape_string(addslashes($value));	
-	}
-	
-	function Unsanitize ( $value )
-	{
-		return stripslashes($value);	
-	}
+
 	
 ?>

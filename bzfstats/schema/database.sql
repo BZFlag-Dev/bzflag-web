@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `current_servers` (
   `map` varchar(80) default NULL,
   `description` varchar(128) default NULL,
   `hash` varchar(50) default NULL,
-  `lastHeartbeat` datetime default NULL,
+  `last_heartbeat` datetime default NULL,
   PRIMARY KEY  (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

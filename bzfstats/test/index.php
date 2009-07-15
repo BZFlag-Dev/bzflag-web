@@ -30,8 +30,12 @@ function PlayerUpdate( )
 }
 
 
-echo "	<a href=\"../index.php?". GetConnectHeader("add") . GetTeamScoresHeader() . "\">No players</a><br>
-		<a href=\"../index.php?". GetConnectHeader("add") . GetTeamScoresHeader() . PlayerUpdate() .  "\">Players(update)</a>
-		";
+echo "	<html><head></head><body>
+		<h3>Push</h3>
+		<a href=\"../index.php?". GetConnectHeader("add") . GetTeamScoresHeader() . "\">No players</a><br>
+		<a href=\"../index.php?". GetConnectHeader("add") . GetTeamScoresHeader() . PlayerUpdate() .  "\">Players(update)</a><br>
+		<h3>API</h3>
+		<a href=\"../api.php?action=list\">API LIST</a><br>
+		</body></html>";
 
 ?>

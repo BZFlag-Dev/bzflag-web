@@ -145,12 +145,12 @@ function LogTransaction()
 	}
 	if (isset($_REQUEST['playercount']))
 	{
-		$count .= Sanitize($_REQUEST['playercount']);
+		$count = Sanitize($_REQUEST['playercount']);
 		
 		for($i = 0; $i < $count; $i += 1)
 		{
 			$players .= "&";
-			$players .= BuildPlayerLog(i);
+			$players .= BuildPlayerLog($i);
 		}
 	}
 	
