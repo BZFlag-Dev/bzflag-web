@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `current_servers` (
   `ID` bigint(20) NOT NULL auto_increment,
   `host` varchar(32) default NULL,
   `last_update` datetime default NULL,
-  `mode` tinyint(4) default NULL,
+  `mode` varchar(32) default NULL,
   `red_wins` int(11) default NULL,
   `red_losses` int(11) default NULL,
   `red_score` int(11) default NULL,
