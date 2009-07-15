@@ -92,8 +92,9 @@
 	
 	function GetDBFieldForKey ( $keyName, $key, $db, $field )
 	{
-		$query = "SELECT " . $field . " FROM ". $db ." WHERE " . $keyName . "='" .$key . "'";
+		$query = "SELECT " . $field . " FROM ". $db ." WHERE " . $keyName . "='" .$key . "'";		
 		$results = GetQueryResults(SQLGet($query),$field );
+		
 		if (!$results)
 			return FALSE;
 		return Unsanitize($results[0]);
@@ -101,7 +102,12 @@
 	
 	function GetDBFieldForID ( $id, $db, $field )
 	{
-		return GetDBFieldForKey("ID",$id,$db,$field);
+		$query = "SELECT " . $field . " FROM ". $db ." WHERE ID=" . $id;		
+		$results = GetQueryResults(SQLGet($query),$field );
+		
+		if (!$results)
+			return FALSE;
+		return Unsanitize($results[0]);
 	}
 	
 	function SetDBFieldForKey ( $keyName, $key, $db, $field, $value )

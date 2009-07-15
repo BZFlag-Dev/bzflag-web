@@ -89,8 +89,6 @@ function LogTransaction()
 	$query = "INSERT INTO log (host, name, hash, action, gameinfo, playerinfo) VALUES('". $host. "', '". $name . 
 							"', '".$hash . "', '" . $action . "', '" . $gameinfo. "', '". $players . "')";
 	$result = SQLSet($query);
-	echo "result" . $result . "<br>";
-	echo "query" . $query;
 }
 
 ?>

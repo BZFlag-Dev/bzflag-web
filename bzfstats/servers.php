@@ -16,4 +16,11 @@ function AddServerToCurrent ( $host )
 	return FindServerInCurrent($host);
 }
 
+function ServerExists ( $id )
+{
+	$result = GetDBFieldForID ( $id, "current_servers", "last_heartbeat" );
+	if (!$result)
+		return FALSE;
+	return TRUE;
+}
 ?>

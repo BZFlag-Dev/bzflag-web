@@ -36,6 +36,11 @@ echo "	<html><head></head><body>
 		<a href=\"../index.php?". GetConnectHeader("add") . GetTeamScoresHeader() . PlayerUpdate() .  "\">Players(update)</a><br>
 		<h3>API</h3>
 		<a href=\"../api.php?action=list\">API LIST</a><br>
+		<form action=\"../api.php\" method=\"GET\">
+		<input type=\"hidden\" name=\"action\" value=\"info\">
+		<input type=\"text\" name=\"id\" value=\"1\">
+		<input type=\"submit\" value=\"Server Info\">
+		</form?
 		</body></html>";
 
 ?>
