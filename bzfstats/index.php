@@ -2,14 +2,11 @@
 include_once("db.php");
 include_once("log.php");
 include_once("servers.php");
+include_once("args.php");
 
 function ProcessAdd ()
 {
-	$host = Sanitize($_SERVER['HTTP_HOST']);
-	if (isset($_REQUEST['port']))
-		$host .= ":" . Sanitize($_REQUEST['port']);
-	else
-		$host .= ":5154";
+	$host = Sanitize($_SERVER['HTTP_HOST']) . ":" . GetPort();
 
 	$id = FindServerInCurrent($host);
 	
@@ -29,9 +26,13 @@ function ProcessAdd ()
 		
 	if ($hash != $currentHash) // it's update time
 	{
+		$map = "UNKNOWN";
+		
 		// ok update all the server stuff
-		//$query = "UPDATE current_servers SET 
-	
+		$query = "UPDATE current_servers SET ";
+		SQLSet($query);
+		
+		// update player data
 	}
 
 	// update the heartbeat time
