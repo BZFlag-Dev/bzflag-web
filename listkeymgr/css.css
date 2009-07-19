@@ -1,0 +1,64 @@
+/* COMMON ELEMENTS */
+/* Text formatting */
+
+
+#PageFrame{
+padding: 10px;
+height: 100%;
+background-color: #fff;
+margin-left:auto;
+margin-right:auto;
+}
+
+#Header{
+margin-left:auto;
+margin-right:auto;
+font-family:Calibri, Calibri, Arial, Helvetica, sans-serif;
+font-size:2em;
+}
+
+#Note{
+}
+
+#NoKeys{
+
+}
+
+#KeyList{
+}
+
+#KeyListTitle{
+}
+
+#KeyListHeader{
+}
+
+#KeyHostHeader{
+}
+
+#KeyKeyHeader{
+}
+
+.Key{
+}
+
+.KeyHost{
+}
+
+.KeyKey{
+}
+
+.KeyDelete{
+}
+
+#KeyAdd{
+}
+
+#KeyAddNotes{
+}
+
+#DeleteConfirm{
+}
+
+#DeleteConfirmLink{
+}
