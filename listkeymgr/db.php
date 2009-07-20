@@ -1,5 +1,13 @@
 <?php  
-	include_once("conf/config.php");
+	// define dbhost/dbuname/dbpass/dbname here
+// NOTE it's .php so folks can't read the source
+include('/etc/bzflag/serversettings.php');
+// $dbhost  = 'localhost';
+// $dbname  = 'bzflag';
+// $bbdbname = 'bzbb';
+// $dbuname = 'bzflag';
+// $dbpass  = 'bzflag';
+
 	
 	function Sanitize ( $value )
 	{
@@ -13,18 +21,18 @@
 	
 	function ConnectToDB ()
 	{
-		global $CONFIG_DATABASE_SERVER;
-		global $CONFIG_DATABASE_DATABSE;
-		global $CONFIG_DATABASE_USER;
-		global $CONFIG_DATABASE_PASS;
+		global $dbhost;
+		global $dbname;
+		global $dbuname;
+		global $dbpass;
 		
-		$db = mysql_pconnect($CONFIG_DATABASE_SERVER,$CONFIG_DATABASE_USER,$CONFIG_DATABASE_PASS);
+		$db = mysql_pconnect($dbhost,$dbuname,$dbpass);
 		if (!$db)
 		{
 			return FALSE;
 		}
 		else
-			$result = mysql_select_db($CONFIG_DATABASE_DATABSE);
+			$result = mysql_select_db($dbname);
 		
 		return $db;
 	}
