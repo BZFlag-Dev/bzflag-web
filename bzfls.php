@@ -61,6 +61,7 @@ if (!mysql_select_db($dbname)) {
 # ip address. value is not used at present. these are pulled
 # from the serverbans table.
 $banlist = array();
+
 $result = sqlQuery ('SELECT type, value, owner, reason FROM serverbans '
 	. 'WHERE active = 1');
 for ($i = 0; $i < mysql_num_rows ($result); ++$i) {
@@ -233,7 +234,7 @@ if (array_key_exists('action', $_REQUEST)) {
 }
 # For ADD REMOVE
 $nameport = vnpod($_REQUEST['nameport']);
-
+$serverKey = maybe_add_slashes($_REQUEST['key']);
 # For ADD
 $build    = vcsoe($_REQUEST['build']);
 $version  = vcsoe($_REQUEST['version']); # also on LIST
@@ -598,9 +599,43 @@ function action_add() {
   #  -- ADD --
   # Server either requests to be added to DB, or to issue a keep-alive so that it
   # does not get dropped due to a timeout...
-  global $link, $nameport, $version, $build, $gameinfo, $slashtitle, $checktokens, $groups, $debugNoIpCheck;
+  global $link, $nameport, $version, $build, $gameinfo, $slashtitle, $checktokens, $groups, $debugNoIpCheck, $serverKey;
   header('Content-type: text/plain');
   debug("Attempting to ADD $nameport $version $gameinfo " . stripslashes($slashtitle), 3);
+  
+  $owner = "";
+  $ownerID = "";
+  
+  // check the server key
+  if ($version != 'BZFS0026')
+  {
+	$result = mysql_query("SELECT host, owner FROM authkeys WHERE key_string='" . $serverKey . "'");
+	$count = mysql_num_rows($result);
+	if (!$count)
+	{
+		print("ERROR: Missing or invalid server authentication key\n");
+		return;
+	}
+	$row=mysql_fetch_row($result);
+	
+	$host = $row[0];
+	$ownerID = $row[1];
+	$ip = gethostbyname($host);
+	if ($ip != $_SERVER['REMOTE_ADDR'])
+	{
+		echo "ERROR: Host mismatch for server authentication key\n";
+		return;	
+	}
+	
+	// ok so the key is good, now to check the owner
+	$owner = file_get_contents("http://my.bzflag.org/bzidtools.php?action=name&value=" . $ownerID);
+	
+	if (!$owner)
+	{
+		print("ERROR: Owner lookup failure\n");
+		return;	
+	}
+  }
 
   # Filter out badly formatted or buggy versions
   print "MSG: ADD $nameport $version $gameinfo " . stripslashes($slashtitle) . "\n";
@@ -633,12 +668,13 @@ function action_add() {
   # connection to it
   $fp = @fsockopen ($servname, $servport, $errno, $errstring, 5);
   if (!$fp) {
+    //debug('Unable to connect back to '.$servname.':'.$servport, 1);
     print("ERROR: Unable to reach your server. Check your router/firewall. ($errstring)\n");
     return;
   }
   # FIXME - should callback and update all stats instead of bzupdate.pl
   fclose ($fp);
-
+  
   $curtime = time();
 
   $result = mysql_query("SELECT * FROM servers "
@@ -673,10 +709,14 @@ function action_add() {
 	. "version = '$version', "
 	. "gameinfo = '$gameinfo', "
 	. "title = '$slashtitle', "
-	. "lastmod = $curtime "
+	. "lastmod = $curtime, "
+	. "owner = '$ownerID' "
 	. "WHERE nameport = '$nameport'", $link)
       or die ("Invalid query: ". mysql_error());
   }
+  
+  if ($owner)
+	print "OWNER: $owner\n";
 
   action_checktokens();
   debug("ADD $nameport", 3);
