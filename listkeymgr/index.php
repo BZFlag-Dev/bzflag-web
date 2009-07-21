@@ -209,7 +209,7 @@ function Login()
 		return;
 	}
 	$_SESSION['BZID'] = $checkResults['bzid'];
-	PageRedirect($_SERVER['SCRIPT_NAME'],25);
+	PageRedirect($_SERVER['SCRIPT_NAME'],0);
 }
 
 function Logout()
