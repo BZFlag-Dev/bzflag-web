@@ -216,6 +216,7 @@ CREATE TABLE `servers` (
   `purplemax` int(11) NOT NULL default '0',
   `observersize` int(11) NOT NULL default '0',
   `observermax` int(11) NOT NULL default '0',
+  `owner` int(11) NOT NULL default '0',
   PRIMARY KEY  (`server_id`),
   KEY `nameport` (`nameport`)
 ) TYPE=MyISAM;
