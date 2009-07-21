@@ -232,7 +232,7 @@ else if (!isset($_SESSION['BZID']) || $_SESSION['BZID'] == -1 )
 	$returnURL = "http://" . $_SERVER['SERVER_NAME'] .  $_SERVER['SCRIPT_NAME'] . "?action=login&token=%TOKEN%&user=%USERNAME%";
 	
 	$url .= urlencode($returnURL);
-	PageRedirect($url,25);
+	PageRedirect($url,0);
 }
 else
 {
