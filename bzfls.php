@@ -607,7 +607,7 @@ function action_add() {
   $ownerID = "";
   
   // check the server key
-  if ($version != 'BZFS0026')
+  if ($version != 'BZFS0026' && $version != 'BZFS1910')
   {
 	$result = mysql_query("SELECT host, owner FROM authkeys WHERE key_string='" . $serverKey . "'");
 	$count = mysql_num_rows($result);
