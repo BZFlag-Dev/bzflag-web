@@ -42,14 +42,13 @@ background-color: #eee;
 }
 
 #KeyHostHeader{
-min-width:250px;
 }
 
 #KeyKeyHeader{
 min-width:250px;
 }
 
-.Key{
+#KeyListTable{
 background-color: #ddd;
 border-style:solid;
 border-width:1px;
@@ -57,12 +56,12 @@ border-color:#000;
 padding: 5px;
 }
 
-.KeyHost{
-width: 250px;
+.Key{
 }
 
-.KeyKey{
-width: 250px;
+.KeyHost{
+}
+Key{
 }
 
 .KeyDelete{

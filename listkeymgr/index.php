@@ -75,11 +75,13 @@ function Listing ( $note = FALSE )
 	else
 	{
 		echo "<div id=\"KeyList\">";
-		echo "<div id=\"KeyListTitle\">Keys</div>";
-		echo "<div id=\"KeyListHeader\">
-		<span id=\"KeyHostHeader\">Host</span>
-		<span id=\"KeyKeyHeader\">Key</span>
-		</div>";
+		echo "<div id=\"KeyListTitle\">Keys</div>
+		<table border=\"0\" id=\"KeyListTable\">
+		<tr id=\"KeyListHeader\">
+		<td> <div id=\"KeyHostHeader\">Host</div></td> 
+		<td> <div id=\"KeyKeyHeader\">Key</div></td> 
+		<td> <div>&nbsp;</div></td> 
+		</tr>";
 		foreach ( $results as $result )
 		{
 			$id = $result['ID'];
@@ -87,13 +89,14 @@ function Listing ( $note = FALSE )
 			$host = GetDBFieldForID($id,"authkeys","host");
 			$key = GetDBFieldForID($id,"authkeys","key_string");
 			
-			echo "<div class=\"Key\">
-			<span class=\"KeyHost\">".$host."</span>
-			<span class=\"KeyKey\">".$key."</span>
-			<span class=\"KeyDelete\"><a href=\"".$_SERVER['SCRIPT_NAME']."?action=removekey&id=".$id."\">Delete</a></span>
-			</div>";
+			echo "<tr class=\"KeyItem\">
+			<td> <div class=\"KeyHost\">".$host."</div></td>
+			<td> <div class=\"KeyKey\">".$key."</div></td>
+			<td> <div class=\"KeyDelete\"><a href=\"".$_SERVER['SCRIPT_NAME']."?action=removekey&id=".$id."\">Delete</a></div></td>
+			</tr>";
 		}
-		echo "</div>";
+		echo "</table>
+		</div>";
 	}
 	
 	echo "<div id=\"KeyAdd\">
