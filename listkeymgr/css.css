@@ -3,7 +3,7 @@
 
 
 #PageFrame{
-padding: 10px;
+padding: 5px;
 height: 100%;
 background-color: #fff;
 margin-left:auto;
@@ -21,10 +21,11 @@ font-size:2em;
 }
 
 #NoKeys{
-
+padding: 5px;
 }
 
 #KeyList{
+padding: 5px;
 }
 
 #KeyListTitle{
@@ -33,6 +34,7 @@ margin-right:auto;
 font-family:Calibri, Calibri, Arial, Helvetica, sans-serif;
 font-size:2em;
 background-color: #eee;
+padding: 5px;
 }
 
 #KeyListHeader{
@@ -56,12 +58,13 @@ border-color:#000;
 padding: 5px;
 }
 
-.Key{
+.KeyItem{
 }
 
 .KeyHost{
 }
-Key{
+
+.Key{
 }
 
 .KeyDelete{
@@ -73,12 +76,14 @@ margin-right:auto;
 font-family:Calibri, Calibri, Arial, Helvetica, sans-serif;
 font-size:1.25em;
 background-color: #eee;
+padding: 5px;
 }
 
 #KeyAddNotes{
 font-family:Calibri, Calibri, Arial, Helvetica, sans-serif;
 font-size:0.75em;
 background-color: #ddd;
+padding: 5px;
 }
 
 #DeleteConfirm{
