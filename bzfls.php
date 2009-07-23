@@ -278,7 +278,7 @@ function testform($message) {
 	<option value="UNKNOWN">UNKNOWN - test invalid request</option>
     </select><br>
     list_format:<select name="listformat">
-	<option value="raw" selected>raw</option>
+	<option value="plain" selected>plain</option>
 	<option value="lua">lua</option>
 	<option value="json">json</option>
     </select><br>
@@ -348,7 +348,7 @@ function json_quote($str)
 }
 
 
-function print_raw_list(&$listing)
+function print_plain_list(&$listing)
 {
   if (isset($listing['token'])) {
     if ($listing['token']) {
@@ -537,9 +537,9 @@ function action_list() {
   }
 
   switch ($listformat) {
-    case "lua":  { print_lua_list($listing);  break; }
-    case "json": { print_json_list($listing); break; }
-    default:     { print_raw_list($listing);  break; }
+    case "lua":  { print_lua_list($listing);   break; }
+    case "json": { print_json_list($listing);  break; }
+    default:     { print_plain_list($listing); break; }
   }
 
   if ($local != 1) {
