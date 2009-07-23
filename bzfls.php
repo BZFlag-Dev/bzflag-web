@@ -447,7 +447,7 @@ function action_list() {
     $row = mysql_fetch_row($result);
     $playerid = $row[0];
     if (!$playerid || !phpbb_check_hash($password, $row[1])) {
-      $listing['token'] = Array('token' => '');
+      $listing['token'] = ""; // empty token is a bad token
       debug ("NOTOK", 2);
     } else {
       srand(microtime() * 100000000);
@@ -459,7 +459,7 @@ function action_list() {
 	  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
 	  . "WHERE user_id='$playerid'", $link)
 	or die ("Invalid query: ". mysql_error());
-      $listing['token'] = Array('token' => $token);
+      $listing['token'] = $token;
 /* // Temporarily disabled the PM check
       # check for private messages and send a notice if there is one
       $result = mysql_query("SELECT user_new_privmsg FROM bzbb3_users "
