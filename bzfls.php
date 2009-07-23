@@ -536,8 +536,6 @@ function action_list() {
     $listing['servers'][] = $row;
   }
 
-//  $listing['token'] = ''; //FIXME
-
   switch ($listformat) {
     case "lua":  { print_lua_list($listing);  break; }
     case "json": { print_json_list($listing); break; }
