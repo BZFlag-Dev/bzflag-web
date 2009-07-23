@@ -250,7 +250,9 @@ $email    = veod($_REQUEST['email']);     # urlencoded
 $password = vcsoe($_REQUEST['password']);  # urlencoded
 
 # for LIST
-$local    = vcsoe($_REQUEST['local']);
+$local      = vcsoe($_REQUEST['local']);
+$listformat = vcsoe($_REQUEST['listformat']);
+
 
 function testform($message) {
   global $action;
@@ -329,10 +331,23 @@ function advertlistCleanup (){
 }
 
 
+function lua_quote($str)
+{
+  return '"' . addslashes($str) . '"';
+}
+
+
+function json_quote($str)
+{
+  return '"' . addslashes($str) . '"';
+}
+
+
 function action_list() {
   #  -- LIST --
   # Same as LIST in the old bzfls
-  global $bbdbname, $dbname, $link, $callsign, $password, $version, $local, $alternateServers;
+  global $bbdbname, $dbname, $link, $callsign, $password, $version;
+  global $local, $listformat, $alternateServers;
   header('Content-type: text/plain');
   debug ("  :::::  ", 2);
 
@@ -415,18 +430,82 @@ function action_list() {
 
   if ($version)
     $qryv = "AND version='$version'";
+
+  $fields = "nameport,version,gameinfo,ipaddr,title";
+  if (($printMode == "lua") || ($printMode == "json")) {
+    $fields .= ",owner";
+  }
+
   $result = sqlQuery("
-    SELECT nameport,version,gameinfo,ipaddr,title FROM servers, server_advert_groups as sav
+    SELECT $fields FROM servers, server_advert_groups as sav
     WHERE servers.server_id=sav.server_id
     AND  sav.group_id IN ($advertList) $qryv
     ORDER BY `nameport` ASC");
 
-  while (true) {
-    $row = mysql_fetch_row($result);
-    if (!$row)
-      break;
-    $line = implode(' ', $row);
-    print "$line\n";
+  if ($listformat == "lua") {
+    print "return {\n";
+    print "fields = { 'version', 'hexcode', 'addr', 'ipaddr', 'title', 'owner' },\n";
+    print "servers = {\n";
+    while (true) {
+      $row = mysql_fetch_row($result);
+      if (!$row) {
+        break;
+      }
+      $owner = "";
+      $ownerID = $row[5];
+      if ($ownerID) {
+        $owner = file_get_contents("http://my.bzflag.org/bzidtools.php?action=name&value=" . $ownerID);
+      }
+      print "{"
+      . lua_quote($row[1]) . ","     // version
+      . lua_quote($row[2]) . ","     // hexcode
+      . lua_quote($row[0]) . ","     // addr
+      . lua_quote($row[3]) . ","     // ipaddr
+      . lua_quote($row[4]) . ","     // title
+      . lua_quote($owner)  . "},\n"; // owner
+    }
+    print "} -- end servers\n";
+    print "}\n";
+  }
+  else if ($listformat == "json") {
+    print "{\n";
+    print "fields: ['version','hexcode','addr','ipaddr','title','owner'],\n";
+    print "servers: [";
+    $first = true;
+    while (true) {
+      $row = mysql_fetch_row($result);
+      if (!$row) {
+        break;
+      }
+      if ($first) {
+        $first = false;
+      } else {
+        print ",";
+      }
+      $owner = "";
+      $ownerID = $row[5];
+      if ($ownerID) {
+        $owner = file_get_contents("http://my.bzflag.org/bzidtools.php?action=name&value=" . $ownerID);
+      }
+      print "\n["
+      . json_quote($row[1]) . ","  // version
+      . json_quote($row[2]) . ","  // hexcode
+      . json_quote($row[0]) . ","  // addr
+      . json_quote($row[3]) . ","  // ipaddr
+      . json_quote($row[4]) . ","  // title
+      . json_quote($owner)  . "]"; // owner
+    }
+    print "\n]\n";
+    print "}\n";
+  }
+  else {
+    while (true) {
+      $row = mysql_fetch_row($result);
+      if (!$row)
+        break;
+      $line = implode(' ', $row);
+      print "$line\n";
+    }
   }
 
   if ($local != 1) {
@@ -878,34 +957,25 @@ header("Connection: close");
 
 # Do stuff based on what the 'action' is...
 switch ($action) {
-case 'LIST':
-  action_list();
-  break;
-case 'GETTOKEN':
-  action_gettoken();
-  break;
-case 'ADD':
-  action_add();
-  break;
-case 'REMOVE':
-  action_remove();
-  break;
-case 'REGISTER':
-  action_register();
-  break;
-case 'CONFIRM';
-  action_confirm();
-  break;
-case 'CHECKTOKENS':
-  header('Content-type: text/plain');
-  action_checktokens();
-  break;
-case 'DEBUG':
-  testform('');
-  break;
-default:
-  # TODO dump the default form here but still close the database connection
-  testform('Unknown command: \'' . $action . '\'');
+  case 'LIST':     { action_list();       break; }
+  case 'GETTOKEN': { action_gettoken();   break; }
+  case 'ADD':      { action_add();        break; }
+  case 'REMOVE':   { action_remove();     break; }
+  case 'REGISTER': { action_register();   break; }
+  case 'CONFIRM':  { action_confirm();    break; }
+  case 'CHECKTOKENS': {
+    header('Content-type: text/plain');
+    action_checktokens();
+    break;
+  }
+  case 'DEBUG': {
+    testform('');
+    break;
+  }
+  default: {
+    # TODO dump the default form here but still close the database connection
+    testform('Unknown command: \'' . $action . '\'');
+  }
 }
 
 # make sure the connection to mysql is severed
