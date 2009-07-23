@@ -348,6 +348,71 @@ function json_quote($str)
 }
 
 
+function print_raw_list(&$listing)
+{
+  if (isset($listing['token'])) {
+    if ($listing['token']) {
+      print("TOKEN: " . $listing['token'] . "\n");
+    } else {
+      print("NOTOK: invalid callsign or password\n");
+    }
+  }
+  foreach ($listing['servers'] as $server) {
+    print(implode(" ", $server) . "\n");
+  }
+}
+
+
+function print_lua_list(&$listing)
+{
+  print "return {\n";
+  if (isset($listing['token'])) {
+    print "token = " . lua_quote($listing['token']) . ",\n";
+  }
+  print "fields = { 'version', 'hexcode', 'addr', 'ipaddr', 'title', 'owner' },\n";
+  print "servers = {\n";
+  foreach ($listing['servers'] as $server) {
+    print "{"
+    . lua_quote($server[1]) . ","     // version
+    . lua_quote($server[2]) . ","     // hexcode
+    . lua_quote($server[0]) . ","     // addr
+    . lua_quote($server[3]) . ","     // ipaddr
+    . lua_quote($server[4]) . ","     // title
+    . lua_quote($server[5])  . "},\n"; // owner
+  }
+  print "}\n"; // end the "servers" table
+  print "}\n";
+}
+
+
+function print_json_list(&$listing)
+{
+  print "{\n";
+  if (isset($listing['token'])) {
+    print "token: " . json_quote($listing['token']) . ",\n";
+  }
+  print "fields: ['version','hexcode','addr','ipaddr','title','owner'],\n";
+  print "servers: [";
+  $first = true;
+  foreach ($listing['servers'] as $server) {
+    if ($first) {
+      $first = false;
+    } else {
+      print ",";
+    }
+    print "\n["
+    . json_quote($server[1]) . ","  // version
+    . json_quote($server[2]) . ","  // hexcode
+    . json_quote($server[0]) . ","  // addr
+    . json_quote($server[3]) . ","  // ipaddr
+    . json_quote($server[4]) . ","  // title
+    . json_quote($server[5]) . "]"; // owner
+  }
+  print "\n]\n";
+  print "}\n";
+}
+
+
 function action_list() {
   #  -- LIST --
   # Same as LIST in the old bzfls
@@ -355,6 +420,8 @@ function action_list() {
   global $local, $listformat, $alternateServers;
   header('Content-type: text/plain');
   debug ("  :::::  ", 2);
+
+  $listing = Array();
 
   # remove all inactive servers from the table
   debug('Deleting inactive servers from list', 3);
@@ -380,7 +447,7 @@ function action_list() {
     $row = mysql_fetch_row($result);
     $playerid = $row[0];
     if (!$playerid || !phpbb_check_hash($password, $row[1])) {
-      print("NOTOK: invalid callsign or password\n");
+      $listing['token'] = Array('token' => '');
       debug ("NOTOK", 2);
     } else {
       srand(microtime() * 100000000);
@@ -392,7 +459,7 @@ function action_list() {
 	  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
 	  . "WHERE user_id='$playerid'", $link)
 	or die ("Invalid query: ". mysql_error());
-      print("TOKEN: $token\n");
+      $listing['token'] = Array('token' => $token);
 /* // Temporarily disabled the PM check
       # check for private messages and send a notice if there is one
       $result = mysql_query("SELECT user_new_privmsg FROM bzbb3_users "
@@ -437,8 +504,12 @@ function action_list() {
     $qryv = "AND version='$version'";
 
   $fields = "nameport,version,gameinfo,ipaddr,title";
-  if (($listformat == "lua") || ($listformat == "json")) {
+  $listing['fields'] = Array("addr", "version", "hexcode", "ipaddr", "title");
+
+  $needOwner = ($listformat == "lua") || ($listformat == "json");
+  if ($needOwner) {
     $fields .= ",owner";
+    $listing['fields'][] = "owner"; // append the owner field
   }
 
   $result = sqlQuery("
@@ -447,80 +518,42 @@ function action_list() {
     AND  sav.group_id IN ($advertList) $qryv
     ORDER BY `nameport` ASC");
 
-  if ($listformat == "lua") {
-    print "return {\n";
-    print "fields = { 'version', 'hexcode', 'addr', 'ipaddr', 'title', 'owner' },\n";
-    print "servers = {\n";
-    while (true) {
-      $row = mysql_fetch_row($result);
-      if (!$row) {
-        break;
-      }
+  $listing['servers'] = Array();
+
+  while (true) {
+    $row = mysql_fetch_row($result);
+    if (!$row) {
+      break;
+    }
+    if ($needOwner) {    
       $owner = "";
       $ownerID = $row[5];
       if ($ownerID) {
         $owner = file_get_contents("http://my.bzflag.org/bzidtools.php?action=name&value=" . $ownerID);
       }
-      print "{"
-      . lua_quote($row[1]) . ","     // version
-      . lua_quote($row[2]) . ","     // hexcode
-      . lua_quote($row[0]) . ","     // addr
-      . lua_quote($row[3]) . ","     // ipaddr
-      . lua_quote($row[4]) . ","     // title
-      . lua_quote($owner)  . "},\n"; // owner
+      $row[5] = $owner;
     }
-    print "}\n"; // end the "servers" table
-    print "}\n";
+    $listing['servers'][] = $row;
   }
-  else if ($listformat == "json") {
-    print "{\n";
-    print "fields: ['version','hexcode','addr','ipaddr','title','owner'],\n";
-    print "servers: [";
-    $first = true;
-    while (true) {
-      $row = mysql_fetch_row($result);
-      if (!$row) {
-        break;
-      }
-      if ($first) {
-        $first = false;
-      } else {
-        print ",";
-      }
-      $owner = "";
-      $ownerID = $row[5];
-      if ($ownerID) {
-        $owner = file_get_contents("http://my.bzflag.org/bzidtools.php?action=name&value=" . $ownerID);
-      }
-      print "\n["
-      . json_quote($row[1]) . ","  // version
-      . json_quote($row[2]) . ","  // hexcode
-      . json_quote($row[0]) . ","  // addr
-      . json_quote($row[3]) . ","  // ipaddr
-      . json_quote($row[4]) . ","  // title
-      . json_quote($owner)  . "]"; // owner
-    }
-    print "\n]\n";
-    print "}\n";
-  }
-  else {
-    while (true) {
-      $row = mysql_fetch_row($result);
-      if (!$row)
-        break;
-      $line = implode(' ', $row);
-      print "$line\n";
-    }
+
+//  $listing['token'] = ''; //FIXME
+
+  switch ($listformat) {
+    case "lua":  { print_lua_list($listing);  break; }
+    case "json": { print_json_list($listing); break; }
+    default:     { print_raw_list($listing);  break; }
   }
 
   if ($local != 1) {
     // check the old list server and append
     foreach($alternateServers as $thisSever ){
-      if ($thisSever != '')
+      if ($thisSever != '') {
 	readfile($thisSever.'?action=LIST&local=1');
+      }
     }
   }
 }
+
 
 function action_gettoken (){
   global $bbdbname, $dbname, $link, $callsign, $password, $version, $local, $alternateServers;
