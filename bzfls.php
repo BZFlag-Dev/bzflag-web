@@ -277,6 +277,11 @@ function testform($message) {
 	<option value="GETTOKEN">GETTOKEN - get player token</option>
 	<option value="UNKNOWN">UNKNOWN - test invalid request</option>
     </select><br>
+    list_format:<select name="listformat">
+	<option value="raw" selected>raw</option>
+	<option value="lua">lua</option>
+	<option value="json">json</option>
+    </select><br>
     actions: LIST<br>
     version:<input type="text" name="version" size="80"><br>
     local:<input type="text" name="local" size="5" value="1"><br>
@@ -432,7 +437,7 @@ function action_list() {
     $qryv = "AND version='$version'";
 
   $fields = "nameport,version,gameinfo,ipaddr,title";
-  if (($printMode == "lua") || ($printMode == "json")) {
+  if (($listformat == "lua") || ($listformat == "json")) {
     $fields .= ",owner";
   }
 
