@@ -469,7 +469,7 @@ function action_list() {
       . lua_quote($row[4]) . ","     // title
       . lua_quote($owner)  . "},\n"; // owner
     }
-    print "} -- end servers\n";
+    print "}\n"; // end the "servers" table
     print "}\n";
   }
   else if ($listformat == "json") {
