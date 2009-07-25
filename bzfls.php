@@ -13,8 +13,8 @@
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-define (MYSQL_PERSISTENT, false);
-define (MD5_PASSWORD, true);
+define ('MYSQL_PERSISTENT', false);
+define ('MD5_PASSWORD', true);
 
 define('IN_PHPBB', true);
 $phpbb_root_path = 'bb/';
@@ -50,10 +50,15 @@ if (MYSQL_PERSISTENT === true){
 }else{
   $link = mysql_connect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
 }
+
 if (!mysql_select_db($dbname)) {
   debug("Database $dbname did not exist", 1);
   die('Could not open db: ' . mysql_error());
 }
+
+#Connect to the ldap directory
+$ldap_conn = ldap_connect($ldap_host)
+  or die("could not connect to ldap host $ldap_host");
 
 @mysql_query("SET NAMES 'utf8'", $link);
 
@@ -554,36 +559,21 @@ function action_list() {
 
 
 function action_gettoken (){
-  global $bbdbname, $dbname, $link, $callsign, $password, $version, $local, $alternateServers;
+  global $callsign, $password, $ldap_conn, $ldap_suffix;
   header('Content-type: text/plain');
   debug('Fetching TOKEN', 2);
 
   if ($callsign && $password) {
-    if (!mysql_select_db($bbdbname)) {
-      debug("Database $bbdbname did not exist", 1);
-      die('Could not open db: ' . mysql_error());
-    }
     $clean_callsign = utf8_clean_string($callsign);
-
-    $result = mysql_query("SELECT user_id, user_password FROM bzbb3_users "
-	. "WHERE username_clean='$clean_callsign' "
-	. "AND user_inactive_reason=0", $link)
-      or die ("Invalid query: " . mysql_error());
-    $row = mysql_fetch_row($result);
-    $playerid = $row[0];
-    if (!$playerid || !phpbb_check_hash($password, $row[1])) {
-      print("NOTOK: invalid callsign or password ($callsign:$password)\n");
-    } else {
-      srand(microtime() * 100000000);
+	
+	$bind = ldap_bind($ldap_conn, 'cn=' . $clean_callsign . ',' . $ldap_suffix, $password);
+	if(!$bind) {
+	  print("NOTOK: invalid callsign or password ($callsign:$password)\n");
+	} else {
+	  srand(microtime() * 100000000);
       $token = rand(0,2147483647);
-      $result = mysql_query("UPDATE bzbb3_users SET "
-	  . "user_token='$token', "
-	  . "user_tokendate='" . time() . "', "
-	  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
-	  . "WHERE user_id='$playerid'", $link)
-	or die ("Invalid query: ". mysql_error());
-      print("TOKEN: $token\n");
-    }
+	  print("TOKEN: $token\n");
+	}
   }
 }
 
@@ -714,7 +704,7 @@ function action_add() {
   #  -- ADD --
   # Server either requests to be added to DB, or to issue a keep-alive so that it
   # does not get dropped due to a timeout...
-  global $link, $nameport, $version, $build, $gameinfo, $slashtitle, $checktokens, $groups, $debugNoIpCheck, $serverKey;
+  global $link, $nameport, $version, $build, $gameinfo, $slashtitle, $checktokens, $groups, $debugNoIpCheck;
   header('Content-type: text/plain');
   debug("Attempting to ADD $nameport $version $gameinfo " . stripslashes($slashtitle), 3);
   
