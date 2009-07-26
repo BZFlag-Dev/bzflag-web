@@ -572,6 +572,20 @@ function action_gettoken (){
 	} else {
 	  srand(microtime() * 100000000);
       $token = rand(0,2147483647);
+	  
+	  if (!mysql_select_db($bbdbname)) {
+        debug("Database $bbdbname did not exist", 1);
+        die('Could not open db: ' . mysql_error());
+	  }
+	  
+      $result = mysql_query("UPDATE bzbb3_users SET "
+	  . "user_token='$token', "
+	  . "user_tokendate='" . time() . "', "
+	  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
+	  . "WHERE username_clean='$clean_callsign' "
+	  . "AND user_inactive_reason=0", $link)
+	    or die ("Invalid query: ". mysql_error());
+		
 	  print("TOKEN: $token\n");
 	}
   }
@@ -579,7 +593,7 @@ function action_gettoken (){
 
 function checktoken($callsign, $ip, $token, $garray) {
   # validate player token for connecting player on a game server
-  global $bbdbname, $dbname, $link;
+  global $bbdbname, $dbname, $link, $ldap_conn, $ldap_suffix;
   # TODO add grouplist support
   print("MSG: checktoken callsign=$callsign, ip=$ip, token=$token ");
   foreach($garray as $group) {
@@ -592,19 +606,23 @@ function checktoken($callsign, $ip, $token, $garray) {
     debug("Database $bbdbname did not exist", 1);
     die('Could not open db: ' . mysql_error());
   }
-
+  
   $clean_callsign = utf8_clean_string($callsign);
 
   # Check if player exists. if not, just return UNK
-  $result = mysql_query("SELECT user_id FROM bzbb3_users "
-			. "WHERE username_clean='$clean_callsign' ", $link)
-    or die ('Invalid query: ' . mysql_error());
-  $rows = mysql_num_rows($result);
-  if (!mysql_num_rows($result)) {
+  
+  $userdn = 'cn=' . $clean_callsign . ',' . $ldap_suffix;
+  $attrs = array("uid");
+  $result = ldap_search($ldap_conn, $userdn, "(userPassword=*)", $attrs);
+  
+  if (!$result || !ldap_count_entries($ldap_conn, $result)) {
     print ("UNK: $callsign\n");
     debug ("UNK:$callsign ", 2);
     return;
   }
+  
+  $info = ldap_get_entries($ldap_conn, $result);
+  $playerid = $info[0]["uid"][0];
 
   # include server-reported IP so other server admins can't steal tokens
   # include token if specified
@@ -620,29 +638,30 @@ function checktoken($callsign, $ip, $token, $garray) {
       . $testtoken, $link)
     or die ('Invalid query: ' . mysql_error());
   $row = mysql_fetch_row($result);
-  $playerid = $row[0];
-  if ($playerid) {
+  $bzbb_id = $row[0];
+  if ($playerid && $bzbb_id) {
     # clear tokendate so nasty game server admins can't login someplace else
     $result = mysql_query("UPDATE bzbb3_users SET "
 			  . "user_lastvisit='" . time() . "', "
     #. "user_tokendate='" . time() . "'"
 			  . "user_tokendate='0'"
-			  . "WHERE user_id='$playerid'", $link)
+			  . "WHERE user_id='$bzbb_id'", $link)
       or die ('Invalid query: ' . mysql_error());
-    print ("TOKGOOD: $callsign");
+	  
     if (count($garray)) {
-      $query = "SELECT bzbb3_groups.group_name FROM bzbb3_groups, bzbb3_user_group "
-	. "WHERE bzbb3_user_group.user_id='$playerid' "
-	. "AND bzbb3_user_group.group_id=bzbb3_groups.group_id "
-	. "AND bzbb3_user_group.user_pending=0 "
-	. "and (bzbb3_groups.group_name='"
-	. implode("' or bzbb3_groups.group_name='", $garray) . "' )";
-      $result = mysql_query("$query")
-	or die ('Invalid query: ' . mysql_error());
-      while ($row = mysql_fetch_row($result)) {
-	print(':' . $row[0]);
-      }
+	  $filter = "(&(objectClass=groupOfUniqueNames)(uniqueMember=" . $userdn . ")(|";
+	  foreach($garray as $group)
+	    $filter = $filter . "(cn=" . $group . ")";
+	  $filter = $filter . "))";
+	  $result = ldap_search($ldap_conn, $ldap_suffix, $filter);
+	  if($result) {
+	    $info = ldap_get_entries($ldap_conn, $result);
+	    for ($i=0; $i<$info["count"]; $i++)
+	      print(':' . $info[$i]["cn"][0]);
+	  }
     }
+	
+    print ("TOKGOOD: $callsign");
     print ("\n");
 
     # Send the BZID
@@ -659,9 +678,12 @@ function checktoken($callsign, $ip, $token, $garray) {
 function action_checktokens() {
   #  -- CHECKTOKENS --
   # validate callsigns and tokens (clears tokens)
-  global $link, $checktokens, $groups;
+  global $link, $checktokens, $groups, $ldap_rootdn, $ldap_rootpass, $ldap_conn;
   debug ("  :::::  ", 2);
   if ($checktokens != '') {
+    $bind = ldap_bind($ldap_conn, $ldap_rootdn, $ldap_rootpass)
+	or die("cannot bind to rootdn");
+	
     function remove_empty ($value) { return empty($value) ? false : true; }
     $garray = array_filter(explode("\r\n", $groups), 'remove_empty');
     foreach(array_filter(explode("\r\n", $checktokens), 'remove_empty') as $checktoken) {
