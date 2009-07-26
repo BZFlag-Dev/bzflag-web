@@ -56,9 +56,8 @@ if (!mysql_select_db($dbname)) {
   die('Could not open db: ' . mysql_error());
 }
 
-#Connect to the ldap directory
-$ldap_conn = ldap_connect($ldap_host)
-  or die("could not connect to ldap host $ldap_host");
+include('userstore.php');
+$userstore = new UserStore();
 
 @mysql_query("SET NAMES 'utf8'", $link);
 
@@ -559,15 +558,14 @@ function action_list() {
 
 
 function action_gettoken (){
-  global $callsign, $password, $ldap_conn, $ldap_suffix;
+  global $callsign, $password, $bbdbname, $link, $userstore;
   header('Content-type: text/plain');
   debug('Fetching TOKEN', 2);
 
   if ($callsign && $password) {
     $clean_callsign = utf8_clean_string($callsign);
-	
-	$bind = ldap_bind($ldap_conn, 'cn=' . $clean_callsign . ',' . $ldap_suffix, $password);
-	if(!$bind) {
+
+	if(!$userstore->auth($clean_callsign, $password)) {
 	  print("NOTOK: invalid callsign or password ($callsign:$password)\n");
 	} else {
 	  srand(microtime() * 100000000);
@@ -593,7 +591,7 @@ function action_gettoken (){
 
 function checktoken($callsign, $ip, $token, $garray) {
   # validate player token for connecting player on a game server
-  global $bbdbname, $dbname, $link, $ldap_conn, $ldap_suffix;
+  global $bbdbname, $dbname, $link, $userstore;
   # TODO add grouplist support
   print("MSG: checktoken callsign=$callsign, ip=$ip, token=$token ");
   foreach($garray as $group) {
@@ -611,18 +609,12 @@ function checktoken($callsign, $ip, $token, $garray) {
 
   # Check if player exists. if not, just return UNK
   
-  $userdn = 'cn=' . $clean_callsign . ',' . $ldap_suffix;
-  $attrs = array("uid");
-  $result = ldap_search($ldap_conn, $userdn, "(userPassword=*)", $attrs);
-  
-  if (!$result || !ldap_count_entries($ldap_conn, $result)) {
+  $playerid = $userstore->getID($clean_callsign);
+  if(!$playerid) {
     print ("UNK: $callsign\n");
     debug ("UNK:$callsign ", 2);
     return;
   }
-  
-  $info = ldap_get_entries($ldap_conn, $result);
-  $playerid = $info[0]["uid"][0];
 
   # include server-reported IP so other server admins can't steal tokens
   # include token if specified
@@ -639,7 +631,7 @@ function checktoken($callsign, $ip, $token, $garray) {
     or die ('Invalid query: ' . mysql_error());
   $row = mysql_fetch_row($result);
   $bzbb_id = $row[0];
-  if ($playerid && $bzbb_id) {
+  if ($bzbb_id) {
     # clear tokendate so nasty game server admins can't login someplace else
     $result = mysql_query("UPDATE bzbb3_users SET "
 			  . "user_lastvisit='" . time() . "', "
@@ -648,18 +640,8 @@ function checktoken($callsign, $ip, $token, $garray) {
 			  . "WHERE user_id='$bzbb_id'", $link)
       or die ('Invalid query: ' . mysql_error());
 	  
-    if (count($garray)) {
-	  $filter = "(&(objectClass=groupOfUniqueNames)(uniqueMember=" . $userdn . ")(|";
-	  foreach($garray as $group)
-	    $filter = $filter . "(cn=" . $group . ")";
-	  $filter = $filter . "))";
-	  $result = ldap_search($ldap_conn, $ldap_suffix, $filter);
-	  if($result) {
-	    $info = ldap_get_entries($ldap_conn, $result);
-	    for ($i=0; $i<$info["count"]; $i++)
-	      print(':' . $info[$i]["cn"][0]);
-	  }
-    }
+	foreach($userstore->intersectGroups($clean_callsign, $garray) as $group)
+	  print(':' . $group);
 	
     print ("TOKGOOD: $callsign");
     print ("\n");
@@ -678,12 +660,9 @@ function checktoken($callsign, $ip, $token, $garray) {
 function action_checktokens() {
   #  -- CHECKTOKENS --
   # validate callsigns and tokens (clears tokens)
-  global $link, $checktokens, $groups, $ldap_rootdn, $ldap_rootpass, $ldap_conn;
+  global $link, $checktokens, $groups;
   debug ("  :::::  ", 2);
   if ($checktokens != '') {
-    $bind = ldap_bind($ldap_conn, $ldap_rootdn, $ldap_rootpass)
-	or die("cannot bind to rootdn");
-	
     function remove_empty ($value) { return empty($value) ? false : true; }
     $garray = array_filter(explode("\r\n", $groups), 'remove_empty');
     foreach(array_filter(explode("\r\n", $checktokens), 'remove_empty') as $checktoken) {
