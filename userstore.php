@@ -17,6 +17,7 @@
   $ldap_rootdn
   $ldap_rootpass
   $ldap_suffix
+  $daemon_http_ports
 */
 
 define("REG_SUCCESS", 0);
@@ -72,27 +73,11 @@ class UserStore {
 		return $this->getIDfromDN($this->getuserdn($callsign));
 	}
 	
-	public function intersectGroups($callsign, $garray) {
-		global $ldap_suffix;
-		$g = array();
+	public function intersectGroupsNoExplode($callsign, $garray) {
 		if (!count($garray))
-			return $g;
-		
-		$conn = $this->getroot();
-		
-		$filter = "(&(objectClass=groupOfUniqueNames)(uniqueMember=" . $this->getuserdn($callsign) . ")(|";
-		foreach($garray as $group)
-			$filter = $filter . "(cn=" . $group . ")";
-		$filter = $filter . "))";
-		
-		$result = ldap_search($conn, $ldap_suffix, $filter);
-		if($result) {
-			$info = ldap_get_entries($conn, $result);
-			for ($i=0; $i<$info["count"]; $i++)
-				$g[] = $info[$i]["cn"][0];
-		}
-		
-		return $g;
+			return array();
+
+		return $this->sendRequest(array_merge(array("intersectGroups", $callsign), $garray));
 	}
 	
 	private function escape($str) {
@@ -101,12 +86,28 @@ class UserStore {
 		return $str;
 	}
 	
-	public function registerUser($callsign, $password, $email) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "localhost:88?register&" . $this->escape($callsign) . "&" . $this->escape($password) . "&" . $this->escape($email));
+	private function sendRequest($reqs) {
+		global $daemon_http_ports;
+		$port = $daemon_http_ports[array_rand($daemon_http_ports)];
+		$url = "localhost:$port?";
+		$first = true;
+		foreach($reqs as $req) {
+			if(!$first) $url = $url . "&";
+			$first = false;
+			$url = $url . $this->escape($req);
+		}
+		$ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
         curl_close($ch);
+		if(!$output || strlen($output) < 8) return "";
+		return substr($output, 8);
+	}
+	
+	public function registerUser($callsign, $password, $email) {
+		$output = $this->sendRequest(array("register", $callsign, $password, $email));
+		if($output == "") return REG_FAIL_GENERIC;
 		return (int)$output;
 	}
 };

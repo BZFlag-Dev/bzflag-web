@@ -639,11 +639,9 @@ function checktoken($callsign, $ip, $token, $garray) {
 			  . "user_tokendate='0'"
 			  . "WHERE user_id='$bzbb_id'", $link)
       or die ('Invalid query: ' . mysql_error());
-	  
-	foreach($userstore->intersectGroups($clean_callsign, $garray) as $group)
-	  print(':' . $group);
-	
-    print ("TOKGOOD: $callsign");
+
+	print ("TOKGOOD: $callsign");
+	print ($userstore->intersectGroupsNoExplode($clean_callsign, $garray));
     print ("\n");
 
     # Send the BZID
