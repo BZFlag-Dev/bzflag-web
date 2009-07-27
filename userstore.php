@@ -12,8 +12,22 @@
 // IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
+/* expected globals:
+  $ldap_host
+  $ldap_rootdn
+  $ldap_rootpass
+  $ldap_suffix
+*/
+
+define("REG_SUCCESS", 0);
+define("REG_INVALID_MESSAGE", 1);
+define("REG_USER_EXISTS", 2);
+define("REG_MAIL_EXISTS", 3);
+define("REG_FAIL_GENERIC", 4);
+
 class UserStore {
 	private $rootld;
+	private $nextuid;
 	
 	private function bind($dn, $password) {
 		global $ldap_host;
@@ -41,11 +55,11 @@ class UserStore {
 		return $this->rootld;
 	}
 	
-	public function getID($callsign) {
+	private function getIDfromDN($dn) {
 		$conn = $this->getroot();
 		
 		$attrs = array("uid");
-		$result = ldap_search($conn, $this->getuserdn($callsign), "(userPassword=*)", $attrs);
+		$result = ldap_search($conn, $dn, "(userPassword=*)", $attrs);
 
 		if (!$result || !ldap_count_entries($conn, $result))
 			return false;
@@ -54,14 +68,18 @@ class UserStore {
 		return $info[0]["uid"][0];
 	}
 	
-	public function intersectGroups($callsign, $garray) {\
+	public function getID($callsign) {
+		return $this->getIDfromDN($this->getuserdn($callsign));
+	}
+	
+	public function intersectGroups($callsign, $garray) {
 		global $ldap_suffix;
 		$g = array();
 		if (!count($garray))
 			return $g;
 		
 		$conn = $this->getroot();
-			
+		
 		$filter = "(&(objectClass=groupOfUniqueNames)(uniqueMember=" . $this->getuserdn($callsign) . ")(|";
 		foreach($garray as $group)
 			$filter = $filter . "(cn=" . $group . ")";
@@ -75,6 +93,21 @@ class UserStore {
 		}
 		
 		return $g;
+	}
+	
+	private function escape($str) {
+		str_replace("*", "*1", $str);
+		str_replace("&", "*2", $str);
+		return $str;
+	}
+	
+	public function registerUser($callsign, $password, $email) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "localhost:88?register&" . $this->escape($callsign) . "&" . $this->escape($password) . "&" . $this->escape($email));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        curl_close($ch);
+		return (int)$output;
 	}
 };
 
