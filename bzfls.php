@@ -422,6 +422,7 @@ function action_list() {
   # Same as LIST in the old bzfls
   global $bbdbname, $dbname, $link, $callsign, $password, $version;
   global $local, $listformat, $alternateServers;
+  global $userstore;
   header('Content-type: text/plain');
   debug ("  :::::  ", 2);
 
@@ -438,32 +439,14 @@ function action_list() {
     advertlistCleanup();
 
   if ($callsign && $password) {
-    if (!mysql_select_db($bbdbname)) {
-      debug("Database $bbdbname did not exist", 1);
-      die('Could not open db: ' . mysql_error());
-    }
     $clean_callsign = utf8_clean_string($callsign);
 
-    $result = mysql_query("SELECT user_id, user_password FROM bzbb3_users "
-	. "WHERE username_clean='$clean_callsign' "
-	. "AND user_inactive_reason=0", $link)
-      or die ("Invalid query: " . mysql_error());
-    $row = mysql_fetch_row($result);
-    $playerid = $row[0];
-    if (!$playerid || !phpbb_check_hash($password, $row[1])) {
+    if (!$userstore->getToken($clean_callsign, $password, $_SERVER['REMOTE_ADDR'], $token)) {
       $listing['token'] = ""; // empty token is a bad token
       debug ("NOTOK", 2);
     } else {
-      srand(microtime() * 100000000);
-      $token = rand(0,2147483647);
-      debug ("OK   token=$token", 2);
-      $result = mysql_query("UPDATE bzbb3_users SET "
-	  . "user_token='$token', "
-	  . "user_tokendate='" . time() . "', "
-	  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
-	  . "WHERE user_id='$playerid'", $link)
-	or die ("Invalid query: ". mysql_error());
       $listing['token'] = $token;
+      debug ("OK   token=$token", 2);
 /* // Temporarily disabled the PM check
       # check for private messages and send a notice if there is one
       $result = mysql_query("SELECT user_new_privmsg FROM bzbb3_users "
@@ -477,30 +460,13 @@ function action_list() {
       }
 */
     }
-    if (!mysql_select_db($dbname)) {
-      debug("Database $dbname did not exist", 1);
-      die('Could not open db: ' . mysql_error());
-    }
   }
 
   $advertList = "0";    // marker for phantom group 'EVERYONE'
   if ($playerid){
-    sqlQuery ("USE $bbdbname");
     // get list of groups player belongs to ...
     debug ("FETCHING GROUPS", 3);
-
-//    $result = sqlQuery ("
-//      SELECT g.group_id FROM bzbb3_user_group ug, bzbb3_groups g
-//      WHERE g.group_id=ug.group_id AND (ug.user_id = $playerid AND g.group_name<>'') OR g.group_name='VERIFIED'");
-
-// menotume hack 2006/14/18 - speed fix ??
-    $result = sqlQuery ("
-      SELECT g.group_id FROM bzbb3_user_group ug, bzbb3_groups g
-      WHERE g.group_id=ug.group_id AND ug.user_pending=0 AND ((ug.user_id = $playerid AND g.group_name<>'') OR (g.group_name='VERIFIED'))");
-
-    while ($row = mysql_fetch_row($result))
-      $advertList .= ",$row[0]";
-    sqlQuery ("USE $dbname");
+	$advertList .= str_replace(":", ",", $userstore->intersectGroupsNoExplode($callsign, array(), true));
   }
   //print "NOTICE: $advertList\n";
 
@@ -556,7 +522,6 @@ function action_list() {
   }
 }
 
-
 function action_gettoken (){
   global $callsign, $password, $bbdbname, $link, $userstore;
   header('Content-type: text/plain');
@@ -565,27 +530,10 @@ function action_gettoken (){
   if ($callsign && $password) {
     $clean_callsign = utf8_clean_string($callsign);
 
-	if(!$userstore->auth($clean_callsign, $password)) {
+	if(!$userstore->getToken($clean_callsign, $password, $_SERVER['REMOTE_ADDR'], $token))
 	  print("NOTOK: invalid callsign or password ($callsign:$password)\n");
-	} else {
-	  srand(microtime() * 100000000);
-      $token = rand(0,2147483647);
-	  
-	  if (!mysql_select_db($bbdbname)) {
-        debug("Database $bbdbname did not exist", 1);
-        die('Could not open db: ' . mysql_error());
-	  }
-	  
-      $result = mysql_query("UPDATE bzbb3_users SET "
-	  . "user_token='$token', "
-	  . "user_tokendate='" . time() . "', "
-	  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
-	  . "WHERE username_clean='$clean_callsign' "
-	  . "AND user_inactive_reason=0", $link)
-	    or die ("Invalid query: ". mysql_error());
-		
+	else
 	  print("TOKEN: $token\n");
-	}
   }
 }
 
@@ -598,50 +546,23 @@ function checktoken($callsign, $ip, $token, $garray) {
     print(" group=$group");
   }
   print("\n");
-  $timeout = 3600; # 60 minutes while testing
-  $staletime = time() - $timeout;
-  if (!mysql_select_db($bbdbname)) {
-    debug("Database $bbdbname did not exist", 1);
-    die('Could not open db: ' . mysql_error());
-  }
-  
+
   $clean_callsign = utf8_clean_string($callsign);
 
-  # Check if player exists. if not, just return UNK
-  
-  $playerid = $userstore->getID($clean_callsign);
-  if(!$playerid) {
+  $ret = $userstore->checkToken($clean_callsign, $ip, $token);
+  if($ret == "0") {
+	//  player doesn't exist
     print ("UNK: $callsign\n");
     debug ("UNK:$callsign ", 2);
     return;
-  }
-
-  # include server-reported IP so other server admins can't steal tokens
-  # include token if specified
-  $testtoken = "AND user_token='$token' AND user_tokendate > $staletime ";
-  if ($ip) {
-    $testtoken .= "AND user_tokenip='$ip'";
-  }
-
-//debug ( "SELECT user_id FROM bzbb3_users ". "WHERE username='$callsign' " . $testtoken, 2);
-
-  $result = mysql_query("SELECT user_id FROM bzbb3_users "
-      . "WHERE username_clean='$clean_callsign' "
-      . $testtoken, $link)
-    or die ('Invalid query: ' . mysql_error());
-  $row = mysql_fetch_row($result);
-  $bzbb_id = $row[0];
-  if ($bzbb_id) {
-    # clear tokendate so nasty game server admins can't login someplace else
-    $result = mysql_query("UPDATE bzbb3_users SET "
-			  . "user_lastvisit='" . time() . "', "
-    #. "user_tokendate='" . time() . "'"
-			  . "user_tokendate='0'"
-			  . "WHERE user_id='$bzbb_id'", $link)
-      or die ('Invalid query: ' . mysql_error());
-
+  } else if($ret == "1") {
+	// exists but bad token given
+	print ("TOKBAD: $callsign\n");
+    debug ("TOKBAD:$callsign ", 2);
+  } else if($ret == "2") {
+    // exists and valid token
 	print ("TOKGOOD: $callsign");
-	print ($userstore->intersectGroupsNoExplode($clean_callsign, $garray));
+	print ($userstore->intersectGroupsNoExplode($clean_callsign, $garray, false));
     print ("\n");
 
     # Send the BZID
@@ -649,10 +570,8 @@ function checktoken($callsign, $ip, $token, $garray) {
     # - bzfs is setup to accept spaces if the strings is "quoted"
     print ("BZID: $playerid $callsign\n");
     debug ("TOKGOOD: $callsign ", 2);
-  } else {
-    print ("TOKBAD: $callsign\n");
-    debug ("TOKBAD:$callsign ", 2);
-  }
+  } else
+	die("failed to check token");
 }
 
 function action_checktokens() {
@@ -677,7 +596,7 @@ function action_checktokens() {
 }
 
 function add_advertList ($serverID){
-  global $bbdbname;
+  global $bbdbname, $userstore;
 
   $adverts = $_REQUEST['advertgroups'];
 
@@ -691,10 +610,19 @@ function add_advertList ($serverID){
     if (in_array('EVERYONE', $advertList) || count($advertList)==0 ){
       sqlQuery ("INSERT INTO server_advert_groups (server_id, group_id) VALUES ($serverID, 0)");
     } else {
-      sqlQuery ("
-        INSERT INTO server_advert_groups (server_id, group_id)
-        SELECT $serverID, group_id FROM $bbdbname.bzbb3_groups
-        WHERE group_name IN ('". implode ("','", $advertList) ."')");
+	  // get the group ids for all existing groups in the array
+	  $glist = $userstore->intersectGroupsNoExplode("", $advertList, false, true);
+	  function remove_empty3 ($value) { return empty($value) ? false : true; }
+	  $garray = array_filter(explode(":", $glist, 'remove_empty3'));
+	  if(!empty($garray)) {
+		$query = "INSERT INTO server_advert_groups (server_id, group_id) VALUES ";
+		$first = true;
+        foreach($garray  as $group) {
+          if(!$first) $query .= ",";
+          $first = false;
+          $query .= "($serverID, $group)";
+        }
+      }
     }
   }
 }
@@ -869,7 +797,7 @@ function action_register() {
   # Registers a player onto the players database.
   global $link, $callsign, $email, $password, $userstore;
   
-  $err = $userstore->registerUser($callsign, $password, $email);
+  $err = $userstore->registerUser($callsign, $password, $email, $randtext);
   if($err != REG_SUCCESS) {
     print('Registration FAILED: ');
     switch($err) {
@@ -882,27 +810,12 @@ function action_register() {
 	}
 	exit;
   } else {
-    # no existing entry found - proceed to complete the registration
-    /*$alphanum = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    $randtext = '';
-    srand(microtime() * 100000000);
-    for ( $i = 0; $i < 8; $i++ )
-      $randtext .= $alphanum{rand(0,35)};
-    # FIXME remove `` etc from email
-    $to = urldecode($email);
-    mail($to, "BZFlag player registration",
-         "You have just registered a BZFlag player account with\n" .
-         "    callsign: $callsign\n" .
-         "    password: $password\n" .
-         "To activate this account, please go to the following URL:\n\n" .
-         "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'] . "?action=CONFIRM&email=$email&password=$randtext\n")
-      or die ("Could not send mail");
-    $curtime = time();
     $result = mysql_query("INSERT INTO players "
         . "(email, callsign, password, created, randtext, lastmod) VALUES "
         . "('$email', '$callsign', '$password', '$curtime', "
         . "'$randtext', '$curtime')", $link)
-    or die ("Invalid query: ". mysql_error());*/
+      or die ("Invalid query: ". mysql_error());
+	  
     print("Registration SUCCESSFUL: ");
     print("You will receive an email informing you on how to complete your account registration\n");
     #print("While we are debugging, the link is posted here as well.:\n" .
