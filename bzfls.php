@@ -537,19 +537,19 @@ function checktoken($callsign, $ip, $token, $garray) {
   print("\n");
 
   $ret = $userstore->checkToken($callsign, $ip, $token);
-  if($ret == "0") {
+  if($ret == "1") {
 	//  player doesn't exist
     print ("UNK: $callsign\n");
     debug ("UNK:$callsign ", 2);
     return;
-  } else if($ret == "1") {
+  } else if($ret == "2") {
 	// exists but bad token given
 	print ("TOKBAD: $callsign\n");
     debug ("TOKBAD:$callsign ", 2);
-  } else if($ret == "2") {
+  } else if($ret == "3") {
     // exists and valid token
 	print ("TOKGOOD: $callsign");
-	print ($userstore->intersectGroupsNoExplode($callsign, $garray, false));
+	print ($userstore->intersectGroupsNoExplode($callsign, $garray, false, false));
     print ("\n");
 
     # Send the BZID
