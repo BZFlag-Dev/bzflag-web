@@ -20,11 +20,6 @@ define('IN_PHPBB', true);
 $phpbb_root_path = 'bb/';
 $phpEx = 'php';
 
-include($phpbb_root_path.'includes/functions.'.$phpEx);
-include($phpbb_root_path.'includes/utf/utf_tools2.'.$phpEx);
-include($phpbb_root_path.'includes/utf/utf_normalizer.'.$phpEx);
-
-
 # where to send debug printing (might override below)
 $debugLevel= 2;      // set to >2 to see all sql queries (>1 to see GET/POST input args)
 $debugFilename	= '/var/log/bzfls/bzfls.log';
@@ -36,7 +31,6 @@ $debugNoIpCheck = 0;  // for testing ONLY !!!
 include('/etc/bzflag/serversettings.php');
 // $dbhost  = 'localhost';
 // $dbname  = 'bzflag';
-// $bbdbname = 'bzbb';
 // $dbuname = 'bzflag';
 // $dbpass  = 'bzflag';
 
@@ -58,8 +52,6 @@ if (!mysql_select_db($dbname)) {
 
 include('userstore.php');
 $userstore = new UserStore();
-
-@mysql_query("SET NAMES 'utf8'", $link);
 
 # for banning.  provide key => value pairs where the key is an
 # ip address. value is not used at present. these are pulled
@@ -313,10 +305,9 @@ Group1</textarea>
 </body>');
   if ($action == 'DEBUG') {
     # clear secure bits
-    global $dbhost, $dbname, $bbdbname, $dbuname, $dbpass;
+    global $dbhost, $dbname, $dbuname, $dbpass;
     $dbhost  = 'HIDDEN';
     $dbname  = 'HIDDEN';
-    $bbdbname = 'HIDDEN';
     $dbuname = 'HIDDEN';
     $dbpass  = 'HIDDEN';
 //    print("<PRE>\n");
@@ -420,7 +411,7 @@ function print_json_list(&$listing)
 function action_list() {
   #  -- LIST --
   # Same as LIST in the old bzfls
-  global $bbdbname, $dbname, $link, $callsign, $password, $version;
+  global $dbname, $link, $callsign, $password, $version;
   global $local, $listformat, $alternateServers;
   global $userstore;
   header('Content-type: text/plain');
@@ -439,9 +430,8 @@ function action_list() {
     advertlistCleanup();
 
   if ($callsign && $password) {
-    $clean_callsign = utf8_clean_string($callsign);
 
-    if (!$userstore->getToken($clean_callsign, $password, $_SERVER['REMOTE_ADDR'], $token)) {
+    if (!$userstore->getToken($callsign, $password, $_SERVER['REMOTE_ADDR'], $token)) {
       $listing['token'] = ""; // empty token is a bad token
       debug ("NOTOK", 2);
     } else {
@@ -523,14 +513,13 @@ function action_list() {
 }
 
 function action_gettoken (){
-  global $callsign, $password, $bbdbname, $link, $userstore;
+  global $callsign, $password, $link, $userstore;
   header('Content-type: text/plain');
   debug('Fetching TOKEN', 2);
 
   if ($callsign && $password) {
-    $clean_callsign = utf8_clean_string($callsign);
 
-	if(!$userstore->getToken($clean_callsign, $password, $_SERVER['REMOTE_ADDR'], $token))
+	if(!$userstore->getToken($callsign, $password, $_SERVER['REMOTE_ADDR'], $token))
 	  print("NOTOK: invalid callsign or password ($callsign:$password)\n");
 	else
 	  print("TOKEN: $token\n");
@@ -539,7 +528,7 @@ function action_gettoken (){
 
 function checktoken($callsign, $ip, $token, $garray) {
   # validate player token for connecting player on a game server
-  global $bbdbname, $dbname, $link, $userstore;
+  global $dbname, $link, $userstore;
   # TODO add grouplist support
   print("MSG: checktoken callsign=$callsign, ip=$ip, token=$token ");
   foreach($garray as $group) {
@@ -547,9 +536,7 @@ function checktoken($callsign, $ip, $token, $garray) {
   }
   print("\n");
 
-  $clean_callsign = utf8_clean_string($callsign);
-
-  $ret = $userstore->checkToken($clean_callsign, $ip, $token);
+  $ret = $userstore->checkToken($callsign, $ip, $token);
   if($ret == "0") {
 	//  player doesn't exist
     print ("UNK: $callsign\n");
@@ -562,7 +549,7 @@ function checktoken($callsign, $ip, $token, $garray) {
   } else if($ret == "2") {
     // exists and valid token
 	print ("TOKGOOD: $callsign");
-	print ($userstore->intersectGroupsNoExplode($clean_callsign, $garray, false));
+	print ($userstore->intersectGroupsNoExplode($callsign, $garray, false));
     print ("\n");
 
     # Send the BZID
@@ -596,7 +583,7 @@ function action_checktokens() {
 }
 
 function add_advertList ($serverID){
-  global $bbdbname, $userstore;
+  global $userstore;
 
   $adverts = $_REQUEST['advertgroups'];
 
