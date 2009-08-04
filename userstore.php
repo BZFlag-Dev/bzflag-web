@@ -131,6 +131,10 @@ class UserStore {
 		if($ret != "1" && $ret != "2" && $ret != "3") return false;
 		return $ret;
 	}
+	
+	public function updateName($old_name, $new_name) {
+		return trim($this->sendRequest(array("updatename", $old_name, $new_name)));
+	}
 };
 
 ?>
