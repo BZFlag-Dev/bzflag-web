@@ -29,6 +29,14 @@ define("REG_USER_INVALID", 5);
 define("REG_PASS_INVALID", 6);
 define("REG_MAIL_INVALID", 7);
 
+define("CHINF_SUCCESS", 0x0);
+define("CHINF_INVALID_CALLSIGN", 0x1);
+define("CHINF_INVALID_EMAIL", 0x2);
+define("CHINF_INVALID_PASSWORD", 0x4);
+define("CHINF_TAKEN_CALLSIGN", 0x8);
+define("CHINF_TAKEN_EMAIL", 0x10);
+define("CHINF_OTHER_ERROR", 0x1000);
+
 class UserStore {
 	private $rootld;
 	private $nextuid;
@@ -132,9 +140,12 @@ class UserStore {
 		return $ret;
 	}
 	
-	public function updateName($old_name, $new_name) {
-		return trim($this->sendRequest(array("updatename", $old_name, $new_name)));
+	public function changeUserInfo($for_user, $to_user, $to_pass, $to_mail) {
+		$output = trim($this->sendRequest( array("chinf", $for_user, $to_user, $to_pass, $to_mail) ));
+		if($output == "" || !ctype_digit($output)) { debug("ret code wrong: " . $output); return CHINF_OTHER_ERROR; }
+		return (int)$output;
 	}
+	
 };
 
 ?>
