@@ -1,0 +1,139 @@
+diff --git a/config.php b/config.php
+index 42e6dbb..6629d74 100644
+--- a/config.php
++++ b/config.php
+@@ -14,4 +14,12 @@ $load_extensions = '';
+ @define('PHPBB_INSTALLED', true);
+ // @define('DEBUG', true);
+ // @define('DEBUG_EXTRA', true);
++
++$ldap_host = "localhost";
++$ldap_rootdn = "cn=Manager,dc=my-domain,dc=com";
++$ldap_rootpass = "secret";
++$ldap_suffix = "dc=my-domain,dc=com";
++
++$daemon_http_ports = array("88");
++
+ ?>
+\ No newline at end of file
+diff --git a/includes/ucp/ucp_profile.php b/includes/ucp/ucp_profile.php
+index d1336b2..7a68900 100644
+--- a/includes/ucp/ucp_profile.php
++++ b/includes/ucp/ucp_profile.php
+@@ -103,6 +103,44 @@ class ucp_profile
+ 					{
+ 						$error[] = 'FORM_INVALID';
+ 					}
++					
++					if(!sizeof($error))
++					{
++						// the normal validity checks are called from validate_data above
++						// but for concurrency reasons the data can only be validated while performing the operation on ldap
++						// (cannot separate test and set)
++						// so put this after all other validation is done so that if it succeeds, the changes in phpbb can be done as well
++						
++						$chinf_name = "";
++						$chinf_pass = "";
++						$chinf_mail = "";
++						
++						if($data['username'] != $user->data['username'] && $auth->acl_get('u_chgname') && $config['allow_namechange'])
++							$chinf_name = $data['username'];
++						
++						if($auth->acl_get('u_chgemail') && $data['email'] != $user->data['user_email'])
++							$chinf_mail = $data['email'];
++
++						if($auth->acl_get('u_chgpasswd') && $data['new_password'] && !phpbb_check_hash($data['new_password'], $user->data['user_password']))
++							$chinf_pass = $data['new_password'];
++							
++						if($chinf_name != "" || $chinf_pass != "" || $chinf_mail != "")
++						{
++							require_once("D:\wamp\www\db\userstore.php");
++							$userstore = new UserStore;
++							
++							$chinf_ret = $userstore->changeUserInfo($user->data['username'], $chinf_name, $chinf_pass, $chinf_mail);
++							
++							if($chinf_ret != CHINF_SUCCESS) {
++								if(($chinf_ret & CHINF_INVALID_CALLSIGN) != 0) $error[] = 'INVALID_CHARS_USERNAME';
++								if(($chinf_ret & CHINF_INVALID_EMAIL) != 0) $error[] = 'EMAIL_INVALID_EMAIL';
++								if(($chinf_ret & CHINF_INVALID_PASSWORD) != 0) $error[] = 'INVALID_CHARS_NEW_PASSWORD';
++								if(($chinf_ret & CHINF_TAKEN_CALLSIGN) != 0) $error[] = 'USERNAME_TAKEN_USERNAME';
++								if(($chinf_ret & CHINF_TAKEN_EMAIL) != 0) $error[] = 'EMAIL_TAKEN_EMAIL';
++								if(($chinf_ret & CHINF_OTHER_ERROR) != 0) $error[] = 'GENERAL_ERROR';
++							}
++						}
++					}
+ 
+ 					if (!sizeof($error))
+ 					{
+diff --git a/includes/ucp/ucp_register.php b/includes/ucp/ucp_register.php
+index 8a636e7..f6c6199 100644
+--- a/includes/ucp/ucp_register.php
++++ b/includes/ucp/ucp_register.php
+@@ -266,8 +266,66 @@ class ucp_register
+ 					$error[] = $user->lang['NEW_EMAIL_ERROR'];
+ 				}
+ 			}
++			
++			if(!sizeof($error))
++			{
++				// NOTES:
++				//  - sending the mail only through the daemon is more centralized and we need a hack to pretend
++				//    the email was sent 
++				//  - if registration is also done then we can't treat the user as active and if treated as
++				//    active then the activation must go through the phpbb activation page and then that needs to be
++				//    changed to talk to the daemon
++				// - if user is registered and the mail is sent here: 
++				//      - it must be changed to match the one sent by the daemon at least in contents, it should not send the 
++				//        password to the user
++				//      - the daemon must not send it as well
++				//      - when the mail is sent at registering via the client there is no phpbb user id to be put in the activation link 
++				//        but the daemon can put a different link, so that the user activates through the list server instead,
++				//        then the phpbb account will be created on first login
++			    //     - editing the contents of the email just means editing a text file where some values are replaced so that 
++				//       should not be a maintainability concern
++				//     - the activation page still needs to be modified, but only to notify the daemon that the activation was successful
++				//       and phpbb is free to generate and check the keys however it sees fit and so is the daemon
++				// - if we  just disable activation, create an active user and reroute activation
++				//   to the list server then the activation page wouldn't need to be changed
++				//   but the member list would get filled with inactive users and the newest user would be changed
++				// - whether the user is active or not, it cannot log in until until the daemon allows it to
++				// - fixing the message at login attempts before activation is harder and not important so that's left as is
++				//  - if registration is not done here:
++				//     - we should pretend it happened, send the appropriate message
++				//     - the activation can be fully rerouted to the list server
++				//     - the user can be created at first login after activation
++				//     - in order to save the timezone, language preferance and maybe other things the user enters at this form,
++				//       they need to be sent to the daemon as well and the ldap auth module needs to be changed to read them from ldap
++				//       on first login .. while this involves more changes than other solutions, these changes can be considered additional
++				//       features that everyone could benefit from, not custom changes, so they may be incorporated into phpbb later
++				//     - even if the auth module is not modified the timezone/language bug is not such a big deal
++				//     - there's no need to store it in both ldap and phpbb if the user does not activate
++				//
++				// - the latter variant is used currently
++				//
++				
++				require_once("D:\wamp\www\db\userstore.php");
++				$bz_userstore = new UserStore;
++				
++				$bz_ret_code = $bz_userstore->registerUser($data['username'], $data['new_password'], $data['email']);
++				switch($bz_ret_code) {
++					case REG_SUCCESS: 
++						// pretend the phbb registration is done
++						$message = $user->lang['ACCOUNT_INACTIVE'];
++						$message = $message . '<br /><br />' . sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$phpbb_root_path}index.$phpEx") . '">', '</a>');
++						trigger_error($message);
++						break;
++					case REG_USER_EXISTS: $error[] = $user->lang['USERNAME_TAKEN_USERNAME']; break;
++					case REG_MAIL_EXISTS: $error[] = $user->lang['EMAIL_TAKEN_EMAIL']; break;
++					case REG_USER_INVALID: $error[] = $user->lang['INVALID_CHARS_USERNAME']; break;
++					case REG_PASS_INVALID: $error[] = $user->lang['INVALID_CHARS_NEW_PASSWORD']; break;
++					case REG_MAIL_INVALID: $error[] = $user->lang['EMAIL_INVALID_EMAIL']; break;
++					default: $error[] = $user->lang['GENERAL_ERROR']; break;
++				}
++			}
+ 
+-			if (!sizeof($error))
++			if (!sizeof($error) && false /*hack to skip registration */)
+ 			{
+ 				$server_url = generate_board_url();
+ 

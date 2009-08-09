@@ -518,7 +518,6 @@ function action_gettoken (){
   debug('Fetching TOKEN', 2);
 
   if ($callsign && $password) {
-
 	if(!$userstore->getToken($callsign, $password, $_SERVER['REMOTE_ADDR'], $token))
 	  print("NOTOK: invalid callsign or password ($callsign:$password)\n");
 	else
@@ -813,26 +812,15 @@ function action_register() {
 function action_confirm() {
   #  -- CONFIRM --
   # Confirm a registration
-  global $link, $email, $password;
+  global $email, $callsign, $password, $userstore;
   header('Content-type: text/html');
   print("<html><head><title>Confirm registration</title></head><body>\n");
-  $result = mysql_query("SELECT randtext FROM players WHERE email='$email'", $link)
-    or die ('Invalid query: ' . mysql_error());
-  $row = mysql_fetch_row($result);
-  $randtext = $row[0];
-  if ( $randtext == NULL ) {
-    print("The account $email has already been confirmed.<br>\n");
-  } else {
-    if ( $password != $randtext ) {
-      print("Failed to confirm registration for $email since generated key did not match<br>\n");
-    } else {
-      $result = mysql_query("UPDATE players SET "
-	  . "randtext = NULL, "
-	  . "lastmod = '" . time() . "' "
-	  . "WHERE email='$email'", $link)
-	or die ('Invalid query: ' . mysql_error());
-      print("The account for $email has been successfully activated.<br>\n");
-    }
+  $ret = $userstore->activateUser($callsign, $email, $password);
+  switch($ret) {
+	case "0": print("The account for $email has been successfully activated.<br>\n"); break;
+	case "1": print("The account for $email has already been confirmed.<br>\n"); break;
+	case "2": print("Failed to confirm registration for $email since generated key did not match<br>\n"); break;
+	default: print("The account for $email does not exist.<br>\n"); break;
   }
   print('See <a href="http://BZFlag.org">http://BZFlag.org</a></body></html>');
 }

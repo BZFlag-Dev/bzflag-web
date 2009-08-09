@@ -1,0 +1,82 @@
+diff --git a/LocalSettings.php b/LocalSettings.php
+index 728038b..b269f00 100644
+--- a/LocalSettings.php
++++ b/LocalSettings.php
+@@ -122,3 +122,42 @@ $wgDiff3 = "";
+ # When you make changes to this configuration file, this will make
+ # sure that cached pages are cleared.
+ $wgCacheEpoch = max( $wgCacheEpoch, gmdate( 'YmdHis', @filemtime( __FILE__ ) ) );
++
++# ldap
++require_once 'extensions/LdapAuthentication.php';
++ 
++$wgAuth = new LdapAuthenticationPlugin();
++ 
++$wgLDAPDomainNames = array(
++  'bzldap'
++);
++ 
++$wgLDAPServerNames = array(
++  'bzldap' => 'localhost'
++);
++ 
++$wgLDAPSearchStrings = array(
++  'bzldap' => 'cn=USER-NAME,dc=my-domain,dc=com'
++);
++ 
++$wgLDAPEncryptionType = array(
++  'bzldap' => 'clear'
++);
++ 
++$wgMinimalPasswordLength = 1;
++
++$wgLDAPPreferences = array(
++  'bzldap'=>array( "email"=>"mail","realname"=>"sn","nickname"=>"cn"),
++);
++
++$wgLDAPUniqueRenameUser = array(
++  'bzldap' => true
++);
++
++$wgLDAPUniqueAttribute = array(
++  'bzldap' => 'uid'
++);
++
++$wgLDAPDebug = 5;
++
++require_once("$IP/extensions/Renameuser/SpecialRenameuser.php");
+\ No newline at end of file
+diff --git a/extensions/LdapAuthentication.php b/extensions/LdapAuthentication.php
+index 7cbe174..551d27e 100644
+--- a/extensions/LdapAuthentication.php
++++ b/extensions/LdapAuthentication.php
+@@ -523,7 +523,11 @@ class LdapAuthenticationPlugin extends AuthPlugin {
+ 						// Make a new rename user object with: from, to, uid of from	
+ 						$rename = new RenameuserSQL( $retrievedusername, $username, $uid );
+ 						$rename->rename();
+-
++						
++						// set the external id to point to the new username
++						// otherwise the auth will try to rename the user again at the next login
++						$this->setExternalID($this->externalid, $username);
++						
+ 						// For the time being we can't just allow the user to log in
+ 						// as MediaWiki will try to create the user account after we
+ 						// do a rename. If we don't return false, the user will get
+@@ -548,6 +552,16 @@ class LdapAuthenticationPlugin extends AuthPlugin {
+ 		//We made it this far; the user authenticated and didn't fail any checks, so he/she gets in.
+ 		return true;
+ 	}
++	
++	public function setExternalID($id, $name) {
++		$dbw = wfGetDB( DB_MASTER );
++		$dbw->replace('user_externalid', array('uid'), array( 'uid' => $id, 'name' => $name ), __METHOD__);
++	}
++	
++	public function whoIsExternalID($id) {
++		$dbr = wfGetDB( DB_SLAVE );
++		return $dbr->selectField('user_externalid', 'name', "uid=$id");
++	}
+ 
+ 	function cleanupFailedAuth() {
+ 		$this->authFailed = true;

@@ -114,36 +114,42 @@ class UserStore {
         $output = curl_exec($ch);
         curl_close($ch);
 		if(!$output || strlen($output) < 8) { debug("no output" . ($output ? strlen($output) : "")); return ""; }
-		return substr($output, 8);
+		return trim(substr($output, 8));
 	}
 	
-	public function registerUser($callsign, $password, $email, &$randtext) {
-		$rand_text_length = 8;
-		$output = trim($this->sendRequest(array("register", $callsign, $password, $email)));
-		$arr = explode(":", $output);
-		if(count($arr) != 2) { debug("arr count wrong: " . count($arr)); return REG_FAIL_GENERIC; }
-		if($arr[0] == "" || !ctype_digit($arr[0])) { debug("ret code wrong: " . $arr[0]); return REG_FAIL_GENERIC; }
-		$ret = (int)$output;
-		if($ret == REG_SUCCESS && strlen($arr[1]) < $rand_text_length) { debug("randtext wrong: " . $arr[1]); return REG_FAIL_GENERIC; }
-		$randtext = $arr[1];
-		return $ret;
+	public function registerUser($callsign, $password, $email) {
+		$output = $this->sendRequest(array("register", $callsign, $password, $email));
+		if($output == "" || !ctype_digit($output)) { debug("ret code wrong: " . $output); return REG_FAIL_GENERIC; }
+		return (int)$output;
 	}
 	
 	public function getToken($callsign, $password, $ip, &$token) {
-		$token = trim($this->sendRequest(array("gettoken", $callsign, $password, $ip)));
+		$token = $this->sendRequest(array("gettoken", $callsign, $password, $ip));
 		return $token != "";
 	}
 	
 	public function checkToken($callsign, $ip, $token) {
-		$ret = trim($this->sendRequest(array("checktoken", $callsign, $ip, $token)));
+		$ret = $this->sendRequest(array("checktoken", $callsign, $ip, $token));
 		if($ret != "1" && $ret != "2" && $ret != "3") return false;
 		return $ret;
 	}
 	
 	public function changeUserInfo($for_user, $to_user, $to_pass, $to_mail) {
-		$output = trim($this->sendRequest( array("chinf", $for_user, $to_user, $to_pass, $to_mail) ));
+		$output = $this->sendRequest( array("chinf", $for_user, $to_user, $to_pass, $to_mail) );
 		if($output == "" || !ctype_digit($output)) { debug("ret code wrong: " . $output); return CHINF_OTHER_ERROR; }
 		return (int)$output;
+	}
+	
+	public function resetPassword($callsign, $email) {
+		return $this->sendRequest(array("resetpass", $callsign, $email));
+	}
+	
+	public function resendActivationMail($callsign, $email) {
+		return $this->sendRequest(array("resendactmail", $callsign, $email));
+	}
+	
+	public function activateUser($callsign, $email, $randtext) {
+		return $this->sendRequest(array("activate", $callsign, $email, $randtext));
 	}
 	
 };
