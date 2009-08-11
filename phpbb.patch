@@ -137,3 +137,77 @@ index 8a636e7..f6c6199 100644
  			{
  				$server_url = generate_board_url();
  
+diff --git a/includes/ucp/ucp_remind.php b/includes/ucp/ucp_remind.php
+index b16d941..6ee7b0b 100644
+--- a/includes/ucp/ucp_remind.php
++++ b/includes/ucp/ucp_remind.php
+@@ -36,6 +36,19 @@ class ucp_remind
+ 
+ 		if ($submit)
+ 		{
++			// don't change the password or send the mail, let the daemon do it, but pretend those were done
++			require_once("D:\wamp\www\db\userstore.php");
++			$bz_userstore = new UserStore;
++				
++			$bz_ret_code = $bz_userstore->resetPassword($username, $email);
++			switch($bz_ret_code) {
++				case "1": trigger_error('NO_USER');
++				case "2": trigger_error('NO_EMAIL_USER');
++				case "3": trigger_error('ACCOUNT_NOT_ACTIVATED');
++				case "4": trigger_error('GENERAL_ERROR');
++			}
++			
++			/*
+ 			$sql = 'SELECT user_id, username, user_permissions, user_email, user_jabber, user_notify_type, user_type, user_lang, user_inactive_reason
+ 				FROM ' . USERS_TABLE . "
+ 				WHERE user_email = '" . $db->sql_escape($email) . "'
+@@ -104,6 +117,7 @@ class ucp_remind
+ 			);
+ 
+ 			$messenger->send($user_row['user_notify_type']);
++			*/
+ 
+ 			meta_refresh(3, append_sid("{$phpbb_root_path}index.$phpEx"));
+ 
+diff --git a/includes/ucp/ucp_resend.php b/includes/ucp/ucp_resend.php
+index 67d130b..e3db114 100644
+--- a/includes/ucp/ucp_resend.php
++++ b/includes/ucp/ucp_resend.php
+@@ -42,7 +42,20 @@ class ucp_resend
+ 			{
+ 				trigger_error('FORM_INVALID');
+ 			}
++			
++			// don't change the password or send the mail, let the daemon do it, but pretend those were done
++			require_once("D:\wamp\www\db\userstore.php");
++			$bz_userstore = new UserStore;
++				
++			$bz_ret_code = $bz_userstore->resendActivationMail($username, $email);
++			switch($bz_ret_code) {
++				case "1": trigger_error('NO_USER');
++				case "2": trigger_error('NO_EMAIL_USER');
++				case "3": trigger_error('ACCOUNT_ALREADY_ACTIVATED');
++				case "4": trigger_error('GENERAL_ERROR');
++			}
+ 
++			/*
+ 			$sql = 'SELECT user_id, group_id, username, user_email, user_type, user_lang, user_actkey, user_inactive_reason
+ 				FROM ' . USERS_TABLE . "
+ 				WHERE user_email = '" . $db->sql_escape($email) . "'
+@@ -83,7 +96,7 @@ class ucp_resend
+ 			{
+ 				trigger_error('NO_GROUP');
+ 			}
+-
++			
+ 			$coppa = ($row['group_name'] == 'REGISTERED_COPPA' && $row['group_type'] == GROUP_SPECIAL) ? true : false;
+ 
+ 			include_once($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
+@@ -143,6 +156,7 @@ class ucp_resend
+ 				}
+ 				$db->sql_freeresult($result);
+ 			}
++			*/
+ 
+ 			meta_refresh(3, append_sid("{$phpbb_root_path}index.$phpEx"));
+ 

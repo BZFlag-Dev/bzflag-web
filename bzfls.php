@@ -820,7 +820,7 @@ function action_confirm() {
 	case "0": print("The account for $email has been successfully activated.<br>\n"); break;
 	case "1": print("The account for $email has already been confirmed.<br>\n"); break;
 	case "2": print("Failed to confirm registration for $email since generated key did not match<br>\n"); break;
-	default: print("The account for $email does not exist.<br>\n"); break;
+	default: print("An error has occurred while activating the account for $email<br>\n"); break;
   }
   print('See <a href="http://BZFlag.org">http://BZFlag.org</a></body></html>');
 }
