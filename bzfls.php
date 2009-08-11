@@ -535,7 +535,7 @@ function checktoken($callsign, $ip, $token, $garray) {
   }
   print("\n");
 
-  $ret = $userstore->checkToken($callsign, $ip, $token);
+  $ret = $userstore->checkToken($callsign, $ip, $token, $playerid);
   if($ret == "1") {
 	//  player doesn't exist
     print ("UNK: $callsign\n");
@@ -796,12 +796,6 @@ function action_register() {
 	}
 	exit;
   } else {
-    $result = mysql_query("INSERT INTO players "
-        . "(email, callsign, password, created, randtext, lastmod) VALUES "
-        . "('$email', '$callsign', '$password', '$curtime', "
-        . "'$randtext', '$curtime')", $link)
-      or die ("Invalid query: ". mysql_error());
-	  
     print("Registration SUCCESSFUL: ");
     print("You will receive an email informing you on how to complete your account registration\n");
     #print("While we are debugging, the link is posted here as well.:\n" .

@@ -88,13 +88,24 @@ class UserStore {
 	
 	public function intersectGroupsNoExplode($callsign, $garray, $all, $ids) {
 		if (!count($garray) && !$all)
-			return array();
+			return "";
 		// NOTE: if callsign = "" this returns all existing groups from the array
 		//              if all = true then the groups of $callsign are intersected with all groups i.e returns all groups the user is in
 		//             returns the values in the format ":group_name_1:group_name_1..."
 		//             or if the ids = true then ":group_id_1:group_id_2.."
 
 		return $this->sendRequest(array_merge(array("intersectGroups", ($all ? "1" : "0") . ($ids ? "1" : "0"), $callsign), $garray));
+	}
+	
+	private function not_empty($value) {
+		return empty($value) ? false : true;
+	}
+	
+	public function intersectGroups($callsign, $garray, $all, $ids) {
+		$list = $this->intersectGroupsNoExplode($callsign, $garray, $all, $ids);
+		if($list == "")
+			return array();
+		return array_filter(explode(',', $list), array($this, 'not_empty'));
 	}
 	
 	private function sendRequest($reqs) {
@@ -128,8 +139,11 @@ class UserStore {
 		return $token != "";
 	}
 	
-	public function checkToken($callsign, $ip, $token) {
-		$ret = $this->sendRequest(array("checktoken", $callsign, $ip, $token));
+	public function checkToken($callsign, $ip, $token, &$bzid) {
+		$output = $this->sendRequest(array("checktoken", $callsign, $ip, $token));
+		$arr = array_filter(explode(",", $output), array($this, 'not_empty'));
+		$ret = $arr[0];
+		$bzid = $arr[1];
 		if($ret != "1" && $ret != "2" && $ret != "3") return false;
 		return $ret;
 	}
