@@ -34,6 +34,8 @@ require_once( 'template/header.php' );
 // ==================== My memberships & my groups ====================
 
 if( $auth->isLoggedIn() ) {
+
+	$data->fillAllUserInfo($auth->getUserID());
 	?>
 
 	<p>
@@ -48,26 +50,21 @@ if( $auth->isLoggedIn() ) {
 
 				<?php
 
-				$groupids = $data->getGroupsByUser( $auth->getUserID() );
-				if( count( $groupids ) == 0 )
+				$group_array = $data->getGroupsByUser( $auth->getUserID() );
+				if( count( $group_array ) == 0 )
 					echo "You are not a member of any groups at this time.<br>\n";
 				else {
 					echo "<table>\n";
 					echo "<tr><th>Group</th><th>Members</th></tr>\n";
-
-					foreach( $groupids as $groupid )
-						// Form an array of ORG.GROUP names to ids,
-						// so we can sort alphabetically
-						$group_array[$data->getOrgName( $data->getGroupOrg( $groupid ) ).".".
-								$data->getGroupName( $groupid )] = $groupid;
+								
 					asort( $group_array );
 
-					foreach( $group_array as $groupname => $groupid )
+					foreach( $group_array as $ou_grp )
 						echo "<tr><td>".
-							"<a href=\"groups.php?action=members&id=".
-							$groupid."\">".
-							$groupname."</td><td>".count(
-									$data->getGroupMembers( $groupid ) ).
+							"<a href=\"groups.php?action=members&ou=".
+							$ou_grp[0]."&grp=".$ou_grp[1]."\">".
+							$ou_grp[0].".".$ou_grp[1]."</td><td>"/*.count(
+									$data->getGroupMembers( $groupid ) )*/.
 							"</a></td></tr>\n";
 
 					echo "</table>\n";
@@ -81,80 +78,51 @@ if( $auth->isLoggedIn() ) {
 				<?php
 
 				// Generate array of orgid's[groupid's]
-				$orgs = array();
-				foreach( $data->getGroupsByUser( $auth->getUserID() ) as $membergroupid ) {
-					$orgid = $data->getOrg( $membergroupid );
-					$org_groups = $data->getOrgGroups( $orgid );
-
-					// $data->isGroupAdmin() is expensive, so we'll use another
-					if( $data->isOrgAdminGroup( $membergroupid ) ) {
-						// no need to bother with each group... they're all admined,
-						// so add them all
-						foreach( $org_groups as $groupid ) {
-							if( ! $orgs[$orgid] )
-								$orgs[$orgid] = array();
-
-							// Use a hash here so we don't get duplicate group ids
-							$orgs[$orgid][$groupid] = 1;
-						}
-					} else if( $data->isSpecialAdminGroup( $membergroupid ) ) {
-						foreach( $org_groups as $groupid ) {
-							// See if this is the one we have special perms on
-							if( $data->isSpecialAdminGroup( $membergroupid, $groupid ) ) {
-								if( ! $orgs[$orgid] )
-									$orgs[$orgid] = array();
-
-								// Use a hash here so we don't get duplicate group ids
-								$orgs[$orgid][$groupid] = 1;
-							}
-						}
-					}
-				}
-
-				if( count( $orgs ) == 0 )
+				$org_group_arr = $data->getGroupsAdministeredBy( $auth->getUserID() );
+					
+				if( count( $org_group_arr ) == 0 )
 					echo "You do not administer any groups at this time.<br>\n";
 				else {
 					echo "<table>\n";
 					echo "<tr><th colspan=\"3\">Name</th><th colspan=\"2\">&nbsp;</th></tr>\n";
 
-					foreach( $orgs as $orgid => $group_array ) {
+					foreach( $org_group_arr as $org => $group_array ) {
 						// Org info
 						echo "<tr class=\"org\"><td colspan=\"3\">".
-								$data->getOrgName( $orgid )."</td>".
+								$org."</td>".
 								"<td>".( $data->isOrgAdmin(
-										$auth->getUserID(), $orgid ) ?
-										"<a href=\"orgs.php?action=detail&id=".
-										$orgid."\">".
+										$auth->getUserID(), $org ) ?
+										"<a href=\"orgs.php?action=detail&ou=".
+										$org."\">".
 										"<img src=\"template/img/wrench.png\">" :
 										"&nbsp;" )."</a></td>".
 										"<td colspan=\"2\">&nbsp;</td></tr>\n";
 
 						// Group name and links (if applicable)
-						ksort( $group_array );
-						foreach( array_keys( $group_array ) as $groupid )
+						foreach( $group_array as $group )
 							echo "<tr><td>".
-									( $data->isOrgAdminGroup( $groupid, $orgid ) ?
+									( $data->isOrgAdminGroup( $org, $group ) ?
 											"<img src=\"template/img/key_high.png\">" :
-									( $data->isSpecialAdminGroup( $groupid ) ?
+									( $data->isSpecialAdminGroup( $org, $group ) ?
 											"<img src=\"template/img/key_low.png\">" :
 											"&nbsp;" ) )."</td>".
 									"<td>&nbsp;</td>".
-									"<td><a href=\"groups.php?action=members&id=".
-									$groupid."\">".$data->getGroupName( $groupid ).
+									"<td><a href=\"groups.php?action=members&ou=".$org.
+									"&grp=".$group."\">".$group.
 									"</a></td>".
-									( $data->isGroupAdmin( $auth->getUserID(), $groupid ) ?
+									//( $data->isGroupAdmin( $auth->getUserID(), $group ) ?
 											"<td style=\"padding: 0\">".
-											"<a href=\"groups.php?action=detail&id=".
-											$groupid."\">".
+											"<a href=\"groups.php?action=detail&ou=".$org.
+											"&grp=".$group."\">".
 											"<img src=\"template/img/wrench.png\"></a></td>".
-											"<td><a href=\"groups.php?action=delete&id=".
-											$groupid."\">".
-											"<img src=\"template/img/delete.png\"></td>" :
-											"<td>&nbsp;</td><td>&nbsp;</td>" ).
-											"</tr>\n";
+											"<td><a href=\"groups.php?action=delete&grp=".
+											"&ou=".$org."&grp=".$group."\">".
+											"<img src=\"template/img/delete.png\"></td>"// :
+									//		"<td>&nbsp;</td><td>&nbsp;</td>" ).
+											. "</tr>\n";
 
 						// Final row for creating a new group
-						if( $data->isOrgAdmin( $auth->getUserID(), $orgid ) )
+						if( $data->isOrgAdmin( $auth->getUserID(), $org ) )
 							echo "<tr>".
 									"<td>&nbsp;</td><td>&nbsp;</td>".
 									"<td>New Group</td>".
@@ -186,8 +154,8 @@ if( $auth->isLoggedIn() ) {
 
 <p>
 <span class="large">Site Information</span><br>
-Total Organizations: <?php echo $data->getNumOrgs(); ?><br>
-Total Groups: <?php echo $data->getNumGroups(); ?><br>
+Total Organizations: <?php echo $userstore->getNumOrgs(); ?><br>
+Total Groups: <?php echo $userstore->getNumGroups(); ?><br>
 Current Users:<br>
 Users Today:
 </span>

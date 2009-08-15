@@ -13,6 +13,9 @@ require_once( "config.php" );
 require_once( "functions.php" );
 require_once( "data.class.php" );
 require_once( "auth.class.php" );
+require_once( "D:\wamp\www\db\userstore.php" );
+
+$userstore = new UserStore;
 
 session_start();
 

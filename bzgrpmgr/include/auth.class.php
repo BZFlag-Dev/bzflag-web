@@ -8,18 +8,17 @@ class auth {
 	private $userID, $username;
 
 	public function logUserIn( $username, $password ) {
-		global $data;
+		global $userstore;
 
-		$userID = $data->getUserID( $username );
-		if( ! $userID )
+		if(!$userstore->auth($username, $password))
 			return false;
-		if( $data->getEncryptedPass( $userID ) == md5( $password ) ) {
-			$this->userID = $userID;
-			$this->username = $username;
-			return true;
-		}
+		if(!($id = $userstore->getID($username)))
+			return false;
 
-		return false;
+		$this->username = $username;
+		$this->userID = $id;
+
+		return true;
 	}
 	public function logUserOut() {
 		unset( $this->userID );
