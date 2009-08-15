@@ -37,9 +37,18 @@ define("CHINF_TAKEN_CALLSIGN", 0x8);
 define("CHINF_TAKEN_EMAIL", 0x10);
 define("CHINF_OTHER_ERROR", 0x1000);
 
+define("PERM_ADMIN_OF", 1);
+define("PERM_ADMIN", 2);
+define("PERM_ORG_ADMIN", 3);
+define("PERM_GLOBAL_ADMIN", 4);
+
 class UserStore {
 	private $rootld;
 	private $nextuid;
+	
+	private function debug($output) {
+		echo $output . '<br>';
+	}
 	
 	private function bind($dn, $password) {
 		global $ldap_host;
@@ -86,7 +95,7 @@ class UserStore {
 		return $this->getIDfromDN($this->getuserdn($callsign));
 	}
 	
-	public function intersectGroupsNoExplode($callsign, $garray, $all, $ids) {
+	public function intersectGroupsNoExplode($callsign, $garray, $all) {
 		if (!count($garray) && !$all)
 			return "";
 		// NOTE: if callsign = "" this returns all existing groups from the array
@@ -94,18 +103,18 @@ class UserStore {
 		//             returns the values in the format ":group_name_1:group_name_1..."
 		//             or if the ids = true then ":group_id_1:group_id_2.."
 
-		return $this->sendRequest(array_merge(array("intersectGroups", ($all ? "1" : "0") . ($ids ? "1" : "0"), $callsign), $garray));
+		return $this->sendRequest(array_merge(array("intersectGroups", ($all ? "1" : "0"), $callsign), $garray));
 	}
 	
 	private function not_empty($value) {
 		return empty($value) ? false : true;
 	}
 	
-	public function intersectGroups($callsign, $garray, $all, $ids) {
-		$list = $this->intersectGroupsNoExplode($callsign, $garray, $all, $ids);
+	public function intersectGroups($callsign, $garray, $all) {
+		$list = $this->intersectGroupsNoExplode($callsign, $garray, $all);
 		if($list == "")
 			return array();
-		return array_filter(explode(',', $list), array($this, 'not_empty'));
+		return $this->explode_noempty(',', $list);
 	}
 	
 	private function sendRequest($reqs) {
@@ -118,19 +127,19 @@ class UserStore {
 			$first = false;
 			$url = $url . urlencode($req);
 		}
-		$ch = curl_init(); if(!$ch) { debug("curl_init failed"); return ""; }
-        if(!curl_setopt($ch, CURLOPT_URL, $url)) { debug("opt url failed"); return ""; }
-        if(!curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1)) { debug("opt return failed"); return ""; }
-		if(!curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2)) { debug("opt timeout failed"); return ""; }
+		$ch = curl_init(); if(!$ch) { $this->debug("curl_init failed"); return ""; }
+        if(!curl_setopt($ch, CURLOPT_URL, $url)) { $this->debug("opt url failed"); return ""; }
+        if(!curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1)) { $this->debug("opt return failed"); return ""; }
+		if(!curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2)) { $this->debug("opt timeout failed"); return ""; }
         $output = curl_exec($ch);
         curl_close($ch);
-		if(!$output || strlen($output) < 8) { debug("no output" . ($output ? strlen($output) : "")); return ""; }
+		if(!$output || strlen($output) < 8) { $this->debug("no output" . ($output ? strlen($output) : "")); return ""; }
 		return trim(substr($output, 8));
 	}
 	
 	public function registerUser($callsign, $password, $email) {
 		$output = $this->sendRequest(array("register", $callsign, $password, $email));
-		if($output == "" || !ctype_digit($output)) { debug("ret code wrong: " . $output); return REG_FAIL_GENERIC; }
+		if($output == "" || !ctype_digit($output)) { $this->debug("ret code wrong: " . $output); return REG_FAIL_GENERIC; }
 		return (int)$output;
 	}
 	
@@ -141,7 +150,7 @@ class UserStore {
 	
 	public function checkToken($callsign, $ip, $token, &$bzid) {
 		$output = $this->sendRequest(array("checktoken", $callsign, $ip, $token));
-		$arr = array_filter(explode(",", $output), array($this, 'not_empty'));
+		$arr = $this->explode_noempty(",", $output);
 		$ret = $arr[0];
 		$bzid = $arr[1];
 		if($ret != "1" && $ret != "2" && $ret != "3") return false;
@@ -150,7 +159,7 @@ class UserStore {
 	
 	public function changeUserInfo($for_user, $to_user, $to_pass, $to_mail) {
 		$output = $this->sendRequest( array("chinf", $for_user, $to_user, $to_pass, $to_mail) );
-		if($output == "" || !ctype_digit($output)) { debug("ret code wrong: " . $output); return CHINF_OTHER_ERROR; }
+		if($output == "" || !ctype_digit($output)) { $this->debug("ret code wrong: " . $output); return CHINF_OTHER_ERROR; }
 		return (int)$output;
 	}
 	
@@ -166,6 +175,117 @@ class UserStore {
 		return $this->sendRequest(array("activate", $callsign, $email, $randtext));
 	}
 	
+	public function getGroupsOwnedBy($callsign) {
+		return $this->sendRequest(array("groupsownedby", $callsign));
+	}
+	
+	public function getNumGroups() {
+		return (int)$this->sendRequest(array("totalgroups"));
+	}
+	
+	public function getNumOrgs() {
+		return (int)$this->sendRequest(array("totalorgs"));
+	}
+	
+	private function explode_noempty($delimiter, $string) {
+		return array_filter(explode($delimiter, $string), array($this, 'not_empty'));
+	}
+	
+	private function getPerm($perm_str) {
+		$perm = explode(' ', $perm_str);
+		if(count($perm) == 0) return false;
+		$perm[0] = (int)$perm[0];
+		switch($perm[0]) {
+			case PERM_ADMIN_OF:
+				if(count($perm) != 3) { $this->debug("invalid args in $perm_str"); return false; }
+				break;
+			default:
+				if(count($perm) != 1) { $this->debug("invalid args in $perm_str"); return false; }
+		}
+		return $perm;
+	}
+	
+	private function getPermsArray($perm_strs) {
+		$ret = array();
+		if(!$perm_strs || !is_array($perm_strs)) { $this->debug("invalid perm_strs"); var_dump($perm_strs); return $ret; }
+		foreach($perm_strs as $perm_str)
+			if($perm = $this->getPerm($perm_str))
+				$ret[] = $perm;
+		return $ret;
+	}
+	
+	public function getMemberInfo($uid) {
+		if(!$uid) return array();
+		
+		$output = $this->sendRequest(array("getmemberinfo", $uid));
+		$ret = array();
+		foreach($this->explode_noempty(':', $output) as $groupinfo) {
+			$arr = explode(',', $groupinfo);
+			if(count($arr) == 0) { $this->debug("invalid group info $groupinfo"); continue; }
+			$og = explode(' ', $arr[0]);
+			if(count($og) != 2) { $this->debug("MemberInfo: invalid group name" . $arr[0]); continue; }
+			
+			if(count($arr) > 1) {
+				array_shift($arr);
+				$ret[] = array('ou' => $og[0], 'grp' => $og[1], 'perms' => $this->getPermsArray($arr));
+			} else
+				$ret[] = array('ou' => $og[0], 'grp' => $og[1], 'perms' => array());
+		}
+		
+		//echo 'memberinfo: '; var_dump($ret); echo '<br>';
+		return $ret;
+	}
+	
+	public function getGroupInfo($group_array) {
+		if(empty($group_array))
+			return array();
+		
+		// serialize the group array
+		$request = array('getgroupinfo');
+		foreach($group_array as $og) {
+			$request[]= $og[0];
+			$request[]= $og[1];
+		}
+		
+		$output = $this->sendRequest(array_merge($request));
+		$ret = array();
+		foreach($this->explode_noempty(':', $output) as $groupinfo) {
+			$arr = explode(',', $groupinfo);
+			if(count($arr) == 0) { debug("empty groupinfos for $ret"); continue; }
+			$ogs = explode(' ', $arr[0]);
+			if(count($ogs) != 3) { debug("invalid groupinfo $arr[0] for $ret"); continue; }
+			
+			if(count($arr) > 1) {
+				array_shift($arr);
+				$ret[] = array('ou' => $ogs[0], 'grp' => $ogs[1], 'state' => $ogs[2], 'perms' => $this->getPermsArray($arr));
+			} else
+				$ret[] = array('ou' => $ogs[0], 'grp' => $ogs[1], 'state' => $ogs[2], 'perms' => array());
+		}
+		
+		//echo 'getgroupinfo: '; var_dump($ret); echo '<br>';
+		return $ret;
+	}
+	
+	public function getOrgGroups($org_array) {
+		if(empty($org_array))
+			return array();
+
+		$output = $this->sendRequest(array_merge(array("getorggroups"), $org_array));
+		$ret = array();
+		foreach($this->explode_noempty(',', $output) as $group) {
+			$arr = explode(' ', $group);
+			if(count($arr) != 2) { $this->debug("OrgGroups: invalid group name $group"); continue; }
+			$ret[$arr[0]] = $arr[1];
+		}
+		return $ret;
+	}
+	
+	public function getOrgsOwnedBy($uid) {
+		if(!$uid) return array();
+		$ret = $this->explode_noempty(',',$this->sendRequest(array("getorgsownedby", $uid)));
+		//echo "getOrgsOwnedBy($uid): "; var_dump($ret); echo '<br>';
+		return $ret;
+	}
 };
 
 ?>

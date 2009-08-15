@@ -452,7 +452,8 @@ function action_list() {
     }
   }
 
-  $advertList = "0";    // marker for phantom group 'EVERYONE'
+  // advertlist support is disabled until the group_id field in 
+  /*$advertList = "0";    // marker for phantom group 'EVERYONE'
   if ($playerid){
     // get list of groups player belongs to ...
     debug ("FETCHING GROUPS", 3);
@@ -509,7 +510,7 @@ function action_list() {
 	readfile($thisSever.'?action=LIST&local=1');
       }
     }
-  }
+  }*/
 }
 
 function action_gettoken (){
@@ -548,7 +549,7 @@ function checktoken($callsign, $ip, $token, $garray) {
   } else if($ret == "3") {
     // exists and valid token
 	print ("TOKGOOD: $callsign");
-	print ($userstore->intersectGroupsNoExplode($callsign, $garray, false, false));
+	print ($userstore->intersectGroupsNoExplode($callsign, $garray, false));
     print ("\n");
 
     # Send the BZID
@@ -597,7 +598,7 @@ function add_advertList ($serverID){
       sqlQuery ("INSERT INTO server_advert_groups (server_id, group_id) VALUES ($serverID, 0)");
     } else {
 	  // get the group ids for all existing groups in the array
-	  $glist = $userstore->intersectGroupsNoExplode("", $advertList, false, true);
+	  $glist = $userstore->intersectGroupsNoExplode("", $advertList, false);
 	  function remove_empty3 ($value) { return empty($value) ? false : true; }
 	  $garray = array_filter(explode(":", $glist, 'remove_empty3'));
 	  if(!empty($garray)) {
