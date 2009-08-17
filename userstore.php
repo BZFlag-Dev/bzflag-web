@@ -214,40 +214,45 @@ class UserStore {
 		return $ret;
 	}
 	
-	public function getMemberInfo($uid) {
-		if(!$uid) return array();
-		
-		$output = $this->sendRequest(array("getmemberinfo", $uid));
+	private function parseMemberInfo($output) {
 		$ret = array();
 		foreach($this->explode_noempty(':', $output) as $groupinfo) {
 			$arr = explode(',', $groupinfo);
 			if(count($arr) == 0) { $this->debug("invalid group info $groupinfo"); continue; }
-			$og = explode(' ', $arr[0]);
-			if(count($og) != 2) { $this->debug("MemberInfo: invalid group name" . $arr[0]); continue; }
+			$uog = explode(' ', $arr[0]);
+			if(count($uog) != 3) { $this->debug("MemberInfo: invalid member info" . $arr[0]); continue; }
 			
 			if(count($arr) > 1) {
 				array_shift($arr);
-				$ret[] = array('ou' => $og[0], 'grp' => $og[1], 'perms' => $this->getPermsArray($arr));
+				$ret[] = array('uid' => $uog[0], 'ou' => $uog[1], 'grp' => $uog[2], 'perms' => $this->getPermsArray($arr));
 			} else
-				$ret[] = array('ou' => $og[0], 'grp' => $og[1], 'perms' => array());
+				$ret[] = array('uid' => $uog[0], 'ou' => $uog[1], 'grp' => $uog[2], 'perms' => array());
 		}
 		
 		//echo 'memberinfo: '; var_dump($ret); echo '<br>';
 		return $ret;
 	}
 	
+	public function getMemberInfo($uid) {
+		if(!$uid)
+			return array();
+		
+		return $this->parseMemberInfo($this->sendRequest(array("getmemberinfo", $uid)));
+	}
+
+	private function serialize($in_arr) {
+		$out_arr = array();
+		foreach($in_arr as $row)
+			foreach($row as $val)
+				$out_arr[]= $val;
+		return $out_arr;
+	}
+	
 	public function getGroupInfo($group_array) {
 		if(empty($group_array))
 			return array();
 		
-		// serialize the group array
-		$request = array('getgroupinfo');
-		foreach($group_array as $og) {
-			$request[]= $og[0];
-			$request[]= $og[1];
-		}
-		
-		$output = $this->sendRequest(array_merge($request));
+		$output = $this->sendRequest(array_merge(array('getgroupinfo'), $this->serialize($group_array)));
 		$ret = array();
 		foreach($this->explode_noempty(':', $output) as $groupinfo) {
 			$arr = explode(',', $groupinfo);
@@ -284,6 +289,41 @@ class UserStore {
 		if(!$uid) return array();
 		$ret = $this->explode_noempty(',',$this->sendRequest(array("getorgsownedby", $uid)));
 		//echo "getOrgsOwnedBy($uid): "; var_dump($ret); echo '<br>';
+		return $ret;
+	}
+	
+	public function getMemberCount($group_array) {
+		if(empty($group_array))
+			return array();
+			
+		$ret = array();
+		$output = $this->sendRequest(array_merge(array('getmembercount'), $this->serialize($group_array)));
+		foreach($this->explode_noempty(',', $output) as $group_count) {
+			$arr = explode(' ', $group_count);
+			if(count($arr) != 3) { $this->debug("GetMemberCount: invalid member count $group_count in $output"); continue; }
+			$ret[]= array('ou' => $arr[0], 'grp' => $arr[1], 'count' => (int)$arr[2]);
+		}
+		return $ret;
+	}
+	
+	public function getGroupMembers($group_array) {
+		if(empty($group_array))
+			return array();
+		
+		return $this->parseMemberInfo($this->sendRequest(array_merge(array("getgroupmembers"), $this->serialize($group_array))));
+	}
+	
+	public function getUserNames($uids) {
+		if(empty($uids))
+			return array();
+
+		$ret = array();
+		$uidnames = $this->explode_noempty(',',$this->sendRequest(array_merge(array("getusernames"), $uids)));
+		foreach($uidnames as $uidname) {
+			$arr = explode(' ', $uidname);
+			if(count($arr) != 2) { $this->debug("invalid uidname $uidname"); var_dump($uidnames); continue; }
+			$ret[]= array('uid' => $arr[0], 'name' => $arr[1]);
+		}
 		return $ret;
 	}
 };
