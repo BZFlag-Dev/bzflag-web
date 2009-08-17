@@ -3,6 +3,49 @@
 // Data layer class. This class provides the site with an interface for
 // accessing all data.
 
+// taken from http://www.php.net/debug_backtrace
+function pretty_backtrace($print=true)
+{
+	$s = '';
+	if (PHPVERSION() >= 4.3) {
+   
+		$MAXSTRLEN = 64;
+   
+		$s = '<pre align=left>';
+		$traceArr = debug_backtrace();
+		array_shift($traceArr);
+		$tabs = sizeof($traceArr)-1;
+		foreach ($traceArr as $arr) {
+			for ($i=0; $i < $tabs; $i++) $s .= ' &nbsp; ';
+			$tabs -= 1;
+			$s .= '<font face="Courier New,Courier">';
+			if (isset($arr['class'])) $s .= $arr['class'].'.';
+			$args = array();
+			foreach($arr['args'] as $v) {
+				if (is_null($v)) $args[] = 'null';
+				else if (is_array($v)) $args[] = 'Array['.sizeof($v).']';
+				else if (is_object($v)) $args[] = 'Object:'.get_class($v);
+				else if (is_bool($v)) $args[] = $v ? 'true' : 'false';
+				else {
+					$v = (string) @$v;
+					$str = htmlspecialchars(substr($v,0,$MAXSTRLEN));
+					if (strlen($v) > $MAXSTRLEN) $str .= '...';
+					$args[] = $str;
+				}
+			}
+		   
+			$s .= $arr['function'].'('.implode(', ',$args).')';
+			$s .= sprintf("</font><font color=#808080 size=-1> # line %4d,".
+" file: <a href=\"file:/%s\">%s</a></font>",
+$arr['line'],$arr['file'],$arr['file']);
+			$s .= "\n";
+		}   
+		$s .= '</pre>';
+		if ($print) print $s;
+	}
+	return $s;
+}
+
 class data {
 	private $conn, $tbl_prf, $dbname, $bbdbname;
 
@@ -11,7 +54,7 @@ class data {
 	// ============================================================
 
 	function __construct( $config ) {
-		
+		$this->group_info = array(); $this->member_info = array(); $this->org_info = array();
 	}
 
 	// ============================================================
@@ -19,11 +62,10 @@ class data {
 	// ============================================================
 	
 	// cache all information retrieved from the daemon in these vars because they may be used many times on a single page
-	private $group_info, $member_info, $org_info;
+	private $group_info, $member_info, $org_info, $user_info;
 	
-	public function fillAllUserInfo($uid) {
+	public function fillAllUserInfo($uid, $fill_orgGroups = true, $fill_memberCount = true) {
 		global $userstore;
-		$this->group_info = array(); $this->member_info = array(); $this->org_info = array();
 		
 		// get info for the user's group memberships
 		foreach($userstore->getMemberInfo($uid) as $memberInfo)
@@ -32,9 +74,14 @@ class data {
 		//$this->dump_cache();
 			
 		 // get info for the groups the user is member of
-		foreach($userstore->getGroupInfo($this->getGroupsByUser($uid)) as $groupInfo)
+		$member_groups = $this->getGroupsByUser($uid);
+		foreach($userstore->getGroupInfo($member_groups) as $groupInfo)
 			$this->set_group_info($groupInfo['ou'], $groupInfo['grp'], $groupInfo['state'], $groupInfo['perms']);
 		
+		if($fill_memberCount)
+			foreach($userstore->getMemberCount($member_groups) as $memberCount)
+				$this->set_group_memberCount($memberCount['ou'], $memberCount['grp'], $memberCount['count']);
+			
 		//$this->dump_cache();
 		
 		// get info for the orgs the user is the owner of  (except those specified as permissions)
@@ -44,7 +91,19 @@ class data {
 		//$this->dump_cache();
 		
 		// get all groups for all orgs the user is a member of, including those specified in permissions
-		$this->fillOrgGroups($this->getOrgsOwnedBy($uid));
+		if($fill_orgGroups)
+			$this->fillOrgGroups($this->getOrgsOwnedBy($uid));
+		
+		//$this->dump_cache();
+	}
+	
+	public function fillGroupInfo($org, $grp) {
+		global $userstore;
+		foreach($userstore->getGroupMembers(array(array($org, $grp))) as $memberInfo)
+			$this->set_member_info($memberInfo['uid'], $memberInfo['ou'], $memberInfo['grp'], $memberInfo['perms']);
+		
+		foreach($userstore->getUserNames($this->getGroupMembers($org, $grp)) as $uidname)
+			$this->set_user_name($uidname['uid'], $uidname['name']);
 	}
 	
 	public function dump_cache() {
@@ -56,7 +115,7 @@ class data {
 	public function fillOrgGroups($org_array) {
 		global $userstore;
 		foreach($userstore->getOrgGroups($org_array) as $org => $group)
-			init_group_info($org, $group, false);
+			$this->init_group_info($org, $group, false);
 	}
 	
 	private function init_org_info($ou) {
@@ -67,12 +126,20 @@ class data {
 		}
 	}
 	
+	private function init_user_info($uid) {
+		if(!isset($this->user_info[$uid])) $this->user_info[$uid] = array( 'name' => null );
+		else {
+			if(!isset($this->user_info[$uid]['name'])) $this->user_info[$uid]['name'] = null;
+		}
+	}
+	
 	private function init_group_info($ou, $grp, $set_null_info = true) {
 		if(!isset($this->group_info[$ou])) $this->group_info[$ou] = array( $grp => array( 'state' => null, 'perms' => array() ) );
 		else if(!isset($this->group_info[$ou][$grp])) $this->group_info[$ou][$grp] = array( 'state' => null, 'perms' => array() );
 		else if($set_null_info) {
 			if(!isset($this->group_info[$ou][$grp]['perms'])) $this->group_info[$ou][$grp]['perms'] = array();
 			if(!isset($this->group_info[$ou][$grp]['state'])) $this->group_info[$ou][$grp]['state'] = null;
+			if(!isset($this->group_info[$ou][$grp]['member_count'])) $this->group_info[$ou][$grp]['member_count'] = null;
 		}
 	}
 	
@@ -85,50 +152,74 @@ class data {
 		}
 	}
 	
-	public function set_member_info($uid, $ou, $grp, $perms) {
+	private function set_member_info($uid, $ou, $grp, $perms) {
 		$this->init_member_info($uid, $ou, $grp);
 		$this->member_info[$uid][$ou][$grp]['perms'] = $perms;
 	}
 	
-	public function set_org_info($ou, $owner, $contact) {
+	private function set_user_name($uid, $name) {
+		$this->init_user_info($uid);
+		$this->user_info[$uid]['name'] = $name;
+	}
+	
+	private function set_org_info($ou, $owner, $contact) {
+		//echo "$ou $owner $contact<br>";
 		$this->init_org_info($ou);
 		$this->org_info[$ou]['owner'] = $owner;
 		$this->org_info[$ou]['contact'] = $contact;
 	}
 	
-	public function set_group_info($ou, $grp, $state, $perms) {
+	private function set_group_info($ou, $grp, $state, $perms) {
 		$this->init_group_info($ou, $grp);
 		$this->group_info[$ou][$grp]['state'] = $state;
 		$this->group_info[$ou][$grp]['perms'] = $perms;
 	}
 	
-	public function get_memberInfo_byUid($uid) {
+	private function set_group_memberCount($ou, $grp, $count) {
+		$this->init_group_info($ou, $grp);
+		$this->group_info[$ou][$grp]['member_count'] = $count;
+	}
+	
+	private function get_memberInfo_byUid($uid) {
 		if(isset($this->member_info) && isset($this->member_info[$uid]))
 			return $this->member_info[$uid];
 		else
-			return false; // TODO fetch from the daemon
+			return false;
 	}
 	
-	public function get_memberInfo_byUidOrg($uid, $org) {
-		if(isset($this->member_info) && isset($this->member_info[$uid]) &&
-			isset($this->member_info[$uid][$org]))
-			return $this->member_info[$uid][$org];
-		else
-			return false; // TODO fetch from the daemon
+	private function get_memberInfo_byUidOrg($uid, $org) {
+		if($byUid = $this->get_memberInfo_byUid($uid))
+			if(isset($byUid[$org]))
+				return $byUid[$org];
+		return false;
 	}
 	
-	public function get_orgInfo($org) {
+	private function get_memberInfo($uid, $org, $grp) {
+		if($byUidOrg = $this->get_memberInfo_byUidOrg($uid, $org))
+			if(isset($byUidOrg[$grp]))
+				return $byUidOrg[$grp];
+		return false;
+	}
+	
+	private function get_orgInfo($org) {
 		if(isset($this->org_info) && isset($this->org_info[$org]))
 			return $this->org_info[$org];
 		else
-			return false; // TODO fetch from the daemon
+			return false;
+	}
+	
+	private function get_userInfo($uid) {
+		if(isset($this->user_info) && isset($this->user_info[$uid]))
+			return $this->user_info[$uid];
+		else
+			return false;
 	}
 	
 	private function get_groupInfo_byOrg($org) {
 		if(isset($this->group_info) && isset($this->group_info[$org]))
 			return $this->group_info[$org];
 		else
-			return array(); // TODO fetch from the daemon
+			return false;
 	}
 	
 	private function get_groupInfo($ou, $grp) {
@@ -136,16 +227,62 @@ class data {
 			isset($this->group_info[$ou][$grp]))
 			return $this->group_info[$ou][$grp];
 		else
-			return array(); // TODO fetch from the daemon
+			return false;
 	}
 	
-	private function find_perm($perm_id, $in_perms) {
-		foreach($in_perms as $perm)
-			if($perm[0] == $perm_id)
+	private function find_perm($perm_ids, $in_perms, $with_org = false, $with_grp = false, $find_all = false, &$arr = array()) {
+		$ret = false;
+		foreach($in_perms as $perm) {
+			if(in_array($perm[0], $perm_ids)) {
+				if($with_org && $with_grp)
+					$ret = array('perm' => $perm, 'ou' => $with_org, 'grp' => $with_grp);
+				else
+					$ret = $perm;
+				
+				if($find_all)
+					$arr[]= $ret;
+				else
+					return $ret;
+			}
+		}
+
+		return $ret;
+	}
+	
+	private function find_perm_grp($perm_ids, $org, $grp, $with_details = false, $find_all = false, &$arr = array()) {
+		if($groupInfo = $this->get_groupInfo($org, $grp)) {
+			$perm = $this->find_perm($perm_ids, $groupInfo['perms'], 
+				($with_details ? $org : null), ($with_details ? $grp : null), $find_all, $arr);
+			if($find_all == false) return $perm;
+		}
+		return false;
+	}
+	
+	private function find_perm_uid($perm_ids, $uid, $with_details = false, $find_all = false) {
+		$ret = ($find_all ? array() : false);
+		if($membersByUid = $this->get_memberInfo_byUid($uid)) {
+			foreach($membersByUid as $org => $groups) {
+				foreach($groups as $group => $memberInfo) {
+					$perm = $this->find_perm($perm_ids, $memberInfo['perms'],
+						($with_details ? $org : null), ($with_details ? $group : null), $find_all, $ret);
+					if($find_all == false && $perm) return $perm;
+					$perm = $this->find_perm_grp($perm_ids, $org, $group, $with_details, $find_all, $ret);
+					if($find_all == false && $perm) return $perm;
+				}
+			}
+		}
+		return $ret;
+	}
+	
+	private function find_perm_uid_org($perm_ids, $uid, $org) {
+		if($memberGroups = $this->get_memberInfo_byUidOrg($uid, $org))
+			foreach($memberGroups as $group => $memberInfo)
+			if($perm = $this->find_perm($perm_ids, $memberInfo['perms']) ||
+				$perm = $this->find_perm_grp($perm_ids, $org, $group))
 				return $perm;
 		return false;
 	}
-
+	
 	// Organization permission functions
 	public function isOrgAdminGroup( $org, $group ) {
 		if($info = $this->get_groupInfo($org, $group))
@@ -206,30 +343,28 @@ class data {
 
 	// Utility permission functions
 	public function isOrgAdmin( $uid, $org ) {
-		if($orgInfo = $this->get_orgInfo($org) && $orgInfo['owner'] == $uid)
+		if($orgInfo = $this->get_orgInfo($org))
+			if($orgInfo['owner'] == $uid)
+				return true;
+		if($perm = $this->find_perm_uid_org(array(PERM_ORG_ADMIN), $uid, $org))
 			return true;
-		if($memberGroups = $this->get_memberInfo_byUidOrg($uid, $org))
-			foreach($memberGroups as $group => $memberInfo) {
-				if($this->find_perm(PERM_ORG_ADMIN, $memberInfo['perms']))
-					return true;
-				if($groupInfo = $this->get_groupInfo($org, $group))
-					if($this->find_perm(PERM_ORG_ADMIN, $groupInfo['perms']))
-						return true;
-			}
 		return false;
 	}
 	
-	public function isGroupAdmin( $userid, $groupid ) {
-		$groups = $this->getGroupsByUser( $userid );
+	public function isGroupAdmin( $uid, $org, $grp ) {
+		$groups = $this->getGroupsByUser( $uid );
 
 		if( ! $groups )
 			return false;
+			
+		if($memberInfo = $this->get_memberInfo($uid, $org, $grp))
+			if($this->find_perm(array(PERM_ADMIN), $memberInfo['perms']))
 
-		if( $this->isOrgAdmin( $userid, $this->getOrg( $groupid ) ) )
+		if( $this->isOrgAdmin( $uid, $org ) )
 			return true;
 
-		foreach( $groups as $group )
-			if( $this->isSpecialAdminGroup( $group, $groupid ) )
+		foreach($this->find_perm_uid(array(PERM_ADMIN_OF), $uid, true, true) as $arr)
+			if($ret['perm'][1] == $org && $ret['perm'][2] == $grp)
 				return true;
 
 		return false;
@@ -240,45 +375,18 @@ class data {
 	// ============================================================
 
 	public function getUserID( $username ) {
-		$sql = "SELECT user_id FROM ".
-				"phpbb_users WHERE username = \"".
-				$username."\"";
-		mysql_select_db( $this->bbdbname );
-		$result = mysql_query( $sql, $this->conn );
-		if( ! $result )
-			return false;
-
-		if( $result && mysql_num_rows( $result ) > 0 )
-			return mysql_result( $result, 0 );
-
+		todo();
 		return false;
 	}
 	
-	public function getUsername( $userid ) {
-		$sql = "SELECT username FROM phpbb_users ".
-				"WHERE user_id = ".$userid;
-		mysql_select_db( $this->bbdbname );
-		$result = mysql_query( $sql, $this->conn );
-		if( ! $result )
-			return false;
-
-		if( $result && mysql_num_rows( $result ) > 0 )
-				return mysql_result( $result, 0 );
-
+	public function getUsername( $uid ) {
+		if($info = $this->get_userInfo($uid))
+			return $info['name'];
 		return false;
 	}
 	
 	public function getEncryptedPass( $userid ) {
-		$sql = "SELECT user_password FROM phpbb_users ".
-				"WHERE user_id = ".$userid;
-		mysql_select_db( $this->bbdbname );
-		$result = mysql_query( $sql, $this->conn );
-		if( ! $result )
-			return false;
-
-		if( $result && mysql_num_rows( $result ) > 0 )
-				return mysql_result( $result, 0 );
-
+		todo();
 		return false;
 	}
 
@@ -287,36 +395,8 @@ class data {
 	// ============================================================
 
 	public function getNumOrgs() {
-		$sql = "SELECT orgid FROM ".$this->tbl_prf."orgs WHERE 1";
-		mysql_select_db( $this->dbname );
-		$result = mysql_query( $sql, $this->conn );
-		if( $result )
-			return mysql_num_rows( $result );
-
-		return false;
-	}
-	
-	public function getOrgID( $orgname ) {
-		// This should be the only function that deals with
-		// organizations by name
-		$sql = "SELECT orgid FROM ".$this->tbl_prf."orgs WHERE ".
-				"orgname = \"".$orgname."\"";
-		mysql_select_db( $this->dbname );
-		$result = mysql_query( $sql, $this->conn );
-		if( $result && mysql_num_rows( $result ) > 0 )
-			return true;
-
-		return false;
-	}
-
-	public function getOrgName( $orgid ) {
-		$sql = "SELECT orgname FROM ".$this->tbl_prf."orgs WHERE ".
-				"orgid = ".$orgid;
-		mysql_select_db( $this->dbname );
-		$result = mysql_query( $sql, $this->conn );
-		if( $result && mysql_num_rows( $result ) > 0 ) 
-			return mysql_result( $result, 0);
-
+		global $userstore;
+		return $userstore->getNumOrgs();
 		return false;
 	}
 	
@@ -332,16 +412,6 @@ class data {
 		return $ret;
 	}
 	
-	public function getOrg( $groupid ) {
-		$sql = "SELECT orgid FROM ".$this->tbl_prf."groups WHERE groupid = ".$groupid;
-		mysql_select_db( $this->dbname );
-		$result = mysql_query( $sql, $this->conn );
-		if( $result && mysql_num_rows( $result ) > 0 ) 
-			return mysql_result( $result, 0);
-
-		return false;
-	}
-
 	// Manipulation functions
 	public function createOrg( $name, $userid ) {
 		// Don't create duplicate groups
@@ -392,14 +462,10 @@ class data {
 		foreach($this->org_info as $org => $info)
 			if($info['owner'] == $uid)
 				$ret[] = $org;
-		if(!isset($this->member_info) || !isset($this->member_info[$uid]))
-			return $ret; // TODO: fillMemberInfo
 		
-		foreach($this->member_info[$uid] as $org => $group_array)
-			foreach($group_array as $group => $member_info)
-				foreach($member_info['perms'] as $perm)
-					if($perm[0] == PERM_ORG_ADMIN)
-						$ret[] = $org;
+		foreach($this->find_perm_uid(array(PERM_ORG_ADMIN), $uid, true, true) as $arr)
+			$ret[]= $arr['ou'];
+
 		return $ret;
 	}
 
@@ -409,25 +475,10 @@ class data {
 
 	// Info functions
 	public function getNumGroups() {
-		$sql = "SELECT groupid FROM ".$this->tbl_prf."groups WHERE 1";
-		mysql_select_db( $this->dbname );
-		$result = mysql_query( $sql, $this->conn );
-		if( $result )
-			return mysql_num_rows( $result );
-
-		return false;
+		global $userstore;
+		return $userstore->getNumGroups();
 	}
 
-	public function getGroupName( $groupid ) {
-		$sql = "SELECT groupname FROM ".$this->tbl_prf."groups WHERE ".
-				"groupid = ".$groupid;
-		mysql_select_db( $this->dbname );
-		$result = mysql_query( $sql, $this->conn );
-		if( $result && mysql_num_rows( $result ) > 0 ) 
-			return mysql_result( $result, 0);
-
-		return false;
-	}
 	public function getGroupDesc( $groupid ) {
 		$sql = "SELECT description FROM ".$this->tbl_prf.
 				"groups WHERE "."groupid = ".$groupid;
@@ -438,6 +489,7 @@ class data {
 
 		return false;
 	}
+	
 	public function getGroupOrg( $groupid ) {
 		$sql = "SELECT orgid FROM ".$this->tbl_prf.
 				"groups WHERE groupid=".$groupid;
@@ -448,28 +500,26 @@ class data {
 
 		return false;
 	}
-	public function getGroupState( $groupid ) {
-		$sql = "SELECT state FROM ".$this->tbl_prf.
-				"groups WHERE groupid=".$groupid;
-		mysql_select_db( $this->dbname );
-		$result = mysql_query( $sql, $this->conn );
-		if( $result && mysql_num_rows( $result ) > 0 )
-			return mysql_result( $result, 0);
-
+	
+	public function getGroupState( $org, $group ) {
+		if($info = $this->get_groupInfo($org, $group))
+			return $info['state'];
 		return false;
 	}
 
-	public function getGroupMembers( $groupid ) {
-		$members = array();
-
-		$sql = "SELECT userid FROM ".$this->tbl_prf.
-				"memberships WHERE groupid=".$groupid;
-		mysql_select_db( $this->dbname );
-		$result = mysql_query( $sql, $this->conn );
-		if( $result && mysql_num_rows( $result ) > 0 )
-			while( $result_array = mysql_fetch_array( $result ) )
-				array_push( $members, $result_array['userid'] );
-		return $members;
+	public function getGroupMembers( $org, $group ) {
+		$ret = array();
+		if(!isset($this->member_info)) return $ret;
+		foreach(array_keys($this->member_info) as $uid)
+			if($this->isMemberOf($uid, $org, $group))
+				$ret[]= $uid;
+		return $ret;
+	}
+	
+	public function getGroupMemberCount( $org, $group ) {
+		if($info = $this->get_groupInfo($org, $group))
+			return $info['member_count'];
+		return false;
 	}
 	
 	public function isGroupMember( $userid, $groupid ) {
@@ -483,6 +533,13 @@ class data {
 		if( $result && mysql_num_rows( $result ) > 0 )
 			return true;
 
+		return false;
+	}
+	
+	public function isMemberOf($uid, $org, $grp) {
+		if($membersByUid = $this->get_memberInfo_byUid($uid))
+			if(isset($membersByUid[$org]) && isset($membersByUid[$org][$grp]))
+				return true;
 		return false;
 	}
 
@@ -500,28 +557,29 @@ class data {
 		return $ret;
 	}
 	
-	public function getGroupsAdministeredBy($uid, $get_org_admin = true) {
+	public function getGroupsAdministratedBy($uid, $get_org_admin = true) {
 		if( ! $uid )
 			return false;
 			
-		$add_ret = create_function('&$ret,$org,$grp', 'if(!isset($ret[$org])) $ret[$org]=array($grp); else $ret[$org][]= $grp;');
-
 		$ret = array();
-		if($membersByUid = $this->get_memberInfo_byUid($uid))
-			foreach($membersByUid as $org => $groups)
-				foreach($groups as $group => $groupInfo)
-					foreach($groupInfo['perms'] as $perm)
-						if($perm[0] == PERM_ADMIN)
-							$add_ret($ret,$org,$group);
-						else if($perm[0] == PERM_ADMIN_OF)
-							$add_ret($ret,$perm[1],$perm[2]);
+		$add_ret = create_function('&$ret,$org,$grp', 
+			'if(!isset($ret[$org])) $ret[$org] = array($grp => 1);
+			else if(!isset($ret[$org][$grp])) $ret[$org][$grp] = 1;');
+
+		foreach($this->find_perm_uid(array(PERM_ADMIN, PERM_ADMIN_OF), $uid, true, true) as $arr) {
+			$perm = $arr['perm'];
+			if($perm[0] == PERM_ADMIN)
+				$add_ret($ret,$arr['ou'],$arr['grp']);
+			else if($perm[0] == PERM_ADMIN_OF)
+				$add_ret($ret,$perm[1],$perm[2]);
+		}
 		
 		if($get_org_admin)
 			foreach($this->getOrgsOwnedBy($uid) as $org)
 				foreach($this->getOrgGroups($org) as $group)
 					$add_ret($ret,$org,$group);
 
-		//echo "getGroupsAdministeredBy($uid, $get_org_admin): "; var_dump($ret); echo '<br>';
+		//echo "getGroupsAdministratedBy($uid, $get_org_admin): "; var_dump($ret); echo '<br>';
 		return $ret;
 	}
 

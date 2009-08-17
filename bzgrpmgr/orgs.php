@@ -8,8 +8,10 @@ switch( $_GET['action'] ) {
 	case "detail":
 		// Editing new or existing organization
 
+		if(isset($_GET['ou']))
+			$data->fillAllUserInfo($auth->getUserID(), false, false);
 		// Verify auth
-		if( $_GET['id'] && ! $data->isOrgAdmin( $auth->getUserID(), $_GET['id'] ) )
+		if( isset($_GET['ou']) && ! $data->isOrgAdmin( $auth->getUserID(), $_GET['ou'] ) )
 			header( "Location: ." );
 
 		require_once( 'template/header.php' );
@@ -17,16 +19,16 @@ switch( $_GET['action'] ) {
 		?>
 
 <form method="POST" action="orgs.php?action=update">
-	<?php if( $_GET['id'] ) echo "<input type=\"hidden\" name=\"id\" value=\"".$_GET['id']."\">"; ?>
+	<?php if( isset($_GET['ou']) ) echo "<input type=\"hidden\" name=\"id\" value=\"".$_GET['ou']."\">"; ?>
 	<table>
 		<tr>
 			<td>Organization name:</td>
 			<td><input type="text" name="orgname" value="<?php
-if( $_GET['id'] ) echo $data->getOrgName( $_GET['id'] );
+if( isset($_GET['ou']) ) echo $_GET['ou'];
 					?>" size="20"></td>
 		</tr>
 		<tr><td>&nbsp;</td><td><input type="submit" name="submit" value="<?php
-if( $_GET['id'] ) echo "Update"; else echo "Create";
+if( isset($_GET['ou']) ) echo "Update"; else echo "Create";
 				?>"></td></tr>
 	</table>
 </form>
@@ -73,7 +75,6 @@ if( $_GET['id'] ) echo "Update"; else echo "Create";
 			$data->createOrg( $_POST['orgname'], $auth->getUserID()  );
 
 		header( "Location: ." );
-
 		break;
 	default:
  		header( "Location: ." );

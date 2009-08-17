@@ -3,25 +3,41 @@
 // Includes
 require_once( 'include/global.php' );
 
+if(isset($_GET['ou']) && isset($_GET['grp'])) {
+	$got_data = true;
+	$org_name = $_GET['ou'];
+	$group_name = $_GET['grp'];
+	$data->fillAllUserInfo($auth->getUserID());
+} else
+	$got_data = false;
+
+
 // Main action switch
 switch( $_GET['action'] ) {
 	case "members":
-		if( ! $_GET['id'] ) {
+		if( ! $got_data ) {
 			// Where's our bloody data?
 			header( "Location: ." );
 
 			exit;
-		} else if( $data->getGroupState( $_GET['id'] ) == GRPSTATE_INACTIVE ) {
+		}
+		
+		$data->fillGroupInfo($org_name, $group_name);
+		
+		//$data->dump_cache();
+		
+		if( $data->getGroupState( $org_name, $group_name ) == GRPSTATE_INACTIVE ) {
 			// Group is inactive
 			graceful_exit( "Sorry, this group has been locked by an administrator." );
-		} else if( $data->getGroupState( $_GET['id'] ) == GRPSTATE_HIDDEN &&
-				! $data->isGroupMember( $data->getUserID(), $_GET['id'] ) ) {
+		}
+		
+		if( $data->getGroupState( $org_name, $group_name ) == GRPSTATE_HIDDEN &&
+				! $data->isGroupMember( $data->getUserID(), $org_name, $group_name ) ) {
 			// Group is hidden and this user is not a member
 			graceful_exit( "Sorry, you may not view the members of this group." );
 		}
 
-		if( $data->isGroupAdmin( $auth->getUserID(), $_GET['id'] ) )
-			$isAdmin = true;
+		$isAdmin = $data->isGroupAdmin( $auth->getUserID(), $org_name, $group_name );
 
 		require_once( 'template/header.php' );
 
@@ -31,14 +47,13 @@ switch( $_GET['action'] ) {
 		<table>
 			<tr>
 				<th<?php if( $isAdmin ) echo " colspan=\"2\""; ?>>
-					<?php echo $data->getOrgName( $data->getOrg( $_GET['id'] ) ).".".
-							$data->getGroupName( $_GET['id'] ); ?>
+					<?php echo $org_name .".". $group_name; ?>
 				</th>
 			</tr>
 
 			<?php
 
-			foreach( $data->getGroupMembers( $_GET['id'] ) as $memberid )
+			foreach( $data->getGroupMembers( $org_name, $group_name ) as $memberid )
 				// need to limit the number of users listed per page here
 				// (make variable?)
 				echo "<tr>".
@@ -115,7 +130,7 @@ switch( $_GET['action'] ) {
 				}
 
 				foreach( $orgs as $orgid => $groups ) {
-					$orgname = $data->getOrgName( $orgid );
+					$org_name = $data->getOrgName( $orgid );
 
 					foreach( $groups as $groupid => $null ) {
 						echo "<option value=\"".$groupid."\">".$orgname.".".
@@ -150,7 +165,7 @@ switch( $_GET['action'] ) {
 		// Editing new or existing organization
 
 		// Verify auth
-		if( $_GET['id'] && ! $data->isOrgAdmin( $auth->getUserID(), $_GET['id'] ) )
+		if( $got_data && ! $data->isOrgAdmin( $auth->getUserID(), $org_name, $group_name ) )
 			header( "Location: ." );
 
 		require_once( 'template/header.php' );

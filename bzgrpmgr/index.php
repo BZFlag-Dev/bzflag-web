@@ -63,8 +63,8 @@ if( $auth->isLoggedIn() ) {
 						echo "<tr><td>".
 							"<a href=\"groups.php?action=members&ou=".
 							$ou_grp[0]."&grp=".$ou_grp[1]."\">".
-							$ou_grp[0].".".$ou_grp[1]."</td><td>"/*.count(
-									$data->getGroupMembers( $groupid ) )*/.
+							$ou_grp[0].".".$ou_grp[1]."</td><td>".
+									$data->getGroupMemberCount( $ou_grp[0], $ou_grp[1] ).
 							"</a></td></tr>\n";
 
 					echo "</table>\n";
@@ -78,7 +78,7 @@ if( $auth->isLoggedIn() ) {
 				<?php
 
 				// Generate array of orgid's[groupid's]
-				$org_group_arr = $data->getGroupsAdministeredBy( $auth->getUserID() );
+				$org_group_arr = $data->getGroupsAdministratedBy( $auth->getUserID() );
 					
 				if( count( $org_group_arr ) == 0 )
 					echo "You do not administer any groups at this time.<br>\n";
@@ -99,7 +99,7 @@ if( $auth->isLoggedIn() ) {
 										"<td colspan=\"2\">&nbsp;</td></tr>\n";
 
 						// Group name and links (if applicable)
-						foreach( $group_array as $group )
+						foreach( array_keys($group_array) as $group )
 							echo "<tr><td>".
 									( $data->isOrgAdminGroup( $org, $group ) ?
 											"<img src=\"template/img/key_high.png\">" :
@@ -154,8 +154,8 @@ if( $auth->isLoggedIn() ) {
 
 <p>
 <span class="large">Site Information</span><br>
-Total Organizations: <?php echo $userstore->getNumOrgs(); ?><br>
-Total Groups: <?php echo $userstore->getNumGroups(); ?><br>
+Total Organizations: <?php echo $data->getNumOrgs(); ?><br>
+Total Groups: <?php echo $data->getNumGroups(); ?><br>
 Current Users:<br>
 Users Today:
 </span>
