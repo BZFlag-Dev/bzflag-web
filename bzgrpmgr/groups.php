@@ -38,6 +38,8 @@ switch( $_GET['action'] ) {
 		}
 
 		$isAdmin = $data->isGroupAdmin( $auth->getUserID(), $org_name, $group_name );
+		
+		//if($isAdmin) echo 'admin<br>'; else echo 'not admin<br>';
 
 		require_once( 'template/header.php' );
 
@@ -97,46 +99,9 @@ switch( $_GET['action'] ) {
 				<select name="destination">
 				<?php
 				// Output names of possible destination groups as options
-
-				// Generate array of orgid's[groupid's]
-				$orgs = array();
-				foreach( $data->getGroupsByUser( $auth->getUserID() ) as $membergroupid ) {
-					$orgid = $data->getOrg( $membergroupid );
-					$org_groups = $data->getOrgGroups( $orgid );
-
-					// $data->isGroupAdmin() is expensive, so we'll use another
-					if( $data->isOrgAdminGroup( $membergroupid ) ) {
-						// no need to bother with each group... they're all admined,
-						// so add them all
-						foreach( $org_groups as $groupid ) {
-							if( ! $orgs[$orgid] )
-								$orgs[$orgid] = array();
-
-							// Use a hash here so we don't get duplicate group ids
-							$orgs[$orgid][$groupid] = 1;
-						}
-					} else if( $data->isSpecialAdminGroup( $membergroupid ) ) {
-						foreach( $org_groups as $groupid ) {
-							// See if this is the one we have special perms on
-							if( $data->isSpecialAdminGroup( $membergroupid, $groupid ) ) {
-								if( ! $orgs[$orgid] )
-									$orgs[$orgid] = array();
-
-								// Use a hash here so we don't get duplicate group ids
-								$orgs[$orgid][$groupid] = 1;
-							}
-						}
-					}
-				}
-
-				foreach( $orgs as $orgid => $groups ) {
-					$org_name = $data->getOrgName( $orgid );
-
-					foreach( $groups as $groupid => $null ) {
-						echo "<option value=\"".$groupid."\">".$orgname.".".
-								$data->getGroupName( $groupid )."</option>\n";
-					}
-				}
+				foreach($data->getGroupsAdministratedBy( $auth->getUserID() ) as $org => $groups)
+					foreach(array_keys($groups) as $group)
+						echo "<option>".$org.".".$group."</option>\n";
 
 				?>
 			
@@ -148,10 +113,10 @@ switch( $_GET['action'] ) {
 		</form>
 
 		<form method="GET action="groups.php?action=<?php
-				if( $data->isGroupMember( $auth->getUserID(), $_GET['id'] ) ) echo "leavegroup"; else echo "joingroup";
+				if( $data->isGroupMember( $auth->getUserID(), $org_name, $group_name ) ) echo "leavegroup"; else echo "joingroup";
 				?>">
 			<input type="submit" value="<?php
-				if( $data->isGroupMember( $auth->getUserID(), $_GET['id'] ) ) echo "Leave group"; else echo "Join group";
+				if( $data->isGroupMember( $auth->getUserID(), $org_name, $group_name ) ) echo "Leave group"; else echo "Join group";
 				?>">
 		</form>
 
@@ -173,16 +138,16 @@ switch( $_GET['action'] ) {
 		?>
 
 <form method="POST" action="orgs.php?action=update">
-	<?php if( $_GET['id'] ) echo "<input type=\"hidden\" name=\"id\" value=\"".$_GET['id']."\">"; ?>
+	<?php if( $got_data ) echo "<input type=\"hidden\" name=\"id\" value=\"".$org_name.'.'.$group_name."\">"; ?>
 	<table>
 		<tr>
 			<td>Organization name:</td>
 			<td><input type="text" name="orgname" value="<?php
-if( $_GET['id'] ) echo $data->getOrgName( $_GET['id'] );
+if( $got_data ) echo $org_name;
 					?>" size="20"></td>
 		</tr>
 		<tr><td>&nbsp;</td><td><input type="submit" name="submit" value="<?php
-if( $_GET['id'] ) echo "Update"; else echo "Create";
+if( $got_data ) echo "Update"; else echo "Create";
 				?>"></td></tr>
 	</table>
 </form>

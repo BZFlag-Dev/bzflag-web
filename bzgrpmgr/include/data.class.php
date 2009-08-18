@@ -110,6 +110,7 @@ class data {
 		echo 'group_info: '; var_dump($this->group_info); echo '<br>';
 		echo 'member_info: '; var_dump($this->member_info); echo '<br>';
 		echo 'org_info: '; var_dump($this->org_info); echo '<br>';
+		echo 'user_info: '; var_dump($this->user_info); echo '<br>';
 	}
 	
 	public function fillOrgGroups($org_array) {
@@ -352,13 +353,9 @@ class data {
 	}
 	
 	public function isGroupAdmin( $uid, $org, $grp ) {
-		$groups = $this->getGroupsByUser( $uid );
-
-		if( ! $groups )
-			return false;
-			
 		if($memberInfo = $this->get_memberInfo($uid, $org, $grp))
 			if($this->find_perm(array(PERM_ADMIN), $memberInfo['perms']))
+				return true;
 
 		if( $this->isOrgAdmin( $uid, $org ) )
 			return true;
@@ -511,7 +508,7 @@ class data {
 		$ret = array();
 		if(!isset($this->member_info)) return $ret;
 		foreach(array_keys($this->member_info) as $uid)
-			if($this->isMemberOf($uid, $org, $group))
+			if($this->isGroupMember($uid, $org, $group))
 				$ret[]= $uid;
 		return $ret;
 	}
@@ -522,21 +519,7 @@ class data {
 		return false;
 	}
 	
-	public function isGroupMember( $userid, $groupid ) {
-		$members = array();
-
-		$sql = "SELECT userid FROM ".$this->tbl_prf.
-				"memberships WHERE userid = ".$userid.
-				" AND groupid = ".$groupid;
-		mysql_select_db( $this->dbname );
-		$result = mysql_query( $sql, $this->conn );
-		if( $result && mysql_num_rows( $result ) > 0 )
-			return true;
-
-		return false;
-	}
-	
-	public function isMemberOf($uid, $org, $grp) {
+	public function isGroupMember($uid, $org, $grp) {
 		if($membersByUid = $this->get_memberInfo_byUid($uid))
 			if(isset($membersByUid[$org]) && isset($membersByUid[$org][$grp]))
 				return true;
