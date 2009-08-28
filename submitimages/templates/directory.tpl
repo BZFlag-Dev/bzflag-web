@@ -33,7 +33,7 @@
 <body>
   <a href="{$config.paths.baseURL}">Submit Images</a><hr>
 
-  <h1>Index of {$data.httpdirectory}</h1>
+  <h1>Index of {$data.httpdirectoryclean}</h1>
     
   <table>
     <tr><th>Name</th><th>Size</th><th>Author</th><th>Uploader</th><th>License</th></tr>
@@ -41,11 +41,11 @@
     <tr><td><a href="../">Parent Directory</a></td><td>&lt;DIR&gt;</td><td>N/A</td><td>N/A</td><td>N/A</td></tr>
 {/if}
 {foreach from=$data.directories item=directoryname name=directories}
-    <tr><td><a href="{$data.httpdirectory}{$directoryname}/">{$directoryname}</a></td><td>&lt;DIR&gt;</td><td>N/A</td><td>N/A</td><td>N/A</td></tr>
+    <tr><td><a href="{$data.httpdirectory}{$directoryname|escape:'url'}/">{$directoryname}</a></td><td>&lt;DIR&gt;</td><td>N/A</td><td>N/A</td><td>N/A</td></tr>
 {/foreach}
 {foreach from=$data.files item=file name=files}
     <tr>
-      <td><a href="{$data.httpdirectory}{$file.filename}">{$file.filename}</a></td>
+      <td><a href="{$data.httpdirectory}{$file.filename|escape:'url'}">{$file.filename}</a></td>
       <td>{$file.filesize}</td>
       <td>{if $file.authorname}{$file.authorname}{else}(Unknown){/if}</td>
       <td>{if $file.uploaderfirstname && $file.uploaderlastname}{$file.uploaderfirstname} {$file.uploaderlastname}{else}(Unknown){/if}</td>

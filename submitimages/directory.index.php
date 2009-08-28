@@ -7,6 +7,7 @@
   // Set up some variables for this session
   $data['filedirectory'] = $_SERVER['DOCUMENT_ROOT'].rtrim(urldecode($_SERVER['REQUEST_URI']), '/')."/";
   $data['httpdirectory'] = $_SERVER['REQUEST_URI'];
+  $data['httpdirectoryclean'] = urldecode($data['httpdirectory']);
   // Not even sure if Apache would handle a request that included .. in it, but
   // better safe than sorry.
   if (strstr('..', $_SERVER['REQUEST_URI'])) exit;
