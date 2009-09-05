@@ -794,6 +794,15 @@ function action_register() {
     case REG_USER_EXISTS:
       print("A player has already registered with the callsign: $callsign");
       break;
+	case REG_USER_INVALID:
+	  print("Invalid callsign");
+	  break;
+	case REG_MAIL_INVALID:
+	  print("Invalid email");
+	  break;
+	case REG_PASS_INVALID:
+	  print("Invalid password");
+	  break;
 	}
 	exit;
   } else {
