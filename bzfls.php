@@ -485,6 +485,8 @@ function action_list() {
 
   $advertList = "0";    // marker for phantom group 'EVERYONE'
   if ($playerid){
+    global $verifiedGroupID;
+
     sqlQuery ("USE $bbdbname");
     // get list of groups player belongs to ...
     debug ("FETCHING GROUPS", 3);
