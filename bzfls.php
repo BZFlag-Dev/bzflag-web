@@ -25,6 +25,10 @@ include($phpbb_root_path.'includes/utf/utf_tools2.'.$phpEx);
 include($phpbb_root_path.'includes/utf/utf_normalizer.'.$phpEx);
 
 
+// a hack to speed up action_list()
+$verifiedGroupID = '6727';
+
+
 # where to send debug printing (might override below)
 $debugLevel= 2;      // set to >2 to see all sql queries (>1 to see GET/POST input args)
 $debugFilename	= '/var/log/bzfls/bzfls.log';
@@ -494,8 +498,9 @@ function action_list() {
       SELECT g.group_id FROM bzbb3_user_group ug, bzbb3_groups g
       WHERE g.group_id=ug.group_id AND ug.user_pending=0 AND ug.user_id = $playerid");
 
-    // Verified group (speed up the above query, since group_name is not indexed, this this prevents the need to look it up by name)
-    $advertList .= ",6727";
+    // Verified group (speed up the above query, since group_name is
+    // not indexed, this this prevents the need to look it up by name)
+    $advertList .= "," . $verifiedGroupID;
 
     while ($row = mysql_fetch_row($result))
       $advertList .= ",$row[0]";
