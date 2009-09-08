@@ -492,8 +492,7 @@ function action_list() {
 // menotume hack 2006/14/18 - speed fix ??
     $result = sqlQuery ("
       SELECT g.group_id FROM bzbb3_user_group ug, bzbb3_groups g
-      WHERE g.group_id=ug.group_id AND ug.user_pending=0 AND ug.user_id = $play
-erid");
+      WHERE g.group_id=ug.group_id AND ug.user_pending=0 AND ug.user_id = $playerid");
 
     // Verified group (speed up the above query, since group_name is not indexed, this this prevents the need to look it up by name)
     $advertList .= ",6727";
