@@ -464,18 +464,14 @@ function action_list() {
 	  . "WHERE user_id='$playerid'", $link)
 	or die ("Invalid query: ". mysql_error());
       $listing['token'] = $token;
-/* // Temporarily disabled the PM check
       # check for private messages and send a notice if there is one
       $result = mysql_query("SELECT user_new_privmsg FROM bzbb3_users "
-	  . "WHERE username='$callsign' "
-	  . "AND user_password=MD5('$password')"
-	  . "AND user_inactive_reason=0", $link)
+	  . "WHERE username_clean='$clean_callsign'", $link)
 	or die ("Invalid query: " . mysql_error());
       $pms = mysql_result($result, 0);
       if ($pms) {
 	print("NOTICE: You have $pms private messages waiting for you, $callsign.  Log in at http://my.bzflag.org/bb/ to read them.\n");
       }
-*/
     }
     if (!mysql_select_db($dbname)) {
       debug("Database $dbname did not exist", 1);
