@@ -146,10 +146,6 @@ reason: (Axl Rose) foul language on multiple servers, web service abuse
 end: 0
 banner: Project Admins
 reason: (XJ62495)  service abuse, cheat distribution
-67.126.*.*
-end: 0
-banner: Project Admins
-reason: (Sk3letr0n) service abuse, cheat distribution, cheating
 71.59.113.232
 end: 0
 banner: Project Admins
