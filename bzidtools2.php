@@ -1,16 +1,11 @@
 <?php
+
 include('/etc/bzflag/serversettings.php');
 
 
 function Sanitize($value)
 {
   return mysql_real_escape_string(addslashes($value));  
-}
-
-
-function Unsanitize($value)
-{
-  return stripslashes($value);  
 }
 
 
@@ -31,13 +26,13 @@ if (!isset($_REQUEST['action']) && !isset($_REQUEST['value'])) {
   return;
 }
 
+
+header('Content-type: text/plain');
+
 if (!isset($_REQUEST['action']) || !isset($_REQUEST['value'])) {
   echo "ERROR: bad inputs";
   return;
 }
-
-
-header('Content-type: text/plain');
 
 $db = mysql_pconnect($dbhost, $dbuname, $dbpass);
 if (!$db) {
