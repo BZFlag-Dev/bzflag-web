@@ -161,6 +161,8 @@ function action_webvalidate() {
 	
   if ($referer)
     $validReferer = strncmp($_SERVER['SCRIPT_NAME'],$referer,count($_SERVER['SCRIPT_NAME']));
+	else
+		$validReferer = TRUE; // some systems disable referers, so we can't check em if it dosn't exist.
 	
   if ($Key != $formKey || !$validReferer)
     {
