@@ -89,8 +89,12 @@ function action_weblogin() {
 		
 	$css = FALSE;
     if ( array_key_exists("css", $_REQUEST) )
+    {
 		$css =  $_REQUEST['css'];
-	
+		if (get_magic_quotes_gpc())
+			$css = stripslashes($css);
+		$css = htmlspecialchars($css, ENT_QUOTES);
+    }	
 	$sessionKey = rand();
 	
 	$_SESSION['webloginformkey'] = $sessionKey;
