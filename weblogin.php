@@ -49,7 +49,7 @@ function dumpPageHeader ( $cssURL ) {
 	header('Content-type: text/html');
 
 	echo '
-		<HTML>
+		<html>
 		<head>
 		<title>BZFlag - web login</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -61,7 +61,7 @@ function dumpPageHeader ( $cssURL ) {
 		echo '
 		<link href="http://www.bzflag.org/favicon.ico" rel="shortcut icon">
 		</head>
-		<BODY>
+		<body>
 		<div id="Logo"><img src="http://my.bzflag.org/images/webauth_logo.png"></div>
 		<div id="Header"></div>
 		<div id="OuterFrame">
@@ -77,150 +77,143 @@ print('
 	  		</div>
 		</div>
 	  	<div id="Footer"></div>
-		</BODY>
-		</HTML> ');
+		</body>
+		</html> ');
 }
 
 function action_weblogin() {
-	if ( array_key_exists("url", $_REQUEST) )
-		$URL =  $_REQUEST['url'];
-	else
-		die ('ERROR, you must pass in a URL value');
+  if ( array_key_exists("url", $_REQUEST) )
+    $URL =  $_REQUEST['url'];
+  else
+    die ('ERROR, you must pass in a URL value');
 		
-	$css = FALSE;
-    if ( array_key_exists("css", $_REQUEST) )
+  $css = FALSE;
+  if ( array_key_exists("css", $_REQUEST) )
     {
-		$css =  $_REQUEST['css'];
-		if (get_magic_quotes_gpc())
-			$css = stripslashes($css);
-		$css = htmlspecialchars($css, ENT_QUOTES);
+      $css =  $_REQUEST['css'];
+      if (get_magic_quotes_gpc())
+	$css = stripslashes($css);
+      $css = htmlspecialchars($css, ENT_QUOTES);
     }	
-	$sessionKey = rand();
+  $sessionKey = rand();
 	
-	$_SESSION['webloginformkey'] = $sessionKey;
+  $_SESSION['webloginformkey'] = $sessionKey;
 
-	$parsedURL = parse_url($URL);
+  $parsedURL = parse_url($URL);
 
-	dumpPageHeader($css);
-	echo '
-					<div id="Alert"><img src="http://my.bzflag.org/images/webauth_alert.png"></div>
-					<div id="InfoHeader">
-							The site <b>' . $parsedURL["host"] . '</b> is requesting a login using your BZFlag global login<br>
-							Please enter your username and password in the fields below<br>
-							No personal information will be sent to the requesting site (like your password)
-					</div>
+  dumpPageHeader($css);
+  echo '
+	<div id="Alert"><img src="http://my.bzflag.org/images/webauth_alert.png"></div>
+	<div id="InfoHeader">
+		The site <b>' . $parsedURL["host"] . '</b> is requesting a login using your BZFlag global login<br>
+		Please enter your username and password in the fields below<br>
+		No personal information will be sent to the requesting site (like your password)
+	</div>
 					
-					<div id="LoginFormSection">
-							
-							<form id="LoginForm" action="'. $_SERVER['SCRIPT_NAME'] . '" method="POST" >
-							<INPUT type ="hidden" name="url" value="'. htmlentities($URL) .'">
-							<INPUT type ="hidden" name="action" value="webvalidate">
-							<INPUT type ="hidden" name="key" value="'.$sessionKey.'">
-							<div id="Username">Username <INPUT id="UsernameField" type ="text" name="username"></div>
-							<div id="Password">Password <INPUT id="PasswordField" type ="password"  name ="password"></div>
-							<div id="LoginButtonSection"><INPUT id="LoginButton" type="submit" value="login"></div>
-							</form>
-							</div>
-						';
-	dumpPageFooter();
+	<div id="LoginFormSection">
+		<form id="LoginForm" action="'. $_SERVER['SCRIPT_NAME'] . '" method="POST" >
+			<input type ="hidden" name="url" value="'. htmlentities($URL) .'">
+			<input type ="hidden" name="action" value="webvalidate">
+			<input type ="hidden" name="key" value="'.$sessionKey.'">
+			<label>Username</label> <input id="UsernameField" type ="text" name="username">
+			<label>Password</label> <input id="PasswordField" type ="password"  name ="password">
+			<label><input id="LoginButton" type="submit" value="login">
+		</form>
+	</div>
+	';
+  dumpPageFooter();
 }
 
 function action_webvalidate() {
 
-	global $bbdbname, $dbname, $link;
+  global $bbdbname, $dbname, $link;
 	
-	$Key = "";
-	$formKey = $_SESSION['webloginformkey'];
+  $Key = "";
+  $formKey = $_SESSION['webloginformkey'];
 
-    if ( array_key_exists("key", $_REQUEST) )
-		$Key =  $_REQUEST['key'];
+  if ( array_key_exists("key", $_REQUEST) )
+    $Key =  $_REQUEST['key'];
 	
-	if ( array_key_exists("url", $_REQUEST) )
-		$URL =  $_REQUEST['url'];
-	else
-		die ('ERROR, you must pass in a URL value');
+  if ( array_key_exists("url", $_REQUEST) )
+    $URL =  $_REQUEST['url'];
+  else
+    die ('ERROR, you must pass in a URL value');
 
-	if ( array_key_exists("url", $_REQUEST) )
-		$URL =  $_REQUEST['url'];
-	else
-		die ('ERROR, you must pass in a URL value');
+  if ( array_key_exists("username", $_REQUEST) )
+    $username =  utf8_clean_string($_REQUEST['username']);
+  else
+    die ('ERROR, you must pass in a USERNAME value');
 
-	if ( array_key_exists("username", $_REQUEST) )
-		$username =  utf8_clean_string($_REQUEST['username']);
-	else
-		die ('ERROR, you must pass in a USERNAME value');
-
-	if ( array_key_exists("password", $_REQUEST) )
-		$password =  $_REQUEST['password'];
-	else
-		die ('ERROR, you must pass in a PASSWORD value');
+  if ( array_key_exists("password", $_REQUEST) )
+    $password =  $_REQUEST['password'];
+  else
+    die ('ERROR, you must pass in a PASSWORD value');
 
 
-    if (!mysql_select_db($bbdbname))
-	{
+  if (!mysql_select_db($bbdbname))
+    {
       die('Unknown Error');
     }
 	
-	$validReferer = false;
+  $validReferer = false;
 	
-	$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : FALSE;
+  $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : FALSE;
 	
-	if ($referer)
-		$validReferer = strncmp($_SERVER['SCRIPT_NAME'],$referer,count($_SERVER['SCRIPT_NAME']));
+  if ($referer)
+    $validReferer = strncmp($_SERVER['SCRIPT_NAME'],$referer,count($_SERVER['SCRIPT_NAME']));
 	
-	if ($Key != $formKey || !$validReferer)
-	{
-		dumpPageHeader(FALSE);
-		echo'
-			<div id="Error">
-				
-					The website you are loging in from is attempting to circumvent a part of the BZFlag weblogin system<br>
-					Please contact the site owner to have them rectify the problem. If the site in question had asked you for password, it is possible that the site may have stored your information. It is highly recommended that users who see this message change their password immediately.
-				</div>
-		';
+  if ($Key != $formKey || !$validReferer)
+    {
+      dumpPageHeader(FALSE);
+      echo'
+	<div id="Error">
+		The website you are loging in from is attempting to circumvent a part of the BZFlag weblogin system<br>
+		Please contact the site owner to have them rectify the problem. If the site in question had asked you for password, it is possible that the site may have stored your information. It is highly recommended that users who see this message change their password immediately.
+	</div>
+	';
 		
-		dumpPageFooter();
-	}
-	else
+      dumpPageFooter();
+    }
+  else
+    {
+      $result = mysql_query(	"SELECT user_id, user_password FROM bzbb3_users "
+				. "WHERE username_clean='$username' "
+				. "AND user_inactive_reason=0", $link)
+	or die ("Invalid query: " . mysql_error());
+	
+      $row = mysql_fetch_row($result);
+      $playerid = $row[0];
+	
+      if (!$playerid || !phpbb_check_hash($password, $row[1]))
 	{
-		$result = mysql_query(	"SELECT user_id, user_password FROM bzbb3_users "
-								. "WHERE username_clean='$username' "
-								. "AND user_inactive_reason=0", $link)
-								  or die ("Invalid query: " . mysql_error());
+	  dumpPageHeader(FALSE);
+	  echo'<div id="Error"><b>The username or password you entered was invalid.</b></div>';
+	  dumpPageFooter();
+	}
+      else
+	{
+	  srand(microtime() * 100000000);
+	  $token = rand(0,2147483647);
 	
-		$row = mysql_fetch_row($result);
-		$playerid = $row[0];
-	
-		if (!$playerid || !phpbb_check_hash($password, $row[1]))
-		{
-			dumpPageHeader(FALSE);
-			echo'<div id="Error"><b>The username or password you entered was invalid.</b></div>';
-			dumpPageFooter();
-		}
-		else
-		{
-		  srand(microtime() * 100000000);
-		  $token = rand(0,2147483647);
-	
-		  $result = mysql_query("UPDATE bzbb3_users SET "
-								  . "user_token='$token', "
-								  . "user_tokendate='" . time() . "', "
-								  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
-								  . "WHERE user_id='$playerid'", $link)
-			or die ("Invalid query: ". mysql_error());
+	  $result = mysql_query("UPDATE bzbb3_users SET "
+				. "user_token='$token', "
+				. "user_tokendate='" . time() . "', "
+				. "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
+				. "WHERE user_id='$playerid'", $link)
+	    or die ("Invalid query: ". mysql_error());
 	
 	//	$redirURL = $URL . '?username=' . $username . '&token=' . $token;
 	
 	// let them specify the paramaters, we'll just replace them with real info
-		$redirURL = str_replace(Array('%TOKEN%', '%USERNAME%'), Array($token, urlencode($username)), $URL);
+	  $redirURL = str_replace(Array('%TOKEN%', '%USERNAME%'), Array($token, urlencode($username)), $URL);
 	
-		header('location: ' . $redirURL);
-		}
-		if (!mysql_select_db($dbname))
-		{
-		  die('Could not open db: ');
-		}
+	  header('location: ' . $redirURL);
 	}
+      if (!mysql_select_db($dbname))
+	{
+	  die('Could not open db: ');
+	}
+    }
 }
 
 // start of real script
