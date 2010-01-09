@@ -163,7 +163,7 @@ function action_weblogin() {
 			<input type ="hidden" name="key" value="'.$sessionKey.'">
 			<label>Username</label> <input id="UsernameField" type ="text" name="username">
 			<label>Password</label> <input id="PasswordField" type ="password"  name ="password">
-			<label>Automatically login when going to '. $parsedURL["host"] .' </label> <input id="RememberCheckbox" type ="checkbox"  name ="remember">
+			<input id="RememberCheckbox" type ="checkbox"  name ="remember"><label>Automatically login when going to '. $parsedURL["host"] .' </label> 
 			<label><input id="LoginButton" type="submit" value="login">
 		</form>
 	</div>
