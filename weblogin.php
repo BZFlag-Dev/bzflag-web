@@ -109,11 +109,11 @@ function action_weblogin() {
 					<div id="LoginFormSection">
 							
 							<form id="LoginForm" action="'. $_SERVER['SCRIPT_NAME'] . '" method="POST" >
+							<INPUT type ="hidden" name="url" value="'. htmlentities($URL) .'">
+							<INPUT type ="hidden" name="action" value="webvalidate">
+							<INPUT type ="hidden" name="key" value="'.$sessionKey.'">
 							<div id="Username">Username <INPUT id="UsernameField" type ="text" name="username"></div>
 							<div id="Password">Password <INPUT id="PasswordField" type ="password"  name ="password"></div>
-							<INPUT type ="hidden" name="url" value="'. htmlentities($URL) .'"><br>
-							<INPUT type ="hidden" name="action" value="webvalidate"><br>
-							<INPUT type ="hidden" name="key" value="'.$sessionKey.'"><br>
 							<div id="LoginButtonSection"><INPUT id="LoginButton" type="submit" value="login"></div>
 							</form>
 							</div>
