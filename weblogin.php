@@ -54,7 +54,7 @@ function dumpPageHeader () {
 		<title>BZFlag - web login</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<link rel="stylesheet" type="text/css" href="http://www.bzflag.org/general.css">
-		<link href="http://www.bzflag.or/favicon.ico" rel="shortcut icon">
+		<link href="http://www.bzflag.org/favicon.ico" rel="shortcut icon">
 		</head>
 		<BODY>
 		<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#DDDDDD">
