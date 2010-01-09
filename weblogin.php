@@ -82,6 +82,9 @@ print('
 }
 
 function action_weblogin() {
+	
+	  global $bbdbname, $dbname, $link;
+
   if ( array_key_exists("url", $_REQUEST) )
     $URL =  $_REQUEST['url'];
   else
@@ -100,9 +103,52 @@ function action_weblogin() {
   $_SESSION['webloginformkey'] = $sessionKey;
 
   $parsedURL = parse_url($URL);
-
-  dumpPageHeader($css);
-  echo '
+	
+	$hostkey = md5($parsedURL["host"]);
+	
+	$wlu = $hostkey.'wlu';
+	$wlk = $hostkey.'wlk';
+	
+	if (isset($_COOKIE[$wlu]) && isset($_COOKIE[$wlk]))
+	{
+		// try autologin
+		if (mysql_select_db($bbdbname))
+    {
+			$uid = $_COOKIE[$wlu];
+			
+       $result = mysql_query("SELECT user_id, user_password, username_clean FROM bzbb3_users "
+				. "WHERE user_id='$uid' "
+				. "AND user_inactive_reason=0", $link);
+			 
+			 if ($result)
+			 {
+					$row = mysql_fetch_row($result);
+					$playerid = $row[0];
+					
+					$keyhash = md5($parsedURL["host"] . $row[1]); 
+					if ($keyhash ==$_COOKIE[$wlk])
+					{
+						 srand(microtime() * 100000000);
+							$token = rand(0,2147483647);
+						
+							$result = mysql_query("UPDATE bzbb3_users SET "
+									. "user_token='$token', "
+									. "user_tokendate='" . time() . "', "
+									. "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
+									. "WHERE user_id='$playerid'", $link);
+							if ($result)
+							{
+								 $redirURL = str_replace(Array('%TOKEN%', '%USERNAME%'), Array($token, urlencode($row[2])), $URL);
+									header('location: ' . $redirURL);
+									return;
+							}
+					}
+			 }
+    }
+	}
+	
+	dumpPageHeader($css);
+	echo '
 	<div id="Alert"><img src="http://my.bzflag.org/images/webauth_alert.png"></div>
 	<div id="InfoHeader">
 		The site <b>' . $parsedURL["host"] . '</b> is requesting a login using your BZFlag global login<br>
@@ -117,17 +163,19 @@ function action_weblogin() {
 			<input type ="hidden" name="key" value="'.$sessionKey.'">
 			<label>Username</label> <input id="UsernameField" type ="text" name="username">
 			<label>Password</label> <input id="PasswordField" type ="password"  name ="password">
+			<label>Automatically login when going to '. $parsedURL["host"] .' </label> <input id="RememberCheckbox" type ="checkbox"  name ="remember">
 			<label><input id="LoginButton" type="submit" value="login">
 		</form>
 	</div>
 	';
-  dumpPageFooter();
+	dumpPageFooter();
+
 }
 
 function action_webvalidate() {
 
   global $bbdbname, $dbname, $link;
-	
+		
   $Key = "";
   $formKey = $_SESSION['webloginformkey'];
 
@@ -138,6 +186,8 @@ function action_webvalidate() {
     $URL =  $_REQUEST['url'];
   else
     die ('ERROR, you must pass in a URL value');
+		
+	$parsedURL = parse_url($URL);
 
   if ( array_key_exists("username", $_REQUEST) )
     $username =  utf8_clean_string($_REQUEST['username']);
@@ -148,7 +198,10 @@ function action_webvalidate() {
     $password =  $_REQUEST['password'];
   else
     die ('ERROR, you must pass in a PASSWORD value');
-
+		
+	$remember = FALSE;
+	if ( array_key_exists("remember", $_REQUEST) )
+    $remember =  $_REQUEST['remember'];
 
   if (!mysql_select_db($bbdbname))
     {
@@ -178,7 +231,7 @@ function action_webvalidate() {
     }
   else
     {
-      $result = mysql_query(	"SELECT user_id, user_password FROM bzbb3_users "
+      $result = mysql_query("SELECT user_id, user_password FROM bzbb3_users "
 				. "WHERE username_clean='$username' "
 				. "AND user_inactive_reason=0", $link)
 	or die ("Invalid query: " . mysql_error());
@@ -186,14 +239,14 @@ function action_webvalidate() {
       $row = mysql_fetch_row($result);
       $playerid = $row[0];
 	
-      if (!$playerid || !phpbb_check_hash($password, $row[1]))
-	{
-	  dumpPageHeader(FALSE);
-	  echo'<div id="Error"><b>The username or password you entered was invalid.</b></div>';
-	  dumpPageFooter();
-	}
-      else
-	{
+		if (!$playerid || !phpbb_check_hash($password, $row[1]))
+		{
+	  	dumpPageHeader(FALSE);
+			echo'<div id="Error"><b>The username or password you entered was invalid.</b></div>';
+			dumpPageFooter();
+		}
+		else
+		{
 	  srand(microtime() * 100000000);
 	  $token = rand(0,2147483647);
 	
@@ -205,6 +258,21 @@ function action_webvalidate() {
 	    or die ("Invalid query: ". mysql_error());
 	
 	//	$redirURL = $URL . '?username=' . $username . '&token=' . $token;
+	$hostkey = md5($parsedURL["host"]);
+	
+	if ($remember)
+	{
+		$wlu = $hostkey.'wlu';
+		$wlk = $hostkey.'wlk';
+		setcookie($wlu, $playerid , time()+1209600); 
+		$key = md5($parsedURL["host"] . $row[1]);
+    setcookie($wlk, $key , time()+1209600); 
+  }
+	else
+	{
+		setcookie($hostkey.'webloginuser'.'webloginuser', "" , time()-3600); 
+		setcookie($hostkey.'webloginkey'.'webloginkey', "" , time()-3600); 
+	}
 	
 	// let them specify the paramaters, we'll just replace them with real info
 	  $redirURL = str_replace(Array('%TOKEN%', '%USERNAME%'), Array($token, urlencode($username)), $URL);
