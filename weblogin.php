@@ -62,10 +62,11 @@ function dumpPageHeader ( $cssURL ) {
 		<link href="http://www.bzflag.org/favicon.ico" rel="shortcut icon">
 		</head>
 		<BODY>
+		<div id="Logo"><img src="http://my.bzflag.org/images/webauth_logo.png"></div>
 		<div id="Header"></div>
 		<div id="OuterFrame">
 			<div id="CentralFrame">
-				<div id="CentralHeader">My.BZFlag.org Login Page</div><div id="Logo"><img src="http://my.bzflag.org/images/webauth_logo.png"></div>
+				<div id="CentralHeader">My.BZFlag.org Login Page</div>
 		';
 }
 

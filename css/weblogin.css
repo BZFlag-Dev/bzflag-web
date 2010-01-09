@@ -58,8 +58,9 @@ background-color: #33f;
 }
 
 #Logo{
-	vertical-align:top;
-	text-align:right;
+    position:absolute;
+    top:20px;
+    right:40px;
 }
 
 #Alert{
