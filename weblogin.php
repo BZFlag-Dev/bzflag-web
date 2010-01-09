@@ -113,6 +113,10 @@ function action_weblogin() {
 		$URL =  $_REQUEST['url'];
 	else
 		die ('ERROR, you must pass in a URL value');
+		
+	$sessionKey = rand();
+	
+	$_SESSION['webloginformkey'] = $sessionKey;
 
 	$parsedURL = parse_url($URL);
 
@@ -129,7 +133,7 @@ function action_weblogin() {
 					<tr>
 						<td valign="top">
 							<table width="40%" border="0" cellpadding="0" cellspacing="0">
-							<form action="http://my.bzflag.org/weblogin.php" method="POST" >
+							<form action="'. $_SERVER['SCRIPT_NAME'] . '" method="POST" >
 							<tr>
 								<td>Username <INPUT type ="text" name="username"></td>
 							</tr>
@@ -138,6 +142,7 @@ function action_weblogin() {
 							</tr>
 							<INPUT type ="hidden" name="url" value="'. htmlentities($URL) .'"><br>
 							<INPUT type ="hidden" name="action" value="webvalidate"><br>
+							<INPUT type ="hidden" name="key" value="'.$sessionKey.'"><br>
 							<tr>
 								<td><INPUT type="submit" value="login"></td>
 							</tr>
@@ -151,6 +156,17 @@ function action_weblogin() {
 function action_webvalidate() {
 
 	global $bbdbname, $dbname, $link;
+	
+	$Key = "";
+	$formKey = $_SESSION['webloginformkey'];
+
+    if ( array_key_exists("key", $_REQUEST) )
+		$Key =  $_REQUEST['key'];
+	
+	if ( array_key_exists("url", $_REQUEST) )
+		$URL =  $_REQUEST['url'];
+	else
+		die ('ERROR, you must pass in a URL value');
 
 	if ( array_key_exists("url", $_REQUEST) )
 		$URL =  $_REQUEST['url'];
@@ -170,57 +186,81 @@ function action_webvalidate() {
 
     if (!mysql_select_db($bbdbname))
 	{
-      die('Could not open db:' . $bbdbname .' ' . mysql_error());
+      die('Unknown Error');
     }
-
-    $result = mysql_query(	"SELECT user_id, user_password FROM bzbb3_users "
-							. "WHERE username_clean='$username' "
-							. "AND user_inactive_reason=0", $link)
-							  or die ("Invalid query: " . mysql_error());
-
-    $row = mysql_fetch_row($result);
-    $playerid = $row[0];
-
-    if (!$playerid || !phpbb_check_hash($password, $row[1]))
+	
+	$validReferer = false;
+	
+	$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : FALSE;
+	
+	if ($referer)
+		$validReferer = strncmp($_SERVER['SCRIPT_NAME'],$referer,count($_SERVER['SCRIPT_NAME']));
+	
+	if ($Key != $formKey || !$validReferer)
 	{
 		dumpPageHeader();
 		print('
 			<tr>
 				<td valign="top">
-					<b>The username or password you entered was invalid.</b>
+					The website you are loging in from is attempting to circumvent a part of the BZFlag weblogin system<br>
+					Please contact the site owner to have them rectify the problem. If the site in question had asked you for password please be aware that it is possible that the site may have stored it. It is highly recommended that users that see this message change their password immediately.
 				</td>
 			</tr>
 		');
+		
 		dumpPageFooter();
 	}
-    else
+	else
 	{
-      srand(microtime() * 100000000);
-      $token = rand(0,2147483647);
-
-      $result = mysql_query("UPDATE bzbb3_users SET "
-							  . "user_token='$token', "
-							  . "user_tokendate='" . time() . "', "
-							  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
-							  . "WHERE user_id='$playerid'", $link)
-		or die ("Invalid query: ". mysql_error());
-
-//	$redirURL = $URL . '?username=' . $username . '&token=' . $token;
-
-// let them specify the paramaters, we'll just replace them with real info
-	$redirURL = str_replace(Array('%TOKEN%', '%USERNAME%'), Array($token, urlencode($username)), $URL);
-
-	header('location: ' . $redirURL);
-    }
-    if (!mysql_select_db($dbname))
-	{
-      die('Could not open db: ' . mysql_error());
-    }
+		$result = mysql_query(	"SELECT user_id, user_password FROM bzbb3_users "
+								. "WHERE username_clean='$username' "
+								. "AND user_inactive_reason=0", $link)
+								  or die ("Invalid query: " . mysql_error());
+	
+		$row = mysql_fetch_row($result);
+		$playerid = $row[0];
+	
+		if (!$playerid || !phpbb_check_hash($password, $row[1]))
+		{
+			dumpPageHeader();
+			print('
+				<tr>
+					<td valign="top">
+						<b>The username or password you entered was invalid.</b>
+					</td>
+				</tr>
+			');
+			dumpPageFooter();
+		}
+		else
+		{
+		  srand(microtime() * 100000000);
+		  $token = rand(0,2147483647);
+	
+		  $result = mysql_query("UPDATE bzbb3_users SET "
+								  . "user_token='$token', "
+								  . "user_tokendate='" . time() . "', "
+								  . "user_tokenip='" . $_SERVER['REMOTE_ADDR'] . "' "
+								  . "WHERE user_id='$playerid'", $link)
+			or die ("Invalid query: ". mysql_error());
+	
+	//	$redirURL = $URL . '?username=' . $username . '&token=' . $token;
+	
+	// let them specify the paramaters, we'll just replace them with real info
+		$redirURL = str_replace(Array('%TOKEN%', '%USERNAME%'), Array($token, urlencode($username)), $URL);
+	
+		header('location: ' . $redirURL);
+		}
+		if (!mysql_select_db($dbname))
+		{
+		  die('Could not open db: ');
+		}
+	}
 }
 
 // start of real script
 
-
+session_start();
 # Connect to the server database persistently.
 $link = mysql_pconnect($dbhost, $dbuname, $dbpass)
      or die('Could not connect: ' . mysql_error());
