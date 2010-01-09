@@ -1,0 +1,116 @@
+body {
+  background-color: #222222;
+  color: #000000;
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica", "Lucida Grande", "Arial", sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+a:link {
+  color: #0000ff;
+  text-decoration: none;
+  font-style: italic;
+}
+
+a:visited {
+  color: #0000ff;
+  text-decoration: none;
+  font-style: italic;
+}
+
+a:active {
+  color: #0000ff;
+  text-decoration: none;
+  font-style: italic;
+}
+
+a:hover {
+  color: #0000ff;
+  text-decoration: underline;
+  font-style: italic;
+}
+
+#Header{
+}
+
+#OuterFrame{
+	padding: 25px;
+}
+
+#CentralFrame{
+padding: 10px;
+background-color: #fff;
+margin-left:auto;
+margin-right:auto;
+}
+
+#CentralHeader{
+margin-left:auto;
+margin-right:auto;
+font-family:Calibri, Calibri, Arial, Helvetica, sans-serif;
+font-size:3em;
+text-align:center;
+padding: 5px;
+color:#FFF;
+background-color: #33f;
+}
+
+#Logo{
+	vertical-align:top;
+	text-align:right;
+}
+
+#Alert{
+	float:left;
+}
+
+#InfoHeader{
+}
+
+#LoginFormSection{
+	clear:bottom;
+	background-color: #eee;
+	padding: 10px;
+}
+
+#LoginForm{
+}
+
+#Username{
+}
+
+#UsernameField{
+}
+
+#Password{
+}
+
+#PasswordField{
+}
+
+#LoginButtonSection{
+}
+
+#LoginButton{
+}
+
+#Error{
+}
+
+#CopyrightSection{
+	background-color: #eeeeff;
+	text-align:right;
+}
+
+#CopyrightItem{
+}
+
+#CentralFooter{
+}
+
+#Footer{
+}
+
+

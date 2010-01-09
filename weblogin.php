@@ -41,69 +41,41 @@ $banlist = array(
 $thisURL = 'http://my.bzflag.org/weblogin.php';
 $listServerURL = 'http://my.bzflag.org/db/';
 
-function dumpPageHeader () {
+function dumpPageHeader ( $cssURL ) {
 
 	# tell the proxies not to cache
 	header('Cache-Control: no-cache');
 	header('Pragma: no-cache');
 	header('Content-type: text/html');
 
-	print ('
+	echo '
 		<HTML>
 		<head>
 		<title>BZFlag - web login</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-		<link rel="stylesheet" type="text/css" href="http://www.bzflag.org/general.css">
+		<link rel="stylesheet" type="text/css" href="http://my.bzflag.org/css/weblogin.css">
+		';
+		if ($cssURL)
+			echo '<link rel="stylesheet" type="text/css" href="' . $cssURL . '">';
+		
+		echo '
 		<link href="http://www.bzflag.org/favicon.ico" rel="shortcut icon">
 		</head>
 		<BODY>
-		<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#DDDDDD">
-		<tr height="50" valign="top">
-			<td colspan="2">
-				<table border="0" cellpadding="0" cellspacing="0" width="100%">
-					<tr>
-						<td bgcolor="#013571" align="right"><img src="http://www.bzflag.org/images/logo2-1.jpg" alt="logo"></td>
-						<td bgcolor="#818181" align="left"><img src="http://www.bzflag.org/images/logo2-2.jpg" alt=""></td>
-					</tr>
-				 </table>
-			</td>
-		</tr>
-		<tr valign="top">
-			<td>
-				<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
-					<tr>
-						<td valign="top"><center><b>my.bzflag.org login page</b></center></td>
-					</tr> ');
+		<div id="Header"></div>
+		<div id="OuterFrame">
+			<div id="CentralFrame">
+				<div id="CentralHeader">My.BZFlag.org Login Page</div><div id="Logo"><img src="http://my.bzflag.org/images/webauth_logo.png"></div>
+		';
 }
 
 function dumpPageFooter () {
-print('</table>
-			</td>
-		</tr>
-		<tr valign="bottom">
-		<td bgcolor="#000000" cellpadding="2">
-			<table width="100%" border="0" cellpadding="2" bgcolor="#FFFFFF">
-				<tr>
-					<td align="right">
-						<span class="copyright">copyright &copy; <a href="http://www.bzflag.org/wiki/CurrentMaintainer">CurrentMaintainer</a> 1993-2005&nbsp;</span>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<table width="100%" border="0" cellpadding="2" bgcolor="#FFFFFF"><tr><td align="center">
-						<a href="http://www.opengl.org/"><img src="http://www.bzflag.org//images/opengl.gif" alt="opengl" width="88" height="31" border="0"></a>
-						<a href="http://sourceforge.net/project/?group_id=3248"><img src="http://sourceforge.net/sflogo.php?group_id=3248&amp;type=1" width="88" height="31" alt="sourceforge" border="0"></a>
-						<a href="http://sourceforge.net/donate/index.php?group_id=3248"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" border="0" alt="Support This Project" /> </a>
-						<a href="http://www.linuxgames.com/"><img src="http://www.bzflag.org/images/linuxgames.gif" width="88" height="31" alt="linuxgames" border="0"></a>
-						<a href="http://www.telefragged.com/"><img src="http://www.bzflag.org//images/telefragged.gif" width="88" height="31" alt="telefragged" border="0"></a>
-					</td>
-				</tr>
-			</table>
-			</td></tr></table>
-		</td>
-		</tr>
-		</table>
-
+print('
+	  			<div id="CopyrightSection"><span class="CopyrightItem">copyright &copy; <a href="http://my.bzflag.org/w/Tim_Riker">Tim Riker</a> 1993-2010&nbsp;</span></div>
+	  			<div id="CentralFooter"></div>
+	  		</div>
+		</div>
+	  	<div id="Footer"></div>
 		</BODY>
 		</HTML> ');
 }
@@ -114,42 +86,37 @@ function action_weblogin() {
 	else
 		die ('ERROR, you must pass in a URL value');
 		
+	$css = FALSE;
+    if ( array_key_exists("css", $_REQUEST) )
+		$css =  $_REQUEST['css'];
+	
 	$sessionKey = rand();
 	
 	$_SESSION['webloginformkey'] = $sessionKey;
 
 	$parsedURL = parse_url($URL);
 
-	dumpPageHeader();
-	// TODO, make this all prety
-	print ('
-					<tr>
-						<td valign="top">
-							The site <b>' . $parsedURL["host"] . '</b> is requesting a login using your bzflag global login<br>
+	dumpPageHeader($css);
+	echo '
+					<div id="Alert"><img src="http://my.bzflag.org/images/webauth_alert.png"></div>
+					<div id="InfoHeader">
+							The site <b>' . $parsedURL["host"] . '</b> is requesting a login using your BZFlag global login<br>
 							Please enter your username and password in the fields below<br>
 							No personal information will be sent to the requesting site (like your password)
-						</td>
-					</tr>
-					<tr>
-						<td valign="top">
-							<table width="40%" border="0" cellpadding="0" cellspacing="0">
-							<form action="'. $_SERVER['SCRIPT_NAME'] . '" method="POST" >
-							<tr>
-								<td>Username <INPUT type ="text" name="username"></td>
-							</tr>
-							<tr>
-								<td>Password <INPUT type ="password"  name ="password"></td>
-							</tr>
+					</div>
+					
+					<div id="LoginFormSection">
+							
+							<form id="LoginForm" action="'. $_SERVER['SCRIPT_NAME'] . '" method="POST" >
+							<div id="Username">Username <INPUT id="UsernameField" type ="text" name="username"></div>
+							<div id="Password">Password <INPUT id="PasswordField" type ="password"  name ="password"></div>
 							<INPUT type ="hidden" name="url" value="'. htmlentities($URL) .'"><br>
 							<INPUT type ="hidden" name="action" value="webvalidate"><br>
 							<INPUT type ="hidden" name="key" value="'.$sessionKey.'"><br>
-							<tr>
-								<td><INPUT type="submit" value="login"></td>
-							</tr>
+							<div id="LoginButtonSection"><INPUT id="LoginButton" type="submit" value="login"></div>
 							</form>
-							</table>
-						</td>
-					</tr> ');
+							</div>
+						';
 	dumpPageFooter();
 }
 
@@ -198,15 +165,14 @@ function action_webvalidate() {
 	
 	if ($Key != $formKey || !$validReferer)
 	{
-		dumpPageHeader();
-		print('
-			<tr>
-				<td valign="top">
+		dumpPageHeader(FALSE);
+		echo'
+			<div id="Error">
+				
 					The website you are loging in from is attempting to circumvent a part of the BZFlag weblogin system<br>
-					Please contact the site owner to have them rectify the problem. If the site in question had asked you for password please be aware that it is possible that the site may have stored it. It is highly recommended that users that see this message change their password immediately.
-				</td>
-			</tr>
-		');
+					Please contact the site owner to have them rectify the problem. If the site in question had asked you for password, it is possible that the site may have stored your information. It is highly recommended that users who see this message change their password immediately.
+				</div>
+		';
 		
 		dumpPageFooter();
 	}
@@ -222,14 +188,8 @@ function action_webvalidate() {
 	
 		if (!$playerid || !phpbb_check_hash($password, $row[1]))
 		{
-			dumpPageHeader();
-			print('
-				<tr>
-					<td valign="top">
-						<b>The username or password you entered was invalid.</b>
-					</td>
-				</tr>
-			');
+			dumpPageHeader(FALSE);
+			echo'<div id="Error"><b>The username or password you entered was invalid.</b></div>';
 			dumpPageFooter();
 		}
 		else
@@ -263,9 +223,9 @@ function action_webvalidate() {
 session_start();
 # Connect to the server database persistently.
 $link = mysql_pconnect($dbhost, $dbuname, $dbpass)
-     or die('Could not connect: ' . mysql_error());
+     or die('Could not connect: ');
 if (!mysql_select_db($dbname))
-  die('Could not open db: ' . mysql_error());
+  die('Could not open db: ');
 
 @mysql_query("SET NAMES 'utf8'", $link);
 
