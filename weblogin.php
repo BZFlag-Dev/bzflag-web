@@ -43,7 +43,7 @@ function dumpPageHeader () {
 <head>
   <title>My.BZFlag.org Login Page</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <link rel="stylesheet" href="css/weblogin2.css">
+  <link rel="stylesheet" href="css/weblogin.css">
   <link href="http://www.bzflag.org/favicon.ico" rel="shortcut icon">
 </head>
 <body>
