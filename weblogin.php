@@ -11,6 +11,13 @@
 // IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
+// Weblogin settings
+$config = Array(
+  // Used for checking for cross-site form submission. Should contain the
+  // full domain name of the site hosting the weblogin.php script.
+  'ourdomain' => 'my.bzflag.org',
+);
+
 define('IN_PHPBB', true);
 $phpbb_root_path = 'bb/';
 $phpEx = 'php';
@@ -19,66 +26,44 @@ include($phpbb_root_path.'includes/functions.'.$phpEx);
 include($phpbb_root_path.'includes/utf/utf_tools2.'.$phpEx);
 include($phpbb_root_path.'includes/utf/utf_normalizer.'.$phpEx);
 
-# where to send debug printing (might override below)
-$enableDebug	= 0;
-$debugFile	= 'bzfls.log';
-
 // define dbhost/dbuname/dbpass/dbname here
 // NOTE it's .php so folks can't read the source
 include('/etc/bzflag/serversettings.php');
 
-# for banning.  provide key => value pairs where the key is an
-# ip address. value is not used at present.
-# FIXME this should be in an sql table with a remote admin interface
-$banlist = array(
-  '68.109.43.46' => 'knightmare.kicks-ass.net',
-#  '127.0.0.1' => 'localhost'
-  '66.189.4.29' => 'axl rose',
-  '134.241.194.13' => 'axl rose',
-  '255.255.255.255' => 'globalbroadcast'
-);
-
-$thisURL = 'http://my.bzflag.org/weblogin.php';
-$listServerURL = 'http://my.bzflag.org/db/';
-
-function dumpPageHeader ( $cssURL ) {
+function dumpPageHeader () {
 
 	# tell the proxies not to cache
 	header('Cache-Control: no-cache');
 	header('Pragma: no-cache');
 	header('Content-type: text/html');
 
-	echo '
-		<html>
-		<head>
-		<title>BZFlag - web login</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-		<link rel="stylesheet" type="text/css" href="http://my.bzflag.org/css/weblogin.css">
-		';
-		if ($cssURL)
-			echo '<link rel="stylesheet" type="text/css" href="' . $cssURL . '">';
-		
-		echo '
-		<link href="http://www.bzflag.org/favicon.ico" rel="shortcut icon">
-		</head>
-		<body>
-		<div id="Logo"><img src="http://my.bzflag.org/images/webauth_logo.png"></div>
-		<div id="Header"></div>
-		<div id="OuterFrame">
-			<div id="CentralFrame">
-				<div id="CentralHeader">My.BZFlag.org Login Page</div>
-		';
+?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>My.BZFlag.org Login Page</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" href="css/weblogin2.css">
+  <link href="http://www.bzflag.org/favicon.ico" rel="shortcut icon">
+</head>
+<body>
+  <div id="container">
+    <div id="header">
+      <img src="http://my.bzflag.org/images/webauth_logo.png" width="184" height="130" alt="">
+      <h1>My.BZFlag.org Login</h1>
+    </div>
+    <div id="main">
+<?php
 }
 
 function dumpPageFooter () {
-print('
-	  			<div id="CopyrightSection"><span class="CopyrightItem">copyright &copy; <a href="http://my.bzflag.org/w/Tim_Riker">Tim Riker</a> 1993-2010&nbsp;</span></div>
-	  			<div id="CentralFooter"></div>
-	  		</div>
-		</div>
-	  	<div id="Footer"></div>
-		</body>
-		</html> ');
+?>
+    </div>
+    <div id="footer">copyright &copy; <a href="http://my.bzflag.org/w/Tim_Riker">Tim Riker</a> 1993-2010</div>
+  </div>
+</body>
+</html>
+<?php
 }
 
 function action_weblogin() {
@@ -90,14 +75,6 @@ function action_weblogin() {
   else
     die ('ERROR, you must pass in a URL value');
 		
-  $css = FALSE;
-  if ( array_key_exists("css", $_REQUEST) )
-    {
-      $css =  $_REQUEST['css'];
-      if (get_magic_quotes_gpc())
-	$css = stripslashes($css);
-      $css = htmlspecialchars($css, ENT_QUOTES);
-    }	
   $sessionKey = rand();
 	
   $_SESSION['webloginformkey'] = $sessionKey;
@@ -147,27 +124,27 @@ function action_weblogin() {
     }
 	}
 	
-	dumpPageHeader($css);
-	echo '
-	<div id="Alert"><img src="http://my.bzflag.org/images/webauth_alert.png"></div>
-	<div id="InfoHeader">
-		The site <b>' . $parsedURL["host"] . '</b> is requesting a login using your BZFlag global login<br>
-		Please enter your username and password in the fields below<br>
-		No personal information will be sent to the requesting site (like your password)
-	</div>
-					
-	<div id="LoginFormSection">
-		<form id="LoginForm" action="'. $_SERVER['SCRIPT_NAME'] . '" method="POST" >
-			<input type ="hidden" name="url" value="'. htmlentities($URL) .'">
-			<input type ="hidden" name="action" value="webvalidate">
-			<input type ="hidden" name="key" value="'.$sessionKey.'">
-			<label>Username</label> <input id="UsernameField" type ="text" name="username">
-			<label>Password</label> <input id="PasswordField" type ="password"  name ="password">
-			<input id="RememberCheckbox" type ="checkbox"  name ="remember"><label>Automatically login when going to '. $parsedURL["host"] .' </label> 
-			<label><input id="LoginButton" type="submit" value="login">
-		</form>
-	</div>
-	';
+	dumpPageHeader();
+?>
+    <div id="main">
+      <div id="information">
+        The website <b><?php echo htmlentities($parsedURL['host']); ?></b> is requesting a login using your BZFlag global login.<br> 
+        Please provide your username and password on this form.<br>
+        Your password will <b>NOT</b> be sent to the requesting site.
+      </div>
+      
+      <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="POST">
+        <div id="form"> 
+          <input type="hidden" name="url" value="<?php echo htmlentities($URL); ?>"> 
+          <input type="hidden" name="action" value="webvalidate">
+          <input type="hidden" name="key" value="<?php echo $sessionKey; ?>">
+          <label id="usernamelabel">Username: <input name="username" id="username"></label> 
+          <label id="passwordlabel">Password: <input type="password" name="password" id="password"></label>
+          <label id="rememberlabel"><input type="checkbox" name="remember" id="remember"> Automatically login when going to <b><?php echo htmlentities($parsedURL['host']); ?></b></label> 
+          <label id="loginlabel"><input type="submit" id="login" value="login"></label>
+      </div>
+      </form>
+<?php
 	dumpPageFooter();
 
 }
@@ -208,25 +185,19 @@ function action_webvalidate() {
       die('Unknown Error');
     }
 	
-  $validReferer = false;
-	
-  $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : FALSE;
-	
-  if ($referer)
-    $validReferer = strncmp($_SERVER['SCRIPT_NAME'],$referer,count($_SERVER['SCRIPT_NAME']));
-	else
-		$validReferer = TRUE; // some systems disable referers, so we can't check em if it dosn't exist.
+	$refererParts = parse_url($_SERVER['HTTP_REFERER']);
+	$validReferer = (empty($_SERVER['HTTP_REFERER']) || empty($refererParts['host']) || $refererParts['host'] == $GLOBALS['config']['ourdomain']);
 	
   if ($Key != $formKey || !$validReferer)
     {
-      dumpPageHeader(FALSE);
-      echo'
-	<div id="Error">
-		The website you are loging in from is attempting to circumvent a part of the BZFlag weblogin system<br>
-		Please contact the site owner to have them rectify the problem. If the site in question had asked you for password, it is possible that the site may have stored your information. It is highly recommended that users who see this message change their password immediately.
-	</div>
-	';
-		
+      dumpPageHeader();
+?>
+      <div id="information">
+        The website <b><?php echo htmlentities($parsedURL['host']); ?></b> is attempting to circumvent a part of the BZFlag weblogin system<br> 
+        Please contact the site owner to have them rectify the problem.<br>
+        If the website in question had asked you for password, it is possible that the site may have stored your information. It is highly recommended you change your password immediately.
+      </div>
+<?php
       dumpPageFooter();
     }
   else
@@ -241,8 +212,12 @@ function action_webvalidate() {
 	
 		if (!$playerid || !phpbb_check_hash($password, $row[1]))
 		{
-	  	dumpPageHeader(FALSE);
-			echo'<div id="Error"><b>The username or password you entered was invalid.</b></div>';
+	  	dumpPageHeader();
+?>
+      <div id="information">
+        The username or password you entered was invalid.
+      </div>
+<?php
 			dumpPageFooter();
 		}
 		else
@@ -289,8 +264,8 @@ function action_webvalidate() {
 // start of real script
 
 session_start();
-# Connect to the server database persistently.
-$link = mysql_pconnect($dbhost, $dbuname, $dbpass)
+
+$link = mysql_connect($dbhost, $dbuname, $dbpass)
      or die('Could not connect: ');
 if (!mysql_select_db($dbname))
   die('Could not open db: ');
