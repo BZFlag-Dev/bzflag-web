@@ -58,7 +58,7 @@ print <<< end
 										<a href="/" class="navbar">home</a><br>
 										<a href="http://my.bzflag.org/w/Getting_Started" class="navbar" style="color: red;">Getting Started</a><br>
 										<a href="http://my.bzflag.org/w/Getting Help" class="navbar">support</a><br>
-										<a href="http://my.bzflag.org/w/Download" class="navbar">download</a><br>
+										<a href="https://sourceforge.net/project/showfiles.php?group_id=3248" class="navbar">download</a><br>
 										<a href="http://store.bzflag.org/" class="navbar" style="color: green;"><strong>Store</strong></a><br>
 										<a href="/screenshots/" class="navbar">screenshots</a><br>
 										<a href="http://bzflag.svn.sourceforge.net/viewvc/*checkout*/bzflag/trunk/bzflag/COPYING" class="navbar">license</a><br>
@@ -150,7 +150,7 @@ print <<< end
 					<tr>
 						<td bgcolor="#ffffff" align="right">
 end;
-echo '<span class="copyright">copyright &copy; <a href="/wiki/CurrentMaintainer">CurrentMaintainer</a> 1993-'.gmdate('Y').'&nbsp;</span>';
+echo '<span class="copyright">copyright &copy; <a href="http://my.bzflag.org/w/CurrentMaintainer">CurrentMaintainer</a> 1993-'.gmdate('Y').'&nbsp;</span>';
 print <<< end
 						</td>
 					</tr>

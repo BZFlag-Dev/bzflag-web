@@ -4,7 +4,7 @@ include "document.php";
 $doc = new Document;
 $doc->begin("home");
 
-$result = mysql_query("SELECT * FROM news ORDER BY date DESC");
+//$result = mysql_query("SELECT * FROM news ORDER BY date DESC");
 
 print <<< end
 <table border="0">
