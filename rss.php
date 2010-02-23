@@ -38,6 +38,14 @@
     $page['title'] = 'Current Players';
     $data['players'] = $db->FetchAll("SELECT * FROM `currentplayers` ORDER BY $orderby");
   }
+
+  // Strip off any cruft from the end of the email string to due to a bug
+  // in PlayerInfo::cleanEMail() in 2.0.x
+  foreach($data['players'] as $key => $player) {
+    if ( ($pos = strpos($player['email'], "\0")) !== FALSE) {
+      $data['players'][$key]['email'] = substr($player['email'], 0, $pos);
+    }
+  }
   
   // Display output
   
