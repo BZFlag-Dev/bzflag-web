@@ -41,6 +41,7 @@
   $page['refreshed_date'] = date('D, M d H:i:s T Y', $misc[0]['lastrefreshed']);
   $page['refreshed_epoch'] = $misc[0]['lastrefreshed'];
   $page['refreshed_rfc2822'] = date('r', $misc[0]['lastrefreshed']);
+  $page['refreshed_w3c'] = date(DATE_W3C, $misc[0]['lastrefreshed']);
   $page['separator'] = '<div class="center">&middot; &middot; &middot; &middot; &middot; &middot; &middot;</div>';
   
   // Set up Smarty Template Engine
