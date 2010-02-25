@@ -91,7 +91,7 @@ Auto refresh?</p>
 <div class="center">
 <p><a href="{$page.baseURL}rssgenerator.php"><img src="images/xml.gif" alt="RSS Feed"></a></p>
 <p><a href="{$page.baseURL}link.php"><img src="images/link_{if $theme == 'bluetangerine'}bronze{elseif $theme == 'industrial'}silver{else}blue{/if}.png" alt="got stats?"></a></p>
-<p><a href="http://validator.w3.org/check/referer"><img src="images/valid-xhtml10.png" alt="Valid XHTML 1.0!"></a></p>
+<p><a href="http://validator.w3.org/check?uri=referer"><img src="images/valid-html401.png" alt="Valid HTML 4.01 Strict" height="31" width="88"></a></p>
 </div>
 </div>
 
