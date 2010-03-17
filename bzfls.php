@@ -21,7 +21,7 @@ $phpbb_root_path = 'bb/';
 $phpEx = 'php';
 
 include($phpbb_root_path.'includes/functions.'.$phpEx);
-include($phpbb_root_path.'includes/utf/utf_tools2.'.$phpEx);
+include($phpbb_root_path.'includes/utf/utf_tools.'.$phpEx);
 include($phpbb_root_path.'includes/utf/utf_normalizer.'.$phpEx);
 
 
