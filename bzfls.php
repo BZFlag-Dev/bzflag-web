@@ -578,7 +578,7 @@ function action_gettoken (){
     $row = mysql_fetch_row($result);
     $playerid = $row[0];
     if (!$playerid || !phpbb_check_hash($password, $row[1])) {
-      print("NOTOK: invalid callsign or password ($callsign:$password)\n");
+      print("NOTOK: invalid callsign or password\n");
     } else {
       srand(microtime() * 100000000);
       $token = rand(0,2147483647);
