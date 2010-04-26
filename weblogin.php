@@ -126,7 +126,6 @@ function action_weblogin() {
 	
 	dumpPageHeader();
 ?>
-    <div id="main">
       <div id="information">
         The website <b><?php echo htmlentities($parsedURL['host']); ?></b> is requesting a login using your BZFlag global login.<br> 
         Please provide your username and password on this form.<br>
