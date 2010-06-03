@@ -201,13 +201,14 @@ function action_webvalidate() {
     }
   else
     {
-      $result = mysql_query("SELECT user_id, user_password FROM bzbb3_users "
+      $result = mysql_query("SELECT user_id, user_password, username FROM bzbb3_users "
 				. "WHERE username_clean='$username' "
 				. "AND user_inactive_reason=0", $link)
 	or die ("Invalid query: " . mysql_error());
 	
       $row = mysql_fetch_row($result);
       $playerid = $row[0];
+      $username_real = $row[2];
 	
 		if (!$playerid || !phpbb_check_hash($password, $row[1]))
 		{
@@ -249,7 +250,7 @@ function action_webvalidate() {
 	}
 	
 	// let them specify the paramaters, we'll just replace them with real info
-	  $redirURL = str_replace(Array('%TOKEN%', '%USERNAME%'), Array($token, urlencode($username)), $URL);
+	  $redirURL = str_replace(Array('%TOKEN%', '%USERNAME%'), Array($token, urlencode($username_real)), $URL);
 	
 	  header('location: ' . $redirURL);
 	}
