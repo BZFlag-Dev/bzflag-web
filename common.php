@@ -30,10 +30,10 @@
        );
   
   $page['theme'] = 'bluetangerine';
-  if (array_key_exists($_COOKIE['theme'], $config['themes']))
+  if (isset($_COOKIE['theme']) && array_key_exists($_COOKIE['theme'], $config['themes']))
     $page['theme'] = $_COOKIE['theme'];
   
-  $page['refresh'] = ($_COOKIE['refresh'] == true);
+  $page['refresh'] = (isset($_COOKIE['refresh']) && !!$_COOKIE['refresh']);
     
   $page['servername'] = $_SERVER['SERVER_NAME'];
   $page['baseURL'] = 'http://'.$_SERVER['HTTP_HOST'].'/';
