@@ -25,8 +25,7 @@
   }
   
   // List of players
-  $data['players'] = $db->FetchAll("SELECT * FROM `currentplayers` ORDER BY $orderby");
-  
+  $data['players'] = $db->FetchAll("SELECT * FROM `currentplayers` WHERE team != 'O' ORDER BY $orderby");
   
   // Display output
   
