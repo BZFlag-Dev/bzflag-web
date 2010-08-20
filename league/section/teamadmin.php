@@ -8,7 +8,6 @@ function section_teamadmin_permissions(){
 
 function section_teamadmin(){
   require_once('lib/common.php');
-  $TEAMSIZE = 20;
   $vars = array('id','f_password','f_ok_x','f_comment','f_logo','f_name','f_status','f_password1','f_password2',
       'link','f_leader');
   foreach($vars as $var)
@@ -121,7 +120,7 @@ function section_teamadmin(){
 
       // Admin and leaders can change the team status
       if(isAdmin()||($_SESSION['playerid'] == $obj->leader)) {
-        if($numplayer >= 3 && $numplayer < $TEAMSIZE) {
+        if($numplayer >= 3 && $numplayer < MAX_TEAM_SIZE) {
 
           // Can change status IF there are 3 players or more
           echo "<tr><td>Team status:</td><td><select name=f_status>";

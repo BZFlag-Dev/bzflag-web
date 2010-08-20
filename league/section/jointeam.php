@@ -49,14 +49,14 @@ function section_jointeam_doJoin ($id, $invite){
       from l_team left join l_player  on l_team.id = l_player.team
       where l_team.id = ".$id."
       group by l_team.id, l_team.name, l_team.leader"));
-    if($obj->nump == $TEAMSIZE) {
+    if($obj->nump >= MAX_TEAM_SIZE) {
       // Team full
       echo "<center>Sorry, this team is full. Probably someone was joining it at the same time...</center>";
     } else {
       // Okay, let's do the update
       mysql_query("update l_player set team=".$id." where id=".$_SESSION['playerid']);
       // Close team if it's full
-      if($obj->nump == $TEAMSIZE-1) {
+      if($obj->nump == MAX_TEAM_SIZE-1) {
         mysql_query("update l_team set status='closed' where id=".$id);
       }
       // Close team if it has 3 players and is adminclosed
