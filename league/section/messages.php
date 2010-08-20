@@ -35,6 +35,10 @@ function section_messages(){
     }
 
     if(isset($read)) {
+
+      if (!is_numeric($read))
+        return errorPage ('no messages found');
+
       // Display one message
       $res = sqlQuery("select l_player.callsign sender, l_message.status as msgstat, fromid, datesent, subject, msg, htmlok, l_message.team
         from l_message
