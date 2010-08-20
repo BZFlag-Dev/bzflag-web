@@ -21,16 +21,16 @@
   $data['mostpopularserver'] = $db->FetchRow("SELECT server,players FROM `serverinfo` ORDER BY `players` DESC LIMIT 1");
   
   // Player with highest score
-  $data['playerhighestscore'] = $db->FetchRow("SELECT callsign,score,server FROM `currentplayers` ORDER BY `score` DESC LIMIT 1");
+  $data['playerhighestscore'] = $db->FetchRow("SELECT callsign,score,server FROM `currentplayers` WHERE team != 'O' ORDER BY `score` DESC LIMIT 1");
   
   // Player with highest strength index
-  $data['playerhigheststrength'] = $db->FetchRow("SELECT callsign,strengthindex FROM `currentplayers` ORDER BY `strengthindex` DESC LIMIT 1");
+  $data['playerhigheststrength'] = $db->FetchRow("SELECT callsign,strengthindex FROM `currentplayers` WHERE team != 'O' ORDER BY `strengthindex` DESC LIMIT 1");
   
   // Player with lowest score
-  $data['playerlowestscore'] = $db->FetchRow("SELECT callsign,score,server FROM `currentplayers` ORDER BY `score` LIMIT 1");
+  $data['playerlowestscore'] = $db->FetchRow("SELECT callsign,score,server FROM `currentplayers` WHERE team != 'O' ORDER BY `score` LIMIT 1");
   
   // Player with lowest strength index
-  $data['playerloweststrength'] = $db->FetchRow("SELECT callsign,strengthindex FROM `currentplayers` ORDER BY `strengthindex` LIMIT 1");
+  $data['playerloweststrength'] = $db->FetchRow("SELECT callsign,strengthindex FROM `currentplayers` WHERE team != 'O' ORDER BY `strengthindex` LIMIT 1");
   
   
   // Display output
