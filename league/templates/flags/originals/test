@@ -1,0 +1,21 @@
+#!/bin/sh
+
+
+SMALL=30x18
+LARGE=100x60
+
+
+for fn in *.GIF
+do
+	# get first 4 chars of filename	
+	prefix=`echo $fn | grep -o '^....' | sed q`
+	# make it lowercase
+	prefix=`echo $prefix | tr "[A-Z]" "[a-z]"`		
+
+
+echo $prefix
+
+
+done
+
+

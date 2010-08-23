@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "delete from l_session where expires<NOW()" | ../sql
+echo "omptimize table l_session" | ../sql

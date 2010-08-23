@@ -1,0 +1,11 @@
+#!/bin/sh
+
+
+## import data from Ducati live site (table version 2.00.00)
+## and convert for table version 2.01.00 & generic themes
+
+
+../sqlimportgzip $1
+../sql < ../upgrades/upgrade_20000_20100.sql
+../sql < genericthemes.sql
+php add_test_players.php

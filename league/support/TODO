@@ -1,0 +1,14 @@
+- License information
+
+- section/permissions.php 
+	- Map mod:tag to a number (bzf_permission.id?), and use that internally.
+	  This will save some space.
+
+- section/*.php
+	- Should not access $_SESSION variables directly.
+
+- section/permissions.php
+	- Add description for each role
+
+- section/bzforum.php
+	- Allow post_edit to change topic too, if its the first posting in the thread

@@ -1,0 +1,27 @@
+Upgrading from 2.02.00 to 2.03.00
+=================================
+
+The new features (seasonal) requires a few database changes.
+
+run: <webroot>/support/sqlscripts/upgrade/upgrade_20100_20200.sql
+
+Upgrading from 2.01.00 to 2.02.00
+=================================
+
+run: <webroot>/support/sqlscripts/upgrade/upgrade_20100_20200.sql
+
+Then point your browser to
+http://<yourdomain>/support/sqlscripts/upgrades/upgrade_20100_20200.php That
+script needs to be executed at least once.  After that, you can remove the
+file.  (However, running it multiple times wont hurt)
+
+Upgrading from 2.00.01 to 2.01.00
+=================================
+
+A new permissionsystem have been implemented, which requires 
+some changes to the database. No information is lost, but
+strongly consider making a backup before continuing.
+
+
+run: <webroot>/support/sqlscripts/upgrade/upgrade_20000_20100.sql
+

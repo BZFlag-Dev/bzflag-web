@@ -1,0 +1,32 @@
+#!/bin/sh
+
+## cd to where this script is
+cd `echo $0 | sed -e s/[^/]*$//`
+
+. ../../.config/bzlsql.php
+
+ 
+echo "dump league database to gzip backup"
+ 
+ 
+if [ "$1" == "" ]; then
+        echo "Specify an output file, or \"BACKUP\" for backup"
+        exit 5
+fi
+if [ "$1" == "BACKUP" ]; then
+        TARNAME=$LEAGUEbackups/LEAGUESQL-`date +%Y%m%d-%H%M%S`
+else
+        TARNAME=$1
+fi
+  
+mysqldump -u $SQLuser --host=$SQLhost -p$SQLpass --databases $SQLdatabase |\
+gzip > $TARNAME.gzip
+ 
+echo DONE, $TARNAME.gzip created.
+
+
+
+
+
+
+
