@@ -71,11 +71,6 @@ if( isAuthenticated() ) {
   $UserName = $_SESSION['callsign'];
   $UserID = $_SESSION['playerid'];
   $UserLevel = $_SESSION['level'];
-
-  // ADDED BY BLAST007 TO COMBAT SPAM
-  if (strtolower($UserName) == 'sportcunt') exit;
-  // END OF WHAT WAS ADDED
-
 } else if (PRIVATE_LEAGUE > 1){
   require_once ("privatelogin.php");
 
