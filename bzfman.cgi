@@ -11,13 +11,12 @@ case "$QUERY_STRING" in
 	content=""
 	if [ "x$USE_LOCAL" = "x1" ] ; then
 	    command="`echo $QUERY_STRING | /usr/bin/sed 's/\.[56]\.in$//'`"
-	    content="`/usr/bin/man $command`"
+	    content="`/usr/bin/man $command | /usr/local/bin/man2html`"
 	else
 	    #content="`/usr/local/bin/wget -O - http://cvs.sourceforge.net/viewcvs.py/bzflag/bzflag/man/$QUERY_STRING?rev=HEAD`"
 #http://bzflag.svn.sourceforge.net/viewvc/*checkout*/bzflag/branches/v2_0branch/bzflag/man/bzfs.6.in
-	    content="`/usr/local/bin/wget -O - http://bzflag.svn.sourceforge.net/viewvc/*checkout*/bzflag/branches/v2_0branch/bzflag/man/$QUERY_STRING|/usr/bin/groff -man -T ascii 2>&1`"
+	    content="`/usr/local/bin/wget -O - http://bzflag.svn.sourceforge.net/viewvc/*checkout*/bzflag/branches/v2_0branch/bzflag/man/$QUERY_STRING|/usr/bin/groff -man -T ascii | /usr/local/bin/man2html -nodepage 2>&1`"
 	echo "$content" \
-	    | /usr/local/bin/man2html \
 	    | /usr/bin/sed -e "s~^using the manual pages.<BR>$~using the manual pages from http://cvs.sourceforge.net/viewcvs.py/bzflag/bzflag/man/$QUERY_STRING<BR>~" \
 	    | /usr/bin/sed -e "s~<A HREF=\"bzfman.cgi\">Return to Main Contents</A><HR>~<a href=\"$SCRIPT_NAME\">Top</a><HR>~"
 	    fi
