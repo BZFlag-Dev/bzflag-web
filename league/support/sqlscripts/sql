@@ -1,9 +1,0 @@
-#!/bin/sh
-
-
-cd `echo $0 | sed -e s/[^/]*$//`
-
-. ../../.config/bzlsql.php
-
-mysql -A -u $SQLuser --database=$SQLdatabase --host=$SQLhost -p$SQLpass
-

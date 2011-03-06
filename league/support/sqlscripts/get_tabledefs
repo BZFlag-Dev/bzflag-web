@@ -1,7 +1,0 @@
-#!/bin/bash
-
-BINPATH=`echo $0 | sed -e s/[^/]*$//`
-
-. $BINPATH/../../.config/bzlsql.php
-
-mysqldump -a -d -u $SQLuser $SQLdatabase --host=$SQLhost -p$SQLpass

@@ -1,8 +1,0 @@
-#!/bin/sh
-
-QRY="select count(*) as count, p.callsign from l_message, l_player as p \
-     WHERE toid=p.id \
-     group by toid order by count"
-
-echo $QRY | ../sql
-
