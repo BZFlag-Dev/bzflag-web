@@ -94,7 +94,7 @@ function action_weblogin() {
 			$uid = $_COOKIE[$wlu];
 			
        $result = mysql_query("SELECT user_id, user_password, username_clean FROM bzbb3_users "
-				. "WHERE user_id='$uid' "
+				. "WHERE user_id='".mysql_real_escape_string($uid)."' "
 				. "AND user_inactive_reason=0", $link);
 			 
 			 if ($result)
@@ -202,7 +202,7 @@ function action_webvalidate() {
   else
     {
       $result = mysql_query("SELECT user_id, user_password, username FROM bzbb3_users "
-				. "WHERE username_clean='$username' "
+				. "WHERE username_clean='".mysql_real_escape_string($username)."' "
 				. "AND user_inactive_reason=0", $link)
 	or die ("Invalid query: " . mysql_error());
 	

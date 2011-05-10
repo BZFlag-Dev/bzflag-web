@@ -37,7 +37,7 @@ $query = "";
 
 if ( $action == 'name')
 {
-	$query = "SELECT username_clean FROM bzbb3_users WHERE user_id=" . $value;
+	$query = "SELECT username_clean FROM bzbb3_users WHERE user_id='" . $value . "'";
 }
 else if ( $action == 'id')
 {

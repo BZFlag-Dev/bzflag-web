@@ -445,7 +445,7 @@ function action_list() {
     $clean_callsign = utf8_clean_string($callsign);
 
     $result = mysql_query("SELECT user_id, user_password FROM bzbb3_users "
-	. "WHERE username_clean='$clean_callsign' "
+	. "WHERE username_clean='".mysql_real_escape_string($clean_callsign)."' "
 	. "AND user_inactive_reason=0", $link)
       or die ("Invalid query: " . mysql_error());
     $row = mysql_fetch_row($result);
@@ -466,7 +466,7 @@ function action_list() {
       $listing['token'] = $token;
       # check for private messages and send a notice if there is one
       $result = mysql_query("SELECT user_new_privmsg FROM bzbb3_users "
-	  . "WHERE username_clean='$clean_callsign'", $link)
+	  . "WHERE username_clean='".mysql_real_escape_string($clean_callsign)."'", $link)
 	or die ("Invalid query: " . mysql_error());
       $pms = mysql_result($result, 0);
       if ($pms) {
@@ -572,7 +572,7 @@ function action_gettoken (){
     $clean_callsign = utf8_clean_string($callsign);
 
     $result = mysql_query("SELECT user_id, user_password FROM bzbb3_users "
-	. "WHERE username_clean='$clean_callsign' "
+	. "WHERE username_clean='".mysql_real_escape_string($clean_callsign)."' "
 	. "AND user_inactive_reason=0", $link)
       or die ("Invalid query: " . mysql_error());
     $row = mysql_fetch_row($result);
@@ -613,7 +613,7 @@ function checktoken($callsign, $ip, $token, $garray) {
 
   # Check if player exists. if not, just return UNK
   $result = mysql_query("SELECT user_id FROM bzbb3_users "
-			. "WHERE username_clean='$clean_callsign' ", $link)
+			. "WHERE username_clean='".mysql_real_escape_string($clean_callsign)."' ", $link)
     or die ('Invalid query: ' . mysql_error());
   $rows = mysql_num_rows($result);
   if (!mysql_num_rows($result)) {
@@ -632,7 +632,7 @@ function checktoken($callsign, $ip, $token, $garray) {
 //debug ( "SELECT user_id FROM bzbb3_users ". "WHERE username='$callsign' " . $testtoken, 2);
 
   $result = mysql_query("SELECT user_id FROM bzbb3_users "
-      . "WHERE username_clean='$clean_callsign' "
+      . "WHERE username_clean='".mysql_real_escape_string($clean_callsign)."' "
       . $testtoken, $link)
     or die ('Invalid query: ' . mysql_error());
   $row = mysql_fetch_row($result);
@@ -653,7 +653,7 @@ function checktoken($callsign, $ip, $token, $garray) {
 	. "AND bzbb3_user_group.user_pending=0 "
 	. "and (bzbb3_groups.group_name='"
 	. implode("' or bzbb3_groups.group_name='", $garray) . "' )";
-      $result = mysql_query("$query")
+      $result = mysql_query($query)
 	or die ('Invalid query: ' . mysql_error());
       while ($row = mysql_fetch_row($result)) {
 	print(':' . $row[0]);
@@ -730,7 +730,7 @@ function action_add() {
   // check the server key
   if ($version != 'BZFS0026' && $version != 'BZFS1910')
   {
-	$result = mysql_query("SELECT host, owner FROM authkeys WHERE key_string='" . $serverKey . "'");
+	$result = mysql_query("SELECT host, owner FROM authkeys WHERE key_string='" . mysql_real_escape_string($serverKey) . "'");
 	$count = mysql_num_rows($result);
 	if (!$count)
 	{
@@ -799,7 +799,7 @@ function action_add() {
   $curtime = time();
 
   $result = mysql_query("SELECT * FROM servers "
-      . "WHERE nameport = '$nameport'", $link)
+      . "WHERE nameport = '".mysql_real_escape_string($nameport)."'", $link)
     or die ('Invalid query: ' . mysql_error());
   $count = mysql_num_rows($result);
   if (!$count) {

@@ -37,7 +37,7 @@ $result = mysql_select_db($dbname);
 if (!$result)
 	die();
 
-$query = "SELECT nameport, owner, version FROM servers WHERE owner >= 1" . $value;
+$query = "SELECT nameport, owner, version FROM servers WHERE owner >= 1";
 $result = mysql_query($query);
 
 if ($result && mysql_num_rows($result))
@@ -45,11 +45,11 @@ if ($result && mysql_num_rows($result))
 	$servers = array();
 	
 	$count = mysql_num_rows($result);
-	for ($i = 0; i < $count; $i += 1)
+	for ($i = 0; $i < $count; $i += 1)
 	{
 		$row=mysql_fetch_row($result);
 		
-		$info = $array();
+		$info = Array();
 		$info['nameport'] = Unsanitize ($row[0]);
 		$info['owner'] = Unsanitize ($row[1]);
 		$info['version'] = Unsanitize ($row[2]);
