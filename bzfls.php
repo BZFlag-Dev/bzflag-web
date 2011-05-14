@@ -728,6 +728,7 @@ function action_add() {
   $ownerID = "";
   
   // check the server key
+/* Commented out until we decide if 2.3/2.4 will require a server key
   if ($version != 'BZFS0026' && $version != 'BZFS1910')
   {
 	$result = mysql_query("SELECT host, owner FROM authkeys WHERE key_string='" . mysql_real_escape_string($serverKey) . "'");
@@ -757,6 +758,7 @@ function action_add() {
 		return;	
 	}
   }
+*/
 
   # Filter out badly formatted or buggy versions
   print "MSG: ADD $nameport $version $gameinfo " . stripslashes($slashtitle) . "\n";
