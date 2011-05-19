@@ -809,9 +809,9 @@ function action_add() {
     # Server does not already exist in DB so insert into DB
     # FIXME escape title!
     $result = mysql_query("INSERT INTO servers "
-	. "(nameport, build, version, gameinfo, ipaddr,"
-	. " title, lastmod) VALUES "
-	. "('$nameport', '$build', '$version',"
+        . "(nameport, build, version, owner, gameinfo, ipaddr,"
+        . " title, lastmod) VALUES "                           
+        . "('$nameport', '$build', '$version', '$ownerID',"
 	. " '$gameinfo', '$servip', '$slashtitle', $curtime)", $link)
       or die ("Invalid query: ". mysql_error());
 
