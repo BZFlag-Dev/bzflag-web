@@ -395,8 +395,8 @@ function print_json_list(&$listing)
   if (isset($listing['token'])) {
     print "token: " . json_quote($listing['token']) . ",\n";
   }
-  print "fields: ['version','hexcode','addr','ipaddr','title','owner'],\n";
-  print "servers: [";
+  print '"fields": ["version","hexcode","addr","ipaddr","title","owner"],\n';
+  print '"servers": [';
   $first = true;
   foreach ($listing['servers'] as $server) {
     if ($first) {
