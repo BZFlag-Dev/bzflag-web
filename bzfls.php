@@ -728,7 +728,7 @@ function action_add() {
   $ownerID = "";
   
   // check the server key (from the bzfs -publickey option)
-  if ($version != 'BZFS0026' && $version != 'BZFS1910')
+  if ( ($version != 'BZFS0026' && $version != 'BZFS1910') || $serverKey)
   {
 	$result = mysql_query("SELECT host, owner FROM authkeys WHERE key_string='" . mysql_real_escape_string($serverKey) . "'");
 	$count = mysql_num_rows($result);
@@ -762,7 +762,11 @@ function action_add() {
   print "MSG: ADD $nameport $version $gameinfo " . stripslashes($slashtitle) . "\n";
   $pos = strpos($version, 'BZFS');
   if ($pos === false || $pos > 0)
-    return;
+  {
+	 // see if it's fork or port ( just see if it's 8 characters and has letter and numbers in the right spot )
+	 if (strlen($version) != 8 || is_numeric($version[0]) || is_numeric($version[3]) ||!is_numeric($version[4]))
+		return;
+  }
   $split = explode(':', $nameport);
   $servname = $split[0];
   if (array_key_exists(1, $split))
