@@ -166,3 +166,35 @@ reason: Anonymous VPN banned for abuse
 end: 0
 banner: Project Admins
 reason: Anonymous VPN banned for abuse
+74.115.0.*
+end: 0
+banner: Project Admins
+reason: Anonymous VPN banned for abuse
+74.115.1.*
+end: 0
+banner: Project Admins
+reason: Anonymous VPN banned for abuse
+74.115.2.*
+end: 0
+banner: Project Admins
+reason: Anonymous VPN banned for abuse
+74.115.3.*
+end: 0
+banner: Project Admins
+reason: Anonymous VPN banned for abuse
+74.115.4.*
+end: 0
+banner: Project Admins
+reason: Anonymous VPN banned for abuse
+74.115.5.*
+end: 0
+banner: Project Admins
+reason: Anonymous VPN banned for abuse
+74.115.6.*
+end: 0
+banner: Project Admins
+reason: Anonymous VPN banned for abuse
+74.115.7.*
+end: 0
+banner: Project Admins
+reason: Anonymous VPN banned for abuse
