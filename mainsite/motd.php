@@ -4,11 +4,12 @@
 // get our configs
 include('document.php');
 
-if ($action == "rss")	// generate a feed
+if (@$_GET['action'] == "rss")	// generate a feed
 {
-	header('Content-type: text/rss');
+	//header('Content-type: text/rss');
+        header('Content-Type: application/rss+xml');
 	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
-	$content .= "<rss version=\"2.0\" xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n";
+	$content = "<rss version=\"2.0\" xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n";
 	$content .= " <channel>\n";
 	$content .= "  <title>BZFlag Message of the Day</title>\n";
 	$content .= "  <description>The BZFlag Message of the Day news feed.</description>\n";
@@ -19,8 +20,9 @@ if ($action == "rss")	// generate a feed
 	$content .= "  <ttl>60</ttl>\n";
 	$content .= "  <docs>http://blogs.law.harvard.edu/tech/rss</docs>\n";
 	$content .= "  <image>\n";
-	$content .= "   <title>BZFlag</title>\n";
+	$content .= "   <title>BZFlag Message of the Day</title>\n";
 	$content .= "   <url>http://bzflag.org/images/bzflag_icon_128x128.jpg</url>\n";
+        $content .= "   <link>http://bzflag.org/motd.php?action=rss</link>\n";
 	$content .= "   <width>128</width><height>128</height>\n";
 	$content .= "  </image>\n";
 
@@ -38,8 +40,8 @@ if ($action == "rss")	// generate a feed
 	{
 		$content .= "  <item>\n";
 		$content .= "   <title>$row[title]</title>\n";
-		$content .= "   <link>http://bzflag.org/motd.php?action=rss&id=$row[id]</link>\n";
-		$content .= "   <description>$row[description]</description>\n";
+		$content .= "   <link>http://bzflag.org/motd.php?action=rss&amp;id=$row[id]</link>\n";
+		$content .= "   <description><![CDATA[" . htmlspecialchars($row[description], ENT_QUOTES) . "]]></description>\n";
 		if (isset($row['author'])) {
 		  $content .= "   <author>$row[author]</author>\n";
 		}
@@ -50,7 +52,7 @@ if ($action == "rss")	// generate a feed
 		  $content .= "   <category>$row[version]</category>\n";
 		}
 		if (isset($row['id'])) {
-		  $content .= "   <guid isPermaLink=\"true\">http://bzflag.org/motd.php?action=rss&gid=$row[id]</guid>\n";
+		  $content .= "   <guid isPermaLink=\"true\">http://bzflag.org/motd.php?action=rss&amp;gid=$row[id]</guid>\n";
 		}
 		$content .= "   <source>BZFlag MOTD</source>\n";
 		$content .= "  </item>\n";
@@ -70,11 +72,11 @@ else
 	
 	while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
 	{
-		if (isset($row[title])) {
-			echo "$row[title] \n";
-			echo "Posted by $row[author] on $row[pubDate]\n";
-			echo "$row[description]\n";
-			echo "BZFlag version: $row[version]\n"; 
+		if (isset($row['title'])) {
+			echo "{$row['title']}\n";
+			echo "Posted by {$row['author']} on {$row['pubDate']}\n";
+			echo "{$row['description']}\n";
+			echo "BZFlag version: {$row['version']}\n"; 
 			echo "\n"; 
 		}
 	}
