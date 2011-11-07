@@ -1,0 +1,57 @@
+body {
+  font-family: "Calibri", "Helvetica", "Lucida Grande", "Arial", sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  background-color: #222222;
+}
+  
+#container {
+  width: 550px;
+  margin: 3em auto;
+  border: 10px solid white;
+  background-color: #eee;
+}
+  
+#header {
+  background-color: #33f;
+  text-align: center;
+  overflow: hidden;
+  font-size: 1.2em;
+  line-height: 130px;
+}
+  
+#header h1 {
+  margin: 0;
+  padding: 0;
+  color: white;
+}
+  
+#header img {
+  float: right;
+}
+  
+b {
+  font-size: 14px;
+}
+  
+#information, form {
+  margin: 1em;
+}
+
+label {
+  display: block;
+  clear: both;
+}
+
+#usernamelabel, #passwordlabel {
+  width: 250px;
+}
+  
+#username, #password {
+  float: right;
+}
+  
+#footer {
+  text-align: center;
+}
+
