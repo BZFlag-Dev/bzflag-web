@@ -26,7 +26,7 @@ function OutputServerInfo ( $servers )
 }
 
 header('Content-type: text/plain');
-$db = mysql_pconnect($dbhost, $dbuname, $dbpass);
+$db = mysql_connect($dbhost, $dbuname, $dbpass);
 if (!$db)
 {
 	echo "Error";

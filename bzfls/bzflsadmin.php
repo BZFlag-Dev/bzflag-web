@@ -12,7 +12,7 @@
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 define('IN_PHPBB', true);
-$phpbb_root_path = 'bb/';
+$phpbb_root_path = '../../forums.bzflag.org/htdocs/';
 $phpEx = 'php';
 
 include($phpbb_root_path.'includes/functions.'.$phpEx);

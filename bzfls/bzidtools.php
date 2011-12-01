@@ -15,7 +15,7 @@ header('Content-type: text/plain');
 if (!isset($_REQUEST['action']) || !isset($_REQUEST['value']) )
 	return;
 	
-$db = mysql_pconnect($dbhost, $dbuname, $dbpass);
+$db = mysql_connect($dbhost, $dbuname, $dbpass);
 if (!$db)
 {
 	echo "Error";
