@@ -101,8 +101,9 @@ function debug ($message, $level=1) {
 }
 
 function debugArray ($a){
+  $msg = '';
   foreach ($a as $key => $val){
-    if ($msg)
+    if (!strlen($msg))
       $msg .= ', ';
     if (MD5_PASSWORD && strncasecmp ($key, "PASS", 4)==0)
       $val = md5($val);
@@ -231,25 +232,25 @@ if (array_key_exists('action', $_REQUEST)) {
   $action = '';
 }
 # For ADD REMOVE
-$nameport = vnpod($_REQUEST['nameport']);
-$serverKey = maybe_add_slashes($_REQUEST['key']);
+$nameport = vnpod(@$_REQUEST['nameport']);
+$serverKey = maybe_add_slashes(@$_REQUEST['key']);
 # For ADD
-$build    = vcsoe($_REQUEST['build']);
-$version  = vcsoe($_REQUEST['version']); # also on LIST
-$gameinfo = vhod($_REQUEST['gameinfo']);
-$slashtitle = maybe_add_slashes($_REQUEST['title']); # escape for SQL calls
+$build    = vcsoe(@$_REQUEST['build']);
+$version  = vcsoe(@$_REQUEST['version']); # also on LIST
+$gameinfo = vhod(@$_REQUEST['gameinfo']);
+$slashtitle = maybe_add_slashes(@$_REQUEST['title']); # escape for SQL calls
 # for ADD CHECKTOKENS
-$checktokens = vctod($_REQUEST['checktokens']); # callsign0=token\ncallsign1=token\n...
-$groups   = vctod($_REQUEST['groups']); # groups server is interested in
+$checktokens = vctod(@$_REQUEST['checktokens']); # callsign0=token\ncallsign1=token\n...
+$groups   = vctod(@$_REQUEST['groups']); # groups server is interested in
 
 # For players
-$callsign = vcsoe($_REQUEST['callsign']);  # urlencoded
-$email    = veod($_REQUEST['email']);     # urlencoded
-$password = vcsoe($_REQUEST['password']);  # urlencoded
+$callsign = vcsoe(@$_REQUEST['callsign']);  # urlencoded
+$email    = veod(@$_REQUEST['email']);     # urlencoded
+$password = vcsoe(@$_REQUEST['password']);  # urlencoded
 
 # for LIST
-$local      = vcsoe($_REQUEST['local']);
-$listformat = vcsoe($_REQUEST['listformat']);
+$local      = vcsoe(@$_REQUEST['local']);
+$listformat = vcsoe(@$_REQUEST['listformat']);
 
 
 function testform($message) {
