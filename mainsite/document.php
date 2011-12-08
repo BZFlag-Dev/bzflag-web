@@ -2,14 +2,9 @@
 if(!defined("__DOCUMENT_INC__")) {
 define("__DOCUMENT_INC__", 1);
 
-include('/etc/bzflag/serversettings.php');
+include('/var/www/bzflag.org/serversettings.php');
 
-# Connect to the server database persistently.
-if (MYSQL_PERSISTENT === true){
-  $db = mysql_pconnect($dbhost, $dbuname2, $dbpass) or die('Could not connect: ' . mysql_error());
-}else{
-  $db = mysql_connect($dbhost, $dbuname2, $dbpass) or die('Could not connect: ' . mysql_error());
-}
+$db = mysql_connect($dbhost, $dbuname2, $dbpass) or die('Could not connect: ' . mysql_error());
 mysql_select_db($dbname2);
 
 class Document {
@@ -65,7 +60,7 @@ print <<< end
 										<a href="/getin/" class="navbar">get&nbsp;involved!</a><br>
 										<a href="http://my.bzflag.org/w/Other_Links" class="navbar">links</a><br>
 										<a href="http://my.bzflag.org/w/Main_Page" class="navbar">wiki</a><br>
-										<a href="http://stats.BZFlag.org/" class="navbar">stats</a><br>
+										<a href="http://bzstats.strayer.de/" class="navbar">stats</a><br>
 										<a href="http://my.BZFlag.org/bb/" class="navbar">forums</a><br>
 										<a href="http://sourceforge.net/mail/?group_id=3248" class="navbar">mailing&nbsp;lists</a><br>
 										<a href="http://my.BZFlag.org/league/" class="navbar">CTF&nbsp;league</a><br>
