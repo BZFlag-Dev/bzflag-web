@@ -13,8 +13,7 @@
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
 
-define (MYSQL_PERSISTENT, false);
-define (MD5_PASSWORD, true);
+define ('MD5_PASSWORD', true);
 
 define('IN_PHPBB', true);
 $phpbb_root_path = '../../forums.bzflag.org/htdocs/';
@@ -48,12 +47,7 @@ include('banfunctions.php');
 
 debug('Connecting to the database', 3);
 
-# Connect to the server database persistently.
-if (MYSQL_PERSISTENT === true){
-  $link = mysql_pconnect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
-}else{
-  $link = mysql_connect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
-}
+$link = mysql_connect($dbhost, $dbuname, $dbpass) or die('Could not connect: ' . mysql_error());
 if (!mysql_select_db($dbname)) {
   debug("Database $dbname did not exist", 1);
   die('Could not open db: ' . mysql_error());
