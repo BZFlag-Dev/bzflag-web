@@ -1,7 +1,7 @@
 The BZFlag Image Uploader is a tool for BZFlag map authors.  It is to allow these map authors to upload textures for use in their maps. Using this service has quite a few benefits:
 <ul>
   <li>BZFlag 2.0.x only allows textures to be downloaded from a limited numbers of hosts, one of these being images.bzflag.org</li>
-  <li>BZFlag 3.0, when released, will <strong>ONLY</strong> allow textures from images.bzflag.org</li>
+  <li>BZFlag 2.4.x <strong>ONLY</strong> allows textures from images.bzflag.org. Some images that had been on various <em>username</em>.bzflag.bz hostnames have been migrated to <a href="http://images.bzflag.org">images.bzflag.org/</a><em>username</em> to ease migration to 2.4.  Maps will need to be updated, however.</li>
 </ul>
 Therefore, by hosting your images here, you can be sure that players on your map can always view it the way it was intended, textures and all. They won't have to edit their downloadaccess.txt file to enable your textures.
 <hr>
