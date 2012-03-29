@@ -1,1 +1,0 @@
-bzflist://list.bzflag.org:5156/
