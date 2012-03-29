@@ -1,0 +1,208 @@
+<!--[if IE]><script src="/js/excanvas.compiled.js"></script><![endif]-->
+<script type="text/javascript" src="/js/dygraph-combined.js"></script>   
+<script type="text/javascript">
+    //get current and old date's
+    var dStart = new Date();
+    var dEnd = new Date();
+    var dateAge=1;
+    //var hourAge=168;
+    var hourAge=24;
+    
+    //setOldMonth(dStart);
+    setOldHour(dStart);
+    
+    var dStartStr = getSimpleDateString(dStart);
+    var dEndStr = getSimpleDateString(dEnd);
+    
+    function genURL(baseDataUrl) {
+        return baseDataUrl+"/"+dStartStr+"/"+dEndStr;
+    }
+    
+    function setActiveDateLink(id, dateLink) {
+        all = document.getElementsByName(dateLink);
+        for(var i=0;i<all.length;i++){
+            all[i].style.color = "blue";
+            all[i].className="";
+        }
+        cur = document.getElementById(id);
+        cur.style.color = "red";
+        cur.className+="selected";
+    }
+        
+    function updateGraph(gid, dataURL) {
+        gid.updateOptions( { 'file': dataURL } );
+    }
+
+    function unzoomGraph(gid) {
+        gid.updateOptions({
+        dateWindow: null,
+        valueRange: null
+        });
+    }
+
+    function setOldMonth(objDate) {
+        with (objDate) {
+            setMonth(getMonth()-dateAge);
+        }
+    }
+    
+    function setOldHour(objDate) {
+        with (objDate) {
+            setHours(getHours()-hourAge);
+        }
+    }
+    
+    function zeropad(str) {
+        if (str.length < 2) {
+            return "0"+str;
+        } else {
+            return str;
+        }
+    }
+
+    function getSimpleDateString(date) {
+        var dYear = date.getFullYear().toString();
+        var dMonth = zeropad((date.getMonth()+1).toString());
+        var dDay = zeropad(date.getDate().toString());
+        var dHour = zeropad(date.getHours().toString());
+        var dMin = zeropad(date.getMinutes().toString());
+        var dSec = zeropad(date.getSeconds().toString());
+
+        return dYear+dMonth+dDay+dHour+dMin+dSec
+    }
+
+    function updateDateLabel(start,end) {
+        document.getElementById(start).innerHTML=dStart.toString();
+        document.getElementById(end).innerHTML=dEnd.toString();
+    }
+            
+    function setDateRange(interval, gid, strGid, baseURL) {
+        gidStart = strGid+"DateStart";
+        gidEnd = strGid+"DateEnd";
+        switch(interval) {
+            case '2y':
+                dStart = new Date();
+                dateAge=24;
+                setOldMonth(dStart);
+                dStartStr = getSimpleDateString(dStart);
+                dEnd = new Date();  // update to current time
+                dEndStr = getSimpleDateString(dEnd);
+                updateGraph(gid, genURL(baseURL));
+                updateDateLabel(gidStart,gidEnd);
+                setActiveDateLink(strGid+'2y', strGid+"DateLink");
+                break;
+            case '1y':
+                dStart = new Date();
+                dateAge=12;
+                setOldMonth(dStart);
+                dStartStr = getSimpleDateString(dStart);
+                dEnd = new Date();  // update to current time
+                dEndStr = getSimpleDateString(dEnd);
+                updateGraph(gid, genURL(baseURL));
+                updateDateLabel(gidStart,gidEnd);
+                setActiveDateLink(strGid+'1y', strGid+"DateLink");
+                break;
+            case '6m':
+                dStart = new Date();
+                dateAge=6;
+                setOldMonth(dStart);
+                dStartStr = getSimpleDateString(dStart);
+                dEnd = new Date();  // update to current time
+                dEndStr = getSimpleDateString(dEnd);
+                updateGraph(gid, genURL(baseURL));
+                updateDateLabel(gidStart,gidEnd);
+                setActiveDateLink(strGid+'6m', strGid+"DateLink");
+                break;
+            case '3m':
+                dStart = new Date();
+                dateAge=3;
+                setOldMonth(dStart);
+                dStartStr = getSimpleDateString(dStart);
+                dEnd = new Date();  // update to current time
+                dEndStr = getSimpleDateString(dEnd);
+                updateGraph(gid, genURL(baseURL));
+                updateDateLabel(gidStart,gidEnd);
+                setActiveDateLink(strGid+'3m', strGid+"DateLink");
+                break;
+            case '1m':
+                dStart = new Date();
+                dateAge=1;
+                setOldMonth(dStart);
+                dStartStr = getSimpleDateString(dStart);
+                dEnd = new Date();  // update to current time
+                dEndStr = getSimpleDateString(dEnd);
+                updateGraph(gid, genURL(baseURL));
+                updateDateLabel(gidStart,gidEnd);
+                setActiveDateLink(strGid+'1m', strGid+"DateLink");
+                break;
+            case '14d':
+                dStart = new Date();
+                hourAge=336;
+                setOldHour(dStart);
+                dStartStr = getSimpleDateString(dStart);
+                dEnd = new Date();  // update to current time
+                dEndStr = getSimpleDateString(dEnd);
+                updateGraph(gid, genURL(baseURL));
+                updateDateLabel(gidStart,gidEnd);
+                setActiveDateLink(strGid+'14d', strGid+"DateLink");
+                break;
+            case '7d':
+                dStart = new Date();
+                hourAge=168;
+                setOldHour(dStart);
+                dStartStr = getSimpleDateString(dStart);
+                dEnd = new Date();  // update to current time
+                dEndStr = getSimpleDateString(dEnd);
+                updateGraph(gid, genURL(baseURL));
+                updateDateLabel(gidStart,gidEnd);
+                setActiveDateLink(strGid+'7d', strGid+"DateLink");
+                break;
+            case '1d':
+                dStart = new Date();
+                hourAge=24;
+                setOldHour(dStart);
+                dStartStr = getSimpleDateString(dStart);
+                dEnd = new Date();  // update to current time
+                dEndStr = getSimpleDateString(dEnd);
+                updateGraph(gid, genURL(baseURL));
+                updateDateLabel(gidStart,gidEnd);
+                setActiveDateLink(strGid+'1d', strGid+"DateLink");
+                break;
+            case '12h':
+                dStart = new Date();
+                hourAge=12;
+                setOldHour(dStart);
+                dStartStr = getSimpleDateString(dStart);
+                dEnd = new Date();  // update to current time
+                dEndStr = getSimpleDateString(dEnd);
+                updateGraph(gid, genURL(baseURL));
+                updateDateLabel(gidStart,gidEnd);
+                setActiveDateLink(strGid+'12h', strGid+"DateLink");
+                break;
+            case '6h':
+                dStart = new Date();
+                hourAge=6;
+                setOldHour(dStart);
+                dStartStr = getSimpleDateString(dStart);
+                dEnd = new Date();  // update to current time
+                dEndStr = getSimpleDateString(dEnd);
+                updateGraph(gid, genURL(baseURL));
+                updateDateLabel(gidStart,gidEnd);
+                setActiveDateLink(strGid+'6h', strGid+"DateLink");
+                break;
+            case '1h':
+                dStart = new Date();
+                hourAge=1;
+                setOldHour(dStart);
+                dStartStr = getSimpleDateString(dStart);
+                dEnd = new Date();  // update to current time
+                dEndStr = getSimpleDateString(dEnd);
+                updateGraph(gid, genURL(baseURL));
+                updateDateLabel(gidStart,gidEnd);
+                setActiveDateLink(strGid+'1h', strGid+"DateLink");
+                break;
+            default:
+                break;
+        }
+    }
+</script>

@@ -1,0 +1,53 @@
+Please note that as some player names have slashes in them, that Apache by default blocks the encoding of slashes.
+
+to work around this, we enable `AllowEncodedSlashes On` at the virtual directory level.
+
+The application encodes them just fine, and will route them just fine, and there is no security issue with them - so it's safe to enable them
+
+
+alias/virtual server config:
+Please note that "AllowOverride" and "Options" settings:
+	"AllowOverride All"
+	"Options FollowSylinks"
+
+apache Virtual Server Example:
+<VirtualHost *:80>
+    ServerAdmin webmaster@domain.com
+    DocumentRoot "/var/www/BzStatsWeb/webroot"
+    ServerName mydomainname
+    AllowEncodedSlashes On
+
+    ErrorLog "logs/BzStatsWeb-error.log"
+    CustomLog "logs/BzStatsWeb-access.log" common
+
+    <Directory "/var/www/BzStatsWeb/webroot">
+        AllowOverride All
+        Options FollowSymLinks
+        Order allow,deny
+        Allow from all
+    </Directory>
+</VirtualHost>
+
+
+Qore's included .htaccess file in the webroot gives friendly URL's, and routes everything properly to index.php.
+
+If you would rather 'alias' the webroot from an existing site (meaning it will not be served from the site's root)
+then you must set it up as follows:
+
+
+alias /myAlias "/path/to/project/webroot"
+<Location /myAlias>
+    Options FollowSymLinks
+    Order allow,deny
+    Allow from all
+    AllowEncodedSlashes On
+
+    <IfModule mod_rewrite.c>
+        RewriteEngine On
+
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+
+        RewriteRule ^(.*)$ index.php?url=$1 [PT,L]
+    </IfModule>
+</Location>

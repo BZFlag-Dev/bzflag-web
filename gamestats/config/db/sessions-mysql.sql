@@ -1,0 +1,9 @@
+CREATE TABLE `sessions` (
+	`session_id` CHAR(70) NOT NULL,
+	`session_data` TEXT NOT NULL,
+	`create_time` DATETIME NOT NULL,
+	`last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`session_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=MyISAM;

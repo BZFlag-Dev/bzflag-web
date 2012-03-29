@@ -1,0 +1,90 @@
+{% extends 'default.html.twig' %}
+{% import "includes/graphjs.html.twig" as graph %}
+{% import "includes/graph.html.twig" as g %}
+
+{% block title %}Player Stats{% endblock %}
+{% block PlayersCurrent %}selected{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{constant('SITE_ROOT')}}/css/dygraph.css" />
+{% endblock %}
+    
+{% block jsfooter %}
+    {{ parent() }}
+    {{ graph.dyjs('first','/bzstatsapi/csv/getsumedplayercount','BZFlag Total Player Activity','Number Active Players/Observers', 'false') }}
+{% endblock %}
+    
+{% block graphArea %}
+    <center>
+    <table class="graphs">
+        <tbody>
+            <tr>
+                <td>{{ g.ghtml("first", '/bzstatsapi/csv/getsumedplayercount', '1110px', '400px') }}</td>
+            </tr>
+        </tbody>
+    </table>
+    </center>
+{% endblock %}
+    
+    
+{% block contentTop %}
+<form name="input" action="/bzstats/playersearch/" method="post">
+    Player Search: <input type="text" name="PlayerSearch" />
+    <input type="submit" value="Search" />
+</form>
+    
+{% if data.error.playernotfound %}
+    <div class="error">
+        The Player You Searched For Could Not be Found!<br />
+        Please make sure you use Alpha-Numeric characters only.
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<table id='stats'>
+    <thead>
+        <tr>
+            <th id="th1">Currently Online Players <span class="small info">(total: {{ data['curPlayers']|length }})</span></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <div class="largescroll">
+                    <table class="serversUsed">
+                        <thead class="subHeader">
+                            <tr>
+                                <th>Player Name</th>
+                                <th>Server Name</th>
+                                <th>Team</th>
+                                <th>Wins</th>
+                                <th>Losses</th>
+                                <th>TeamKills</th>
+                                <th>TimeStamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data['curPlayers'] %}
+                                <tr class="{{ cycle(['even', 'odd'], loop.index) }}">
+                                    <td><a href="/bzstats/player/{{row['PlayerName']|url_encode()}}">{{ row.PlayerName }}</a></td>
+                                    <td>{{row.ServerName}}</td>
+                                    <td>{{row.Team}}</td>
+                                    <td>{{row.Wins}}</td>
+                                    <td>{{row.Losses}}</td>
+                                    <td>{{row.Teamkills}}</td>
+                                    <td>{{row.Timestamp}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}
+
+{% block listArea %}
+{% endblock %}

@@ -1,0 +1,27 @@
+{% macro dyjs(gid,baseDataUrl,title,ylabel,stacked,doNotInclude) %}
+    {% if not doNotInclude %}
+        {% include 'includes/graphjs-common.html.twig' %}
+    {% endif %}
+    <script type="text/javascript">
+        var g{{gid}};
+        var {{gid}}DataURL = genURL("{{baseDataUrl|raw}}");
+
+        updateDateLabel("{{gid}}DateStart","{{gid}}DateEnd");
+        setActiveDateLink("{{gid}}1d", '{{gid}}DateLink')
+        
+        g{{gid}} = new Dygraph(
+            document.getElementById("g{{gid}}"),{{gid}}DataURL,
+            {
+                title: '{{title}}',
+                titleHeight: 32,
+                ylabel: '{{ylabel}}',
+                legend: 'always',
+                labelsDivStyles: { 'textAlign': 'right' },
+                showRangeSelector: true,
+                highlightCircleSize: 3,
+                strokeWidth: 1,
+                stackedGraph: {{stacked}}
+            }
+        );
+    </script>
+{% endmacro %}

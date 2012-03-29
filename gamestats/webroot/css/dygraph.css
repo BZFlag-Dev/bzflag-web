@@ -1,0 +1,66 @@
+.graphOuter {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    padding: 10px;
+    border: 2px solid #CCC;
+    font-family: monospace;
+}
+
+.graphOptions {
+    margin-left: 55px;
+}
+
+.graphDateSelecttion {
+    text-align: left;
+    width: 100%;
+}
+
+.graphDateSelecttion a, .graphDateSelecttion a:link, .graphDateSelecttion a:visited {
+    text-decoration: none;
+    color: blue;
+}
+
+.graphDateSelecttion a:hover {
+    text-decoration: underline;
+    color: red;
+}
+.graphDateSelecttion a.selected {
+    color: red;
+    text-decoration: none;
+    cursor: default;
+}
+.graphDates {
+    margin-top: 10px;
+    font-size: small;
+}
+.graphDates span {
+    font-family: monospace;
+}
+.gReset {
+    float: right;
+    margin-right: 28px;
+}
+
+.graph{}
+
+.graph .dygraph-label {
+      /* This applies to the title, x-axis label and y-axis label */
+      font-family: Arial, Helvetica, sans-serif;
+}
+.graph .dygraph-title {
+    /* This rule only applies to the chart title */
+    font-size: 24px;
+    text-shadow: gray 2px 2px 2px;  /* color, delta-x, delta-y, blur radius */
+}
+.graph .dygraph-ylabel {
+    /* This rule only applies to the y-axis label */
+    font-size: 18px;
+    text-shadow: gray -2px 2px 2px;  /* (offsets are in a rotated frame) */
+}
+.chart {
+    border: 1px dashed black;
+    margin: 5px;
+    padding: 2px;
+}

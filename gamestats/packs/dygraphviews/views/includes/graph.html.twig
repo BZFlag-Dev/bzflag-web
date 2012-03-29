@@ -1,0 +1,26 @@
+{% macro ghtml(id, api, width, height) %}
+<div class="graphOuter" style="width:{{width}};">
+<div class="graphInner">
+    <div id="g{{id}}" class="graph" style="width: {{width}}; height:{{height}};"></div>
+    <div class="graphOptions">
+        <div class="graphDateSelecttion">
+            {#<a href="#{{id}}" id="{{id}}2y" name="{{id}}DateLink" class="" onClick="setDateRange('2y', g{{id}}, '{{id}}', '{{api}}')">2y</a>
+            <a href="#{{id}}" id="{{id}}1y" name="{{id}}DateLink" class="" onClick="setDateRange('1y', g{{id}}, '{{id}}', '{{api}}')">1y</a>#}
+            <a href="#{{id}}" id="{{id}}6m" name="{{id}}DateLink" class="" onClick="setDateRange('6m', g{{id}}, '{{id}}', '{{api}}')">6m</a>
+            <a href="#{{id}}" id="{{id}}3m" name="{{id}}DateLink" class="" onClick="setDateRange('3m', g{{id}}, '{{id}}', '{{api}}')">3m</a>
+            <a href="#{{id}}" id="{{id}}1m" name="{{id}}DateLink" class="" onClick="setDateRange('1m', g{{id}}, '{{id}}', '{{api}}')">1m</a>
+            <a href="#{{id}}" id="{{id}}14d" name="{{id}}DateLink" class="" onClick="setDateRange('14d', g{{id}}, '{{id}}', '{{api}}')">14d</a>
+            <a href="#{{id}}" id="{{id}}7d" name="{{id}}DateLink" class="" onClick="setDateRange('7d', g{{id}}, '{{id}}', '{{api}}')">7d</a>
+            <a href="#{{id}}" id="{{id}}1d" name="{{id}}DateLink" class="" onClick="setDateRange('1d', g{{id}}, '{{id}}', '{{api}}')">1d</a>
+            <a href="#{{id}}" id="{{id}}12h" name="{{id}}DateLink" class="" onClick="setDateRange('12h', g{{id}}, '{{id}}', '{{api}}')">12h</a>
+            <a href="#{{id}}" id="{{id}}6h" name="{{id}}DateLink" class="" onClick="setDateRange('6h', g{{id}}, '{{id}}', '{{api}}')">6h</a>
+            <div class="gReset"><a href="#{{id}}" onclick="unzoomGraph(g{{id}})">Reset Zoom</a></div>
+        </div>
+        <div class="graphDates">
+            <p>Displaying Data From:</p>
+            <strong>Start Date:</strong> <span id="{{id}}DateStart"></span><br>
+            <strong>End Date:</strong>&nbsp;&nbsp; <span id="{{id}}DateEnd"></span>
+        </div>
+    </div>
+</div>
+{% endmacro %}

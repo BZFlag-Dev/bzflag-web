@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block head %}
+            <link rel="stylesheet" href="{{constant('SITE_ROOT')}}/css/style.css" />
+            <title>{% block title %}{% endblock %} - BZFlag GameStats</title>
+        {% endblock %}
+    </head>
+<body>
+    <div id='pageContainer'>
+        <div id='logo'><img src='{{constant('SITE_ROOT')}}/img/logo.jpg' alt='bzstats logo' /></div>
+        <div id='nav'>
+            <ul>
+                <li class="left"><a href="/" class="{% block HomeCurrent %}{% endblock %}">Home</a></li>
+                <li class="left"><a href="/bzstats/servers" class="{% block ServerCurrent %}{% endblock %}">Servers</a></li>
+                <li class="left"><a href="/bzstats/players" class="{% block PlayersCurrent %}{% endblock %}">Players</a></li>
+                <li class="right"><a href="/AboutBzStats" class="{% block AboutCurrent %}{% endblock %}">About</a></li>
+            </ul>
+        </div>
+        
+        <div id='content'>
+            {% block contentTop %}{% endblock %}
+            <div id='content-inner'>
+                {% block content %}{% endblock %}
+            </div>
+                
+            <div id='graphArea'>
+                {% block graphArea %}{% endblock %}
+            </div>
+
+            <div id='listArea'>
+                {% block listArea %}{% endblock %}
+            </div>
+        </div>
+            
+        <div id='footer'>
+            {% block footer %}
+            {% endblock %}
+        </div>
+    </div>
+{% block jsfooter %}
+{% endblock %}
+</body>
+</html>

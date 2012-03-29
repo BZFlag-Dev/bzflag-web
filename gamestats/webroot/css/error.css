@@ -1,0 +1,35 @@
+h1 { text-align: center; border-bottom: 2px dashed #CCC;}
+
+#wrapper {
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 900px;
+    border: 2px dashed #CCC;
+}
+
+#errBody {
+    padding: 20px;
+    text-align: center;
+    font-size: larger;
+}
+div.link {
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+#errBody a { font-size: larger; font-weight: bold;}
+#errTitle {
+    font-size: larger;
+    font-weight: bold;
+    text-align: left;
+}
+#errDetails {
+    font-size: smaller;
+    background-color: #EEE;
+    padding: 15px;
+    text-align: left;
+}
+#url{margin: 5px 0;}
+#url span, #error span {font-weight: bold;}
+#error { margin: 5px 0; font-size: large;}
+#error span {color: red;}

@@ -1,0 +1,151 @@
+{% extends 'default.html.twig' %}
+{% import "includes/graphjs.html.twig" as graph %}
+{% import "includes/graph.html.twig" as g %}
+
+{% block title %}Server Stats{% endblock %}
+{% block ServerCurrent %}selected{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{constant('SITE_ROOT')}}/css/dygraph.css" />
+{% endblock %}
+
+{% block jsfooter %}
+    {{ parent() }}
+    {{ graph.dyjs('first','/bzstatsapi/csv/getTotalPlayerCount','BZFlag Total Player Activity','Number Active Players', 'false') }}
+    {{ graph.dyjs('second','/bzstatsapi/csv/getTotalServerCount','BZFlag Total Server Activity','Number Active Servers', 'false', 'false') }}
+{% endblock %}
+    
+{% block graphArea %}
+    <center>
+    <table class="graphs">
+        <tbody>
+            <tr>
+                <td>{{ g.ghtml("first", '/bzstatsapi/csv/getTotalPlayerCount', '540px', '300px') }}</td>
+                <td>{{ g.ghtml("second", '/bzstatsapi/csv/getTotalServerCount', '540px', '300px') }}</td>
+            </tr>
+        </tbody>
+    </table>
+    </center>
+{% endblock %}
+
+
+{% block contentTop %}
+<h1>Servers With Players</h1>
+{% endblock %}
+{% block content %}
+<table id='stats'>
+    <thead>
+        <tr>
+            <th id="th1">Current <span class="small info">Last Update: {{ data['curStats']['Timestamp'] }}</span></th>
+            <th id="th2">Today</th>
+            <th id="th3">This Week</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="tRowLast">
+            <td>
+                Servers With Players: <span class="data">{{ data['curStats']['Games'] }}</span><br />
+                Total Players: <span class="data">{{ data['curStats']['Players'] }}</span>
+            </td>
+            <td>
+                Avg Servers with Players: <span class="data">{{ data['dailyServerStats']['AverageServers']|number_format(2) }}</span><br />
+                Min Servers with Players: <span class="data">{{ data['dailyServerStats']['MinServers'] }}</span><br />
+                Max Servers with Players: <span class="data">{{ data['dailyServerStats']['MaxServers'] }}</span><br /><br />
+                Avg Number of Players: <span class="data">{{ data['dailyServerStats']['AveragePlayers']|number_format(2) }}</span><br />
+                Min Number of Players: <span class="data">{{ data['dailyServerStats']['MinPlayers'] }}</span><br />
+                Max Number of Players: <span class="data">{{ data['dailyServerStats']['MaxPlayers'] }}</span><br />
+            </td>
+            <td>
+                Avg Servers with Players: <span class="data">{{ data['weeklyServerStats']['AverageServers']|number_format(2) }}</span><br />
+                Min Servers with Players: <span class="data">{{ data['weeklyServerStats']['MinServers'] }}</span><br />
+                Max Servers with Players: <span class="data">{{ data['weeklyServerStats']['MaxServers'] }}</span><br /><br />
+                Avg Number of Players: <span class="data">{{ data['weeklyServerStats']['AveragePlayers']|number_format(2) }}</span><br />
+                Min Number of Players: <span class="data">{{ data['weeklyServerStats']['MinPlayers'] }}</span><br />
+                Max Number of Players: <span class="data">{{ data['weeklyServerStats']['MaxPlayers'] }}</span><br />
+            </td>
+        </tr>
+        <tr class='tHeading'>
+            <td id="td1">Servers Used <span class="small info">(total: {{ data['curServerList']|length }})</span></td>
+            <td id="td2">Servers Used <span class="small info">(total: {{ data['dailyServerList']|length }})</span></td>
+            <td id="td3">Servers Used <span class="small info">(total: {{ data['weeklyServerList']|length }})</span></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="scroll">
+                    <table class="serversUsed">
+                        <thead class="subHeader">
+                            <tr>
+                                <th>ServerName</th>
+                                <th>Players</th>
+                                <th>Observers</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data['curServerList'] %}
+                                <tr class="{{ cycle(['even', 'odd'], loop.index) }}"><td><a href="/bzstats/server/{{row['ServerName']}}">{{ row.ServerName }}</a></td><td>{{row.Players}}</td><td>{{row.Observers}}</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+            <td>
+                <div class="scroll">
+                    <table class="serversUsed">
+                        <thead class="subHeader">
+                            <tr>
+                                <th>ServerName</th>
+                                <th>Players</th>
+                                <th>Observers</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data['dailyServerList'] %}
+                                <tr class="{{ cycle(['even', 'odd'], loop.index) }}"><td><a href="/bzstats/server/{{row['ServerName']}}">{{ row.ServerName }}</a></td><td>{{row.Players}}</td><td>{{row.Observers}}</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+            <td>
+                <div class="scroll">
+                    <table class="serversUsed">
+                        <thead class="subHeader">
+                            <tr>
+                                <th>ServerName</th>
+                                <th>Players</th>
+                                <th>Observers</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data['weeklyServerList'] %}
+                                <tr class="{{ cycle(['even', 'odd'], loop.index) }}"><td><a href="/bzstats/server/{{row['ServerName']}}">{{ row.ServerName }}</a></td><td>{{row.Players}}</td><td>{{row.Observers}}</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}
+
+{% block listArea %}
+<div class="listAreaWrapper">
+    <div class="listAreaTitle">All Servers <span class="small info">(total: {{ data['serverList']|length }})</span></div>
+    <div class="dataScroll">
+        <table>
+            <tbody>
+                <tr class="bold even dataTop large">
+                    <td>ServerName</td>
+                    <td>Description</td>
+                    <td>LastUpdate</td>
+                </tr>
+                {% for row in data['serverList'] %}
+                    <tr class="{{cycle(['even', 'odd'], loop.index)}}"><td><a href="/bzstats/server/{{row['ServerName']}}">{{row['ServerName']}}</a></td><td>{{row['Description']}}</td><td>{{row['LastUpdate']}}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

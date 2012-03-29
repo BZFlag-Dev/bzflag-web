@@ -1,0 +1,31 @@
+{% extends 'default.html.twig' %}
+
+{% block title %}Player Stats{% endblock %}
+{% block PlayersCurrent %}selected{% endblock %}
+
+{% block contentTop %}
+<form name="input" action="/bzstats/playersearch/" method="post">
+    Player Search: <input type="text" name="PlayerSearch" />
+    <input type="submit" value="Search" />
+</form>
+{% endblock %}
+
+
+{% block content %}
+<table id='stats'>
+    <thead>
+        <tr>
+            <th id="th1">Your Search Found Some Matches! <span class="small info">(total: {{ data['players']|length }})</span></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td><div class="largescroll"><table>
+        {% for row in data['players'] %}
+        <tr class="{{ cycle(['even', 'odd'], loop.index) }}">
+            <td><a class="dataTop" href="/bzstats/player/{{row['PlayerName']|url_encode()}}">{{ row.PlayerName }}</a></td>
+        </tr>
+        {% endfor %}
+        </table></div></td></tr>
+    </tbody>
+</table>
+{% endblock %}
