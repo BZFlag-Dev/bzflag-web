@@ -19,7 +19,7 @@ $cfg['allowedUrlChars'] = 'a-zA-Z0-9&=\-_\+\.:\%\?';
  * 
  * This controls things like template caching and debugging
  */
-$cfg['environment'] = "prod";
+$cfg['environment'] = "dev";
 
 
 /**************************
