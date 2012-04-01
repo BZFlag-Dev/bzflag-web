@@ -46,36 +46,67 @@ class DbMysqlSessions implements \Qore\Unreal\iDbSessions {
      * @param string $sessiondata
      * @return array
      */
-    public function write($sessionid, $sessiondata) {
-        try {
-            //we try to update the table first
-            //if there are no matching rows, rowCount will be 0
-            //then we do an instert instead
-            $this->sth = $this->dbh->prepare("
-                UPDATE sessions
-                SET session_data = ?
-                WHERE session_id = ?");
-            $this->sth->execute(array($sessiondata, $sessionid));
-            $rowCount = $this->sth->rowCount();
-            if ($rowCount == 0) {
-                try {
-                    $this->sth = $this->dbh->prepare("
-                        INSERT INTO sessions (session_id, session_data, create_time) VALUES (?, ?, NOW())");
-                    $this->sth->execute(array( $sessionid, $sessiondata));
-                    $rowCount = $this->sth->rowCount();
-                    if ($rowCount == 1) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } catch(\PDOException $e) {
-                    throw new \Exception($e);
+    public function write($sessionid, $sessiondata, $serverSessionExists) {
+//        try {
+//            //we try to update the table first
+//            //if there are no matching rows, rowCount will be 0
+//            //then we do an instert instead
+//            $this->sth = $this->dbh->prepare("
+//                UPDATE sessions
+//                SET session_data = ?
+//                WHERE session_id = ?");
+//            $this->sth->execute(array($sessiondata, $sessionid));
+//            $rowCount = $this->sth->rowCount();
+//            if ($rowCount == 0) {
+//                try {
+//                    $this->sth = $this->dbh->prepare("
+//                        INSERT INTO sessions (session_id, session_data, create_time) VALUES (?, ?, NOW())");
+//                    $this->sth->execute(array( $sessionid, $sessiondata));
+//                    $rowCount = $this->sth->rowCount();
+//                    if ($rowCount == 1) {
+//                        return true;
+//                    } else {
+//                        return false;
+//                    }
+//                } catch(\PDOException $e) {
+//                    throw new \Exception($e);
+//                }
+//            } else {
+//                return true;
+//            }
+//        } catch(\PDOException $e) {
+//            throw new \Exception($e);
+//        }
+        if ($serverSessionExists) {
+            try {
+                $this->sth = $this->dbh->prepare("
+                  UPDATE sessions
+                  SET session_data = ?
+                  WHERE session_id = ?");
+                $this->sth->execute(array($sessiondata, $sessionid));
+                $rowCount = $this->sth->rowCount();
+                if ($rowCount == 1) {
+                    return true;
+                } else {
+                    return false;
                 }
-            } else {
-                return true;
+            } catch(\PDOException $e) {
+                throw new \Exception($e);
             }
-        } catch(\PDOException $e) {
-            throw new \Exception($e);
+        } else {
+            try {
+                $this->sth = $this->dbh->prepare("
+                    INSERT INTO sessions (session_id, session_data, create_time) VALUES (?, ?, NOW())");
+                $this->sth->execute(array( $sessionid, $sessiondata));
+                $rowCount = $this->sth->rowCount();
+                if ($rowCount == 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch(\PDOException $e) {
+                throw new \Exception($e);
+            }
         }
     }
     

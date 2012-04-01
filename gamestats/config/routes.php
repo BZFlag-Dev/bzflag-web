@@ -6,7 +6,7 @@ $url = $_SERVER['REQUEST_URI'];
 $router = new \Qore\Router($url, 'bzstats', 'main');
 
 //if you need controllers outside of a pack for whatever reason..
-//$router->registerControllerPath(ROOT . DS . 'controllers');
+//$router->registerControllerPath(ROOT . DS . 'libraries' . DS . 'Qore' . DS . 'tests' . DS . 'controllers');
 
 //assign some hardcoded routes (urls mapped to controllers/methods)
 //  if $forceArgs is true, then the $args array that you pass will be used for all URLs that start with $web_path

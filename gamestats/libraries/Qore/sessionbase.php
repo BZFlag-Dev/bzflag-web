@@ -23,6 +23,7 @@ abstract class SessionBase  {
     private $id;
     private $userAgent;
     private $started;
+    protected $serverSessionExists;
     
     public function __construct() {
         //assign the user agent
@@ -30,6 +31,9 @@ abstract class SessionBase  {
         
         //initialize $started to false
         $this->started = false;
+        
+        //initialize $serverSessionExists to false;
+        $this->serverSessionExists = false;
         
         //enforce certain PHP session settings
         ini_set('session.auto_start',                   "0");
@@ -78,6 +82,8 @@ abstract class SessionBase  {
                 if (!$this->sessionExists($_COOKIE[$GLOBALS['cfg']['sessions']['name']])) {
                     $this->kill();
                 } else {
+                    //mark that we have a server-side cache of the session
+                    $this->serverSessionExists = true;
                     session_start();
                 }
             }
@@ -335,6 +341,7 @@ abstract class SessionBase  {
         
         //kill the server's side session cache (if there is one)
         $this->destroy($this->id);
+        $this->serverSessionExists = false;
         
         //close the session
         session_write_close();

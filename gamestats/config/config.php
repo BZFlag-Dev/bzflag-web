@@ -87,7 +87,7 @@ $cfg['sessions']['enabled']     = true;
 
 //'file' or 'db' sessions?
 //  'file' sessions are written to the applications tmp/sessions folder
-$cfg['sessions']['type']        = "file";
+$cfg['sessions']['type']        = "db";
 
 //if $cfg['sessions']['type'] = 'file', 
 //  what should the file extension be?
@@ -142,10 +142,15 @@ $cfg['sessions']['cookieLifeTime'] = 0;
 //this can help session hijacking attempts, as it allows
 //you to tell Qore to transparently regen the sessionID
 //every N requests.
+//WARNING:  There is an issue with pages that launch multiple
+//          GET requests (through javascript for example). 
+//          ONLY use the auto-regen feature if you know you 
+//          only have 1 GET request per page refresh. See
+//          docs for the reason why.
 //
 //  1  = regenerate sessionID on every request
 //  0  = never auto regenerate sessionID
-$cfg['sessions']['regenSessionId'] = 10;
+$cfg['sessions']['regenSessionId'] = 0;
 
 //should we redirect users on invalid session?
 //it is probably better to let your authentication/authorization component
