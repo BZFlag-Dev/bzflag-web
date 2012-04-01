@@ -52,7 +52,7 @@ class DbSessionHandler extends \Qore\SessionBase {
     
     public function write($sessionid, $sessiondata) {
         if ($this->isValid()) {
-            $this->db->write($sessionid, $sessiondata);
+            $this->db->write($sessionid, $sessiondata, $this->serverSessionExists);
         }
     }
     

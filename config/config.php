@@ -36,26 +36,26 @@ $cfg['environment'] = "prod";
  *          it is safe to simply copy the default one, and replace all instances
  *          of the word 'default' with your other db-identity.
  */
-//$cfg['db']['default']['type']      = "mysql";
-//$cfg['db']['default']['host']      = "localhost";
-//$cfg['db']['default']['port']      = 3306;
-//$cfg['db']['default']['database']  = "bzstats";
-//$cfg['db']['default']['user']      = "bzstats";
-//$cfg['db']['default']['password']  = "bzstats";
-
 $cfg['db']['default']['type']      = "mysql";
-$cfg['db']['default']['host']      = "127.0.0.16";
+$cfg['db']['default']['host']      = "localhost";
 $cfg['db']['default']['port']      = 3306;
-$cfg['db']['default']['database']  = "bzstats";
-$cfg['db']['default']['user']      = "bzstats";
-$cfg['db']['default']['password']  = "bzstats";
+$cfg['db']['default']['database']  = "dbname";
+$cfg['db']['default']['user']      = "user";
+$cfg['db']['default']['password']  = "pass";
+
+// $cfg['db']['default']['type']      = "mysql";
+// $cfg['db']['default']['host']      = "localhost";
+// $cfg['db']['default']['port']      = 3306;
+// $cfg['db']['default']['database']  = "dbname";
+// $cfg['db']['default']['user']      = "bzstats";
+// $cfg['db']['default']['password']  = "bzstats";
 
 $cfg['db']['sessions']['type']      = "mysql";
-$cfg['db']['sessions']['host']      = "127.0.0.16";
+$cfg['db']['sessions']['host']      = "localhost";
 $cfg['db']['sessions']['port']      = 3306;
-$cfg['db']['sessions']['database']  = "sessions";
-$cfg['db']['sessions']['user']      = "bzstats";
-$cfg['db']['sessions']['password']  = "bzstats";
+$cfg['db']['sessions']['database']  = "dbname";
+$cfg['db']['sessions']['user']      = "user";
+$cfg['db']['sessions']['password']  = "pass";
 
 /**
  * Each $cfg['db'][<db-identity>] keyname should have it's connection
@@ -87,7 +87,7 @@ $cfg['sessions']['enabled']     = true;
 
 //'file' or 'db' sessions?
 //  'file' sessions are written to the applications tmp/sessions folder
-$cfg['sessions']['type']        = "file";
+$cfg['sessions']['type']        = "db";
 
 //if $cfg['sessions']['type'] = 'file', 
 //  what should the file extension be?
@@ -142,10 +142,15 @@ $cfg['sessions']['cookieLifeTime'] = 0;
 //this can help session hijacking attempts, as it allows
 //you to tell Qore to transparently regen the sessionID
 //every N requests.
+//WARNING:  There is an issue with pages that launch multiple
+//          GET requests (through javascript for example). 
+//          ONLY use the auto-regen feature if you know you 
+//          only have 1 GET request per page refresh. See
+//          docs for the reason why.
 //
 //  1  = regenerate sessionID on every request
 //  0  = never auto regenerate sessionID
-$cfg['sessions']['regenSessionId'] = 10;
+$cfg['sessions']['regenSessionId'] = 0;
 
 //should we redirect users on invalid session?
 //it is probably better to let your authentication/authorization component

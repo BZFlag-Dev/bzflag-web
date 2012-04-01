@@ -22,18 +22,18 @@ namespace Qore;
 abstract class SessionBase  {
     private $id;
     private $userAgent;
-    private $userLanguage;
     private $started;
+    protected $serverSessionExists;
     
     public function __construct() {
         //assign the user agent
         $this->userAgent = $_SERVER['HTTP_USER_AGENT'];
         
-        //asign the user's prefered language
-        $this->userLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-        
         //initialize $started to false
         $this->started = false;
+        
+        //initialize $serverSessionExists to false;
+        $this->serverSessionExists = false;
         
         //enforce certain PHP session settings
         ini_set('session.auto_start',                   "0");
@@ -82,6 +82,8 @@ abstract class SessionBase  {
                 if (!$this->sessionExists($_COOKIE[$GLOBALS['cfg']['sessions']['name']])) {
                     $this->kill();
                 } else {
+                    //mark that we have a server-side cache of the session
+                    $this->serverSessionExists = true;
                     session_start();
                 }
             }
@@ -181,7 +183,7 @@ abstract class SessionBase  {
         $this->set('Qore', 'createTime', time());
         $this->setSessionTimestamp();
         $this->set('Qore', 'RegenCount', 0);
-        $this->set('Qore', 'fingerprint', md5($this->userAgent . '+' . $this->userLanguage));  
+        $this->set('Qore', 'fingerprint', md5($this->userAgent));  
     }
     
     /**
@@ -210,7 +212,7 @@ abstract class SessionBase  {
         
         //make sure the session has all the needed vars, and the fingerprints match
         if ($this->varIsSet('Qore', 'lastSessionUpdate') && $this->varIsSet('Qore', 'createTime')
-                && md5($this->userAgent . '+' . $this->userLanguage) == $this->get('Qore', 'fingerprint') ) {
+                && md5($this->userAgent) == $this->get('Qore', 'fingerprint') ) {
             
             //return true if it is session time is good
             $maxLife = $GLOBALS['cfg']['sessions']['lifeTime'];
@@ -339,6 +341,7 @@ abstract class SessionBase  {
         
         //kill the server's side session cache (if there is one)
         $this->destroy($this->id);
+        $this->serverSessionExists = false;
         
         //close the session
         session_write_close();
