@@ -28,6 +28,6 @@ $router->registerRoute(false, '/bzstatsapi', 'bzstatsapi', 'dispatcher');
 try {
     $router->route();
 } catch ( Exception $e ) {
-    $errPage = new Qore\Error();
+    $errPage = new \Qore\Error();
     $errPage->displayErr($url, $e);
 }

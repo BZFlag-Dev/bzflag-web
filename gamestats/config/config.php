@@ -178,8 +178,48 @@ $cfg['cache']['time'] = 300;
 //<method>_public_pre()
 $cfg['pageCache']['time'] = 300;
 
+
 /**************************
-* Registered all the Packs that we will use
+ *  Error Page Configuration
+ * 
+ *  This controls the error page options
+ */
+
+// DOCS say that for FASTCGI you need "Status: " HTTP headers,
+// while normally you need "HTTP/1.0 " HTTP headers.
+// This option controls which one is used in \Qore\Error
+$cfg['error']['fastcgi'] = false;
+
+// should we have seperate error pages for each type of error
+// if this is true, then you will need to create custom
+// twig error pages for each error type.
+// the error pages that MUST be created are as follows:
+//   ...views\qore\error\error200.html.twig //OK
+//   ...views\qore\error\error400.html.twig //Bad Request
+//   ...views\qore\error\error401.html.twig //Unauthorized
+//   ...views\qore\error\error403.html.twig //Forbidden
+//   ...views\qore\error\error404.html.twig //Not Found
+//   ...views\qore\error\error500.html.twig //Internal Server Error
+//   ...views\qore\error\error501.html.twig //Not Implemented
+//
+// By default, this is false, and Qore uses a single error template
+// which displays the error strings that are passed to it, and simply
+// changes the HTTP Response code to the appropriate code that was set
+// by the code that threw the error (400, 404, etc..).
+// 
+// the default error template is called "error.html.twig" and exists
+// in the default views folder /views/Qore/error/error.html.twig
+// if you want to modify the error pages, copy it to one of
+// your Packs' views folder (in <Pack>/views/Qore/error/error.html.twig)
+// and modify accordingly. you can also create the individual error files
+// in one of your Packs' views folder too - if you desire to use multiple.
+$cfg['error']['seperatePages'] = true;
+
+
+
+
+/**************************
+* The Packs that we will use
 */
 $cfg['packs'] = array('bzstats', 'dygraphviews');
 
@@ -202,12 +242,11 @@ foreach ($cfg['packs'] as $pack) {
 }
 
 /**************************
- *  Pack Configurations
+ *  Inidiviual Pack Configurations
  * 
  *  Please read the README for each pack to see what should be
  *  registered in the $cfg array
  */
-
 /**
  * BZstats Configurations 
  */

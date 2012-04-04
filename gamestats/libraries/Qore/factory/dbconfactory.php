@@ -16,7 +16,7 @@ class DbConFactory {
             $class = "Packs\\$pack\\Dbcon\\Db" . ucfirst(strtolower($type));
         }
         if (!class_exists($class)) {
-            throw new \Exception('Missing db class: '.$class);
+            throw new \Qore\Qexception('Missing db class: '.$class, \Qore\Qexception::$InternalError);
         }
         return new $class($dbinstance);
     }

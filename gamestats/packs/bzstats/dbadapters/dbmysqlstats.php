@@ -35,7 +35,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -55,7 +55,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -83,7 +83,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -113,7 +113,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -138,7 +138,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -163,7 +163,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -194,7 +194,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -219,7 +219,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -245,7 +245,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -271,7 +271,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -299,7 +299,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -325,7 +325,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -351,7 +351,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -371,7 +371,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -398,7 +398,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -426,7 +426,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -452,7 +452,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e) ;
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError) ;
         }
     }
     
@@ -474,7 +474,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e) ;
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError) ;
         }
     }
     
@@ -500,7 +500,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e) ;
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError) ;
         }
     }
     
@@ -526,7 +526,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -559,7 +559,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -585,7 +585,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -610,7 +610,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -639,7 +639,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -668,7 +668,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -694,7 +694,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
    }
    
@@ -720,7 +720,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
    }
    
@@ -746,7 +746,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
    }
    
@@ -772,7 +772,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
    }
    
@@ -801,7 +801,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
    }
    
@@ -832,7 +832,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
    }
    
@@ -855,7 +855,7 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
    }
 }

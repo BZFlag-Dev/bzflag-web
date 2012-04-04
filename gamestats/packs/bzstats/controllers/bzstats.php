@@ -134,7 +134,7 @@ class BzstatsController extends \Qore\Controller {
     public function server_public_pre(array $args) {
         if (!count($args)==1) {
             $this->setExecutionState(false);
-            throw new Exception("A Server Name Must be passed!");
+            throw new \Qore\Qexception("A Server Name Must be passed!", \Qore\Qexception::$BadRequest);
         } else {
             $this->cachePage();
         }
@@ -149,7 +149,7 @@ class BzstatsController extends \Qore\Controller {
         
         //of we can't find the server - throw an error and exit
         if (!is_array($data['serverDetails'])) {
-            throw new Exception("Sorry, the server you are looking for can't be found");
+            throw new \Qore\Qexception("Sorry, the server you are looking for can't be found", \Qore\Qexception::$NotFound);
         }
         $data['curAveragePlayers'] = $this->db->getSpecificServerAvgPlayers($args[0], $this->curStart, $this->end);
         $data['dayAveragePlayers'] = $this->db->getSpecificServerAvgPlayers($args[0], $this->dayStart, $this->end);
@@ -200,7 +200,7 @@ class BzstatsController extends \Qore\Controller {
     public function player_public_pre(array $args) {
         if (!count($args)==1) {
             $this->setExecutionState(false);
-            throw new Exception("A Player Name Must be passed!");
+            throw new \Qore\Qexception("A Player Name Must be passed!", \Qore\Qexception::$BadRequest);
         } else {
             $this->cachePage();
         }
@@ -217,7 +217,7 @@ class BzstatsController extends \Qore\Controller {
         
         //see if we have any data for the player - if not, error out...
         if (!is_array($data['PlayerLastSeen'])) {
-            throw new Exception("Sorry, the server you are looking for can't be found");
+            throw new \Qore\Qexception("Sorry, the player you are looking for can't be found", \Qore\Qexception::$NotFound);
         }
         
         //set the players first seen details
@@ -245,7 +245,7 @@ class BzstatsController extends \Qore\Controller {
     public function playersearch_public_pre() {
         if (!$this->httpPost) {
             $this->setExecutionState(false);
-            throw new Exception("Sorry, this page only accepts POST Requests");
+            throw new \Qore\Qexception("Sorry, this page only accepts POST Requests", \Qore\Qexception::$BadRequest);
         }
     }
     
