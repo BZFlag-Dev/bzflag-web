@@ -8,14 +8,31 @@
 {% endblock %}
 
 {% block content %}
+<div style='padding: 10px;'>
 <p>
-    This site gathers stats from all bzflag servers that are registered with the list server.
-    It uses a stats collector [get link] which records statistical data to a database that this website displays
-    in various ways.
-</p>
-<p>
-more to come..
-</p>
-    
+    This site gathers stats from all bzflag servers that are registered with the list server, and allows you to make sense of the data. <br />
+    Some of the things you can view are:
+    <div style='margin: 25px;'>
+    <ul>
+        <li>View global statistics over time for players and servers</li>
+        <li>View individual player stats over time, with high score and activity graphs</li>
+        <li>View currently connected players</li>
+        <li>View which servers are the most active now, and over time</li>
+        <li>View individual server stats, with activity graphs</li>
+    </ul>
+    </div>
 
+    Please note that for now, all dates present on this site are in GMT/UTC. 
+    In the future we will have an option to select which timezone you want to view the dates in.
+ </p>
+ <p>
+     If you have any suggestions, would like to help out, or find any issues with the site, you can contact Quol using any of the below methods:
+    <div style='margin: 25px;'>   
+    <ul>
+        <li><a href="http://forums.bzflag.org">Official Forums</a> bzmail</li>
+        <li>IRC: #bzflag on freenode</li>
+    </ul>
+    </div>
+ </p>
+ </div>
 {% endblock %}
