@@ -34,7 +34,7 @@ class DbMysqlSessions implements \Qore\Unreal\iDbSessions {
                 return false;
             }
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -47,36 +47,6 @@ class DbMysqlSessions implements \Qore\Unreal\iDbSessions {
      * @return array
      */
     public function write($sessionid, $sessiondata, $serverSessionExists) {
-//        try {
-//            //we try to update the table first
-//            //if there are no matching rows, rowCount will be 0
-//            //then we do an instert instead
-//            $this->sth = $this->dbh->prepare("
-//                UPDATE sessions
-//                SET session_data = ?
-//                WHERE session_id = ?");
-//            $this->sth->execute(array($sessiondata, $sessionid));
-//            $rowCount = $this->sth->rowCount();
-//            if ($rowCount == 0) {
-//                try {
-//                    $this->sth = $this->dbh->prepare("
-//                        INSERT INTO sessions (session_id, session_data, create_time) VALUES (?, ?, NOW())");
-//                    $this->sth->execute(array( $sessionid, $sessiondata));
-//                    $rowCount = $this->sth->rowCount();
-//                    if ($rowCount == 1) {
-//                        return true;
-//                    } else {
-//                        return false;
-//                    }
-//                } catch(\PDOException $e) {
-//                    throw new \Exception($e);
-//                }
-//            } else {
-//                return true;
-//            }
-//        } catch(\PDOException $e) {
-//            throw new \Exception($e);
-//        }
         if ($serverSessionExists) {
             try {
                 $this->sth = $this->dbh->prepare("
@@ -91,7 +61,7 @@ class DbMysqlSessions implements \Qore\Unreal\iDbSessions {
                     return false;
                 }
             } catch(\PDOException $e) {
-                throw new \Exception($e);
+                throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
             }
         } else {
             try {
@@ -105,7 +75,7 @@ class DbMysqlSessions implements \Qore\Unreal\iDbSessions {
                     return false;
                 }
             } catch(\PDOException $e) {
-                throw new \Exception($e);
+                throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
             }
         }
     }
@@ -144,7 +114,7 @@ class DbMysqlSessions implements \Qore\Unreal\iDbSessions {
                 return false;
             }
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     
@@ -163,7 +133,7 @@ class DbMysqlSessions implements \Qore\Unreal\iDbSessions {
             $this->sth->execute(array($oldTimeStamp));
             return true;
         } catch(\PDOException $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
 }

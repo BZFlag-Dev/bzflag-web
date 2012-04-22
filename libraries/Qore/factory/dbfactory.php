@@ -16,7 +16,7 @@ class DbFactory {
             $class = "Packs\\$pack\\Dbadapters\\Db" . ucfirst(strtolower($type)) . ucfirst(strtolower($target));
         }
         if (!class_exists($class)) {
-                throw new \Exception('Missing db class: '.$class);
+                throw new \Qore\Qexception('Missing db class: '.$class, \Qore\Qexception::$InternalError);
             }
         return new $class($dbh);
     }

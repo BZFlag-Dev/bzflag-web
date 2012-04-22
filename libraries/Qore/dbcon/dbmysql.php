@@ -21,7 +21,7 @@ class DbMysql implements \Qore\Unreal\iDb {
             $this->dbh = new \PDO($conString,$GLOBALS['cfg']['db'][$dbInstance]['user'],$GLOBALS['cfg']['db'][$dbInstance]['password']);
             $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         } catch(\Exception $e) {
-            throw new \Exception($e);
+            throw new \Qore\Qexception($e, \Qore\Qexception::$InternalError);
         }
     }
     

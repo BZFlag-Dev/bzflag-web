@@ -1,0 +1,23 @@
+{% extends 'default.html.twig' %}
+
+{% block title %}Error{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{constant('SITE_ROOT')}}/css/error.css" />
+{% endblock %}
+
+{% block replaceContent %}
+    <div id="wrapper">
+        <h1>Error Processing Page</h1>
+        <div id="errBody">
+            We are sorry, but something unexpected has happened,<br /> and the page you requested could not be served to you
+            <div class="link"><a href="{{constant('SITE_ROOT')}}">Click Here To Go Back To The Home Page</a></div>
+            <div id="errTitle">Details:</div>
+            <div id="errDetails">
+                <div id="url">You tried to access: <span>{{ url }}</span></div>
+                <div id="error">Error: <span>{{ error }}</span></div>
+            </div>
+        </div><!-- errBody -->
+    </div> <!-- wrapper -->
+{% endblock %}

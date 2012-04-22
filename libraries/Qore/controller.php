@@ -54,9 +54,6 @@ class Controller extends BaseController {
         //create the view path that we should use
         $viewPath = array();
         
-        //$the default view path
-        $viewPath[] = ROOT . DS . 'views';
-        
         //loop through the registered packs and add it's view direcory
         foreach ($GLOBALS['cfg']['packs'] as $pack) {
             $viewDir = ROOT . DS . 'packs' . DS . $pack . DS . 'views';
@@ -65,6 +62,10 @@ class Controller extends BaseController {
             }
         }
         
+        //$the default view path goes at the end
+        $viewPath[] = ROOT . DS . 'views';
+        
+        //load twig up..
         $this->loader = new \Twig_Loader_Filesystem($viewPath);
         
         //if we aren't in a dev environment, we assume prod

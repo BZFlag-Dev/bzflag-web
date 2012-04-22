@@ -217,7 +217,7 @@ class Router {
                         //execute the requested method and pass in urlArray as args
                         $this->callController($this->requestedMethod);
                     } else {
-                        throw new \Exception("public method: $this->requestedMethod not found in $controllerFile");
+                        throw new \Qore\Qexception("public method: $this->requestedMethod not found in $controllerFile", \Qore\Qexception::$NotFound);
                     }
                 } else {
                     //the requsted url does not match a predefined route
@@ -242,7 +242,7 @@ class Router {
                                 $this->callController($method);
                             } else {
                                 //no methods found for controller
-                                throw new \Exception("No valid methods could be found for class '$class'.");
+                                throw new \Qore\Qexception("No valid methods could be found for class '$class'.", \Qore\Qexception::$NotFound);
                             }
                         }
                     } else {
@@ -254,15 +254,15 @@ class Router {
                             $this->callController($method);
                         } else {
                             //no methods found for controller
-                            throw new \Exception("No valid methods could be found for class '$class'.");
+                            throw new \Qore\Qexception("No valid methods could be found for class '$class'.", \Qore\Qexception::$NotFound);
                         }
                     }
                 }
             } else {
-                throw new \Exception("class '$class' could not be found!");
+                throw new \Qore\Qexception("class '$class' could not be found!", \Qore\Qexception::$NotFound);
             }
         } else {
-            throw new \Exception("Unable to find the '$this->requestedController' controller!");
+            throw new \Qore\Qexception("Unable to find the '$this->requestedController' controller!", \Qore\Qexception::$NotFound);
         }
     }
     
@@ -353,7 +353,7 @@ class Router {
             //call the controllers post method
             $this->controller->__post();
         } else {
-            throw new \Exception("you do not have permissions to execute this page");
+            throw new \Qore\Qexception("you do not have permissions to execute this page", \Qore\Qexception::$Unauthorized);
         }
     }
     
