@@ -22,6 +22,9 @@ class BzstatsController extends \Qore\Controller {
     public function __construct() {
         parent::__construct();
         //build the time strings that we need for all the queries
+        //for now all times are in GMT
+        date_default_timezone_set('UTC');
+        
         $now = time();
         $min5 = 60*5; //5 minutes in seconds
         $min10 = 60*10; //10 minutes in seconds

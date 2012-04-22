@@ -4,7 +4,13 @@
     //get current and old date's
     var dStart = new Date();
     var dEnd = new Date();
+    
+    //convert time to GMT
+    //setToGMT(dStart);
+    //setToGMT(dEnd);
+    
     var dateAge=1;
+    //var tz=dStart.getTimezoneOffset();
     //var hourAge=168;
     var hourAge=24;
     
@@ -61,19 +67,19 @@
     }
 
     function getSimpleDateString(date) {
-        var dYear = date.getFullYear().toString();
-        var dMonth = zeropad((date.getMonth()+1).toString());
-        var dDay = zeropad(date.getDate().toString());
-        var dHour = zeropad(date.getHours().toString());
-        var dMin = zeropad(date.getMinutes().toString());
-        var dSec = zeropad(date.getSeconds().toString());
+        var dYear = date.getUTCFullYear().toString();
+        var dMonth = zeropad((date.getUTCMonth()+1).toString());
+        var dDay = zeropad(date.getUTCDate().toString());
+        var dHour = zeropad(date.getUTCHours().toString());
+        var dMin = zeropad(date.getUTCMinutes().toString());
+        var dSec = zeropad(date.getUTCSeconds().toString());
 
         return dYear+dMonth+dDay+dHour+dMin+dSec
     }
 
     function updateDateLabel(start,end) {
-        document.getElementById(start).innerHTML=dStart.toString();
-        document.getElementById(end).innerHTML=dEnd.toString();
+        document.getElementById(start).innerHTML=dStart.toUTCString();
+        document.getElementById(end).innerHTML=dEnd.toUTCString();
     }
             
     function setDateRange(interval, gid, strGid, baseURL) {
