@@ -9,6 +9,7 @@ class BzstatsController extends \Qore\Controller {
     private $dayStart;
     private $weekStart;
     private $end;
+    private $timezone;
     
     /**
      *
@@ -21,9 +22,22 @@ class BzstatsController extends \Qore\Controller {
      */
     public function __construct() {
         parent::__construct();
+        //see if we have a timezone that was specified
+        if ($this->session->varIsSet('bzstats', 'timezone')) {
+            $this->timezone = $this->session->get('bzstats', 'timezone');
+        } else {
+            $this->session->set('bzstats', 'timezone', 'GMT');
+            $this->timezone = 'GMT';
+        }
+        
+        //$this->timezone = 'Canada/Eastern';
+        $this->timezone = 'GMT';
+        
         //build the time strings that we need for all the queries
-        //for now all times are in GMT
-        date_default_timezone_set('UTC');
+        //all SQL queries are passed GMT times
+        //since the dates are all GMT in the DB
+        //we pass $this->timezone setting to the DB, and the DB is responsible for timezone conversion
+        date_default_timezone_set('GMT');
         
         $now = time();
         $min5 = 60*5; //5 minutes in seconds
@@ -65,21 +79,21 @@ class BzstatsController extends \Qore\Controller {
         //grab the weekly server count
         $data['weekServers'] = $this->db->getServerCount($this->weekStart, $this->end);
         //the active players/servers
-        $data['curStats'] = $this->db->getCurrentStats();
+        $data['curStats'] = $this->db->getCurrentStats($this->timezone);
         //the most active time today
-        $data['dayMostActive'] = $this->db->getPopularTime("most", $this->dayStart, $this->end);
+        $data['dayMostActive'] = $this->db->getPopularTime("most", $this->dayStart, $this->end, $this->timezone);
         //the least active time today
-        $data['dayLeastActive'] = $this->db->getPopularTime("least", $this->dayStart, $this->end);
+        $data['dayLeastActive'] = $this->db->getPopularTime("least", $this->dayStart, $this->end, $this->timezone);
         //the most active time this week
-        $data['weekMostActive'] = $this->db->getPopularTime("most", $this->weekStart, $this->end);
+        $data['weekMostActive'] = $this->db->getPopularTime("most", $this->weekStart, $this->end, $this->timezone);
         //the least active time this week
-        $data['weekLeastActive'] = $this->db->getPopularTime("least", $this->weekStart, $this->end);
+        $data['weekLeastActive'] = $this->db->getPopularTime("least", $this->weekStart, $this->end, $this->timezone);
         //get the current most popular server
-        $data['curPopularServer'] = $this->db->getMostPopularServer($this->curStart, $this->end);
+        $data['curPopularServer'] = $this->db->getMostPopularServer($this->curStart, $this->end, $this->timezone);
         //get the days most popular server from today
-        $data['dayPopularServer'] = $this->db->getMostPopularServer($this->dayStart, $this->end);
+        $data['dayPopularServer'] = $this->db->getMostPopularServer($this->dayStart, $this->end, $this->timezone);
         //get the weeks most popular server from today
-        $data['weekPopularServer'] = $this->db->getMostPopularServer($this->weekStart, $this->end);
+        $data['weekPopularServer'] = $this->db->getMostPopularServer($this->weekStart, $this->end, $this->timezone);
         //get player with most current wins
         $data['curPlayerWins'] = $this->db->getMostWins($this->curStart, $this->end);
         //get player with most day wins
@@ -105,7 +119,7 @@ class BzstatsController extends \Qore\Controller {
         //get most week TK
         $data['weekTK'] = $this->db->getMostTK($this->weekStart, $this->end);
         
-        echo $this->twig->render('bzstatsMain.html.twig', array('data' => $data));
+        echo $this->twig->render('bzstatsMain.html.twig', array('data' => $data, 'timezone' => $this->timezone));
     }
     
     public function servers_public_pre() {
@@ -117,7 +131,7 @@ class BzstatsController extends \Qore\Controller {
         $data = array();
         
         //get the current active server/player stats
-        $data['curStats'] = $this->db->getCurrentStats();
+        $data['curStats'] = $this->db->getCurrentStats($this->timezone);
         //the daily player/server stats
         $data['dailyServerStats'] = $this->db->getPlayerCounts($this->dayStart, $this->end);
         //the weekly player/server stats
@@ -129,9 +143,9 @@ class BzstatsController extends \Qore\Controller {
         //get the weekly server list
         $data['weeklyServerList'] = $this->db->getActiveServerList($this->weekStart, $this->end);
         //get the complete server list ordered by lastupsdate time
-        $data['serverList'] = $this->db->getServerList();
+        $data['serverList'] = $this->db->getServerList($this->timezone);
         
-        echo $this->twig->render('bzstatsServers.html.twig', array('data' => $data));
+        echo $this->twig->render('bzstatsServers.html.twig', array('data' => $data, 'timezone' => $this->timezone));
     }
     
     public function server_public_pre(array $args) {
@@ -148,37 +162,38 @@ class BzstatsController extends \Qore\Controller {
         $data = array();
         
         //grab the current connection info for the current server
-        $data['serverDetails'] = $this->db->getSpecificServerDescription(urldecode($args[0]));
+        $data['serverDetails'] = $this->db->getSpecificServerDescription(urldecode($args[0]), $this->timezone);
         
         //of we can't find the server - throw an error and exit
         if (!is_array($data['serverDetails'])) {
             throw new \Qore\Qexception("Sorry, the server you are looking for can't be found", \Qore\Qexception::$NotFound);
         }
+        
         $data['curAveragePlayers'] = $this->db->getSpecificServerAvgPlayers($args[0], $this->curStart, $this->end);
         $data['dayAveragePlayers'] = $this->db->getSpecificServerAvgPlayers($args[0], $this->dayStart, $this->end);
         $data['weekAveragePlayers'] = $this->db->getSpecificServerAvgPlayers($args[0], $this->weekStart, $this->end);
-        $data['curMaxPlayers'] = $this->db->getSpecificServerMaxPlayers($args[0], $this->curStart, $this->end);
-        $data['dayMaxPlayers'] = $this->db->getSpecificServerMaxPlayers($args[0], $this->dayStart, $this->end);
-        $data['weekMaxPlayers'] = $this->db->getSpecificServerMaxPlayers($args[0], $this->weekStart, $this->end);
+        $data['curMaxPlayers'] = $this->db->getSpecificServerMaxPlayers($args[0], $this->curStart, $this->end, $this->timezone);
+        $data['dayMaxPlayers'] = $this->db->getSpecificServerMaxPlayers($args[0], $this->dayStart, $this->end, $this->timezone);
+        $data['weekMaxPlayers'] = $this->db->getSpecificServerMaxPlayers($args[0], $this->weekStart, $this->end, $this->timezone);
         $data['curPlayers'] = $this->db->getSpecificServerPlayers($args[0], $this->curStart, $this->end);
         $data['dayPlayers'] = $this->db->getSpecificServerPlayers($args[0], $this->dayStart, $this->end);
         $data['weekPlayers'] = $this->db->getSpecificServerPlayers($args[0], $this->weekStart, $this->end);
         $data['allPlayers'] = $this->db->getSpecificServerPlayers($args[0], '19700101', $this->end);
-        $data['curBestPlayerRatio'] = $this->db->getSpecificServerPlayerByRatio($args[0], 'best', $this->curStart, $this->end);
-        $data['dayBestPlayerRatio'] = $this->db->getSpecificServerPlayerByRatio($args[0], 'best', $this->dayStart, $this->end);
-        $data['weekBestPlayerRatio'] = $this->db->getSpecificServerPlayerByRatio($args[0], 'best', $this->weekStart, $this->end);
-        $data['curWorstPlayerRatio'] = $this->db->getSpecificServerPlayerByRatio($args[0], 'worst', $this->curStart, $this->end);
-        $data['dayWorstPlayerRatio'] = $this->db->getSpecificServerPlayerByRatio($args[0], 'worst', $this->dayStart, $this->end);
-        $data['weekWorstPlayerRatio'] = $this->db->getSpecificServerPlayerByRatio($args[0], 'worst', $this->weekStart, $this->end);
-        $data['curMostWins'] = $this->db->getSpecificServerMostWins($args[0], $this->curStart, $this->end);
-        $data['dayMostWins'] = $this->db->getSpecificServerMostWins($args[0], $this->dayStart, $this->end);
-        $data['weekMostWins'] = $this->db->getSpecificServerMostWins($args[0], $this->weekStart, $this->end);
-        $data['curTK'] = $this->db->getSpecificServerMostTK($args[0], $this->curStart, $this->end);
-        $data['dayTK'] = $this->db->getSpecificServerMostTK($args[0], $this->dayStart, $this->end);
-        $data['weekTK'] = $this->db->getSpecificServerMostTK($args[0], $this->weekStart, $this->end);
+        $data['curBestPlayerRatio'] = $this->db->getSpecificServerPlayerByRatio($args[0], 'best', $this->curStart, $this->end, $this->timezone);
+        $data['dayBestPlayerRatio'] = $this->db->getSpecificServerPlayerByRatio($args[0], 'best', $this->dayStart, $this->end, $this->timezone);
+        $data['weekBestPlayerRatio'] = $this->db->getSpecificServerPlayerByRatio($args[0], 'best', $this->weekStart, $this->end, $this->timezone);
+        $data['curWorstPlayerRatio'] = $this->db->getSpecificServerPlayerByRatio($args[0], 'worst', $this->curStart, $this->end, $this->timezone);
+        $data['dayWorstPlayerRatio'] = $this->db->getSpecificServerPlayerByRatio($args[0], 'worst', $this->dayStart, $this->end, $this->timezone);
+        $data['weekWorstPlayerRatio'] = $this->db->getSpecificServerPlayerByRatio($args[0], 'worst', $this->weekStart, $this->end, $this->timezone);
+        $data['curMostWins'] = $this->db->getSpecificServerMostWins($args[0], $this->curStart, $this->end, $this->timezone);
+        $data['dayMostWins'] = $this->db->getSpecificServerMostWins($args[0], $this->dayStart, $this->end, $this->timezone);
+        $data['weekMostWins'] = $this->db->getSpecificServerMostWins($args[0], $this->weekStart, $this->end, $this->timezone);
+        $data['curTK'] = $this->db->getSpecificServerMostTK($args[0], $this->curStart, $this->end, $this->timezone);
+        $data['dayTK'] = $this->db->getSpecificServerMostTK($args[0], $this->dayStart, $this->end, $this->timezone);
+        $data['weekTK'] = $this->db->getSpecificServerMostTK($args[0], $this->weekStart, $this->end, $this->timezone);
         $data['server'] = $args[0];
         
-        echo $this->twig->render('bzstatsServer.html.twig', array('data'=>$data));
+        echo $this->twig->render('bzstatsServer.html.twig', array('data'=>$data, 'timezone' => $this->timezone));
     }
     
     public function players_public_pre() {
@@ -189,7 +204,7 @@ class BzstatsController extends \Qore\Controller {
         $data = array();
         
         //the current players
-        $data['curPlayers'] = $this->db->getCurrentPlayers($this->curStart, $this->end);
+        $data['curPlayers'] = $this->db->getCurrentPlayers($this->curStart, $this->end, $this->timezone);
         
         if (count($args)>0) {
             if ($args[0] == 'playernotfound') {
@@ -197,7 +212,7 @@ class BzstatsController extends \Qore\Controller {
             }
         }
         
-        echo $this->twig->render('bzstatsPlayers.html.twig', array('data' => $data));
+        echo $this->twig->render('bzstatsPlayers.html.twig', array('data' => $data, 'timezone' => $this->timezone));
     }
     
     public function player_public_pre(array $args) {
@@ -216,7 +231,7 @@ class BzstatsController extends \Qore\Controller {
         $data['PlayerName'] = urldecode($args[0]);
         
         //get the player's last seen date/details
-        $data['PlayerLastSeen'] = $this->db->getPlayerSeenDetails('last', $data['PlayerName']);
+        $data['PlayerLastSeen'] = $this->db->getPlayerSeenDetails('last', $data['PlayerName'], $this->timezone);
         
         //see if we have any data for the player - if not, error out...
         if (!is_array($data['PlayerLastSeen'])) {
@@ -224,25 +239,25 @@ class BzstatsController extends \Qore\Controller {
         }
         
         //set the players first seen details
-        $data['PlayerFirstSeen'] = $this->db->getPlayerSeenDetails('first', $data['PlayerName']);
+        $data['PlayerFirstSeen'] = $this->db->getPlayerSeenDetails('first', $data['PlayerName'], $this->timezone);
         
         //get the players best/worst ratio details
-        $data['PlayerBestRatio'] = $this->db->getPlayerRatioDetails('best', $data['PlayerName']);
-        $data['PlayerWorstRatio'] = $this->db->getPlayerRatioDetails('worst', $data['PlayerName']);
+        $data['PlayerBestRatio'] = $this->db->getPlayerRatioDetails('best', $data['PlayerName'], $this->timezone);
+        $data['PlayerWorstRatio'] = $this->db->getPlayerRatioDetails('worst', $data['PlayerName'], $this->timezone);
         
         //get the players most wins
-        $data['PlayerMostWins'] = $this->db->getPlayerMostWinDetails($data['PlayerName']);
+        $data['PlayerMostWins'] = $this->db->getPlayerMostWinDetails($data['PlayerName'], $this->timezone);
         
         //get the players most losses
-        $data['PlayerMostLosses'] = $this->db->getPlayerMostLossDetails($data['PlayerName']);
+        $data['PlayerMostLosses'] = $this->db->getPlayerMostLossDetails($data['PlayerName'], $this->timezone);
         
         //get the players most TK's
-        $data['PlayerMostTK'] = $this->db->getPlayerMostTKDetails($data['PlayerName']);
+        $data['PlayerMostTK'] = $this->db->getPlayerMostTKDetails($data['PlayerName'], $this->timezone);
         
         //get the players favorite servers
         $data['PlayerFavServers'] = $this->db->getPlayerFavoriteServers($data['PlayerName']);
         
-        echo $this->twig->render('bzstatsPlayer.html.twig', array('data' => $data));
+        echo $this->twig->render('bzstatsPlayer.html.twig', array('data' => $data, 'timezone' => $this->timezone));
     }
     
     public function playersearch_public_pre() {

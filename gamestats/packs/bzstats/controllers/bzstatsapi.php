@@ -48,8 +48,18 @@ class BzstatsapiController extends \Qore\BaseController {
             switch (strtolower($args[0])) {
                 case 'gettotalcount':
                     array_shift($args);
-                    if (count($args)==2) {
-                        $this->data = $this->db->getTotalCount($args[0], $args[1]);
+                    if (count($args)==3) {
+                        $tz = str_replace(':', '/', $args[2]);
+                        $startDate = new DateTime($args[0], new DateTimeZone($tz));
+                        $startDate->setTimezone(new DateTimeZone('GMT'));
+                        $endDate = new DateTime($args[1], new DateTimeZone($tz));
+                        $endDate->setTimezone(new DateTimeZone('GMT'));
+                        
+                        //???
+                        $curStart = date_format($startDate, "Y-m-d H:i:s");
+                        $curEnd = date_format($endDate, "Y-m-d H:i:s");
+                        
+                        $this->data = $this->db->getTotalCount($curStart, $curEnd, $tz);
                         $this->prnt();
                     } else {
                         $this->showUsage();
@@ -57,8 +67,14 @@ class BzstatsapiController extends \Qore\BaseController {
                     break;
                 case 'gettotalplayercount':
                     array_shift($args);
-                    if (count($args)==2) {
-                        $this->data = $this->db->getTotalPlayerCount($args[0], $args[1]);
+                    if (count($args)==3) {
+                        $tz = str_replace(':', '/', $args[2]);
+                        $startDate = new DateTime($args[0], new DateTimeZone($tz));
+                        $startDate->setTimezone(new DateTimeZone('GMT'));
+                        $endDate = new DateTime($args[1], new DateTimeZone($tz));
+                        $endDate->setTimezone(new DateTimeZone('GMT'));
+                        
+                        $this->data = $this->db->getTotalPlayerCount($startDate, $endDate, $tz);
                         $this->prnt();
                     } else {
                         $this->showUsage();
@@ -66,8 +82,14 @@ class BzstatsapiController extends \Qore\BaseController {
                     break;
                 case 'getsumedplayercount':
                     array_shift($args);
-                    if (count($args)==2) {
-                        $this->data = $this->db->getSumedPlayerCount($args[0], $args[1]);
+                    if (count($args)==3) {
+                        $tz = str_replace(':', '/', $args[2]);
+                        $startDate = new DateTime($args[0], new DateTimeZone($tz));
+                        $startDate->setTimezone(new DateTimeZone('GMT'));
+                        $endDate = new DateTime($args[1], new DateTimeZone($tz));
+                        $endDate->setTimezone(new DateTimeZone('GMT'));
+                        
+                        $this->data = $this->db->getSumedPlayerCount($startDate, $endDate, $tz);
                         $this->prnt();
                     } else {
                         $this->showUsage();
@@ -75,8 +97,14 @@ class BzstatsapiController extends \Qore\BaseController {
                     break;
                 case 'gettotalservercount':
                     array_shift($args);
-                    if (count($args)==2) {
-                        $this->data = $this->db->getTotalServerCount($args[0], $args[1]);
+                    if (count($args)==3) {
+                        $tz = str_replace(':', '/', $args[2]);
+                        $startDate = new DateTime($args[0], new DateTimeZone($tz));
+                        $startDate->setTimezone(new DateTimeZone('GMT'));
+                        $endDate = new DateTime($args[1], new DateTimeZone($tz));
+                        $endDate->setTimezone(new DateTimeZone('GMT'));
+                        
+                        $this->data = $this->db->getTotalServerCount($startDate, $endDate, $tz);
                         $this->prnt();
                     } else {
                         $this->showUsage();
@@ -84,8 +112,14 @@ class BzstatsapiController extends \Qore\BaseController {
                     break;
                 case 'getserverstats':
                     array_shift($args);
-                    if (count($args)==3) {
-                        $this->data = $this->db->getSpecificServerStats($args[0], $args[1], $args[2]);
+                    if (count($args)==4) {
+                        $tz = str_replace(':', '/', $args[3]);
+                        $startDate = new DateTime($args[1], new DateTimeZone($tz));
+                        $startDate->setTimezone(new DateTimeZone('GMT'));
+                        $endDate = new DateTime($args[2], new DateTimeZone($tz));
+                        $endDate->setTimezone(new DateTimeZone('GMT'));
+                        
+                        $this->data = $this->db->getSpecificServerStats($args[0], $startDate, $endDate, $tz);
                         $this->prnt();
                     } else {
                         $this->showUsage();
@@ -93,8 +127,13 @@ class BzstatsapiController extends \Qore\BaseController {
                     break;
                 case 'getplayeractivetimes':
                     array_shift($args);
-                    if (count($args)==3) {
-                        $this->data = $this->db->getPlayerActiveTimes(urldecode($args[0]), $args[1], $args[2]);
+                    if (count($args)==4) {
+                        $tz = str_replace(':', '/', $args[3]);
+                        $startDate = new DateTime($args[1], new DateTimeZone($tz));
+                        $startDate->setTimezone(new DateTimeZone('GMT'));
+                        $endDate = new DateTime($args[2], new DateTimeZone($tz));
+                        $endDate->setTimezone(new DateTimeZone('GMT'));
+                        $this->data = $this->db->getPlayerActiveTimes(urldecode($args[0]), $startDate, $endDate, $tz);
                         $this->prnt();
                     } else {
                         $this->showUsage();
@@ -102,8 +141,14 @@ class BzstatsapiController extends \Qore\BaseController {
                     break;
                 case 'getplayerscores':
                     array_shift($args);
-                    if (count($args)==3) {
-                        $this->data = $this->db->getPlayerScores(urldecode($args[0]), $args[1], $args[2]);
+                    if (count($args)==4) {
+                        $tz = str_replace(':', '/', $args[3]);
+                        $startDate = new DateTime($args[1], new DateTimeZone($tz));
+                        $startDate->setTimezone(new DateTimeZone('GMT'));
+                        $endDate = new DateTime($args[2], new DateTimeZone($tz));
+                        $endDate->setTimezone(new DateTimeZone('GMT'));
+                        
+                        $this->data = $this->db->getPlayerScores(urldecode($args[0]), $startDate, $endDate, $tz);
                         $this->prnt();
                     } else {
                         $this->showUsage();
@@ -118,41 +163,54 @@ class BzstatsapiController extends \Qore\BaseController {
     }
     
     private function showUsage() {
+        if ($GLOBALS['cfg']['error']['fastcgi']) {
+            $httpErrString = "Status: ";
+        } else {
+            $httpErrString = "HTTP/1.0 ";
+        }
+        
+        header($httpErrString . "400 Bad Request", true, 400);
         echo "
         <html><body>
-        <h1>BzstatsWeb - API</h1>
+        <h1>BzstatsWeb API - Version: 1.0</h1>
         <p>
             Each API request must contain a couple of paramaters, and they must all be supplied!<br />
-            Each request should be formatted as follows: /api/{outputFormat}/{command}/{args}/{args}/{args}... <br />
+            Each request should be formatted as follows: /bzstatsapi/{outputFormat}/{command}/{args}/{args}/.../{timezone} <br />
             <ul>
-                <li>{outputFormat} : should be one of jsarray, xml, csv, json</li>
+                <li>{outputFormat} : should be one of: jsarray, xml, csv, json</li>
                 <li>{command} : should be a valid comand - see below</li>
-                <li>{args} : one of more arguments for the command, each command accepts different arguments - so check below</li>
+                <li>{args} : one or more arguments for the command, each command accepts different arguments - so check below</li>
                 <li>{startDate} and {endDate} are all formatted as YYYYMMDDHHMMSS
+                <li>all {timezone}'s must be one of <a href='http://www.php.net/manual/en/timezones.php'>PHP's supported Timezones</a>.
+                    <br />The only change is that you <b><u>must</u></b> replace all forward slashes (/) with a colon (:). 
+                    <br /><u>Example:</u> <b>America/New_York</b> becomes <b>America:New_York</b>
+                    <br />Also, {startDate} and {endDate} should be in the same {timezone}.
+                    <br />The returned dataset dates will also be in the same {timezone}.
+                </li>
             </ul>
             Valid Commands:
             <ul>
-                <li>getTotalCount/{startDate}/{endDate}</li>
-                <li>getTotalPlayerCount/{startDate}/{endDate}</li>
-                <li>getTotalServerCount/{startDate}/{endDate}</li>
-                <li>getServerStats/{startDate}/{endDate}</li>
-                <li>getSumedPlayerCount/{startDate}/{endDate}</li>
-                <li>getPlayerActiveTimes/{playername}/{startDate}/{endDate}</li>
-                <li>getPlayerScores/{playername}/{startDate}/{endDate}</li>
+                <li>getTotalCount/{startDate}/{endDate}/{timezone}</li>
+                <li>getTotalPlayerCount/{startDate}/{endDate}/{timezone}</li>
+                <li>getTotalServerCount/{startDate}/{endDate}/{timezone}</li>
+                <li>getServerStats/{servername}/{startDate}/{endDate}/{timezone}</li>
+                <li>getSumedPlayerCount/{startDate}/{endDate}/{timezone}</li>
+                <li>getPlayerActiveTimes/{playername}/{startDate}/{endDate}/{timezone}</li>
+                <li>getPlayerScores/{playername}/{startDate}/{endDate}/{timezone}</li>
             </ul>
         </p>
         <p>Examples:</p>
         <ul>
-            <li>/bzstatsapi/jsarray/getTotalCount/20120130121537/20120202235959</li>
-            <li>/bzstatsapi/xml/getTotalCount/20120130121537/20120202235959</li>
-            <li>/bzstatsapi/csv/getTotalCount/20120130121537/20120202235959</li>
-            <li>/bzstatsapi/json/getTotalcount/20120130121537/20120202235959</li>
-            <li>/bzstatsapi/xml/getTotalPlayerCount/20120130121537/20120202235959</li>
-            <li>/bzstatsapi/json/getTotalServerCount/20120130121537/20120202235959</li>
+            <li>/bzstatsapi/jsarray/getTotalCount/20120130121537/20120202235959/America:New_York</li>
+            <li>/bzstatsapi/xml/getTotalCount/20120130121537/20120202235959/America:New_York</li>
+            <li>/bzstatsapi/csv/getTotalCount/20120130121537/20120202235959/America:New_York</li>
+            <li>/bzstatsapi/json/getTotalcount/20120130121537/20120202235959/America:New_York</li>
+            <li>/bzstatsapi/xml/getTotalPlayerCount/20120130121537/20120202235959/America:New_York</li>
+            <li>/bzstatsapi/json/getTotalServerCount/20120130121537/20120202235959/America:New_York</li>
             <li>/bzstatsapi/csv/getServerStats/{serverName}/20120130121537/20120202235959</li>
-            <li>/bzstatsapi/csv/getSumedPlayerCount/20120130121537/20120202235959</li>
-            <li>/bzstatsapi/xml/getPlayerActiveTimes/{playername}/20120130121537/20120202235959</li>
-            <li>/bzstatsapi/xml/getPlayerScores/{playername}/20120130121537/20120202235959</li>
+            <li>/bzstatsapi/csv/getSumedPlayerCount/20120130121537/20120202235959/America:New_York</li>
+            <li>/bzstatsapi/xml/getPlayerActiveTimes/{playername}/20120130121537/20120202235959/America:New_York</li>
+            <li>/bzstatsapi/xml/getPlayerScores/{playername}/20120130121537/20120202235959/America:New_York</li>
         </ul>
         </body></html>
         "; die;

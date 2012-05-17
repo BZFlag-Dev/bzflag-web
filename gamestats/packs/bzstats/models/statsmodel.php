@@ -31,11 +31,12 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
     /**
      * Returns te most current active players and servers from the database
      * 
+     * @param string $tz
      * @return array $result
      * @throws \Exception 
      */
-    public function getCurrentStats() {
-        return $this->db->getCurrentStats();
+    public function getCurrentStats($tz) {
+        return $this->db->getCurrentStats($tz);
     }
     
     /**
@@ -56,23 +57,25 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * @param string $type "least" for the least popular/active period. "most" for the most popular
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getPopularTime($type, $startDate, $endDate) {
-        return $this->db->getPopularTime($type, $startDate, $endDate);
+    public function getPopularTime($type, $startDate, $endDate, $tz) {
+        return $this->db->getPopularTime($type, $startDate, $endDate, $tz);
     }
     
    /**
-     * Returns the most active/popular server beween two dates
-     * 
-     * @param string $startDate
-     * @param string $endDate
-     * @return array
-     * @throws \Exception 
-     */
-    public function getMostPopularServer($startDate, $endDate) {
-        return $this->db->getMostPopularServer($startDate, $endDate);
+    * Returns the most active/popular server beween two dates
+    * 
+    * @param string $startDate
+    * @param string $endDate
+    * @param string $tz 
+    * @return array
+    * @throws \Exception 
+    */
+    public function getMostPopularServer($startDate, $endDate, $tz) {
+        return $this->db->getMostPopularServer($startDate, $endDate, $tz);
     }
     
     /**
@@ -119,11 +122,12 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * 
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getTotalCount($startDate, $endDate) {
-        return $this->db->getTotalCount($startDate, $endDate);
+    public function getTotalCount($startDate, $endDate, $tz) {
+        return $this->db->getTotalCount($startDate, $endDate, $tz);
     }
     
     /**
@@ -132,11 +136,12 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * 
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getTotalPlayerCount($startDate, $endDate) {
-        return $this->db->getTotalPlayerCount($startDate, $endDate);
+    public function getTotalPlayerCount($startDate, $endDate, $tz) {
+        return $this->db->getTotalPlayerCount($startDate, $endDate, $tz);
     }
     
     /**
@@ -146,11 +151,12 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * 
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getSumedPlayerCount($startDate, $endDate) {
-        return $this->db->getSumedPlayerCount($startDate, $endDate);
+    public function getSumedPlayerCount($startDate, $endDate, $tz) {
+        return $this->db->getSumedPlayerCount($startDate, $endDate, $tz);
     }
     
     /**
@@ -159,11 +165,12 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * 
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getTotalServerCount($startDate, $endDate) {
-        return $this->db->getTotalServerCount($startDate, $endDate);
+    public function getTotalServerCount($startDate, $endDate, $tz) {
+        return $this->db->getTotalServerCount($startDate, $endDate, $tz);
     }
 
     /**
@@ -181,11 +188,12 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
     /**
      * Returns all registered servers with descriptions sorted by the LastUpdate timestamp
      * 
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getServerList() {
-        return $this->db->getServerList();
+    public function getServerList($tz) {
+        return $this->db->getServerList($tz);
     }
     
     /**
@@ -195,14 +203,20 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * @param string $serverName
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getSpecificServerStats($serverName, $startDate, $endDate) {
+    public function getSpecificServerStats($serverName, $startDate, $endDate, $tz) {
+        $startTzDate = new DateTime($startDate, new \DateTimeZone('GMT'));
+        $startTzDate->setTimezone(new \DateTimeZone($tz));
+        $endTzDate = new DateTime($endDate, new \DateTimeZone('GMT'));
+        $endTzDate->setTimezone(new \DateTimeZone($tz));
+        
         $data = $this->padDates(
-                $startDate, 
-                $endDate, 
-                $this->db->getSpecificServerStats($serverName, $startDate, $endDate), 
+                date_format($startTzDate, 'YmdHis'),
+                date_format($endTzDate, 'YmdHis'),
+                $this->db->getSpecificServerStats($serverName, $startDate, $endDate, $tz), 
                 array('Timestamp','Players', 'Observers'),
                 1800);
         return $data;
@@ -215,11 +229,12 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * @param string $serverName
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getSpecificServerMaxPlayers($serverName, $startDate, $endDate) {
-        return $this->db->getSpecificServerMaxPlayers($serverName, $startDate, $endDate);
+    public function getSpecificServerMaxPlayers($serverName, $startDate, $endDate, $tz) {
+        return $this->db->getSpecificServerMaxPlayers($serverName, $startDate, $endDate, $tz);
     }
     
     /**
@@ -240,11 +255,12 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * Returns Server Details for a specific server (description, gametype, flags, teams, lastupdate)
      * 
      * @param sring $serverName
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getSpecificServerDescription($serverName) {
-        return $this->db->getSpecificServerDescription($serverName);
+    public function getSpecificServerDescription($serverName, $tz) {
+        return $this->db->getSpecificServerDescription($serverName, $tz);
     }
     
     /**
@@ -265,11 +281,12 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * 
      * @param sring $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getSpecificServerMostWins($serverName, $startDate, $endDate) {
-        return $this->db->getSpecificServerMostWins($serverName, $startDate, $endDate);
+    public function getSpecificServerMostWins($serverName, $startDate, $endDate, $tz) {
+        return $this->db->getSpecificServerMostWins($serverName, $startDate, $endDate, $tz);
     }
     
     /**
@@ -279,11 +296,12 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * @param string $type "worst" for the worst ratio. "best" for best ratio
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception
      */
-    public function getSpecificServerPlayerByRatio($serverName, $type, $startDate, $endDate) {
-        return $this->db->getSpecificServerPlayerByRatio($serverName, $type, $startDate, $endDate);
+    public function getSpecificServerPlayerByRatio($serverName, $type, $startDate, $endDate, $tz) {
+        return $this->db->getSpecificServerPlayerByRatio($serverName, $type, $startDate, $endDate, $tz);
     }
     
     /**
@@ -291,11 +309,12 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * 
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception
      */
-    public function getSpecificServerMostTK($serverName, $startDate, $endDate) {
-        return $this->db->getSpecificServerMostTK($serverName, $startDate, $endDate);
+    public function getSpecificServerMostTK($serverName, $startDate, $endDate, $tz) {
+        return $this->db->getSpecificServerMostTK($serverName, $startDate, $endDate, $tz);
     }
     
     /**
@@ -303,9 +322,12 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * 
      * @param string $startDate
      * @param string $endDate 
+     * @param string $tz
+     * @return array
+     * @throws \Exception
      */
-    public function getCurrentPlayers($startDate, $endDate) {
-        return  $this->db->getCurrentPlayers($startDate, $endDate);;
+    public function getCurrentPlayers($startDate, $endDate, $tz) {
+        return  $this->db->getCurrentPlayers($startDate, $endDate, $tz);
     }
     
     /**
@@ -313,11 +335,12 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * 
      * @param string $type last|first last = last/most recent time a player was seen, first = oldest time
      * @param string $playerName
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getPlayerSeenDetails($type, $playerName) {
-        return $this->db->getPlayerSeenDetails($type, $playerName);
+    public function getPlayerSeenDetails($type, $playerName, $tz) {
+        return $this->db->getPlayerSeenDetails($type, $playerName, $tz);
     }
     
     /**
@@ -325,44 +348,48 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * 
      * @param string $type best|worst ratio
      * @param string $playerName
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getPlayerRatioDetails($type, $playerName) {
-        return $this->db->getPlayerRatioDetails($type, $playerName);
+    public function getPlayerRatioDetails($type, $playerName, $tz) {
+        return $this->db->getPlayerRatioDetails($type, $playerName, $tz);
     }
     
     /**
      * Returns the players highest score (most wins)
      * 
      * @param string $playerName
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getPlayerMostWinDetails($playerName) {
-        return $this->db->getPlayerMostWinDetails($playerName);
+    public function getPlayerMostWinDetails($playerName, $tz) {
+        return $this->db->getPlayerMostWinDetails($playerName, $tz);
     }
     
     /**
      * Returns the players most losses details
      * 
      * @param string $playerName
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getPlayerMostLossDetails($playerName) {
-        return $this->db->getPlayerMostLossDetails($playerName);
+    public function getPlayerMostLossDetails($playerName, $tz) {
+        return $this->db->getPlayerMostLossDetails($playerName, $tz);
     }
     
     /**
-    * Returns the players most TK's with details
-    * 
-    * @param string $playerName
-    * @return array
-    * @throws \Exception 
-    */
-   public function getPlayerMostTKDetails($playerName) {
-       return $this->db->getPlayerMostTKDetails($playerName);
+     * Returns the players most TK's with details
+     * 
+     * @param string $playerName
+     * @param string $tz
+     * @return array
+     * @throws \Exception 
+     */
+   public function getPlayerMostTKDetails($playerName, $tz) {
+       return $this->db->getPlayerMostTKDetails($playerName, $tz);
    }
    
    /**
@@ -383,16 +410,23 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
     * @param string $playerName
     * @param string $startDate
     * @param string $endDate
+    * @param string $tz
     * @return array
     * @throws \Exception 
     */
-   public function getPlayerActiveTimes($playerName, $startDate, $endDate){
-       return $this->padDates(
-               $startDate, 
-               $endDate, 
-               $this->db->getPlayerActiveTimes($playerName, $startDate, $endDate),
-               array('Timestamp', 'Active'),
-               1800);
+   public function getPlayerActiveTimes($playerName, $startDate, $endDate, $tz){
+        $startTzDate = new DateTime($startDate, new \DateTimeZone('GMT'));
+        $startTzDate->setTimezone(new \DateTimeZone($tz));
+        $endTzDate = new DateTime($endDate, new \DateTimeZone('GMT'));
+        $endTzDate->setTimezone(new \DateTimeZone($tz));
+        
+        return $this->padDates(
+            date_format($startTzDate, 'YmdHis'),
+            date_format($endTzDate, 'YmdHis'),
+            $this->db->getPlayerActiveTimes($playerName, $startDate, $endDate, $tz),
+            array('Timestamp', 'Active'),
+            1800
+        );
    }
    
    /**
@@ -402,16 +436,23 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
     * @param string $playerName
     * @param string $startDate
     * @param string $endDate
+    * @param string $tz
     * @return array
     * @throws \Exception 
     */
-   public function getPlayerScores($playerName, $startDate, $endDate){
-       return $this->padDates(
-               $startDate, 
-               $endDate, 
-               $this->db->getPlayerScores($playerName, $startDate, $endDate),
-               array('Timestamp', 'Wins', 'Losses', 'Teamkills'),
-               1800);
+   public function getPlayerScores($playerName, $startDate, $endDate, $tz){
+        $startTzDate = new DateTime($startDate, new \DateTimeZone('GMT'));
+        $startTzDate->setTimezone(new \DateTimeZone($tz));
+        $endTzDate = new DateTime($endDate, new \DateTimeZone('GMT'));
+        $endTzDate->setTimezone(new \DateTimeZone($tz));
+        
+        return $this->padDates(
+            date_format($startTzDate, 'YmdHis'),
+            date_format($endTzDate, 'YmdHis'),
+            $this->db->getPlayerScores($playerName, $startDate, $endDate, $tz),
+            array('Timestamp', 'Wins', 'Losses', 'Teamkills'),
+            1800
+        );
    }
    
    /**

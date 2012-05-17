@@ -42,16 +42,18 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
     /**
      * Returns te most current active players and servers from the database
      * 
+     * @param string $tz
      * @return array $result
      * @throws \Exception 
      */
-    public function getCurrentStats() {
+    public function getCurrentStats($tz) {
+        $vals = array($tz);
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT Players, Servers as Games, Timestamp 
-                FROM server_totals 
+                SELECT Players, Servers as Games, CONVERT_TZ(Timestamp, 'GMT', ?) as Timestamp
+                FROM server_totals
                 ORDER BY Timestamp DESC LIMIT 1");
-            $this->sth->execute();
+            $this->sth->execute($vals);
             $result = $this->sth->fetch(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
@@ -93,20 +95,21 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * @param string $type "least" for the least popular/active period. "most" for the most popular
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getPopularTime($type, $startDate, $endDate) {
+    public function getPopularTime($type, $startDate, $endDate, $tz) {
         if (strtolower($type) == "least") {
             $order = "ORDER BY Players ASC Limit 1";
         } else {
             $order = "ORDER BY Players DESC Limit 1";
         }
-        $dates = array($startDate, $endDate);
+        $dates = array($tz, $startDate, $endDate);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT Players, Servers, Timestamp 
+                SELECT Players, Servers, CONVERT_TZ(Timestamp, 'GMT', ?) as Timestamp 
                 FROM server_totals 
                 WHERE Timestamp BETWEEN ? AND ? " . $order);
             $this->sth->execute($dates);
@@ -122,15 +125,16 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * 
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getMostPopularServer($startDate, $endDate) {
-        $dates = array($startDate, $endDate);
+    public function getMostPopularServer($startDate, $endDate, $tz) {
+        $dates = array($tz, $startDate, $endDate);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT ServerName, Observers+Players as TotalPlayers, Players, Observers, Timestamp 
+                SELECT ServerName, Observers+Players as TotalPlayers, Players, Observers, CONVERT_TZ(Timestamp, 'GMT', ?) as Timestamp 
                 FROM server_updates 
                 WHERE Timestamp BETWEEN ? AND ? 
                 ORDER BY TotalPlayers DESC, ServerName ASC LIMIT 1");
@@ -229,15 +233,16 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * 
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
-     * @throws \Exception 
+     * @throws \Exception
      */
-    public function getTotalCount($startDate, $endDate) {
-        $dates = array($startDate, $endDate);
+    public function getTotalCount($startDate, $endDate, $tz) {
+        $dates = array($tz, $startDate, $endDate);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT Date_Format(Timestamp, '%Y/%m/%d %H:%i:%s') as Timestamp, Players, Servers 
+                SELECT Date_Format(CONVERT_TZ(Timestamp, 'GMT', ?), '%Y/%m/%d %H:%i:%s') as Timestamp, Players, Servers 
                 FROM server_totals 
                 WHERE Timestamp BETWEEN ? and ? 
                 ORDER BY Timestamp ASC");
@@ -255,15 +260,16 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * 
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getTotalPlayerCount($startDate, $endDate) {
-            $dates = array($startDate, $endDate);
+    public function getTotalPlayerCount($startDate, $endDate, $tz) {
+            $dates = array($tz, $startDate, $endDate);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT Date_Format(Timestamp, '%Y/%m/%d %H:%i:%s') as Timestamp, Players 
+                SELECT Date_Format(CONVERT_TZ(Timestamp, 'GMT', ?), '%Y/%m/%d %H:%i:%s') as Timestamp, Players 
                 FROM server_totals 
                 WHERE Timestamp BETWEEN ? and ? 
                 ORDER BY Timestamp ASC");
@@ -282,15 +288,16 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * 
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getSumedPlayerCount($startDate, $endDate) {
-            $dates = array($startDate, $endDate);
+    public function getSumedPlayerCount($startDate, $endDate, $tz) {
+            $dates = array($tz, $startDate, $endDate);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT Date_Format(Timestamp, '%Y/%m/%d %H:%i:%s') as Timestamp, SUM(Players) AS Players, SUM(Observers) AS Observers
+                SELECT Date_Format(CONVERT_TZ(Timestamp, 'GMT', ?), '%Y/%m/%d %H:%i:%s') as Timestamp, SUM(Players) AS Players, SUM(Observers) AS Observers
                 FROM server_updates
                 WHERE Timestamp BETWEEN ? AND ?
                 GROUP BY Timestamp
@@ -309,15 +316,16 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * 
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getTotalServerCount($startDate, $endDate) {
-            $dates = array($startDate, $endDate);
+    public function getTotalServerCount($startDate, $endDate, $tz) {
+            $dates = array($tz, $startDate, $endDate);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT Date_Format(Timestamp, '%Y/%m/%d %H:%i:%s') as Timestamp, Servers 
+                SELECT Date_Format(CONVERT_TZ(Timestamp, 'GMT', ?), '%Y/%m/%d %H:%i:%s') as Timestamp, Servers 
                 FROM server_totals 
                 WHERE Timestamp BETWEEN ? and ? 
                 ORDER BY Timestamp ASC");
@@ -358,16 +366,19 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
     /**
      * Returns all registered servers with descriptions sorted by the LastUpdate timestamp
      * 
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getServerList() {
+    public function getServerList($tz) {
+        $dates = array($tz);
+        
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT ServerName, Description, LastUpdate 
+                SELECT ServerName, Description, CONVERT_TZ(LastUpdate, 'GMT', ?) as LastUpdate 
                 FROM server_names
                 ORDER by LastUpdate DESC, ServerName ASC");
-            $this->sth->execute();
+            $this->sth->execute($dates);
             $result = $this->sth->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch(\PDOException $e) {
@@ -382,14 +393,15 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * @param string $serverName
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getSpecificServerStats($serverName, $startDate, $endDate) {
-        $args = array($serverName, $startDate, $endDate);
+    public function getSpecificServerStats($serverName, $startDate, $endDate, $tz) {
+        $args = array($tz, $serverName, $startDate, $endDate);
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT Date_Format(Timestamp, '%Y/%m/%d %H:%i:%s') as Timestamp, Players, Observers
+                SELECT Date_Format(CONVERT_TZ(Timestamp, 'GMT', ?), '%Y/%m/%d %H:%i:%s') as Timestamp, Players, Observers
                 FROM server_updates 
                 WHERE servername = ? AND
                     ( Timestamp BETWEEN ? AND ? )
@@ -409,14 +421,15 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * @param string $serverName
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getSpecificServerMaxPlayers($serverName, $startDate, $endDate) {
-        $args = array($serverName, $startDate, $endDate);
+    public function getSpecificServerMaxPlayers($serverName, $startDate, $endDate, $tz) {
+        $args = array($tz, $serverName, $startDate, $endDate);
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT Players, Observers, Players+Observers AS 'Total', Timestamp
+                SELECT Players, Observers, Players+Observers AS 'Total', CONVERT_TZ(Timestamp, 'GMT', ?) as Timestamp
                 FROM server_updates
                 WHERE ServerName = ? AND
                     (Timestamp BETWEEN ? AND ?)
@@ -460,14 +473,15 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * Returns Server Details for a specific server (description, gametype, flags, teams, lastupdate)
      * 
      * @param sring $serverName
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getSpecificServerDescription($serverName) {
-        $args = array($serverName);
+    public function getSpecificServerDescription($serverName, $tz) {
+        $args = array($tz, $serverName);
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT Description, GameType, GameFlags, Teams, LastUpdate 
+                SELECT Description, GameType, GameFlags, Teams, CONVERT_TZ(LastUpdate, 'GMT', ?) as LastUpdate 
                 FROM server_names 
                 WHERE ServerName = ?");
             $this->sth->execute($args);
@@ -509,15 +523,16 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * 
      * @param sring $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getSpecificServerMostWins($serverName, $startDate, $endDate) {
-        $args = array($serverName, $startDate, $endDate);
+    public function getSpecificServerMostWins($serverName, $startDate, $endDate, $tz) {
+        $args = array($tz, $serverName, $startDate, $endDate);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT PlayerName, Team, Wins, Losses, Teamkills, Timestamp
+                SELECT PlayerName, Team, Wins, Losses, Teamkills, CONVERT_TZ(Timestamp, 'GMT', ?) as Timestamp
                 FROM player_updates 
                 WHERE ServerName = ? AND 
                     (Timestamp BETWEEN ? AND ?)
@@ -537,20 +552,21 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * @param string $type "worst" for the worst ratio. "best" for the best ratio
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception
      */
-    public function getSpecificServerPlayerByRatio($serverName, $type, $startDate, $endDate) {
+    public function getSpecificServerPlayerByRatio($serverName, $type, $startDate, $endDate, $tz) {
         if (strtolower($type) == "worst") {
             $order = "ORDER BY Ratio ASC LIMIT 1";
         } else {
             $order = "ORDER BY Ratio DESC LIMIT 1";
         }
-        $args = array($serverName, $startDate, $endDate);
+        $args = array($tz, $serverName, $startDate, $endDate);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT PlayerName, Team, Wins, Losses, Teamkills, Wins/Losses AS 'Ratio', Timestamp  
+                SELECT PlayerName, Team, Wins, Losses, Teamkills, Wins/Losses AS 'Ratio', CONVERT_TZ(Timestamp, 'GMT', ?) as Timestamp  
                 FROM player_updates 
                 WHERE ServerName = ? AND 
                     (Wins/Losses > 0) AND 
@@ -568,15 +584,16 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * 
      * @param string $startDate
      * @param string $endDate
+     * @param string $tz
      * @return array
      * @throws \Exception
      */
-    public function getSpecificServerMostTK($serverName, $startDate, $endDate) {
-        $args = array($serverName, $startDate, $endDate);
+    public function getSpecificServerMostTK($serverName, $startDate, $endDate, $tz) {
+        $args = array($tz, $serverName, $startDate, $endDate);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT PlayerName, Team, Wins, Losses, Teamkills, Timestamp 
+                SELECT PlayerName, Team, Wins, Losses, Teamkills, CONVERT_TZ(Timestamp, 'GMT', ?) as Timestamp 
                 FROM player_updates 
                 WHERE ServerName = ? AND 
                     (Timestamp BETWEEN ? AND ?)
@@ -594,15 +611,16 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * 
      * @param string $startDate
      * @param string $endDate 
+     * @param string $tz
      * @return array
      * @throws \Exception
      */
-    public function getCurrentPlayers($startDate, $endDate) {
-        $dates = array($startDate, $endDate);
+    public function getCurrentPlayers($startDate, $endDate, $tz) {
+        $dates = array($tz, $startDate, $endDate);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT PlayerName, ServerName, Team, Timestamp, Wins, Losses, Teamkills
+                SELECT PlayerName, ServerName, Team, CONVERT_TZ(Timestamp, 'GMT', ?) as Timestamp, Wins, Losses, Teamkills
                 FROM  player_updates
                 WHERE Timestamp BETWEEN ? AND ?
                 ORDER BY PlayerName ASC, ServerName ASC");
@@ -619,20 +637,21 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * 
      * @param string $type
      * @param string $playerName
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getPlayerSeenDetails($type, $playerName) {
+    public function getPlayerSeenDetails($type, $playerName, $tz) {
         if (strtolower($type) == "last") {
             $order = "ORDER BY Timestamp DESC LIMIT 1";
         } else {
             $order = "ORDER BY Timestamp ASC LIMIT 1";
         }
-        $args = array($playerName);
+        $args = array($tz, $playerName);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT PlayerName, ServerName, Team, Timestamp
+                SELECT PlayerName, ServerName, Team, CONVERT_TZ(Timestamp, 'GMT', ?) as Timestamp
                     FROM player_updates
                     WHERE PlayerName = ? ".$order);
             $this->sth->execute($args);
@@ -648,20 +667,21 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * 
      * @param string $type best|worst ratio
      * @param string $playerName
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getPlayerRatioDetails($type, $playerName) {
+    public function getPlayerRatioDetails($type, $playerName, $tz) {
         if (strtolower($type) == "best") {
             $order = "ORDER BY Ratio DESC LIMIT 1";
         } else {
             $order = "ORDER BY Ratio ASC LIMIT 1";
         }
-        $args = array($playerName);
+        $args = array($tz, $playerName);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT PlayerName, ServerName, Team, Wins, Losses, Teamkills, Wins/Losses AS 'Ratio', Timestamp 
+                SELECT PlayerName, ServerName, Team, Wins, Losses, Teamkills, Wins/Losses AS 'Ratio', CONVERT_TZ(Timestamp, 'GMT', ?) as Timestamp 
                 FROM player_updates 
                 WHERE PlayerName = ? AND Wins/Losses is not null ".$order);
             $this->sth->execute($args);
@@ -676,15 +696,16 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * Returns the players highest score (most wins)
      * 
      * @param string $playerName
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getPlayerMostWinDetails($playerName) {
-       $args = array($playerName);
+    public function getPlayerMostWinDetails($playerName, $tz) {
+       $args = array($tz, $playerName);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT PlayerName, ServerName, Team, Wins, Losses, Teamkills, Timestamp
+                SELECT PlayerName, ServerName, Team, Wins, Losses, Teamkills, CONVERT_TZ(Timestamp, 'GMT', ?) as Timestamp
                 FROM player_updates 
                 WHERE PlayerName = ? 
                     AND Wins is not null
@@ -702,15 +723,16 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
      * Returns the players most losses details
      * 
      * @param string $playerName
+     * @param string $tz
      * @return array
      * @throws \Exception 
      */
-    public function getPlayerMostLossDetails($playerName){
-       $args = array($playerName);
+    public function getPlayerMostLossDetails($playerName, $tz){
+       $args = array($tz, $playerName);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT PlayerName, ServerName, Team, Wins, Losses, Teamkills, Timestamp 
+                SELECT PlayerName, ServerName, Team, Wins, Losses, Teamkills, CONVERT_TZ(Timestamp, 'GMT', ?) as Timestamp 
                 FROM player_updates 
                 WHERE PlayerName = ? 
                     AND Losses is not null
@@ -728,15 +750,16 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
     * Returns the players most TK's with details
     * 
     * @param string $playerName
+    * @param string $tz
     * @return array
     * @throws \Exception 
     */
-   public function getPlayerMostTKDetails($playerName) {
-       $args = array($playerName);
+   public function getPlayerMostTKDetails($playerName, $tz) {
+       $args = array($tz, $playerName);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT PlayerName, ServerName, Team, Wins, Losses, Teamkills, Timestamp 
+                SELECT PlayerName, ServerName, Team, Wins, Losses, Teamkills, CONVERT_TZ(Timestamp, 'GMT', ?) as Timestamp 
                 FROM player_updates 
                 WHERE PlayerName = ? 
                     AND Teamkills is not null
@@ -783,15 +806,16 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
     * @param string $playerName
     * @param string $startDate
     * @param string $endDate
+    * @param string $tz
     * @return array
     * @throws \Exception 
     */
-   public function getPlayerActiveTimes($playerName, $startDate, $endDate){
-       $args = array($playerName, $startDate, $endDate);
+   public function getPlayerActiveTimes($playerName, $startDate, $endDate, $tz){
+       $args = array($tz, $playerName, $startDate, $endDate);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT Date_Format(Timestamp, '%Y/%m/%d %H:%i:%s') as Timestamp, 100 AS Active
+                SELECT Date_Format(CONVERT_TZ(Timestamp, 'GMT', ?), '%Y/%m/%d %H:%i:%s') as Timestamp, 100 AS Active
                 FROM player_updates 
                 WHERE PlayerName = ?
                     AND Timestamp BETWEEN ? AND ?
@@ -812,15 +836,16 @@ class DbMysqlStats extends \Packs\Bzstats\Unreal\aDbStats {
     * @param string $playerName
     * @param string $startDate
     * @param string $endDate
+    * @param string $tz
     * @return array
     * @throws \Exception 
     */
-   public function getPlayerScores($playerName, $startDate, $endDate){
-       $args = array($playerName, $startDate, $endDate);
+   public function getPlayerScores($playerName, $startDate, $endDate, $tz){
+       $args = array($tz, $playerName, $startDate, $endDate);
         
         try {
             $this->sth = $this->dbh->prepare("
-                SELECT Date_Format(Timestamp, '%Y/%m/%d %H:%i:%s') as Timestamp, Wins, Losses, Teamkills
+                SELECT Date_Format(CONVERT_TZ(Timestamp, 'GMT', ?), '%Y/%m/%d %H:%i:%s') as Timestamp, Wins, Losses, Teamkills
                 FROM player_updates 
                 WHERE PlayerName = ?
                     AND (Timestamp BETWEEN ? AND ?)
