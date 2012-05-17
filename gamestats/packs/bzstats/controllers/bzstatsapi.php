@@ -55,7 +55,6 @@ class BzstatsapiController extends \Qore\BaseController {
                         $endDate = new DateTime($args[1], new DateTimeZone($tz));
                         $endDate->setTimezone(new DateTimeZone('GMT'));
                         
-                        //???
                         $curStart = date_format($startDate, "Y-m-d H:i:s");
                         $curEnd = date_format($endDate, "Y-m-d H:i:s");
                         
@@ -74,7 +73,10 @@ class BzstatsapiController extends \Qore\BaseController {
                         $endDate = new DateTime($args[1], new DateTimeZone($tz));
                         $endDate->setTimezone(new DateTimeZone('GMT'));
                         
-                        $this->data = $this->db->getTotalPlayerCount($startDate, $endDate, $tz);
+                        $curStart = date_format($startDate, "Y-m-d H:i:s");
+                        $curEnd = date_format($endDate, "Y-m-d H:i:s");
+                        
+                        $this->data = $this->db->getTotalPlayerCount($curStart, $curEnd, $tz);
                         $this->prnt();
                     } else {
                         $this->showUsage();
@@ -89,7 +91,10 @@ class BzstatsapiController extends \Qore\BaseController {
                         $endDate = new DateTime($args[1], new DateTimeZone($tz));
                         $endDate->setTimezone(new DateTimeZone('GMT'));
                         
-                        $this->data = $this->db->getSumedPlayerCount($startDate, $endDate, $tz);
+                        $curStart = date_format($startDate, "Y-m-d H:i:s");
+                        $curEnd = date_format($endDate, "Y-m-d H:i:s");
+                        
+                        $this->data = $this->db->getSumedPlayerCount($curStart, $curEnd, $tz);
                         $this->prnt();
                     } else {
                         $this->showUsage();
@@ -104,7 +109,10 @@ class BzstatsapiController extends \Qore\BaseController {
                         $endDate = new DateTime($args[1], new DateTimeZone($tz));
                         $endDate->setTimezone(new DateTimeZone('GMT'));
                         
-                        $this->data = $this->db->getTotalServerCount($startDate, $endDate, $tz);
+                        $curStart = date_format($startDate, "Y-m-d H:i:s");
+                        $curEnd = date_format($endDate, "Y-m-d H:i:s");
+                        
+                        $this->data = $this->db->getTotalServerCount($curStart, $curEnd, $tz);
                         $this->prnt();
                     } else {
                         $this->showUsage();
@@ -119,7 +127,10 @@ class BzstatsapiController extends \Qore\BaseController {
                         $endDate = new DateTime($args[2], new DateTimeZone($tz));
                         $endDate->setTimezone(new DateTimeZone('GMT'));
                         
-                        $this->data = $this->db->getSpecificServerStats($args[0], $startDate, $endDate, $tz);
+                        $curStart = date_format($startDate, "Y-m-d H:i:s");
+                        $curEnd = date_format($endDate, "Y-m-d H:i:s");
+                        
+                        $this->data = $this->db->getSpecificServerStats($args[0], $curStart, $curEnd, $tz);
                         $this->prnt();
                     } else {
                         $this->showUsage();
@@ -133,7 +144,11 @@ class BzstatsapiController extends \Qore\BaseController {
                         $startDate->setTimezone(new DateTimeZone('GMT'));
                         $endDate = new DateTime($args[2], new DateTimeZone($tz));
                         $endDate->setTimezone(new DateTimeZone('GMT'));
-                        $this->data = $this->db->getPlayerActiveTimes(urldecode($args[0]), $startDate, $endDate, $tz);
+                        
+                        $curStart = date_format($startDate, "Y-m-d H:i:s");
+                        $curEnd = date_format($endDate, "Y-m-d H:i:s");
+                        
+                        $this->data = $this->db->getPlayerActiveTimes(urldecode($args[0]), $curStart, $curEnd, $tz);
                         $this->prnt();
                     } else {
                         $this->showUsage();
@@ -148,7 +163,10 @@ class BzstatsapiController extends \Qore\BaseController {
                         $endDate = new DateTime($args[2], new DateTimeZone($tz));
                         $endDate->setTimezone(new DateTimeZone('GMT'));
                         
-                        $this->data = $this->db->getPlayerScores(urldecode($args[0]), $startDate, $endDate, $tz);
+                        $curStart = date_format($startDate, "Y-m-d H:i:s");
+                        $curEnd = date_format($endDate, "Y-m-d H:i:s");
+                        
+                        $this->data = $this->db->getPlayerScores(urldecode($args[0]), $curStart, $curEnd, $tz);
                         $this->prnt();
                     } else {
                         $this->showUsage();

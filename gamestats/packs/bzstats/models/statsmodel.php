@@ -208,9 +208,9 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
      * @throws \Exception 
      */
     public function getSpecificServerStats($serverName, $startDate, $endDate, $tz) {
-        $startTzDate = new DateTime($startDate, new \DateTimeZone('GMT'));
+        $startTzDate = new \DateTime($startDate, new \DateTimeZone('GMT'));
         $startTzDate->setTimezone(new \DateTimeZone($tz));
-        $endTzDate = new DateTime($endDate, new \DateTimeZone('GMT'));
+        $endTzDate = new \DateTime($endDate, new \DateTimeZone('GMT'));
         $endTzDate->setTimezone(new \DateTimeZone($tz));
         
         $data = $this->padDates(
@@ -415,9 +415,9 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
     * @throws \Exception 
     */
    public function getPlayerActiveTimes($playerName, $startDate, $endDate, $tz){
-        $startTzDate = new DateTime($startDate, new \DateTimeZone('GMT'));
+        $startTzDate = new \DateTime($startDate, new \DateTimeZone('GMT'));
         $startTzDate->setTimezone(new \DateTimeZone($tz));
-        $endTzDate = new DateTime($endDate, new \DateTimeZone('GMT'));
+        $endTzDate = new \DateTime($endDate, new \DateTimeZone('GMT'));
         $endTzDate->setTimezone(new \DateTimeZone($tz));
         
         return $this->padDates(
@@ -441,9 +441,9 @@ class StatsModel extends \Qore\BaseModel implements \Packs\Bzstats\Unreal\iDbSta
     * @throws \Exception 
     */
    public function getPlayerScores($playerName, $startDate, $endDate, $tz){
-        $startTzDate = new DateTime($startDate, new \DateTimeZone('GMT'));
+        $startTzDate = new \DateTime($startDate, new \DateTimeZone('GMT'));
         $startTzDate->setTimezone(new \DateTimeZone($tz));
-        $endTzDate = new DateTime($endDate, new \DateTimeZone('GMT'));
+        $endTzDate = new \DateTime($endDate, new \DateTimeZone('GMT'));
         $endTzDate->setTimezone(new \DateTimeZone($tz));
         
         return $this->padDates(
