@@ -26,7 +26,7 @@
     // argument (checkIP) is currently set to false since it impairs local
     // testing.
     // TODO: Remove the fourth argument, set it to true, or add a config option
-    $results = validate_token($_GET['token'], urldecode($_GET['username']), Array($config['imageModeratorGroup']), false);
+    $results = validate_token($_GET['token'], $_GET['username'], Array($config['imageModeratorGroup']), false);
   	
   	// The BZID must be returned in our response, and it must be greater than 0
   	if (isset($results['bzid']) && is_numeric($results['bzid']) && $results['bzid'] > 0)
