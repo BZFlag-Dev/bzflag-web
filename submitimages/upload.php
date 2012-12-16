@@ -130,7 +130,7 @@
     }
 
     // Uploader email address
-     if (strlen($input['uploaderemail']) == 0 || ereg("^([A-Za-z0-9_\-\.])+@([A-Za-z0-9\-\.])+\.([A-Za-z]{2,4})$", $input['uploaderemail']) === false)
+     if (strlen($input['uploaderemail']) == 0 || filter_var($input['uploaderemail'], FILTER_VALIDATE_EMAIL) === false)
      {
        $input['invalid'] = true;
        $messages['errors'][] = $lang['errorUploaderemailInvalid'];

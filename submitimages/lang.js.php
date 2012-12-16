@@ -15,10 +15,10 @@
   // Verify that the value passed in was only made up of a to z, or a hyphen.
   // Also verify that the language specified actually exists. If either fails,
   // fall back to using the English language file.
-  if (empty($input['lang']) || !ereg('a-z\-', $input['lang']) || !file_exists($config['paths']['language'].$input['lang'].".php"))
+  //if (empty($input['lang']) || !ereg('a-z\-', $input['lang']) || !file_exists($config['paths']['language'].$input['lang'].".php"))
     include($config['paths']['language']."en.php");
-  else
-    include($config['paths']['language'].$input['lang'].".php");
+  /*else
+    include($config['paths']['language'].$input['lang'].".php");*/
   
   // Write out the JavaScript language file
   echo "var lang = new Array();\n";
