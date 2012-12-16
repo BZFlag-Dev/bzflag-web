@@ -20,10 +20,6 @@
     // Read user input
     //////////////////////////////////////////
     
-    // Temporary sleep to simulate a larger upload
-    // TODO: Remove this before putting the system into production
-    sleep(2);
-  
     $messages['errors'] = Array();
     $messages['top'] = Array();
   
