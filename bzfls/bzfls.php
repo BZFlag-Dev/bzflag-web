@@ -12,9 +12,6 @@
 // IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 // WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
-define ('MD5_PASSWORD', true);
-
 define('IN_PHPBB', true);
 $phpbb_root_path = '../../forums.bzflag.org/htdocs/';
 $phpEx = 'php';
@@ -105,8 +102,8 @@ function debugArray ($a){
   foreach ($a as $key => $val){
     if (!strlen($msg))
       $msg .= ', ';
-    if (MD5_PASSWORD && strncasecmp ($key, "PASS", 4)==0)
-      $val = md5($val);
+    if (strncasecmp ($key, "PASS", 4)==0)
+      $val = "**PASSWORD FILTERED**";
     $msg .= "$key=$val";
   }
   return str_replace (array ("\r", "\n"), array ('<\r>', '<\n>'), $msg);
