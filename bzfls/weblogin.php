@@ -81,6 +81,9 @@ function action_weblogin() {
 
   $parsedURL = parse_url($URL);
 	
+  if (!isset($parsedURL["host"]))
+    die ('ERROR, you must pass in a URL value');
+
 	$hostkey = md5($parsedURL["host"]);
 	
 	$wlu = $hostkey.'wlu';
@@ -164,6 +167,9 @@ function action_webvalidate() {
     die ('ERROR, you must pass in a URL value');
 		
 	$parsedURL = parse_url($URL);
+	
+  if (!isset($parsedURL["host"]))
+    die ('ERROR, you must pass in a URL value');
 
   if ( array_key_exists("username", $_REQUEST) )
     $username =  utf8_clean_string($_REQUEST['username']);
