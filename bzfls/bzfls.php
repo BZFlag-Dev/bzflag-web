@@ -251,7 +251,6 @@ $listformat = vcsoe(@$_REQUEST['listformat']);
 
 
 function testform($message) {
-  global $action;
   header('Content-type: text/html');
   print('<html>
 <head>
@@ -264,11 +263,8 @@ function testform($message) {
   <form action="" method="POST">
     action:<select name="action">
 	<option value="LIST" selected>LIST - list servers</option>
-	<option value="DEBUG">DEBUG - developer interface</option>
 	<option value="ADD">ADD - add a server</option>
 	<option value="REMOVE">REMOVE - remove a server</option>
-	<option value="REGISTER">REGISTER - new player</option>
-	<option value="CONFIRM">CONFIRM - confirm registration</option>
 	<option value="CHECKTOKENS">CHECKTOKENS - verify player token from game server</option>
 	<option value="GETTOKEN">GETTOKEN - get player token</option>
 	<option value="UNKNOWN">UNKNOWN - test invalid request</option>
@@ -302,21 +298,7 @@ Group1</textarea>
     <input type="submit" value="Post entry">
     <input type="reset" value="Clear form">
   </form>
-</body>');
-  if ($action == 'DEBUG') {
-    # clear secure bits
-    global $dbhost, $dbname, $bbdbname, $dbuname, $dbpass;
-    $dbhost  = 'HIDDEN';
-    $dbname  = 'HIDDEN';
-    $bbdbname = 'HIDDEN';
-    $dbuname = 'HIDDEN';
-    $dbpass  = 'HIDDEN';
-//    print("<PRE>\n");
-//    var_dump($GLOBALS);
-//    print("</PRE>\n");
-//    phpinfo();
-  }
-  print('</body>
+</body>
 </html>');
 }
 
@@ -879,81 +861,6 @@ function action_remove() {
   print("REMOVE: $nameport\n");
 }
 
-function action_register() {
-  #  -- REGISTER --
-  # Registers a player onto the players database.
-  global $link, $callsign, $email, $password;
-  # see if there is an existing entry
-  header('Content-type: text/plain');
-  $result = mysql_query("SELECT * FROM players WHERE email = '$email'", $link)
-    or die ('Invalid query: '. mysql_error());
-  if ( mysql_num_rows($result) > 0 ) {
-    print('Registration FAILED: ');
-    print("A player has already registered with the email address: $email");
-    exit;
-  }
-  $result = mysql_query("SELECT * FROM players WHERE callsign = '$callsign'", $link)
-    or die ('Invalid query: '. mysql_error());
-  if ( mysql_num_rows($result) > 0 ) {
-    print('Registration FAILED: ');
-    print("A player has already registered with the callsign: $callsign");
-    exit;
-  }
-
-  # no existing entry found - proceed to complete the registration
-  $alphanum = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  $randtext = '';
-  srand(microtime() * 100000000);
-  for ( $i = 0; $i < 8; $i++ )
-    $randtext .= $alphanum{rand(0,35)};
-  # FIXME remove `` etc from email
-  $to = urldecode($email);
-  mail($to, "BZFlag player registration",
-       "You have just registered a BZFlag player account with\n" .
-       "    callsign: $callsign\n" .
-       "    password: $password\n" .
-       "To activate this account, please go to the following URL:\n\n" .
-       "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'] . "?action=CONFIRM&email=$email&password=$randtext\n")
-    or die ("Could not send mail");
-  $curtime = time();
-  $result = mysql_query("INSERT INTO players "
-      . "(email, callsign, password, created, randtext, lastmod) VALUES "
-      . "('$email', '$callsign', '$password', '$curtime', "
-      . "'$randtext', '$curtime')", $link)
-  or die ("Invalid query: ". mysql_error());
-  print("Registration SUCCESSFUL: ");
-  print("You will receive an email informing you on how to complete your account registration\n");
-  #print("While we are debugging, the link is posted here as well.:\n" .
-  #     "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'] . "?action=CONFIRM&email=$email&password=$randtext\n");
-}
-
-function action_confirm() {
-  #  -- CONFIRM --
-  # Confirm a registration
-  global $link, $email, $password;
-  header('Content-type: text/html');
-  print("<html><head><title>Confirm registration</title></head><body>\n");
-  $result = mysql_query("SELECT randtext FROM players WHERE email='$email'", $link)
-    or die ('Invalid query: ' . mysql_error());
-  $row = mysql_fetch_row($result);
-  $randtext = $row[0];
-  if ( $randtext == NULL ) {
-    print("The account $email has already been confirmed.<br>\n");
-  } else {
-    if ( $password != $randtext ) {
-      print("Failed to confirm registration for $email since generated key did not match<br>\n");
-    } else {
-      $result = mysql_query("UPDATE players SET "
-	  . "randtext = NULL, "
-	  . "lastmod = '" . time() . "' "
-	  . "WHERE email='$email'", $link)
-	or die ('Invalid query: ' . mysql_error());
-      print("The account for $email has been successfully activated.<br>\n");
-    }
-  }
-  print('See <a href="http://BZFlag.org">http://BZFlag.org</a></body></html>');
-}
-
 # set up a list of addresses to check
 $values = Array();
 $values['ipaddress'][0] = $_SERVER['REMOTE_ADDR'];
@@ -1006,10 +913,6 @@ switch ($action) {
   case 'CHECKTOKENS': {
     header('Content-type: text/plain');
     action_checktokens();
-    break;
-  }
-  case 'DEBUG': {
-    testform('');
     break;
   }
   default: {
