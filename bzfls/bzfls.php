@@ -448,6 +448,7 @@ function action_list() {
     $playerid = $row[0];
     if (!$playerid || !phpbb_check_hash($password, $row[1])) {
       $listing['token'] = ""; // empty token is a bad token
+      $playerid = 0;
       debug ("NOTOK", 2);
     } else {
       srand(microtime() * 100000000);
@@ -476,7 +477,7 @@ function action_list() {
   }
 
   $advertList = "0";    // marker for phantom group 'EVERYONE'
-  if ($playerid){
+  if (isset($playerid) && $playerid){
     global $verifiedGroupID;
 
     sqlQuery ("USE $bbdbname");
@@ -504,6 +505,8 @@ function action_list() {
 
   if ($version)
     $qryv = "AND version='$version'";
+  else
+    $qryv = '';
 
   $fields = "nameport,version,gameinfo,ipaddr,title";
   $listing['fields'] = Array("addr", "version", "hexcode", "ipaddr", "title");
