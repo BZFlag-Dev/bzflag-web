@@ -369,6 +369,7 @@ function print_lua_list(&$listing)
     print "token = " . lua_quote($listing['token']) . ",\n";
   }
   print "fields = { 'version', 'hexcode', 'addr', 'ipaddr', 'title', 'owner' },\n";
+  //print "fields = { 'version', 'hexcode', 'addr', 'ipaddr', 'title', 'owner', 'ownername' },\n";
   print "servers = {\n";
   foreach ($listing['servers'] as $server) {
     print "{"
@@ -377,7 +378,8 @@ function print_lua_list(&$listing)
     . lua_quote($server[0]) . ","     // addr
     . lua_quote($server[3]) . ","     // ipaddr
     . lua_quote($server[4]) . ","     // title
-    . lua_quote($server[5])  . "},\n"; // owner
+    //. lua_quote($server[5]) . ","    // owner
+    . lua_quote($server[6]) . "},\n"; // ownername
   }
   print "}\n"; // end the "servers" table
   print "}\n";
@@ -391,6 +393,7 @@ function print_json_list(&$listing)
     print "token: " . json_quote($listing['token']) . ",\n";
   }
   print '"fields": ["version","hexcode","addr","ipaddr","title","owner"],' . "\n";
+  //print '"fields": ["version","hexcode","addr","ipaddr","title","owner","ownername"],' . "\n";
   print '"servers": [';
   $first = true;
   foreach ($listing['servers'] as $server) {
@@ -405,7 +408,8 @@ function print_json_list(&$listing)
     . json_quote($server[0]) . ","  // addr
     . json_quote($server[3]) . ","  // ipaddr
     . json_quote($server[4]) . ","  // title
-    . json_quote($server[5]) . "]"; // owner
+    //. json_quote($server[5]) . "," // owner
+    . json_quote($server[6]) . "]"; // ownername
   }
   print "\n]\n";
   print "}\n";
@@ -507,10 +511,10 @@ function action_list() {
   $fields = "nameport,version,gameinfo,ipaddr,title";
   $listing['fields'] = Array("addr", "version", "hexcode", "ipaddr", "title");
 
-  $needOwner = ($listformat == "lua") || ($listformat == "json");
-  if ($needOwner) {
-    $fields .= ",owner";
+  if ($listformat == "lua" || $listformat == "json") {
+    $fields .= ",owner,ownername";
     $listing['fields'][] = "owner"; // append the owner field
+    $listing['fields'][] = "ownername"; // append the owner field
   }
 
   $result = sqlQuery("
@@ -521,19 +525,7 @@ function action_list() {
 
   $listing['servers'] = Array();
 
-  while (true) {
-    $row = mysql_fetch_row($result);
-    if (!$row) {
-      break;
-    }
-    if ($needOwner) {    
-      $owner = "";
-      $ownerID = $row[5];
-      if ($ownerID) {
-        $owner = file_get_contents("http://my.bzflag.org/bzidtools.php?action=name&value=" . $ownerID);
-      }
-      $row[5] = $owner;
-    }
+  while (($row = mysql_fetch_row($result)) !== FALSE) {
     $listing['servers'][] = $row;
   }
 
@@ -715,7 +707,7 @@ function action_add() {
   #  -- ADD --
   # Server either requests to be added to DB, or to issue a keep-alive so that it
   # does not get dropped due to a timeout...
-  global $link, $nameport, $version, $build, $gameinfo, $slashtitle, $checktokens, $groups, $debugNoIpCheck, $serverKey;
+  global $bbdbname, $dbname, $link, $nameport, $version, $build, $gameinfo, $slashtitle, $checktokens, $groups, $debugNoIpCheck, $serverKey;
   header('Content-type: text/plain');
   debug("Attempting to ADD $nameport $version $gameinfo " . stripslashes($slashtitle), 3);
   
@@ -744,13 +736,17 @@ function action_add() {
 	}
 	
 	// ok so the key is good, now to check the owner
-	$owner = file_get_contents("http://my.bzflag.org/bzidtools.php?action=name&value=" . $ownerID);
-	
-	if (!$owner)
+	mysql_select_db($bbdbname);
+	$result = mysql_query("SELECT username_clean FROM bzbb3_users WHERE user_id='{$ownerID}'");
+	if (($row = mysql_fetch_row($result)) !== FALSE)
 	{
+	  $owner = $row[0];
+	}
+	else {
 		print("ERROR: Owner lookup failure\n");
 		return;	
 	}
+	mysql_select_db($dbname);
   }
 
   # Filter out badly formatted or buggy versions
@@ -796,6 +792,8 @@ function action_add() {
   fclose ($fp);
   
   $curtime = time();
+  
+  $ownerEsc = mysql_real_escape_string($owner);
 
   $result = mysql_query("SELECT * FROM servers "
       . "WHERE nameport = '".mysql_real_escape_string($nameport)."'", $link)
@@ -808,9 +806,9 @@ function action_add() {
     # Server does not already exist in DB so insert into DB
     # FIXME escape title!
     $result = mysql_query("INSERT INTO servers "
-        . "(nameport, build, version, owner, gameinfo, ipaddr,"
+        . "(nameport, build, version, owner, ownername, gameinfo, ipaddr,"
         . " title, lastmod) VALUES "                           
-        . "('$nameport', '$build', '$version', '$ownerID',"
+        . "('$nameport', '$build', '$version', '$ownerID', '{$ownerEsc}', "
 	. " '$gameinfo', '$servip', '$slashtitle', $curtime)", $link)
       or die ("Invalid query: ". mysql_error());
 
@@ -830,7 +828,8 @@ function action_add() {
 	. "gameinfo = '$gameinfo', "
 	. "title = '$slashtitle', "
 	. "lastmod = $curtime, "
-	. "owner = '$ownerID' "
+	. "owner = '$ownerID', "
+	. "ownername = '{$ownerEsc}' "
 	. "WHERE nameport = '$nameport'", $link)
       or die ("Invalid query: ". mysql_error());
   }
