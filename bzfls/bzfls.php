@@ -449,7 +449,7 @@ function action_list() {
 	or die ("Invalid query: " . mysql_error());
       $pms = mysql_result($result, 0);
       if ($pms) {
-	print("NOTICE: You have $pms private messages waiting for you, $callsign.  Log in at http://my.bzflag.org/bb/ to read them.\n");
+	print("NOTICE: You have $pms private messages waiting for you, $callsign.  Log in at https://forums.bzflag.org/ to read them.\n");
       }
     }
     if (!mysql_select_db($dbname)) {
